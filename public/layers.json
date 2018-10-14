@@ -1,0 +1,41 @@
+[{  "id": 0,
+    "name": "Churches",
+    "active": false,
+    "features": [{
+        "id": 0,
+        "name": "Bogart's Smokehouse",
+        "type": "marker",
+        "coords": [28.6109607, -90.2050322]
+      },
+      {
+        "id": 1,
+        "name": "Pappy's Smokehouse",
+        "type": "marker",
+        "coords": [38.6350008, -97.2261532]
+      }]
+  },
+  {
+    "id": 1,
+    "name": "Restaurants",
+    "active": true,
+    "features": [
+      {
+        "id": 0,
+        "name": "Bogart's Smokehouse",
+        "type": "marker",
+        "coords": [38.6109607, -90.2050322]
+      },
+      {
+        "id": 1,
+        "name": "Pappy's Smokehouse",
+        "type": "marker",
+        "coords": [38.6350008, -90.2261532]
+      },
+      {
+        "id": 2,
+        "name": "Broadway Oyster Bar",
+        "type": "marker",
+        "coords": [38.6188362, -90.1947098]
+      }
+    ]
+  }]
