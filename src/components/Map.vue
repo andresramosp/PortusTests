@@ -4,7 +4,7 @@
         <div id="map"></div>
     </div>
     <div class="col-md-3">
-       <!-- <slot name="layersPanel" v-if="map != null"></slot> -->
+       <!-- <slot name="layersPanel" v-if="map != null">vf</slot> -->
        <LayersPanel2 :layers="layers" :map="map" @layer-changed="layerChanged" /> 
     </div>
     <slot></slot>
