@@ -4,7 +4,7 @@
         <div id="map"></div>
     </div>
     <div class="col-md-3">
-       <!-- <slot name="layersPanel" v-if="map != null"></slot> -->
+       <!-- <slot name="layersPanel" v-if="map != null">ss</slot> -->
        <LayersPanel2 :layers="layers" :map="map" @layer-changed="layerChanged" /> 
     </div>
     <slot></slot>
@@ -63,7 +63,7 @@ export default {
             marker.addTo(vm.map);
             markers.push(markers);  
           });
-          L.featureGroup(markers).addTo(vm.map); //ass
+          L.featureGroup(markers).addTo(vm.map); 
       });
     
     },
