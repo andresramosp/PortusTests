@@ -41,15 +41,6 @@ export default {
     );
 
     this.layers = [{ id: 0, name: 'Churches' }, { id: 1, name: 'Restaurants' }];
-    // LayersService.get(1)
-    //   .then(result => { 
-    //     this.layers.push(result);
-    //   });
-    
-    //  LayersService.get(0)
-    //   .then(result => { 
-    //     this.layers.push(result);
-    //   });
   }
 };
 </script>

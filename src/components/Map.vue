@@ -5,7 +5,7 @@
     </div>
     <div class="col-md-3">
        <!-- <slot name="layersPanel" v-if="map != null">vf</slot> -->
-       <LayersPanel2 :layers="layers" :map="map" @layer-changed="layerChanged" /> 
+       <LayersPanel2 :layers="layers" :map="map" @add-layer="addLayer" @remove-layer="removeLayer" /> 
     </div>
     <slot></slot>
 </div>
@@ -44,31 +44,28 @@ export default {
     getMap: function (found) {
       return this.map;
     },
-    layerChanged: function (layerId, active) {
-      // if (!active) {
-      //   this.removeLayer(layerId);
-      // }
-      // else {
-      //   this.addLayer(layerId);
-      // }
-      this.addLayer(layerId);
+    layerChanged: function (args) {
+      if (!args.active) {
+        this.removeLayer(args.layerId);
+      }
+      else {
+        this.addLayer(args.layerId);
+      }
     },
-    addLayer: function (idLayer) {
-      var vm = this;
-      LayersService.get(idLayer)
-        .then(layer => { 
-          var markers = [];
-          layer.features.forEach((feature) => {
-            var marker = L.marker(feature.coords).bindPopup(feature.name);
-            marker.addTo(vm.map);
-            markers.push(markers);  
-          });
-          L.featureGroup(markers).addTo(vm.map); //ass
+    addLayer: function (layer) {
+      var markers = [];
+      layer.features.forEach((feature) => {
+        var marker = L.marker(feature.coords).bindPopup(feature.name);
+        marker.zoomRange = feature.zoomRange;
+        markers.push(marker);  
       });
-    
+      var featureGroupLayer = L.featureGroup(markers); 
+      featureGroupLayer.id = layer.id;
+      featureGroupLayer.addTo(this.map);
+      this.checkVisibleLayerAtZoom();
     },
     removeLayer: function (idLayer) {
-      map.eachLayer(function(layer){
+      this.map.eachLayer(function(layer){
         if (layer.id == idLayer)
           layer.remove();
       });
@@ -80,32 +77,30 @@ export default {
         new L.LatLng(mapExtent[3], mapExtent[2])
       );
       this.map = L.map('map').fitBounds(bounds);
+
+      var vm = this;
+      this.map.on('zoomend', function(){
+        vm.checkVisibleLayerAtZoom();
+      });
+
       L.Control.measureControl().addTo(this.map);
+    },
+    checkVisibleLayerAtZoom: function () {
+      var zoom = this.map.getZoom();
+      this.map.eachLayer(function(layer){
+        if (layer instanceof L.FeatureGroup) {
+          var markers = layer.getLayers();
+          markers.forEach(m => {
+            m.setOpacity((m.zoomRange.min < zoom && zoom < m.zoomRange.max) ? 1 : 0.2);
+          })
+        }
+      });
     },
     setBaseLayer: function () {
        if (this.baseMap) {
         this.baseMap.addTo(this.map);
       }
-    },
-    // initLayers: function () {
-    //   this.layers.forEach((layer) => {
-    //     const markerFeatures = layer.features.filter(feature => feature.type === 'marker');
-    //     const polygonFeatures = layer.features.filter(feature => feature.type === 'polygon');
-    //     markerFeatures.forEach((feature) => {
-    //       feature.leafletObject = L.marker(feature.coords)
-    //         .bindPopup(feature.name);
-    //         if (layer.active) {
-    //           feature.leafletObject.addTo(this.map);
-    //         }
-          
-    //     });
-    //     polygonFeatures.forEach((feature) => {
-    //       feature.leafletObject = L.polygon(feature.coords)
-    //         .bindPopup(feature.name);
-    //     });
-    //   });
-    // },
-   
+    }
   }
 };
 </script>

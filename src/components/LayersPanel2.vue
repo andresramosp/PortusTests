@@ -12,6 +12,8 @@
 
 <script>
 
+import LayersService from "@/api/layers.service";
+
 export default {
   name: "LayersPanel",
   props: 
@@ -25,15 +27,16 @@ export default {
   },
   methods: {
      layerChanged: function (layerId, active) {
-      this.$emit('layer-changed', layerId)
-      // const layer = this.layers.find(layer => layer.id === layerId);
-      // layer.features.forEach((feature) => {
-      //   if (active) {
-      //     feature.leafletObject.addTo(this.map);
-      //   } else {
-      //     feature.leafletObject.removeFrom(this.map);
-      //   }
-      // });
+       if (active) {
+        LayersService.get(layerId)
+        .then(layer => { 
+          this.$emit('add-layer', layer)
+        });
+       }
+       else {
+          this.$emit('remove-layer', layerId)
+       }
+       
     }
   }
 }
