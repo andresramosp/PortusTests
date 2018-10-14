@@ -40,7 +40,12 @@ export default {
       options
     );
 
-    this.layers = [{ id: 0, name: 'Churches' }, { id: 1, name: 'Restaurants' }];
+    this.layers = [
+        { type: 'FeatureLayer', id: 0, name: 'Churches', resource: 'https://localhost:8080/api/layers/0' }, 
+        { type: 'FeatureLayer', id: 1, name: 'Restaurants' },
+        { type: 'TileLayer', id: 2, name: 'Cycling Routes', resource: 'https://tile.waymarkedtrails.org/cycling/{z}/{x}/{y}.png' }
+      ];
+      
   }
 };
 </script>

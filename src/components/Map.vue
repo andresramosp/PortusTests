@@ -5,7 +5,7 @@
     </div>
     <div class="col-md-3">
        <!-- <slot name="layersPanel" v-if="map != null">vf</slot> -->
-       <LayersPanel2 :layers="layers" :map="map" @add-layer="addLayer" @remove-layer="removeLayer" /> 
+       <LayersPanel2 :layers="layers" @add-layer="addLayer" @remove-layer="removeLayer" /> 
     </div>
     <slot></slot>
 </div>
@@ -52,17 +52,24 @@ export default {
         this.addLayer(args.layerId);
       }
     },
-    addLayer: function (layer) {
-      var markers = [];
-      layer.features.forEach((feature) => {
-        var marker = L.marker(feature.coords).bindPopup(feature.name);
-        marker.zoomRange = feature.zoomRange;
-        markers.push(marker);  
-      });
-      var featureGroupLayer = L.featureGroup(markers); 
-      featureGroupLayer.id = layer.id;
-      featureGroupLayer.addTo(this.map);
-      this.checkVisibleLayerAtZoom();
+    addLayer: function (args) {
+      if (args.type == 'FeatureLayer') {
+        var layer = args.layer;
+        var markers = [];
+        layer.features.forEach((feature) => {
+          var marker = L.marker(feature.coords).bindPopup(feature.name);
+          marker.zoomRange = feature.zoomRange;
+          markers.push(marker);  
+        });
+        var featureGroupLayer = L.featureGroup(markers); 
+        featureGroupLayer.id = layer.id;
+        featureGroupLayer.addTo(this.map);
+        this.checkVisibleLayerAtZoom();
+      }
+      else if (args.type == 'TileLayer') {
+        args.layer.addTo(this.map);
+      }
+      
     },
     removeLayer: function (idLayer) {
       this.map.eachLayer(function(layer){
