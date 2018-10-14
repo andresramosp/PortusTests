@@ -63,7 +63,7 @@ export default {
             marker.addTo(vm.map);
             markers.push(markers);  
           });
-          L.featureGroup(markers).addTo(vm.map);
+          L.featureGroup(markers).addTo(vm.map); //as
       });
     
     },
