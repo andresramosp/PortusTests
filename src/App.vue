@@ -9,7 +9,6 @@
 
 import Map from "./components/Map.vue";
 import LayersPanel from "./components/LayersPanel.vue";
-import LayersService from "@/api/layers.service";
 
 export default {
   name: "app",
@@ -23,9 +22,6 @@ export default {
       baseMap: null
     }    
   },
-  created () {
-    LayersService.init();
-  },
   mounted () {
     var options = {
         minZoom: 2,
@@ -36,14 +32,17 @@ export default {
       };
 
     this.baseMap = L.tileLayer(
-      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      "https://khms0.googleapis.com/kh?v=812&hl=es&x={x}&y={y}&z={z}",
+      //"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       options
     );
 
     this.layers = [
-        { type: 'FeatureLayer', id: 0, name: 'Churches', resource: 'https://localhost:8080/api/layers/0' }, 
-        { type: 'FeatureLayer', id: 1, name: 'Restaurants' },
-        { type: 'TileLayer', id: 2, name: 'Cycling Routes', resource: 'https://tile.waymarkedtrails.org/cycling/{z}/{x}/{y}.png' }
+        { id: 'churches', type: 'FeatureLayer', name: 'Churches', resource: 'churches' }, 
+        { id: 'restaurants', type: 'FeatureLayer', name: 'Restaurants', resource: 'restaurants' },
+        { id: 'cycling-routes', type: 'TileLayer', name: 'Cycling Routes', resourceUrl: 'https://tile.waymarkedtrails.org/cycling/{z}/{x}/{y}.png', tms: false },
+        { id: 'prediccion-nivmar', type: 'TileLayer.TimeLine', name: 'Nivel del Mar', resourceUrl: 'https://portus.puertos.es/Portus//pathtiles/level/NIVMAR/RES/{d}{h}/map//{z}/{x}/{y}.png', tms: true},
+        { id: 'prediccion-oleajeAtlantico', type: 'TileLayer.TimeLine', name: 'Oleaje Atlántico', resourceUrl: 'https://portus.puertos.es/Portus//pathtiles/wave/ATL/VHM0/{d}{h}/map//{z}/{x}/{y}.png', tms: true}
       ];
       
   }

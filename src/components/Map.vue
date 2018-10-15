@@ -56,20 +56,21 @@ export default {
       if (args.type == 'FeatureLayer') {
         var layer = args.layer;
         var markers = [];
-        layer.features.forEach((feature) => {
-          var marker = L.marker(feature.coords).bindPopup(feature.name);
-          marker.zoomRange = feature.zoomRange;
+        layer.forEach((feature) => {
+          var marker = L.marker([feature.lat, feature.lon]).bindPopup(feature.name);
+          marker.minZoom = feature.minZoom;
+          marker.maxZoom = feature.maxZoom;
           markers.push(marker);  
         });
         var featureGroupLayer = L.featureGroup(markers); 
-        featureGroupLayer.id = layer.id;
+        featureGroupLayer.id = args.id;
         featureGroupLayer.addTo(this.map);
         this.checkVisibleLayerAtZoom();
       }
-      else if (args.type == 'TileLayer') {
+      else if (args.type == 'TileLayer' || args.type == 'TileLayer.TimeLine') {
+        args.layer.id = args.id;
         args.layer.addTo(this.map);
       }
-      
     },
     removeLayer: function (idLayer) {
       this.map.eachLayer(function(layer){
@@ -83,7 +84,25 @@ export default {
         new L.LatLng(mapExtent[1], mapExtent[0]),
         new L.LatLng(mapExtent[3], mapExtent[2])
       );
-      this.map = L.map('map').fitBounds(bounds);
+
+      var startDate = new Date();
+      startDate.setUTCHours(0, 0, 0, 0);
+      //startDate.setDate(startDate.getDate()-55);
+      
+      this.map = L.map('map', {
+        fullscreenControl: true,
+        timeDimensionControl: true,
+        timeDimensionControlOptions: {
+        position: 'bottomleft',
+        playerOptions: {
+            transitionTime: 1000,
+          }
+        },
+        timeDimension: true,
+        timeDimensionOptions: {
+          timeInterval: startDate.toISOString() + "/PT72H",
+          period: "PT3H"
+        }, }).fitBounds(bounds);
 
       var vm = this;
       this.map.on('zoomend', function(){
@@ -98,7 +117,7 @@ export default {
         if (layer instanceof L.FeatureGroup) {
           var markers = layer.getLayers();
           markers.forEach(m => {
-            m.setOpacity((m.zoomRange.min < zoom && zoom < m.zoomRange.max) ? 1 : 0.2);
+            m.setOpacity((m.minZoom < zoom && zoom < m.maxZoom) ? 1 : 0.2);
           })
         }
       });

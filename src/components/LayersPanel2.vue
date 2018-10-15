@@ -11,7 +11,7 @@
 
 <script>
 
-import LayersService from "@/api/layers.service";
+import ApiService from "@/api/api.service";
 
 export default {
   name: "LayersPanel",
@@ -28,14 +28,19 @@ export default {
      layerChanged: function (args) {
        if (args.active) {
          if (args.type == 'FeatureLayer') {
-           LayersService.get(args.id)
-           .then(layer => { 
-            this.$emit('add-layer', { layer: layer, type: args.type });
+            ApiService.get('markers', args.resource)
+            .then(layer => { 
+            this.$emit('add-layer', { layer: layer.data, type: args.type, id: args.id });
           });
          }
+         else if (args.type == 'TileLayer.TimeLine') {
+            var tileLayer = L.tileLayer(args.resourceUrl, { tms: args.tms });
+            var portusTimeLayer = L.timeDimension.layer.tileLayer.timeLine(tileLayer, {});
+            this.$emit('add-layer',  { layer: portusTimeLayer, type: args.type, id: args.id }) ;
+         }
          else if (args.type == 'TileLayer') {
-            var tileLayer = L.tileLayer(args.resource, {});
-            this.$emit('add-layer',  { layer: tileLayer, type: args.type}) ;
+            var tileLayer = L.tileLayer(args.resourceUrl, { tms: args.tms });
+            this.$emit('add-layer',  { layer: tileLayer, type: args.type, id: args.id }) ;
          }
        }
        else {
