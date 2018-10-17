@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="form-check" v-for="layer in layers" :key="layer.id">
+    <div class="form-check" v-for="mapOption in mapOptions" :key="mapOption.id">
       <label class="form-check-label">
-        <input class="form-check-input" type="checkbox" v-model="layer.active" @change="layerChanged(layer)" />
-        {{ layer.name }}
+        <input class="form-check-input" type="checkbox" v-model="mapOption.active" @change="mapResourceChanged(mapOption)" />
+        {{ mapOption.name }}
       </label>
     </div> 
   </div>
@@ -17,7 +17,7 @@ export default {
   name: "LayersPanel",
   props: 
     {
-      layers: { type: Array, default: [], required: false }
+      mapOptions: { type: Array, default: [], required: false }
       //map: { type: Object, default: null, required: false }
     }
   ,
@@ -25,26 +25,17 @@ export default {
    
   },
   methods: {
-     layerChanged: function (args) {
-       if (args.active) {
-         if (args.type == 'FeatureLayer') {
-            ApiService.get('markers', args.resource)
-            .then(layer => { 
-            this.$emit('add-layer', { layer: layer.data, type: args.type, id: args.id });
-          });
-         }
-         else if (args.type == 'TileLayer.TimeLine') {
-            var tileLayer = L.tileLayer(args.resourceUrl, { tms: args.tms });
-            var portusTimeLayer = L.timeDimension.layer.tileLayer.timeLine(tileLayer, {});
-            this.$emit('add-layer',  { layer: portusTimeLayer, type: args.type, id: args.id }) ;
-         }
-         else if (args.type == 'TileLayer') {
-            var tileLayer = L.tileLayer(args.resourceUrl, { tms: args.tms });
-            this.$emit('add-layer',  { layer: tileLayer, type: args.type, id: args.id }) ;
-         }
+     mapResourceChanged: function (mapOption) {
+       if (mapOption.active) {
+          mapOption.mapResources.forEach(mr => {
+            this.$emit('add-layer', mr);
+          })
        }
        else {
-          this.$emit('remove-layer', args.id)
+         mapOption.mapResources.forEach(mr => {
+            this.$emit('remove-layer', mr);
+          })
+          
        }
        
     }

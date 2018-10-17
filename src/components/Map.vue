@@ -4,18 +4,15 @@
         <div id="map"></div>
     </div>
     <div class="col-md-3">
-       <!-- <slot name="layersPanel" v-if="map != null">vf</slot> -->
-       <LayersPanel2 :layers="layers" @add-layer="addLayer" @remove-layer="removeLayer" /> 
+       <LayersPanel2 :mapOptions="mapOptions" @add-layer="addLayer" @remove-layer="removeLayer" /> 
     </div>
     <slot></slot>
 </div>
 </template>
 
 <script>
-
-import UsuariosService from "@/api/usuarios.service";
 import LayersPanel2 from "@/components/LayersPanel2.vue";
-import LayersService from "@/api/layers.service";
+import ApiService from "@/api/api.service";
 
 export default {
   name: "Map",
@@ -23,7 +20,8 @@ export default {
     LayersPanel2
   },
   props: {
-    layers: Array,
+    mapResources: Array,
+    mapOptions: Array,
     baseMap: Object
   },
   data() {
@@ -32,7 +30,7 @@ export default {
     };
   },
   watch: {
-    baseMap: function (oldValue, newValue) {
+    baseMap: function(oldValue, newValue) {
       this.setBaseLayer();
     }
   },
@@ -41,40 +39,47 @@ export default {
     this.setBaseLayer();
   },
   methods: {
-    getMap: function (found) {
+    getMap: function(found) {
       return this.map;
     },
-    layerChanged: function (args) {
-      if (!args.active) {
-        this.removeLayer(args.layerId);
-      }
-      else {
-        this.addLayer(args.layerId);
-      }
-    },
-    addLayer: function (args) {
-      if (args.type == 'FeatureLayer') {
-        var layer = args.layer;
-        var markers = [];
-        layer.forEach((feature) => {
-          var marker = L.marker([feature.lat, feature.lon]).bindPopup(feature.name);
-          marker.minZoom = feature.minZoom;
-          marker.maxZoom = feature.maxZoom;
-          markers.push(marker);  
+    addLayer: function(mapResourceId) {
+      var vm = this;
+      var mapResource = this.mapResources.filter(mr => { return mr.id == mapResourceId })[0];
+      if (mapResource.type == "FeatureLayer") {
+        ApiService.get(mapResource.resourceApi).then(result => {
+          var markers = [];
+          result.data.forEach(m => {
+            var customIcon = mapResource.icon ? L.icon({ iconUrl: require('@/assets/markers/' + mapResource.icon) }) : { };
+            var marker = L.marker([m.latitud, m.longitud], { icon: customIcon }).bindPopup(m.nombre);
+            Object.assign(marker, m); // copiamos todas las props que pueda traer el marker
+            markers.push(marker);
+          });
+          var featureGroupLayer = L.featureGroup(markers);
+          featureGroupLayer.mapResource = mapResource;
+          featureGroupLayer.addTo(this.map);
+          this.checkVisibleLayerAtZoom();
         });
-        var featureGroupLayer = L.featureGroup(markers); 
-        featureGroupLayer.id = args.id;
-        featureGroupLayer.addTo(this.map);
-        this.checkVisibleLayerAtZoom();
-      }
-      else if (args.type == 'TileLayer' || args.type == 'TileLayer.TimeLine') {
-        args.layer.id = args.id;
-        args.layer.addTo(this.map);
+      } else if (mapResource.type == "TileLayer.TimeLine") {
+        var tileLayer = L.tileLayer(mapResource.resourceUrl, {
+          tms: mapResource.tms
+        });
+        var portusTimeLayer = L.timeDimension.layer.tileLayer.timeLine(
+          tileLayer,
+          {}
+        );
+        portusTimeLayer.mapResource = mapResource;
+        portusTimeLayer.addTo(this.map);
+      } else if (mapResource.type == "TileLayer") {
+        var tileLayer = L.tileLayer(mapResource.resourceUrl, {
+          tms: mapResource.tms
+        });
+        tileLayer.mapResource = mapResource;
+        tileLayer.addTo(this.map);
       }
     },
-    removeLayer: function (idLayer) {
-      this.map.eachLayer(function(layer){
-        if (layer.id == idLayer)
+    removeLayer: function(mapResourceId) {
+      this.map.eachLayer(function(layer) {
+        if (layer.mapResource && layer.mapResource.id == mapResourceId) 
           layer.remove();
       });
     },
@@ -88,42 +93,55 @@ export default {
       var startDate = new Date();
       startDate.setUTCHours(0, 0, 0, 0);
       //startDate.setDate(startDate.getDate()-55);
-      
-      this.map = L.map('map', {
+
+      this.map = L.map("map", {
         fullscreenControl: true,
         timeDimensionControl: true,
         timeDimensionControlOptions: {
-        position: 'bottomleft',
-        playerOptions: {
-            transitionTime: 1000,
+          position: "bottomleft",
+          playerOptions: {
+            transitionTime: 1000
           }
         },
         timeDimension: true,
         timeDimensionOptions: {
           timeInterval: startDate.toISOString() + "/PT72H",
           period: "PT3H"
-        }, }).fitBounds(bounds);
+        }
+      }).fitBounds(bounds);
 
       var vm = this;
-      this.map.on('zoomend', function(){
+      this.map.on("zoomend", function() {
         vm.checkVisibleLayerAtZoom();
       });
 
       L.Control.measureControl().addTo(this.map);
     },
-    checkVisibleLayerAtZoom: function () {
+    checkVisibleLayerAtZoom: function() {
+      var vm = this;
       var zoom = this.map.getZoom();
-      this.map.eachLayer(function(layer){
+      this.map.eachLayer(function(layer) {
         if (layer instanceof L.FeatureGroup) {
           var markers = layer.getLayers();
           markers.forEach(m => {
-            m.setOpacity((m.minZoom < zoom && zoom < m.maxZoom) ? 1 : 0.2);
-          })
+            var minZoom = m.minZoom ? m.minZoom : (layer.mapResource.minZoom ? layer.mapResource.minZoom : 0);
+            m.setOpacity(zoom > minZoom ? 1 : 0.0);
+          });
         }
+        // Opción de zoom contra servidor
+
+        //  LayersService.get(layer.resource, zoom)
+        //   .then(markers => {
+        //     markers.forEach(m => {
+        //      var marker = L.marker([m.lat, m.lon]).bindPopup(m.name);
+        //      marker.addTo(vm.map);
+        //     // TODO: limpiar layer y añadirlos ahí
+        //     })
+        //   });
       });
     },
-    setBaseLayer: function () {
-       if (this.baseMap) {
+    setBaseLayer: function() {
+      if (this.baseMap) {
         this.baseMap.addTo(this.map);
       }
     }

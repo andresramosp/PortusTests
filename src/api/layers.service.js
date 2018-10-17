@@ -1,23 +1,11 @@
-import ApiService from './api.service'
-
-import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
+import { API_URL } from '@/common/config'
 
 const LayersService = {
 
-  init () {
-    Vue.use(VueAxios, axios)
-    Vue.axios.defaults.baseURL = 'http://localhost:8080/';
-  },
-
-  get (idLayer) {
-    return fetch('layers.json')
+  get (idGroup, zoom) {
+    return fetch(API_URL + '/markers?idGroup=' + idGroup + '&zoom=' + zoom)
       .then(response => { 
-        return response.json()
-          .then(json => {
-             return json.filter(l => { return l.id == idLayer })[0];
-        })
+        return response.json();
       })
       .catch((error) => {
         throw new Error(`[RWV] ApiService ${error}`)
