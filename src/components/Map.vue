@@ -4,20 +4,20 @@
         <div id="map"></div>
     </div>
     <div class="col-md-3">
-       <LayersPanel2 :mapOptions="mapOptions" @add-layer="addLayer" @remove-layer="removeLayer" /> 
+       <LayersPanel :mapOptions="mapOptions" @add-layer="addLayer" @remove-layer="removeLayer" /> 
     </div>
     <slot></slot>
 </div>
 </template>
 
 <script>
-import LayersPanel2 from "@/components/LayersPanel2.vue";
+import LayersPanel from "@/components/LayersPanel.vue";
 import ApiService from "@/api/api.service";
 
 export default {
   name: "Map",
   components: {
-    LayersPanel2
+    LayersPanel
   },
   props: {
     mapResources: Array,
@@ -42,6 +42,9 @@ export default {
     getMap: function(found) {
       return this.map;
     },
+    markerClick: function (evt) {
+      this.$emit('marker-click', evt.sourceTarget)
+    },
     addLayer: function(mapResourceId) {
       var vm = this;
       var mapResource = this.mapResources.filter(mr => { return mr.id == mapResourceId })[0];
@@ -50,7 +53,7 @@ export default {
           var markers = [];
           result.data.forEach(m => {
             var customIcon = mapResource.icon ? L.icon({ iconUrl: require('@/assets/markers/' + mapResource.icon) }) : { };
-            var marker = L.marker([m.latitud, m.longitud], { icon: customIcon }).bindPopup(m.nombre);
+            var marker = L.marker([m.latitud, m.longitud], { icon: customIcon }).bindPopup(m.nombre).on('click', this.markerClick);;
             Object.assign(marker, m); // copiamos todas las props que pueda traer el marker
             markers.push(marker);
           });
@@ -92,7 +95,7 @@ export default {
 
       var startDate = new Date();
       startDate.setUTCHours(0, 0, 0, 0);
-      //startDate.setDate(startDate.getDate()-55);
+      //startDate.setDate(startDate.getDate());
 
       this.map = L.map("map", {
         fullscreenControl: true,
@@ -106,7 +109,7 @@ export default {
         timeDimension: true,
         timeDimensionOptions: {
           timeInterval: startDate.toISOString() + "/PT72H",
-          period: "PT3H"
+          period: "PT1H"
         }
       }).fitBounds(bounds);
 

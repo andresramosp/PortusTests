@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="form-check" v-for="layer in layers" :key="layer.id">
+    <div class="form-check" v-for="mapOption in mapOptions" :key="mapOption.id">
       <label class="form-check-label">
-        <input class="form-check-input" type="checkbox" v-model="layer.active" @change="layerChanged(layer.id, layer.active)" />
-        {{ layer.name }}
+        <input class="form-check-input" type="checkbox" v-model="mapOption.active" @change="mapResourceChanged(mapOption)" />
+        {{ mapOption.name }}
       </label>
     </div> 
   </div>
@@ -11,30 +11,33 @@
 
 <script>
 
+import ApiService from "@/api/api.service";
+
 export default {
-  name: "LayersPanelSlot",
-  inject: ['getMap', 'getLayers'],
-  data () {
-    return {
-      map: null,
-      layers: []
+  name: "LayersPanel",
+  props: 
+    {
+      mapOptions: { type: Array, default: [], required: false }
+      //map: { type: Object, default: null, required: false }
     }
-  },
+  ,
   mounted() {
-   this.map = this.getMap();
-   //this.getMap((map) => this.map = map);
-   this.layers = this.getLayers();
+   
   },
   methods: {
-     layerChanged: function (layerId, active) {
-      const layer = this.layers.find(layer => layer.id === layerId);
-      layer.features.forEach((feature) => {
-        if (active) {
-          feature.leafletObject.addTo(this.map);
-        } else {
-          feature.leafletObject.removeFrom(this.map);
-        }
-      });
+     mapResourceChanged: function (mapOption) {
+       if (mapOption.active) {
+          mapOption.mapResources.forEach(mr => {
+            this.$emit('add-layer', mr);
+          })
+       }
+       else {
+         mapOption.mapResources.forEach(mr => {
+            this.$emit('remove-layer', mr);
+          })
+          
+       }
+       
     }
   }
 }
