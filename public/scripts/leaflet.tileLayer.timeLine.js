@@ -51,6 +51,9 @@ L.TimeDimension.Layer.TileLayer.TimeLine = L.TimeDimension.Layer.TileLayer.exten
         if (layer.options.maxZoom && currentZoom > layer.options.maxZoom){
             return true;
         }
+
+        // TODO: añadir comprobación de extent usando getBounds
+
         return layer.isLoaded();
     },
 

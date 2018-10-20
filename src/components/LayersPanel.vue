@@ -11,7 +11,7 @@
 
 <script>
 
-import ApiService from "@/api/api.service";
+import ApiService from "@/services/api.service";
 
 export default {
   name: "LayersPanel",

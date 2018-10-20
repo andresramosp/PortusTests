@@ -11,8 +11,9 @@
 </template>
 
 <script>
+
 import LayersPanel from "@/components/LayersPanel.vue";
-import ApiService from "@/api/api.service";
+import MapService from "@/services/map.service";
 
 export default {
   name: "Map",
@@ -46,39 +47,7 @@ export default {
       this.$emit('marker-click', evt.sourceTarget)
     },
     addLayer: function(mapResourceId) {
-      var vm = this;
-      var mapResource = this.mapResources.filter(mr => { return mr.id == mapResourceId })[0];
-      if (mapResource.type == "FeatureLayer") {
-        ApiService.get(mapResource.resourceApi).then(result => {
-          var markers = [];
-          result.data.forEach(m => {
-            var customIcon = mapResource.icon ? L.icon({ iconUrl: require('@/assets/markers/' + mapResource.icon) }) : { };
-            var marker = L.marker([m.latitud, m.longitud], { icon: customIcon }).bindPopup(m.nombre).on('click', this.markerClick);;
-            Object.assign(marker, m); // copiamos todas las props que pueda traer el marker
-            markers.push(marker);
-          });
-          var featureGroupLayer = L.featureGroup(markers);
-          featureGroupLayer.mapResource = mapResource;
-          featureGroupLayer.addTo(this.map);
-          this.checkVisibleLayerAtZoom();
-        });
-      } else if (mapResource.type == "TileLayer.TimeLine") {
-        var tileLayer = L.tileLayer(mapResource.resourceUrl, {
-          tms: mapResource.tms
-        });
-        var portusTimeLayer = L.timeDimension.layer.tileLayer.timeLine(
-          tileLayer,
-          {}
-        );
-        portusTimeLayer.mapResource = mapResource;
-        portusTimeLayer.addTo(this.map);
-      } else if (mapResource.type == "TileLayer") {
-        var tileLayer = L.tileLayer(mapResource.resourceUrl, {
-          tms: mapResource.tms
-        });
-        tileLayer.mapResource = mapResource;
-        tileLayer.addTo(this.map);
-      }
+      MapService.addLayer(this, mapResourceId);
     },
     removeLayer: function(mapResourceId) {
       this.map.eachLayer(function(layer) {
@@ -109,7 +78,7 @@ export default {
         timeDimension: true,
         timeDimensionOptions: {
           timeInterval: startDate.toISOString() + "/PT72H",
-          period: "PT1H"
+          period: "PT3H"
         }
       }).fitBounds(bounds);
 

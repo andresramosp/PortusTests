@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
-import ApiService from '@/api/api.service'
+import ApiService from '@/services/api.service'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
