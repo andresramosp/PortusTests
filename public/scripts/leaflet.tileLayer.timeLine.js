@@ -52,8 +52,6 @@ L.TimeDimension.Layer.TileLayer.TimeLine = L.TimeDimension.Layer.TileLayer.exten
             return true;
         }
 
-        // TODO: añadir comprobación de extent usando getBounds
-
         return layer.isLoaded();
     },
 
@@ -130,6 +128,7 @@ L.TimeDimension.Layer.TileLayer.TimeLine = L.TimeDimension.Layer.TileLayer.exten
     },
 
     _showLayer: function(layer, time) {
+
         if (this._currentLayer && this._currentLayer !== layer) {
             this._currentLayer.hide();
         }
@@ -139,9 +138,11 @@ L.TimeDimension.Layer.TileLayer.TimeLine = L.TimeDimension.Layer.TileLayer.exten
         }
         this._currentLayer = layer;
         this._currentTime = time;
-        console.log('Show layer with time: ' + new Date(time).toISOString());
+        //console.log('Show layer with time: ' + new Date(time).toISOString());
 
         this._evictCachedTimes(this._timeCacheForward, this._timeCacheBackward);
+
+        
     },
 
     _getLayerForTime: function(time) {

@@ -35,7 +35,7 @@ export default {
   mounted () {
     var options = {
         minZoom: 1,
-        maxZoom: 12,
+        maxZoom: 17,
         attribution:
           'Rendered with <a href="http://www.maptiler.com/">MapTiler</a>',
         tms: false
@@ -51,7 +51,7 @@ export default {
         { id: 2, type: 'FeatureLayer', name: 'Nivmar Ubic. Puertos', resourceApi: 'ubicacionesNivmar/1', minZoom: 0, icon: 'nivmar-puerto.png' },
         { id: 3, type: 'FeatureLayer', name: 'Nivmar Ubic. Localidades', resourceApi: 'ubicacionesNivmar/2', minZoom: 7, icon: 'nivmar-localidad.png' },
         { id: 4, type: 'FeatureLayer', name: 'Nivmar Ubic. Playas', resourceApi: 'ubicacionesNivmar/3', minZoom: 8, icon: 'nivmar-playa.png' },
-        { id: 5, type: 'TileLayer.TimeLine', name: 'Oleaje Atlántico Tiles', resourceUrl: 'https://portus.puertos.es/Portus//pathtiles/wave/ATL/VHM0/{d}{h}/map//{z}/{x}/{y}.png', tms: true },
+        { id: 5, type: 'TileLayer.TimeLine', name: 'Oleaje Atlántico Tiles', resourceUrl: 'https://portus.puertos.es/Portus//pathtiles/wave/ATL/VHM0/{d}{h}/vec//{z}/{x}/{y}.png', tms: true },
         { id: 6, type: 'TileLayer.TimeLine', name: 'Corriente', resourceApi: 'mapTileResources/CURR/circulation', tms: true },
         { id: 7, type: 'TileLayer.TimeLine', name: 'Temperatura', resourceApi: 'mapTileResources/SST', tms: true }
       ];

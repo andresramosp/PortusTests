@@ -54,6 +54,9 @@ export default {
         if (layer.mapResource && layer.mapResource.id == mapResourceId) 
           layer.remove();
       });
+      this.map.preloadedTileLayers = this.map.preloadedTileLayers.filter((plt) => { return plt.mapResource.id != mapResourceId});
+      if (this.map.preloadedTileLayers.length == 0)
+        this.map.removeControl(this.map.timeDimensionControl);
     },
     initMap: function() {
       var mapExtent = [-13.22547087, 31.27732673, 56.43171235, 69.50672323];
@@ -67,29 +70,42 @@ export default {
       //startDate.setDate(startDate.getDate());
 
       this.map = L.map("map", {
+        zoomSnap: 0.1,
         fullscreenControl: true,
         timeDimensionControl: true,
         timeDimensionControlOptions: {
           position: "bottomleft",
           playerOptions: {
-            transitionTime: 1000
-          }
+            transitionTime: 1000,
+            loopButton: true,
+            loop: true
+          },
+          autoPlay: true
         },
         timeDimension: true,
         timeDimensionOptions: {
           timeInterval: startDate.toISOString() + "/PT72H",
-          period: "PT3H"
+          period: "PT24H",
+          //loadingTimeout: 1000
         }
       }).fitBounds(bounds);
 
+      this.map.preloadedTileLayers = [];
+
       var vm = this;
       this.map.on("zoomend", function() {
-        vm.checkVisibleLayerAtZoom();
+        vm.checkVisibleLayers();
+        console.log('Zoom: ' + vm.map.getZoom());
+      });
+
+      this.map.on("moveend", function() {
+        vm.checkVisibleLayers();
       });
 
       L.Control.measureControl().addTo(this.map);
     },
-    checkVisibleLayerAtZoom: function() {
+
+    checkVisibleLayers: function() {
       var vm = this;
       var zoom = this.map.getZoom();
       this.map.eachLayer(function(layer) {
@@ -100,17 +116,30 @@ export default {
             m.setOpacity(zoom > minZoom ? 1 : 0.0);
           });
         }
-        // Opción de zoom contra servidor
-
-        //  LayersService.get(layer.resource, zoom)
-        //   .then(markers => {
-        //     markers.forEach(m => {
-        //      var marker = L.marker([m.lat, m.lon]).bindPopup(m.name);
-        //      marker.addTo(vm.map);
-        //     // TODO: limpiar layer y añadirlos ahí
-        //     })
-        //   });
+     
       });
+      // TODO: probar algún tipo de marcado activo / inactivo, o jugar con opacity, para evitar la lista auxiliar 
+      this.map.preloadedTileLayers.forEach(function (preLayer) {
+        if (MapService.tileLayerInZoomAndExtent(vm.map, preLayer._baseLayer)) {
+          if (!vm.map.hasLayer(preLayer)) {
+            vm.map.options.timeDimensionOptions.period = "PT" + preLayer._baseLayer.options.period + "H";
+            vm.map.timeDimension.initialize(vm.map.options.timeDimensionOptions);
+            vm.map.timeDimension.setCurrentTimeIndex(0);
+            vm.map.removeControl(vm.map.timeDimensionControl);
+            vm.map.addControl(vm.map.timeDimensionControl);
+            preLayer.addTo(vm.map);
+            console.log('Added: ' + preLayer._baseLayer._url)
+          }
+        }
+        else {
+          if (vm.map.hasLayer(preLayer)) {
+            preLayer.remove();
+            vm.map.removeControl(vm.map.timeDimensionControl);
+            console.log('Removed: ' + preLayer._baseLayer._url)
+          }
+          
+        }
+      })
     },
     setBaseLayer: function() {
       if (this.baseMap) {
