@@ -59,9 +59,6 @@ export default {
         { id: 10, type: 'TileLayer.TimeLine', name: 'Viento', resourceApi: 'mapTileResources/WSPD', tms: true }
       ];
 
-    // TODO: aquí solo están de entrada los feature layers (o sacados de un archivo de server o front), hay que llamar
-    // a la api para pedir los tiles. TilesController con getAll y getByParametro (Oleaje, Temperatura). Aquí se le añade el tipo de layer TimeLine
-
     this.mapOptions = [
       { id: 0, group: 'Predicciones', name: 'Nivel del Mar', mapResources: [1, 2, 3, 4] },
       { id: 1, group: 'Predicciones', name: 'Corrientes', mapResources: [8] },
