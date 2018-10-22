@@ -1498,6 +1498,7 @@ L.TimeDimension.Player = (L.Layer || L.Class).extend({
                     this._waitingForBuffer = false;
                 }
             } else {
+                // aqui
                 // check if player has to stop to wait and force to full all the buffer
                 if (numberNextTimesReady < this._minBufferReady) {
                     

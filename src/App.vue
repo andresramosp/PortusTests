@@ -51,9 +51,12 @@ export default {
         { id: 2, type: 'FeatureLayer', name: 'Nivmar Ubic. Puertos', resourceApi: 'ubicacionesNivmar/1', minZoom: 0, icon: 'nivmar-puerto.png' },
         { id: 3, type: 'FeatureLayer', name: 'Nivmar Ubic. Localidades', resourceApi: 'ubicacionesNivmar/2', minZoom: 7, icon: 'nivmar-localidad.png' },
         { id: 4, type: 'FeatureLayer', name: 'Nivmar Ubic. Playas', resourceApi: 'ubicacionesNivmar/3', minZoom: 8, icon: 'nivmar-playa.png' },
-        { id: 5, type: 'TileLayer.TimeLine', name: 'Oleaje Atlántico Tiles', resourceUrl: 'https://portus.puertos.es/Portus//pathtiles/wave/ATL/VHM0/{d}{h}/vec//{z}/{x}/{y}.png', tms: true },
-        { id: 6, type: 'TileLayer.TimeLine', name: 'Corriente', resourceApi: 'mapTileResources/CURR/circulation', tms: true },
-        { id: 7, type: 'TileLayer.TimeLine', name: 'Temperatura', resourceApi: 'mapTileResources/SST', tms: true }
+        { id: 5, type: 'TileLayer.TimeLine', name: 'Oleaje Atlántico', resourceApi: 'mapTileResources/VHM0Atl', tms: true },
+        { id: 6, type: 'TileLayer.TimeLine', name: 'Oleaje Mediterráneo', resourceApi: 'mapTileResources/VHM0Med', tms: true },
+        { id: 7, type: 'TileLayer.TimeLine', name: 'Oleaje', resourceApi: 'mapTileResources/CURR/VHM0', tms: true },
+        { id: 8, type: 'TileLayer.TimeLine', name: 'Corriente', resourceApi: 'mapTileResources/CURR/circulation', tms: true },
+        { id: 9, type: 'TileLayer.TimeLine', name: 'Temperatura', resourceApi: 'mapTileResources/SST', tms: true },
+        { id: 10, type: 'TileLayer.TimeLine', name: 'Viento', resourceApi: 'mapTileResources/WSPD', tms: true }
       ];
 
     // TODO: aquí solo están de entrada los feature layers (o sacados de un archivo de server o front), hay que llamar
@@ -61,9 +64,11 @@ export default {
 
     this.mapOptions = [
       { id: 0, group: 'Predicciones', name: 'Nivel del Mar', mapResources: [1, 2, 3, 4] },
-      { id: 1, group: 'Predicciones', name: 'Oleaje Atlántico', mapResources: [5] },
-      { id: 2, group: 'Predicciones', name: 'Corrientes', mapResources: [6] },
-      { id: 3, group: 'Predicciones', name: 'Temperatura', mapResources: [7] }
+      { id: 1, group: 'Predicciones', name: 'Corrientes', mapResources: [8] },
+      { id: 2, group: 'Predicciones', name: 'Temperatura', mapResources: [9] },
+      { id: 3, group: 'Predicciones', name: 'Oleaje Atl', mapResources: [5, 7] },
+      { id: 4, group: 'Predicciones', name: 'Oleaje Med', mapResources: [6, 7] },
+      { id: 5, group: 'Predicciones', name: 'Viento', mapResources: [10] }
     ]
       
   },
