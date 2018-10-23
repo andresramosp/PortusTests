@@ -13,22 +13,35 @@ const ApiService = {
      //Vue.axios.defaults.headers.common['Authorization'] = `Token ${JwtService.getToken()}`
    },
 
-//   query (resource, params) {
-//     return Vue.axios
-//       .get(resource, params)
-//       .catch((error) => {
-//         throw new Error(`[RWV] ApiService ${error}`)
-//       })
-//   },
+  // get (resource, slug = '') {
+  //   return Vue.axios
+  //     .get(`${resource}/${slug}`)
+  //     .catch((error) => {
+  //       throw new Error(`[RWV] ApiService ${error}`)
+  //     })
+      
+  // },
 
-  get (resource, slug = '') {
-    return Vue.axios
-      .get(`${resource}/${slug}`)
+  // async get (resource, slug = '') {
+  //   var result = await Vue.axios
+  //     .get(`${resource}/${slug}`)
+  //     .catch((error) => {
+  //       throw new Error(`[RWV] ApiService ${error}`)
+  //     });
+  //   return result;
+      
+  // },
+
+  async get (url) {
+    var result = await Vue.axios
+      .get(`${url}`)
       .catch((error) => {
         throw new Error(`[RWV] ApiService ${error}`)
-      })
+      });
+    return result;
       
   },
+
 
   post (resource, params) {
     return Vue.axios.post(`${resource}`, params)
