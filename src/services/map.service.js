@@ -22,22 +22,22 @@ const MapService = {
       featureGroupLayer.addTo(map);
       vs.checkVisibleFeatureLayers(map);
     }
-   else {
-    var bounds = map.getBounds();
-    var zoom = map.getZoom();
-    var result = await ApiService.get(mapResource.resourceApi + '?zoom=' + zoom + '&limN=' + bounds.getNorth() + '&limS=' + bounds.getSouth() + '&limE=' + bounds.getEast() + '&limW=' + bounds.getWest());
-    var markers = [];
-    result.data.forEach(m => {
-      var customIcon = mapResource.icon ? L.icon({ iconUrl: require('@/assets/markers/' + mapResource.icon), iconSize: [17, 17] }) : {};
-      var marker = L.marker([m.latitud, m.longitud], { icon: customIcon }).bindPopup(m.nombre).on('click', markerClickFunction);;
-      Object.assign(marker, m);
-      markers.push(marker);
-    });
-    var featureGroupLayer = L.featureGroup(markers);
-    featureGroupLayer.markerClickFunction = markerClickFunction; // Pensar
-    featureGroupLayer.mapResource = mapResource;
-    featureGroupLayer.addTo(map);
-   }
+    else {
+      var bounds = map.getBounds();
+      var zoom = map.getZoom();
+      var result = await ApiService.get(mapResource.resourceApi + '?zoom=' + zoom + '&limN=' + bounds.getNorth() + '&limS=' + bounds.getSouth() + '&limE=' + bounds.getEast() + '&limW=' + bounds.getWest());
+      var markers = [];
+      result.data.forEach(m => {
+        var customIcon = mapResource.icon ? L.icon({ iconUrl: require('@/assets/markers/' + mapResource.icon), iconSize: [17, 17] }) : {};
+        var marker = L.marker([m.latitud, m.longitud], { icon: customIcon }).bindPopup(m.nombre).on('click', markerClickFunction);;
+        Object.assign(marker, m);
+        markers.push(marker);
+      });
+      var featureGroupLayer = L.featureGroup(markers);
+      featureGroupLayer.markerClickFunction = markerClickFunction; // Pensar
+      featureGroupLayer.mapResource = mapResource;
+      featureGroupLayer.addTo(map);
+    }
   },
 
   async addTimeLineLayer(map, mapResource, vectorial) {
@@ -149,6 +149,7 @@ const MapService = {
     return map.getBounds().intersects(layer.options.bounds)
       && (layer.options.minZoom <= map.getZoom() && (map.getZoom() <= layer.options.maxZoom));
   },
+  
 
   convertYMDHToDate(str) {
     var year = str.substring(0, 4);

@@ -86,26 +86,18 @@ export default {
       this.floatingOptions = [];
     },
     floatingOptionChanged: function(floatingOption) {
-      if (floatingOption.type == 'shiftIsoVectorial') { // Reflexión
-        this.shiftIsoVectorial(floatingOption.resourceId, floatingOption.active);
-      }
+      // Ir a MapService
+      this[floatingOption.type](floatingOption.resourceId, floatingOption.active);
     },
     shiftIsoVectorial: function(mapResourceId, vectorial) {
       MapService.removeLayer(this.map, mapResourceId);
       var mapResource = this.getMapResource(mapResourceId);
-      MapService.addTimeLineLayer(this.map, mapResource, vectorial); // Reflexión a partir del tipo de resource Id
+      MapService.addTimeLineLayer(this.map, mapResource, vectorial); // TileLayer (reflexión)
     },
     addLayer: function(mapResourceId) {
       var vm = this;
       var mapResource = this.getMapResource(mapResourceId);
-      // Reflexión
-      if (mapResource.type == "FeatureLayer") {
-        MapService.addFeatureLayer(this.map, mapResource, this.markerClick);
-      } else if (mapResource.type == "TileLayer") {
-        MapService.addTileLayer(this.map, mapResource);
-      } else if (mapResource.type == "TileLayer.TimeLine") {
-        MapService.addTimeLineLayer(this.map, mapResource);
-      }
+      MapService['add' + mapResource.type](this.map, mapResource, mapResource.type == "FeatureLayer" ? this.markerClick : null)
     },
     removeLayer: function(mapResourceId) {
       MapService.removeLayer(this.map, mapResourceId);

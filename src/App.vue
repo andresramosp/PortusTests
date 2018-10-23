@@ -50,7 +50,7 @@ export default {
     this.mapResources = [
         { 
           id: 1, 
-          type: 'TileLayer.TimeLine', 
+          type: 'TimeLineLayer', 
           name: 'Nivel del Mar', 
           resourceApi: 'mapTileResources/RES', 
           tms: true 
@@ -81,7 +81,7 @@ export default {
         },
         { 
           id: 5, 
-          type: 'TileLayer.TimeLine', 
+          type: 'TimeLineLayer', 
           name: 'Oleaje Atlántico', 
           resourceApi: 'mapTileResources/VHM0Atl', 
           tms: true,
@@ -89,7 +89,7 @@ export default {
         },
         { 
           id: 6, 
-          type: 'TileLayer.TimeLine', 
+          type: 'TimeLineLayer', 
           name: 'Oleaje Mediterráneo', 
           resourceApi: 'mapTileResources/VHM0Med', 
           tms: true,
@@ -97,7 +97,7 @@ export default {
         },
         { 
           id: 7, 
-          type: 'TileLayer.TimeLine', 
+          type: 'TimeLineLayer', 
           name: 'Oleaje', 
           resourceApi: 'mapTileResources/VHM0', 
           tms: true ,
@@ -105,7 +105,7 @@ export default {
         },
         { 
           id: 8, 
-          type: 'TileLayer.TimeLine', 
+          type: 'TimeLineLayer', 
           name: 'Corriente', 
           resourceApi: 'mapTileResources/CURR/circulation', 
           tms: true,
@@ -113,14 +113,14 @@ export default {
         },
         { 
           id: 9, 
-          type: 'TileLayer.TimeLine', 
+          type: 'TimeLineLayer', 
           name: 'Temperatura', 
           resourceApi: 'mapTileResources/SST', 
           tms: true 
         },
         { 
           id: 10, 
-          type: 'TileLayer.TimeLine', 
+          type: 'TimeLineLayer', 
           name: 'Viento', 
           resourceApi: 'mapTileResources/WSPD', 
           tms: true,
@@ -128,7 +128,7 @@ export default {
         },
         { 
           id: 11, 
-          type: 'TileLayer.TimeLine', 
+          type: 'TimeLineLayer', 
           name: 'Salinidad', 
           resourceApi: 'mapTileResources/SAL', 
           tms: true 
