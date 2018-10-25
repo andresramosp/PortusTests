@@ -9,10 +9,11 @@ const MapService = {
   async addFeatureLayer(map, mapResource, markerClickFunction) {
     var vs = this;
     if (!mapResource.serverMode) {
-      var result = await ApiService.get(mapResource.resourceApi);
+      var result = await ApiService.get(mapResource.resourceApi + (mapResource.locale ? ('?locale=' + 'es') : ''));
       var markers = [];
       result.data.forEach(m => {
-        var customIcon = mapResource.icon ? L.icon({ iconUrl: require('@/assets/markers/' + mapResource.icon), iconSize: [17, 17] }) : {};
+        var iconUrl = typeof mapResource.icon === "function" ? mapResource.icon(m) : mapResource.icon;
+        var customIcon = L.icon({ iconUrl: require('@/assets/markers/' + iconUrl), iconSize: [17, 17] });
         var marker = L.marker([m.latitud, m.longitud], { icon: customIcon }).bindPopup(m.nombre).on('click', markerClickFunction);;
         Object.assign(marker, m);
         markers.push(marker);
@@ -25,7 +26,7 @@ const MapService = {
     else {
       var bounds = map.getBounds();
       var zoom = map.getZoom();
-      var result = await ApiService.get(mapResource.resourceApi + '?zoom=' + zoom + '&limN=' + bounds.getNorth() + '&limS=' + bounds.getSouth() + '&limE=' + bounds.getEast() + '&limW=' + bounds.getWest());
+      var result = await ApiService.get(mapResource.resourceApi + (mapResource.locale ? ('?locale=' + 'es') : '') + '?zoom=' + zoom + '&limN=' + bounds.getNorth() + '&limS=' + bounds.getSouth() + '&limE=' + bounds.getEast() + '&limW=' + bounds.getWest());
       var markers = [];
       result.data.forEach(m => {
         var customIcon = mapResource.icon ? L.icon({ iconUrl: require('@/assets/markers/' + mapResource.icon), iconSize: [17, 17] }) : {};
@@ -60,10 +61,9 @@ const MapService = {
       portusTimeLayer.mapResource = mapResource;
       map.preloadedTimeLineLayers.push(portusTimeLayer);
 
-      var rect = L.rectangle([[res.limN, res.limW], [res.limS, res.limE]], { color: 'blue', fillOpacity: 0.0, weight: 1 }).on('click', function (e) {
-        console.info(e);
-
-      }).addTo(map);
+      // var rect = L.rectangle([[res.limN, res.limW], [res.limS, res.limE]], { color: 'blue', fillOpacity: 0.0, weight: 1 }).on('click', function (e) {
+      //   console.info(e);
+      // }).addTo(map);
     })
     vs.checkVisibleTimeLineLayers(map);
   },
@@ -92,8 +92,23 @@ const MapService = {
         if (!layer.mapResource.serverMode) {
           var markers = layer.getLayers();
           markers.forEach(m => {
-            var minZoom = m.minZoom ? m.minZoom : (layer.mapResource.minZoom ? layer.mapResource.minZoom : 0);
+            var minZoom;
+            if (layer.mapResource.minZoom && typeof layer.mapResource.minZoom === "function") {
+              minZoom = layer.mapResource.minZoom(m);
+            }
+            else {
+              minZoom =  m.minZoom ? m.minZoom : (layer.mapResource.minZoom ? layer.mapResource.minZoom : 0);
+            }
             m.setOpacity(zoom > minZoom ? 1 : 0.0);
+            // L.DomUtil.removeClass(m._icon, 'leaflet-marker-icon-fadeout')
+            // L.DomUtil.removeClass(m._icon, 'leaflet-marker-icon-fadein')
+            // if (zoom > minZoom) {
+            //   L.DomUtil.addClass(m._icon, 'leaflet-marker-icon-fadein')
+            // }
+            // else {
+            //   //L.DomUtil.addClass(m._icon, 'leaflet-marker-icon-fadeout')
+            //   m.setOpacity(0);
+            // }
           });
         }
         else {
@@ -109,8 +124,12 @@ const MapService = {
     map.preloadedTimeLineLayers.forEach(function (preLayer) {
       if (sv.tileLayerVisible(map, preLayer._baseLayer)) {
         if (!map.hasLayer(preLayer)) {
-          map.options.timeDimensionOptions.period = "PT" + preLayer._baseLayer.options.period + "H";
-          map.options.timeDimensionOptions.timeInterval = 'PT72H/' + sv.convertYMDHToDate(preLayer._baseLayer.options.strLastate).toISOString();
+          map.options.timeDimensionOptions.period ="PT" + preLayer._baseLayer.options.period + "H";
+          // Simulamos siempre cuatro días para adelante, hasta apuntar a Prod
+          var date = new Date();
+          date.setDate(date.getDate() + 4)
+          date.setUTCHours(0, 0, 0, 0);
+          map.options.timeDimensionOptions.timeInterval = 'PT192H/' + date.toISOString(); //sv.convertYMDHToDate(preLayer._baseLayer.options.strLastate).toISOString();
           map.timeDimension.initialize(map.options.timeDimensionOptions);
           map.timeDimension.setCurrentTimeIndex(0);
           if (map.timeDimensionControl) {

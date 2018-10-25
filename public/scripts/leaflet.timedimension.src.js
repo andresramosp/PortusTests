@@ -1157,11 +1157,13 @@ L.NonTiledLayer.include({
     hide: function() {
         this._visible = false;
         this._div.style.display = 'none';
+
     },
 
     show: function() {
         this._visible = true;
         this._div.style.display = 'block';
+
     },
 
     getURL: function() {
@@ -1195,14 +1197,22 @@ L.TileLayer.include({
         this._visible = false;
         if (this._container) {
             this._container.style.display = 'none';
+            // L.DomUtil.removeClass(this._container, 'leaflet-marker-icon-fadeout')
+            // L.DomUtil.removeClass(this._container, 'leaflet-marker-icon-fadein')
+            // L.DomUtil.addClass(this._container, 'leaflet-marker-icon-fadeout')
         }
+       
     },
 
     show: function() {
         this._visible = true;
         if (this._container) {
             this._container.style.display = 'block';
+            // L.DomUtil.removeClass(this._container, 'leaflet-marker-icon-fadein')
+            // L.DomUtil.removeClass(this._container, 'leaflet-marker-icon-fadeout')
+            // //L.DomUtil.addClass(this._container, 'leaflet-marker-icon-fadein')
         }
+      
     },
 
     getURL: function() {

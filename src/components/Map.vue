@@ -1,22 +1,22 @@
 <template>
-<div class="row">
-   <div class="col-md-9">
-        <div id="map"></div>
-        
-        <!-- COMPONENTE FLOATING OPTIONS PANEL -->
-        <div v-if="floatingOptions.length > 0">
-          <div class="form-check" v-for="floatingOption in floatingOptions" :key="floatingOptions.indexOf(floatingOption)">
-            <label class="form-check-label">
-              <input class="form-check-input" type="checkbox" v-model="floatingOption.active" @change="floatingOptionChanged(floatingOption)" />
-              {{ floatingOption.name }}
-            </label>
-          </div> 
-        </div>
-
+<div class="row" style="height: 100%">
+   <div class="col-md-12">
+        <div  id="map"></div>
     </div>
-    <div class="col-md-3">
+    <div >
        <LayersPanel :mapOptions="mapOptions" @option-click="mapOptionClick" /> 
     </div>
+          <!-- COMPONENTE FLOATING OPTIONS PANEL -->
+
+          <div class="floatingPanel" v-if="floatingOptions.length > 0">
+            <div class="form-check" v-for="floatingOption in floatingOptions" :key="floatingOptions.indexOf(floatingOption)">
+               <label class="form-check-label">
+                <input class="form-check-input" type="checkbox" v-model="floatingOption.active" @change="floatingOptionChanged(floatingOption)" />
+                 {{ floatingOption.name }}
+               </label>
+            </div> 
+          </div>
+
     <slot></slot>
 </div>
 </template>
@@ -55,7 +55,9 @@ export default {
       return this.map;
     },
     getMapResource: function(mapResourceId) {
-      return this.mapResources.find(mr => { return mr.id == mapResourceId; }); 
+      return this.mapResources.find(mr => {
+        return mr.id == mapResourceId;
+      });
     },
     markerClick: function(evt) {
       this.$emit("marker-click", evt.sourceTarget);
@@ -76,18 +78,25 @@ export default {
     showFloatingOptionsPanel: function(mapOption) {
       var vm = this;
       mapOption.mapResources.forEach(resId => {
-          var mapResource = this.getMapResource(resId);
-          if (mapResource.vectors) {
-            vm.floatingOptions.push({ name: 'Dirección', type: 'shiftIsoVectorial', resourceId: resId });
-          }
-        });
+        var mapResource = this.getMapResource(resId);
+        if (mapResource.vectors) {
+          vm.floatingOptions.push({
+            name: "Dirección",
+            type: "shiftIsoVectorial",
+            resourceId: resId
+          });
+        }
+      });
     },
     hideFloatingOptionsPanel: function() {
       this.floatingOptions = [];
     },
     floatingOptionChanged: function(floatingOption) {
       // Ir a MapService
-      this[floatingOption.type](floatingOption.resourceId, floatingOption.active);
+      this[floatingOption.type](
+        floatingOption.resourceId,
+        floatingOption.active
+      );
     },
     shiftIsoVectorial: function(mapResourceId, vectorial) {
       MapService.removeLayer(this.map, mapResourceId);
@@ -97,7 +106,11 @@ export default {
     addLayer: function(mapResourceId) {
       var vm = this;
       var mapResource = this.getMapResource(mapResourceId);
-      MapService['add' + mapResource.type](this.map, mapResource, mapResource.type == "FeatureLayer" ? this.markerClick : null)
+      MapService["add" + mapResource.type](
+        this.map,
+        mapResource,
+        mapResource.type == "FeatureLayer" ? this.markerClick : null
+      );
     },
     removeLayer: function(mapResourceId) {
       MapService.removeLayer(this.map, mapResourceId);
@@ -105,7 +118,7 @@ export default {
         this.map.removeControl(this.map.timeDimensionControl);
     },
     initMap: function() {
-      var mapExtent = [-13.22547087, 31.27732673, 56.43171235, 69.50672323];
+      var mapExtent = PC.map_initial_bounds;
       var bounds = new L.LatLngBounds(
         new L.LatLng(mapExtent[1], mapExtent[0]),
         new L.LatLng(mapExtent[3], mapExtent[2])
@@ -144,10 +157,10 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style >
 #map {
   z-index: 1;
-  height: 600px;
+  height: 100%;
 }
 
 #slider {
@@ -156,4 +169,112 @@ export default {
   right: 20px;
   z-index: 5;
 }
+
+.floatingPanel {
+  position: absolute;
+  z-index: 2;
+  background-color: rgba(0, 123, 255, 0.5);
+  right: 9px;
+  top: 500px;
+  padding: 10px;
+  border-radius: 6px;
+  color: white;
+  font-size: 17px;
+}
+
+input[type="checkbox"] {
+  width: 1.1em;
+  height: 1.1em;
+  padding-right: 3px;
+  
+}
+
+.form-check {
+  padding-top: 1px;
+}
+
+.form-check-input {
+  margin-right: 5px;
+}
+
+.leaflet-marker-icon-fadein,
+.leaflet-marker-shadow-fadein {
+  -webkit-animation: fadein 1s; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: fadein 1s; /* Firefox < 16 */
+  -ms-animation: fadein 1s; /* Internet Explorer */
+  -o-animation: fadein 1s; /* Opera < 12.1 */
+  animation: fadein 1s;
+  animation-delay: 10s;
+}
+
+.leaflet-marker-icon-fadeout,
+.leaflet-marker-shadow-fadeout {
+  animation: fadeout 1s;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Opera < 12.1 */
+@-o-keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* .leaflet-tile{ 
+  filter: blur(10px);
+}
+.leaflet-tile.leaflet-tile-loaded{
+  filter: blur(0);
+  transition: .6s all ease-in;
+} */
 </style>
