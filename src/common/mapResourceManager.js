@@ -10,7 +10,7 @@ export const MapResources = [
     },
     // { 
     //   id: 2, 
-    //   type: 'FeatureLayer', 
+    //   type: 'MarkerLayer', 
     //   name: 'Nivmar Ubic. Puertos', 
     //   resourceApi: 'ubicacionesNivmar', 
     //   minZoom: function (ubicacion) {
@@ -21,7 +21,7 @@ export const MapResources = [
     //     if (ubicacion.tipoUbicacion == 3)
     //       return 8;
     //   }, 
-    //   iconRenderer: function (ubicacion) {
+    //   icon: function (ubicacion) {
     //     if (ubicacion.tipoUbicacion == 1)
     //       return 'nivmar-puerto.png';
     //     if (ubicacion.tipoUbicacion == 2)
@@ -32,7 +32,7 @@ export const MapResources = [
     // },
     { 
       id: 2, 
-      type: 'FeatureLayer', 
+      type: 'MarkerLayer', 
       name: 'Nivmar Ubic. Puertos', 
       resourceApi: 'ubicacionesNivmar/1', 
       minZoom: 0, 
@@ -40,7 +40,7 @@ export const MapResources = [
     },
     { 
       id: 3, 
-      type: 'FeatureLayer', 
+      type: 'MarkerLayer', 
       name: 'Nivmar Ubic. Localidades', 
       resourceApi: 'ubicacionesNivmar/2', 
       minZoom: 7, 
@@ -48,7 +48,7 @@ export const MapResources = [
     },
     { 
       id: 4, 
-      type: 'FeatureLayer', 
+      type: 'MarkerLayer', 
       name: 'Nivmar Ubic. Playas', 
       resourceApi: 'ubicacionesNivmar/3', 
       minZoom: 8, 
@@ -110,39 +110,82 @@ export const MapResources = [
     },
     { 
       id: 12, 
-      type: 'FeatureLayer', 
+      type: 'MarkerLayer', 
       name: 'Puntos Cirana', 
       resourceApi: 'puntosMallaCirana', // {zoom}
       minZoom: 0, 
-      serverMode: true,
       icon: 'nivmar-puerto.png' 
     },
     { 
       id: 13, 
-      type: 'FeatureLayer', 
-      name: 'Estaciones Real Time', 
-      resourceApi: 'estaciones/RT', 
+      type: 'MarkerLayer', 
+      name: 'RT - Oleaje', 
+      resourceApi: 'estaciones/RT_WAVE', 
       minZoom: 0, 
-      icon: function(estacion) {
-          if (estacion.propagacion) {
-            return (estacion.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
+      icon: function (m) {
+          if (m.propagacion) {
+            return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
           }
           else {
-            return (1 <= estacion.estado && estacion.estado  <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
+            return (1 <= m.estado && m.estado  <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
           }
       },
+      showAll: true,
+      locale: true
+    },
+    { 
+      id: 14, 
+      type: 'MarkerLayer', 
+      name: 'RT - Nivel del Mar', 
+      resourceApi: 'estaciones/RT_SEA_LEVEL', 
+      minZoom: 0, 
+      icon: function (m) {
+          if (m.propagacion) {
+            return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
+          }
+          else {
+            return (1 <= m.estado && m.estado  <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
+          }
+      },
+      showAll: true,
+      locale: true
+    },
+    { 
+      id: 15, 
+      type: 'MarkerLayer', 
+      name: 'RT - Agitacion', 
+      resourceApi: 'estaciones/RT_AGITATION', 
+      minZoom: 0, 
+      icon: function (m) {
+          if (m.propagacion) {
+            return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
+          }
+          else {
+            return (1 <= m.estado && m.estado  <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
+          }
+      },
+      showAll: true,
       locale: true
     }
   ];
 
   
 export const MapOptions = [
-  { id: 'pred_nivmar', group: 'Predicciones', name: 'Nivel del Mar', mapResources: [1, 2, 3, 4] },
-  { id: 'pred_corrientes', group: 'Predicciones', name: 'Corrientes', mapResources: [8, 12] }, 
-  { id: 'pred_temperatura', group: 'Predicciones', name: 'Temperatura', mapResources: [9] },
-  { id: 'pred_oleaje_atl', group: 'Predicciones', name: 'Oleaje Atl', mapResources: [5, 7] },
-  { id: 'pred_oleaje_med', group: 'Predicciones', name: 'Oleaje Med', mapResources: [6] },
-  { id: 'pred_viento', group: 'Predicciones', name: 'Viento', mapResources: [10] },
-  { id: 'pred_salinidad', group: 'Predicciones', name: 'Salinidad', mapResources: [11] },
-  { id: 'tr_oleaje', group: 'Tiempo Real', name: 'Oleaje', mapResources: [13] }
+  { id: 'pred_nivmar', group: 'predicciones', name: 'Nivel del Mar', mapResources: [1, 2, 3, 4] },
+  { id: 'pred_corrientes', group: 'predicciones', name: 'Corrientes', mapResources: [8, 12] },  //[8, 12]
+  { id: 'pred_temperatura', group: 'predicciones', name: 'Temperatura', mapResources: [9] },
+  { id: 'pred_oleaje_atl', group: 'predicciones', name: 'Oleaje Atl', mapResources: [5, 7] },
+  { id: 'pred_oleaje_med', group: 'predicciones', name: 'Oleaje Med', mapResources: [6] },
+  { id: 'pred_viento', group: 'predicciones', name: 'Viento', mapResources: [10] },
+  { id: 'pred_salinidad', group: 'predicciones', name: 'Salinidad', mapResources: [11] },
+  { id: 'tr_oleaje', group: 'tiempo_real', name: 'Oleaje', mapResources: [13] },
+  { id: 'tr_nivmar', group: 'tiempo_real', name: 'Nivel del Mar', mapResources: [14] },
+  // { id: 'tr_onda_larga', group: 'tiempo_real', name: 'Onda Larga', mapResources: [13] },
+   { id: 'tr_agitacion', group: 'tiempo_real', name: 'Agitación', mapResources: [15] },
+  // { id: 'tr_viento', group: 'tiempo_real', name: 'Viento', mapResources: [13] },
+  // { id: 'tr_presion_atm', group: 'tiempo_real', name: 'Presión Atm.', mapResources: [13] },
+  // { id: 'tr_temp_agua', group: 'tiempo_real', name: 'Temp. del Agua', mapResources: [13] },
+  // { id: 'tr_temp_aire', group: 'tiempo_real', name: 'Temp. del Aire', mapResources: [13] },
+  // { id: 'tr_corrientes', group: 'tiempo_real', name: 'Corrientes', mapResources: [13] },
+  // { id: 'tr_salinidad', group: 'tiempo_real', name: 'Salinidad', mapResources: [13] }
 ]

@@ -109,7 +109,7 @@ export default {
       MapService["add" + mapResource.type](
         this.map,
         mapResource,
-        mapResource.type == "FeatureLayer" ? this.markerClick : null
+        mapResource.type == "MarkerLayer" ? this.markerClick : null
       );
     },
     removeLayer: function(mapResourceId) {
@@ -133,15 +133,16 @@ export default {
       }).fitBounds(bounds);
 
       this.map.preloadedTimeLineLayers = [];
+      this.map.preloadedMarkers = [];
 
       var vm = this;
       this.map.on("zoomend", function() {
-        MapService.checkVisibleFeatureLayers(vm.map);
+        MapService.checkVisibleMarkerLayers(vm.map);
         MapService.checkVisibleTimeLineLayers(vm.map);
         console.log("Zoom: " + vm.map.getZoom());
       });
       this.map.on("moveend", function() {
-        MapService.checkVisibleFeatureLayers(vm.map);
+        MapService.checkVisibleMarkerLayers(vm.map);
         MapService.checkVisibleTimeLineLayers(vm.map);
       });
 
@@ -197,14 +198,13 @@ input[type="checkbox"] {
   margin-right: 5px;
 }
 
-.leaflet-marker-icon-fadein,
-.leaflet-marker-shadow-fadein {
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
   -webkit-animation: fadein 1s; /* Safari, Chrome and Opera > 12.1 */
   -moz-animation: fadein 1s; /* Firefox < 16 */
   -ms-animation: fadein 1s; /* Internet Explorer */
   -o-animation: fadein 1s; /* Opera < 12.1 */
   animation: fadein 1s;
-  animation-delay: 10s;
 }
 
 .leaflet-marker-icon-fadeout,

@@ -6,39 +6,24 @@ import { BASE_URL_PORTUS } from '@/common/config';
 
 const MapService = {
 
-  async addFeatureLayer(map, mapResource, markerClickFunction) {
+ async addMarkerLayer(map, mapResource, markerClickFunction) {
     var vs = this;
-    if (!mapResource.serverMode) {
-      var result = await ApiService.get(mapResource.resourceApi + (mapResource.locale ? ('?locale=' + 'es') : ''));
-      var markers = [];
+    var result = await ApiService.get(mapResource.resourceApi + (mapResource.locale ? ('?locale=' + 'es') : ''));
+    var markers = [];
       result.data.forEach(m => {
         var iconUrl = typeof mapResource.icon === "function" ? mapResource.icon(m) : mapResource.icon;
         var customIcon = L.icon({ iconUrl: require('@/assets/markers/' + iconUrl), iconSize: [17, 17] });
         var marker = L.marker([m.latitud, m.longitud], { icon: customIcon }).bindPopup(m.nombre).on('click', markerClickFunction);;
+        marker.mapResource = mapResource;
         Object.assign(marker, m);
-        markers.push(marker);
+        if (mapResource.showAll) {
+          marker.addTo(map);
+        }
+        else {
+          map.preloadedMarkers.push(marker);
+        }
       });
-      var featureGroupLayer = L.featureGroup(markers);
-      featureGroupLayer.mapResource = mapResource;
-      featureGroupLayer.addTo(map);
-      vs.checkVisibleFeatureLayers(map);
-    }
-    else {
-      var bounds = map.getBounds();
-      var zoom = map.getZoom();
-      var result = await ApiService.get(mapResource.resourceApi + (mapResource.locale ? ('?locale=' + 'es') : '') + '?zoom=' + zoom + '&limN=' + bounds.getNorth() + '&limS=' + bounds.getSouth() + '&limE=' + bounds.getEast() + '&limW=' + bounds.getWest());
-      var markers = [];
-      result.data.forEach(m => {
-        var customIcon = mapResource.icon ? L.icon({ iconUrl: require('@/assets/markers/' + mapResource.icon), iconSize: [17, 17] }) : {};
-        var marker = L.marker([m.latitud, m.longitud], { icon: customIcon }).bindPopup(m.nombre).on('click', markerClickFunction);;
-        Object.assign(marker, m);
-        markers.push(marker);
-      });
-      var featureGroupLayer = L.featureGroup(markers);
-      featureGroupLayer.markerClickFunction = markerClickFunction; // Pensar
-      featureGroupLayer.mapResource = mapResource;
-      featureGroupLayer.addTo(map);
-    }
+      vs.checkVisibleMarkerLayers(map);
   },
 
   async addTimeLineLayer(map, mapResource, vectorial) {
@@ -82,39 +67,18 @@ const MapService = {
         layer.remove();
     });
     map.preloadedTimeLineLayers = map.preloadedTimeLineLayers.filter((plt) => { return plt.mapResource.id != mapResourceId });
+    map.preloadedMarkers = map.preloadedMarkers.filter((plm) => { return plm.mapResource.id != mapResourceId });
   },
 
-  checkVisibleFeatureLayers(map) {
+  checkVisibleMarkerLayers(map) {
     var sv = this;
     var zoom = map.getZoom();
-    map.eachLayer(function (layer) {
-      if (layer instanceof L.FeatureGroup) {
-        if (!layer.mapResource.serverMode) {
-          var markers = layer.getLayers();
-          markers.forEach(m => {
-            var minZoom;
-            if (layer.mapResource.minZoom && typeof layer.mapResource.minZoom === "function") {
-              minZoom = layer.mapResource.minZoom(m);
-            }
-            else {
-              minZoom =  m.minZoom ? m.minZoom : (layer.mapResource.minZoom ? layer.mapResource.minZoom : 0);
-            }
-            m.setOpacity(zoom > minZoom ? 1 : 0.0);
-            // L.DomUtil.removeClass(m._icon, 'leaflet-marker-icon-fadeout')
-            // L.DomUtil.removeClass(m._icon, 'leaflet-marker-icon-fadein')
-            // if (zoom > minZoom) {
-            //   L.DomUtil.addClass(m._icon, 'leaflet-marker-icon-fadein')
-            // }
-            // else {
-            //   //L.DomUtil.addClass(m._icon, 'leaflet-marker-icon-fadeout')
-            //   m.setOpacity(0);
-            // }
-          });
-        }
-        else {
-          layer.remove();
-          sv.addFeatureLayer(map, layer.mapResource, layer.markerClickFunction);
-        }
+    map.preloadedMarkers.forEach(function (marker) {
+      if (sv.markerVisible(map, marker)) {
+        marker.addTo(map);
+      }
+      else {
+        marker.remove();
       }
     });
   },
@@ -169,6 +133,17 @@ const MapService = {
       && (layer.options.minZoom <= map.getZoom() && (map.getZoom() <= layer.options.maxZoom));
   },
   
+  markerVisible(map, marker) {
+    var minZoom;
+    if (marker.mapResource.minZoom && typeof marker.mapResource.minZoom === "function") {
+      minZoom = layer.mapResource.minZoom(marker);
+    }
+    else {
+      minZoom =  marker.minZoom ? marker.minZoom : (marker.mapResource.minZoom ? marker.mapResource.minZoom : 0);
+    }
+    return map.getBounds().contains(marker.getLatLng())
+      && (map.getZoom() >= minZoom);
+  },
 
   convertYMDHToDate(str) {
     var year = str.substring(0, 4);

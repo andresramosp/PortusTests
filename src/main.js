@@ -6,11 +6,20 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(BootstrapVue);
-
 Vue.config.productionTip = false
 
 ApiService.init()
 
-new Vue({
-  render: h => h(App)
-}).$mount('#app')
+StartApp();
+
+async function StartApp() {
+  var config = await fetch('portus.config.json')
+  config = await config.json();
+  window.PC = config;
+
+  new Vue({
+    render: h => h(App)
+  }).$mount('#app')
+}
+
+

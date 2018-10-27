@@ -48,7 +48,7 @@ export default {
     );
 
     this.mapResources = MapResources;
-    this.mapOptions = MapOptions.filter(opt => { return PC.map_options.indexOf(opt.id) != -1});
+    this.mapOptions = MapOptions.filter(opt => { return PC.map_options.length == 0 || PC.map_options.indexOf(opt.id) != -1});
       
   },
   methods: {
