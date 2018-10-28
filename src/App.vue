@@ -29,8 +29,6 @@ export default {
       {
         minZoom: PC.base_layer_min_zoom,
         maxZoom: PC.base_layer_max_zoom,
-        attribution:
-          'Rendered with <a href="http://www.maptiler.com/">MapTiler</a>',
         tms: false
       }
     );

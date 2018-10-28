@@ -2,7 +2,7 @@
 <div>
   
   <div class='layersPanel' :class="{ 'leftAlign': align == 'left', 'rightAlign': align == 'right' }">
-      <b-card header="Predicciones" class="text-center" style="background-color: rgba(0, 123, 255, 0.5); margin-top: 12px; border-radius: 8px;">
+      <b-card header="Predicciones" class="text-center panel-section" :class="theme" >
         <b-container>
            <b-row >
                <b-col cols="6" class="form-check text-left" v-if="mapOption.group == 'predicciones'" v-for="mapOption in mapOptions" :key="mapOption.id">
@@ -15,7 +15,7 @@
         </b-container>
          
       </b-card>
-      <b-card header="Tiempo Real" class="text-center" style="background-color: rgba(0, 123, 255, 0.5); margin-top: 12px; border-radius: 8px;">
+      <b-card header="Tiempo Real" class="text-center panel-section" :class="theme" >
         <b-container>
            <b-row >
                <b-col cols="6" class="form-check text-left" v-if="mapOption.group == 'tiempo_real'" v-for="mapOption in mapOptions" :key="mapOption.id">
@@ -42,7 +42,8 @@ export default {
   name: "LayersPanel",
   data() {
     return {
-      align: PC.options_panel_align
+      align: PC.options_panel_align,
+      theme: PC.color_theme
     };
   },
   props: {
@@ -70,13 +71,21 @@ export default {
 
 <style scoped>
 .leftAlign {
-  left: 9px;
+  left: 12px;
   top: 85px;
 }
 
 .rightAlign {
-  right: 9px;
+  right: 12px;
   top: 9px;
+}
+
+.blueTheme {
+  background-color: rgba(0, 123, 255, 0.5); 
+}
+
+.greenTheme {
+  background-color: rgba(0, 255, 0, 0.5); 
 }
 
 .layersPanel {
@@ -107,6 +116,12 @@ input[type="checkbox"] {
 .card-header{
   background-color: #091c3259;
   font-size: 19px
+}
+
+.panel-section {
+  /* background-color: rgba(0, 123, 255, 0.5);  */
+  margin-top: 12px; 
+  border-radius: 8px;
 }
 
 </style>

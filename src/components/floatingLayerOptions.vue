@@ -1,5 +1,5 @@
  <template>
-    <div class="floatingPanel" :class="{ 'leftAlign': align == 'left', 'rightAlign': align == 'right' }" v-if="floatingOptions.length > 0">
+    <div class="floatingPanel" :class="{ 'leftAlign': align == 'left', 'rightAlign': align == 'right', blueTheme: theme == 'blueTheme', greenTheme: theme == 'greenTheme' }" v-if="floatingOptions.length > 0">
         <div class="form-check" v-for="floatingOption in floatingOptions" :key="floatingOptions.indexOf(floatingOption)">
             <label class="form-check-label">
                 <input class="form-check-input" type="checkbox" v-model="floatingOption.active" @change="floatingOptionChanged(floatingOption)" />
@@ -16,7 +16,8 @@ export default {
   name: "FloatingLayerOptions",
   data() {
     return {
-      align: PC.options_panel_align
+      align: PC.options_panel_align,
+      theme: PC.color_theme
     };
   },
   props: {
@@ -65,7 +66,6 @@ export default {
 .floatingPanel {
   position: absolute;
   z-index: 2;
-  background-color: rgba(0, 123, 255, 0.5);
   /* right: 9px; */
   /* top: 500px; */
   padding: 10px;
@@ -82,6 +82,14 @@ export default {
 .rightAlign {
   right: 9px;
   top: 500px;
+}
+
+.blueTheme {
+  background-color: rgba(0, 123, 255, 0.5); 
+}
+
+.greenTheme {
+  background-color: rgba(0, 255, 0, 0.5); 
 }
 
 </style>
