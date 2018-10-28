@@ -1,5 +1,6 @@
 <template>
-    <b-tabs class='infoPanelClass' v-if="marker">
+<b-modal v-model="modalShow" v-if="marker" size="lg" :title="markerModel.ModalTitle">
+    <b-tabs class='infoPanelClass' >
         <b-tab title="Acceso a datos" active v-if="markerModel.BancoDatos">
             <b-container style="margin-top: 15px">
                 <b-row v-for="data in markerModel.BancoDatos" :key="data.key">
@@ -22,21 +23,31 @@
             </b-container>
         </b-tab>
       </b-tabs>
+</b-modal>
 </template>
 
 <script>
 
-
-
 export default {
-  name: "InfoPanel",
+  name: "MarkerInfoPanel",
   props: {
     marker: { type: Object, default: null, required: false }
+  },
+  data() {
+      return {
+          modalShow: false
+      }
+  },
+  watch: {
+    marker: function() {
+      this.modalShow = true;
+    }
   },
   computed: {
     markerModel () {
         // TODO: controlar tipo de marker, para crear unas secciones u otras
         return {
+            ModalTitle: this.marker.tipoUbicacion + `: ` + this.marker.nombre,
             Informacion : [
                 {key: 'Longitud', value: this.marker.longitud.toFixed(2) + ' O'  }, 
                 {key: 'Latitud', value: this.marker.latitud.toFixed(2) + ' N' }, 

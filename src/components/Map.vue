@@ -1,34 +1,28 @@
 <template>
-<div class="row" style="height: 100%">
-   <div class="col-md-12">
-        <div  id="map"></div>
-    </div>
-    <div >
-       <LayersPanel :mapOptions="mapOptions" @option-click="mapOptionClick" /> 
-    </div>
-          <!-- COMPONENTE FLOATING OPTIONS PANEL -->
 
-          <div class="floatingPanel" v-if="floatingOptions.length > 0">
-            <div class="form-check" v-for="floatingOption in floatingOptions" :key="floatingOptions.indexOf(floatingOption)">
-               <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" v-model="floatingOption.active" @change="floatingOptionChanged(floatingOption)" />
-                 {{ floatingOption.name }}
-               </label>
-            </div> 
-          </div>
-
-    <slot></slot>
+<div style="height: 100%">
+    <div id="map"></div>
+    <LayersPanel :mapOptions="mapOptions" @option-click="mapOptionClick" /> 
+    <FloatingLayerOptions v-for="mapOption in activeMapOptions" :key="mapOption.id" :mapOption="mapOption" />
+    <MarkerInfoPanel :marker='markerSelected' />
+    <img class="predictionScale" :src="predictionScaleImg" />
 </div>
+
 </template>
 
 <script>
+
 import LayersPanel from "@/components/layersPanel.vue";
-import MapService from "@/services/map.service";
+import FloatingLayerOptions from "@/components/floatingLayerOptions.vue";
+import MarkerInfoPanel from "@/components/markerInfoPanel.vue";
+import MapState from "@/state/map.state";
 
 export default {
   name: "Map",
   components: {
-    LayersPanel
+    LayersPanel,
+    FloatingLayerOptions,
+    MarkerInfoPanel
   },
   props: {
     mapResources: Array,
@@ -38,7 +32,9 @@ export default {
   data() {
     return {
       map: null,
-      floatingOptions: []
+      activeMapOptions: [],
+      predictionScaleImg: null,
+      markerSelected: null
     };
   },
   watch: {
@@ -51,72 +47,18 @@ export default {
     this.setBaseLayer();
   },
   methods: {
-    getMap: function(found) {
-      return this.map;
-    },
-    getMapResource: function(mapResourceId) {
-      return this.mapResources.find(mr => {
-        return mr.id == mapResourceId;
-      });
-    },
     markerClick: function(evt) {
-      this.$emit("marker-click", evt.sourceTarget);
+      var marker = evt.sourceTarget;
+      this.markerSelected = marker;
     },
+
     mapOptionClick: function(mapOption) {
-      if (mapOption.active) {
-        mapOption.mapResources.forEach(resId => {
-          this.addLayer(resId);
-        });
-        this.showFloatingOptionsPanel(mapOption);
-      } else {
-        mapOption.mapResources.forEach(resId => {
-          this.removeLayer(resId);
-        });
-        this.hideFloatingOptionsPanel();
-      }
+      if (mapOption.active)
+        this.activeMapOptions.push(mapOption);
+      else
+        this.activeMapOptions = this.activeMapOptions.filter(opt => { return opt.id != mapOption.id});
     },
-    showFloatingOptionsPanel: function(mapOption) {
-      var vm = this;
-      mapOption.mapResources.forEach(resId => {
-        var mapResource = this.getMapResource(resId);
-        if (mapResource.vectors) {
-          vm.floatingOptions.push({
-            name: "Dirección",
-            type: "shiftIsoVectorial",
-            resourceId: resId
-          });
-        }
-      });
-    },
-    hideFloatingOptionsPanel: function() {
-      this.floatingOptions = [];
-    },
-    floatingOptionChanged: function(floatingOption) {
-      // Ir a MapService
-      this[floatingOption.type](
-        floatingOption.resourceId,
-        floatingOption.active
-      );
-    },
-    shiftIsoVectorial: function(mapResourceId, vectorial) {
-      MapService.removeLayer(this.map, mapResourceId);
-      var mapResource = this.getMapResource(mapResourceId);
-      MapService.addTimeLineLayer(this.map, mapResource, vectorial); // TileLayer (reflexión)
-    },
-    addLayer: function(mapResourceId) {
-      var vm = this;
-      var mapResource = this.getMapResource(mapResourceId);
-      MapService["add" + mapResource.type](
-        this.map,
-        mapResource,
-        mapResource.type == "MarkerLayer" ? this.markerClick : null
-      );
-    },
-    removeLayer: function(mapResourceId) {
-      MapService.removeLayer(this.map, mapResourceId);
-      if (this.map.preloadedTimeLineLayers.length == 0)
-        this.map.removeControl(this.map.timeDimensionControl);
-    },
+
     initMap: function() {
       var mapExtent = PC.map_initial_bounds;
       var bounds = new L.LatLngBounds(
@@ -132,25 +74,35 @@ export default {
         timeDimensionOptions: {}
       }).fitBounds(bounds);
 
-      this.map.preloadedTimeLineLayers = [];
-      this.map.preloadedMarkers = [];
-
       var vm = this;
       this.map.on("zoomend", function() {
-        MapService.checkVisibleMarkerLayers(vm.map);
-        MapService.checkVisibleTimeLineLayers(vm.map);
+        MapState.setVisibleMarkerLayers();
+        MapState.setVisibleTimeLineLayers();
         console.log("Zoom: " + vm.map.getZoom());
       });
       this.map.on("moveend", function() {
-        MapService.checkVisibleMarkerLayers(vm.map);
-        MapService.checkVisibleTimeLineLayers(vm.map);
+        MapState.setVisibleMarkerLayers();
+        MapState.setVisibleTimeLineLayers();
+      });
+      this.map.on("layeradd", function(e) {
+        if (e.layer.options.predictionScaleImg) {
+          vm.predictionScaleImg = e.layer.options.predictionScaleImg;
+        }
+        if (e.layer.mapResource && e.layer.mapResource.type == "MarkerLayer") {
+          e.layer.on("click", vm.markerClick);
+        }
+      });
+      this.map.on("layerremove", function(e) {
+        if (e.layer.options.predictionScaleImg) {
+          vm.predictionScaleImg = "";
+        }
       });
 
-      L.Control.measureControl().addTo(this.map);
+      MapState.init(this.map);
     },
     setBaseLayer: function() {
       if (this.baseMap) {
-        this.baseMap.addTo(this.map);
+        MapState.setBaseLayer(this.baseMap);
       }
     }
   }
@@ -171,23 +123,20 @@ export default {
   z-index: 5;
 }
 
-.floatingPanel {
+.predictionScale {
   position: absolute;
   z-index: 2;
-  background-color: rgba(0, 123, 255, 0.5);
-  right: 9px;
-  top: 500px;
+  left: 55%;
+  bottom: -3px;
   padding: 10px;
   border-radius: 6px;
-  color: white;
-  font-size: 17px;
+  width: 27%;
 }
 
 input[type="checkbox"] {
   width: 1.1em;
   height: 1.1em;
   padding-right: 3px;
-  
 }
 
 .form-check {
@@ -269,12 +218,4 @@ input[type="checkbox"] {
     opacity: 1;
   }
 }
-
-/* .leaflet-tile{ 
-  filter: blur(10px);
-}
-.leaflet-tile.leaflet-tile-loaded{
-  filter: blur(0);
-  transition: .6s all ease-in;
-} */
 </style>

@@ -8,28 +8,6 @@ export const MapResources = [
       resourceApi: 'mapTileResources/RES', 
       tms: true 
     },
-    // { 
-    //   id: 2, 
-    //   type: 'MarkerLayer', 
-    //   name: 'Nivmar Ubic. Puertos', 
-    //   resourceApi: 'ubicacionesNivmar', 
-    //   minZoom: function (ubicacion) {
-    //     if (ubicacion.tipoUbicacion == 1)
-    //       return 0;
-    //     if (ubicacion.tipoUbicacion == 2)
-    //       return 7;
-    //     if (ubicacion.tipoUbicacion == 3)
-    //       return 8;
-    //   }, 
-    //   icon: function (ubicacion) {
-    //     if (ubicacion.tipoUbicacion == 1)
-    //       return 'nivmar-puerto.png';
-    //     if (ubicacion.tipoUbicacion == 2)
-    //       return 'nivmar-localidad.png';
-    //     if (ubicacion.tipoUbicacion == 3)
-    //       return 'nivmar-playa.png';
-    //   }
-    // },
     { 
       id: 2, 
       type: 'MarkerLayer', 
@@ -54,6 +32,28 @@ export const MapResources = [
       minZoom: 8, 
       icon: 'nivmar-playa.png' 
     },
+    // { 
+    //   id: 2, 
+    //   type: 'MarkerLayer', 
+    //   name: 'Nivmar Ubic. Puertos', 
+    //   resourceApi: 'ubicacionesNivmar', 
+    //   minZoom: function (ubicacion) {
+    //     if (ubicacion.tipoUbicacion == 1)
+    //       return 0;
+    //     if (ubicacion.tipoUbicacion == 2)
+    //       return 7;
+    //     if (ubicacion.tipoUbicacion == 3)
+    //       return 8;
+    //   }, 
+    //   icon: function (ubicacion) {
+    //     if (ubicacion.tipoUbicacion == 1)
+    //       return 'nivmar-puerto.png';
+    //     if (ubicacion.tipoUbicacion == 2)
+    //       return 'nivmar-localidad.png';
+    //     if (ubicacion.tipoUbicacion == 3)
+    //       return 'nivmar-playa.png';
+    //   }
+    // },
     { 
       id: 5, 
       type: 'TimeLineLayer', 
@@ -112,7 +112,7 @@ export const MapResources = [
       id: 12, 
       type: 'MarkerLayer', 
       name: 'Puntos Cirana', 
-      resourceApi: 'puntosMallaCirana', // {zoom}
+      resourceApi: 'puntosMallaCirana', 
       minZoom: 0, 
       icon: 'nivmar-puerto.png' 
     },
@@ -172,7 +172,7 @@ export const MapResources = [
   
 export const MapOptions = [
   { id: 'pred_nivmar', group: 'predicciones', name: 'Nivel del Mar', mapResources: [1, 2, 3, 4] },
-  { id: 'pred_corrientes', group: 'predicciones', name: 'Corrientes', mapResources: [8, 12] },  //[8, 12]
+  { id: 'pred_corrientes', group: 'predicciones', name: 'Corrientes', mapResources: [8, 12] },  
   { id: 'pred_temperatura', group: 'predicciones', name: 'Temperatura', mapResources: [9] },
   { id: 'pred_oleaje_atl', group: 'predicciones', name: 'Oleaje Atl', mapResources: [5, 7] },
   { id: 'pred_oleaje_med', group: 'predicciones', name: 'Oleaje Med', mapResources: [6] },

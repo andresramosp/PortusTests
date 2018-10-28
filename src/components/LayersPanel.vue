@@ -1,73 +1,42 @@
 <template>
 <div>
   
- 
   <div class='layersPanel' :class="{ 'leftAlign': align == 'left', 'rightAlign': align == 'right' }">
       <b-card header="Predicciones" class="text-center" style="background-color: rgba(0, 123, 255, 0.5); margin-top: 12px; border-radius: 8px;">
-        
         <b-container>
            <b-row >
-          
                <b-col cols="6" class="form-check text-left" v-if="mapOption.group == 'predicciones'" v-for="mapOption in mapOptions" :key="mapOption.id">
               <label class="form-check-label">
                 <input class="form-check-input" type="checkbox" v-model="mapOption.active" @change="mapOptionChanged(mapOption)" />
                 {{ mapOption.name }}
               </label>
             </b-col> 
- 
-        </b-row>
+           </b-row>
         </b-container>
-       
-       
          
       </b-card>
-        <b-card header="Tiempo Real" class="text-center" style="background-color: rgba(0, 123, 255, 0.5); margin-top: 12px; border-radius: 8px;">
-        
+      <b-card header="Tiempo Real" class="text-center" style="background-color: rgba(0, 123, 255, 0.5); margin-top: 12px; border-radius: 8px;">
         <b-container>
            <b-row >
-          
                <b-col cols="6" class="form-check text-left" v-if="mapOption.group == 'tiempo_real'" v-for="mapOption in mapOptions" :key="mapOption.id">
               <label class="form-check-label">
                 <input class="form-check-input" type="checkbox" v-model="mapOption.active" @change="mapOptionChanged(mapOption)" />
                 {{ mapOption.name }}
               </label>
             </b-col> 
- 
         </b-row>
         </b-container>
-       
-       
-         
       </b-card>
-      <!-- <b-card header="Histórico" class="text-center" style="background-color: rgba(0, 123, 255, 0.5); padding: 10px;">
-          <div class="form-check text-left" v-for="mapOption in mapOptions" :key="mapOption.id">
-          <label class="form-check-label">
-            <input class="form-check-input" type="checkbox" v-model="mapOption.active" @change="mapOptionChanged(mapOption)" />
-            {{ mapOption.name }}
-          </label>
-        </div> 
-      </b-card> -->
   </div>
 
-
 </div>
-
-
   
 </template>
 
- <!-- <b-form-checkbox  v-for="mapOption in mapOptions" :key="mapOption.id"
-                     v-model="mapOption.active"
-                     value="true"
-                     unchecked-value="false"
-                     @change="mapOptionChanged(mapOption)">
-      {{ mapOption.name }}
-    </b-form-checkbox> -->
-    <!-- <b-form-checkbox-group id="checkboxes1" name="flavour1" v-model="active" :options="mapOptions"  @change="mapOptionChanged(mapOption)">
-      </b-form-checkbox-group> -->
 
 <script>
-import ApiService from "@/services/api.service";
+
+import MapState from "@/state/map.state";
 
 export default {
   name: "LayersPanel",
@@ -82,6 +51,17 @@ export default {
   mounted() {},
   methods: {
     mapOptionChanged: function(mapOption) {
+       if (mapOption.active) {
+        mapOption.mapResources.forEach(resId => {
+          var mapResource = MapState.getMapResource(resId);
+          MapState["add" + mapResource.type](mapResource, mapResource.type == "MarkerLayer" ? this.markerClick : null
+          );
+        });
+      } else {
+        mapOption.mapResources.forEach(resId => {
+          MapState.removeLayer(resId);
+        });
+      }
       this.$emit("option-click", mapOption);
     }
   }
@@ -91,7 +71,7 @@ export default {
 <style scoped>
 .leftAlign {
   left: 9px;
-  top: 130px;
+  top: 85px;
 }
 
 .rightAlign {
