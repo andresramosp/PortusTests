@@ -6,12 +6,22 @@ import { BASE_URL_PORTUS } from '@/common/config';
 const MapState = {
 
     map: null,
+    predictionScaleImg: null,
+    preloadedTimeLineLayers: [],
+    preloadedMarkers: [],
+    activeMapOptions: [],
 
     init(map) {
         this.map = map;
-        this.map.preloadedTimeLineLayers = [];
-        this.map.preloadedMarkers = [];
-        this.map.predictionScaleImg = '';
+        this.cacheLayers();
+    },
+
+    cacheLayers() {
+        MapResources.forEach(async mr => {
+            if (mr.type == "MarkerLayer" && mr.cached) {
+                mr.cachedData = await ApiService.get(mr.resourceApi + (mr.locale ? ('?locale=' + 'es') : ''));
+            }
+        })
     },
 
     getMap() {
@@ -29,8 +39,9 @@ const MapState = {
     },
 
     async addMarkerLayer(mapResource) {
-        var vs = this;
-        var result = await ApiService.get(mapResource.resourceApi + (mapResource.locale ? ('?locale=' + 'es') : ''));
+        var result = mapResource.cachedData || await ApiService.get(mapResource.resourceApi + (mapResource.locale ? ('?locale=' + 'es') : ''));
+        if (mapResource.cached)
+            mapResource.cachedData = result;
         result.data.forEach(m => {
             var iconUrl = typeof mapResource.icon === "function" ? mapResource.icon(m) : mapResource.icon;
             var customIcon = L.icon({ iconUrl: require('@/assets/markers/' + iconUrl), iconSize: [17, 17] });
@@ -41,7 +52,7 @@ const MapState = {
                 marker.addTo(this.map);
             }
             else {
-                this.map.preloadedMarkers.push(marker);
+                this.preloadedMarkers.push(marker);
             }
         });
         this.setVisibleMarkerLayers();
@@ -57,29 +68,29 @@ const MapState = {
                 bounds: L.latLngBounds(L.latLng(res.limN, res.limW), L.latLng(res.limS, res.limE)),
                 period: res.numStep,
                 strLastate: res.strLastate,
-                gaps: res.numGaps,
+                gaps: res.numGap,
                 predictionScaleImg: res.urlPaleta
             });
             var portusTimeLayer = L.timeDimension.layer.tileLayer.timeLine(
                 tileLayer,
-                { } 
+                {}
             );
             tileLayer.mapResource = mapResource;
             portusTimeLayer.mapResource = mapResource;
-            this.map.preloadedTimeLineLayers.push(portusTimeLayer);
+            this.preloadedTimeLineLayers.push(portusTimeLayer);
 
-            var rect = L.rectangle([[res.limN, res.limW], [res.limS, res.limE]], { color: 'white', fillOpacity: 0.0, weight: 1 }).on('click', function (e) {
-              console.info(e);
-            }).addTo(this.map);
+            // var rect = L.rectangle([[res.limN, res.limW], [res.limS, res.limE]], { color: 'white', fillOpacity: 0.0, weight: 1 }).on('click', function (e) {
+            //   console.info(e);
+            // }).addTo(this.map);
 
-            rect.mapResource = mapResource;
+            // rect.mapResource = mapResource;
         })
         this.setVisibleTimeLineLayers();
     },
 
     setVisibleMarkerLayers() {
         var ms = this;
-        this.map.preloadedMarkers.forEach(function (marker) {
+        this.preloadedMarkers.forEach(function (marker) {
             if (MapUtils.markerVisible(ms.map, marker)) {
                 marker.addTo(ms.map);
             }
@@ -91,15 +102,14 @@ const MapState = {
 
     setVisibleTimeLineLayers() {
         var ms = this;
-        this.map.preloadedTimeLineLayers.forEach(function (preLayer) {
+        this.preloadedTimeLineLayers.forEach(function (preLayer) {
             if (MapUtils.tileLayerVisible(ms.map, preLayer._baseLayer)) {
                 if (!ms.map.hasLayer(preLayer)) {
                     ms.map.options.timeDimensionOptions.period = "PT" + preLayer._baseLayer.options.period + "H";
-                    // Simulamos siempre cuatro días para adelante, hasta apuntar a Prod
                     var date = new Date();
-                    date.setDate(date.getDate() + 3)
                     date.setUTCHours(0, 0, 0, 0);
-                    ms.map.options.timeDimensionOptions.timeInterval = 'PT192H/' + date.toISOString(); //sv.convertYMDHToDate(preLayer._baseLayer.options.strLastate).toISOString();
+                    var predHours = (preLayer._baseLayer.options.gaps - 1) * 24; //preLayer.mapResource.predictionTime ? preLayer.mapResource.predictionTime : 72;
+                    ms.map.options.timeDimensionOptions.timeInterval = date.toISOString() + '/PT' + predHours + 'H'; // 'PT192H/' + sv.convertYMDHToDate(preLayer._baseLayer.options.strLastate).toISOString();
                     ms.map.timeDimension.initialize(ms.map.options.timeDimensionOptions);
                     ms.map.timeDimension.setCurrentTimeIndex(0);
                     if (ms.map.timeDimensionControl) {
@@ -118,10 +128,9 @@ const MapState = {
                     ms.map.addControl(ms.map.timeDimensionControl);
                     preLayer.addTo(ms.map);
 
-                    // Emitir evento con bus?
-                    // if (preLayer._baseLayer.options.predictionScaleImg) {
-                    //     ms.map.predictionScaleImg = preLayer._baseLayer.options.predictionScaleImg;
-                    //   }
+                    if (preLayer._baseLayer.options.predictionScaleImg) {
+                        ms.predictionScaleImg = preLayer._baseLayer.options.predictionScaleImg;
+                    }
 
                     console.log('Added: ' + preLayer._baseLayer._url)
                 }
@@ -133,10 +142,11 @@ const MapState = {
                         ms.map.timeDimensionControl._player.stop();
                         ms.map.removeControl(ms.map.timeDimensionControl);
                     }
-                    console.log('Removed: ' + preLayer._baseLayer._url);
 
-                    // Emitir evento con bus?
-                    // ms.map.predictionScaleImg = '';
+                    if (preLayer._baseLayer.options.predictionScaleImg)
+                        ms.predictionScaleImg = '';
+
+                    console.log('Removed: ' + preLayer._baseLayer._url);
                 }
 
             }
@@ -151,16 +161,17 @@ const MapState = {
     },
 
     removeLayer(mapResourceId) {
+        var ms = this;
         this.map.eachLayer(function (layer) {
             if (layer.mapResource && layer.mapResource.id == mapResourceId)
                 layer.remove();
         });
-        this.map.preloadedTimeLineLayers = this.map.preloadedTimeLineLayers.filter((plt) => { return plt.mapResource.id != mapResourceId });
-        this.map.preloadedMarkers = this.map.preloadedMarkers.filter((plm) => { return plm.mapResource.id != mapResourceId });
-        
-        if (this.map.preloadedTimeLineLayers.length == 0) {
+        this.preloadedTimeLineLayers = this.preloadedTimeLineLayers.filter((plt) => { return plt.mapResource.id != mapResourceId });
+        this.preloadedMarkers = this.preloadedMarkers.filter((plm) => { return plm.mapResource.id != mapResourceId });
+
+        if (this.preloadedTimeLineLayers.length == 0 && this.map.timeDimensionControl) {
             this.map.removeControl(this.map.timeDimensionControl);
-            //this.predictionScaleImg = "";
+            ms.predictionScaleImg = '';
         }
     },
 };

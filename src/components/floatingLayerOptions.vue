@@ -1,15 +1,20 @@
  <template>
-    <div class="floatingPanel" :class="{ 'leftAlign': align == 'left', 'rightAlign': align == 'right', blueTheme: theme == 'blueTheme', greenTheme: theme == 'greenTheme' }" v-if="floatingOptions.length > 0">
+ <div>
+    <transition appear :appear-class="appearClass" appear-to-class="slide-menu-enter-active">
+      <div v-if="floatingOptions.length > 0" class="floatingPanel"  :class="{ 'leftAlign': align == 'left', 'rightAlign': align == 'right', blueTheme: theme == 'blueTheme', greenTheme: theme == 'greenTheme' }">
         <div class="form-check" v-for="floatingOption in floatingOptions" :key="floatingOptions.indexOf(floatingOption)">
-            <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" v-model="floatingOption.active" @change="floatingOptionChanged(floatingOption)" />
-                 {{ floatingOption.name }}
+           <label class="form-check-label">
+             <input class="form-check-input" type="checkbox" v-model="floatingOption.active" @change="floatingOptionChanged(floatingOption)" />
+               {{ floatingOption.name }}
             </label>
         </div> 
-    </div>
+      </div>
+   </transition>
+ </div>
 </template>
 
 <script>
+
 import MapState from "@/state/map.state";
 
 export default {
@@ -24,38 +29,65 @@ export default {
     mapOption: { type: Object, default: null, required: false }
   },
   computed: {
+    appearClass() {
+      return PC.options_panel_align == 'right' ? 'slide-menu-right' : 'slide-menu-left';
+    },
     floatingOptions() {
       var result = [];
       var vm = this;
+      var multiLayer = this.mapOption.mapResources.length > 1;
       if (this.mapOption) {
         this.mapOption.mapResources.forEach(resId => {
           var mapResource = MapState.getMapResource(resId);
           if (mapResource.vectors) {
             result.push({
               name: "Dirección",
-              type: "shiftIsoVectorial",
-              resourceId: resId
+              method: vm.toggleVectorial,
+              resourceId: resId,
+              active: mapResource.defaultVectors
+            });
+          }
+          if (multiLayer) {
+            result.push({
+              name: mapResource.name, // Markers o Animaciones, algo más genérico... Reservar el name para infoPanel y otros.
+              method: vm.toggleVisibility,
+              resourceId: resId,
+              active: true
             });
           }
         });
+        
         return result;
       }
     }
   },
-  created() {},
-  mounted() {},
+  created() {
+    
+  },
+  mounted() {
+    
+  },
   methods: {
     floatingOptionChanged: function(floatingOption) {
-      this[floatingOption.type](
-        floatingOption.resourceId,
-        floatingOption.active
-      );
+      floatingOption.method(floatingOption.resourceId, floatingOption.active);
     },
 
-    shiftIsoVectorial: function(mapResourceId, vectorial) {
+    toggleVectorial: function(mapResourceId, vectorial) {
       MapState.removeLayer(mapResourceId);
       var mapResource = MapState.getMapResource(mapResourceId);
       MapState.addTimeLineLayer(mapResource, vectorial);
+    },
+
+    toggleVisibility: function(mapResourceId, visible) {
+      if (visible) {
+        // && !MapState.hasLayer...
+        // Buscar si entre las floatingOptions hay un toggleVectorial, y si está activo, enviarlo en caso de TimeLineLayer
+        // (Si no, al quitar y poner el layer, no respeta los vectores. Otra forma sería desactivar vectores automáticamente)
+        var mapResource = MapState.getMapResource(mapResourceId);
+        MapState["add" + mapResource.type](mapResource);
+      } else {
+        MapState.removeLayer(mapResourceId);
+      }
     }
   }
 };
@@ -63,11 +95,31 @@ export default {
 
 <style scoped>
 
+
+.slide-menu-right {
+  position: fixed;
+  transform: translate(150px, 0);
+  -webkit-transform: translate(150px, 0);
+}
+
+
+.slide-menu-left {
+  position: fixed;
+  transform: translate(-150px, 0);
+  -webkit-transform: translate(-150px, 0);
+}
+
+
+
+.slide-menu-enter-active {
+  transition: all 0.5s ease;
+}
+
 .floatingPanel {
   position: absolute;
   z-index: 2;
   /* right: 9px; */
-  /* top: 500px; */
+  top: 500px;
   padding: 10px;
   border-radius: 6px;
   color: white;
@@ -76,20 +128,17 @@ export default {
 
 .leftAlign {
   left: 9px;
-  top: 520px;
 }
 
 .rightAlign {
   right: 9px;
-  top: 500px;
 }
 
 .blueTheme {
-  background-color: rgba(0, 123, 255, 0.5); 
+  background-color: rgba(0, 123, 255, 0.5);
 }
 
 .greenTheme {
-  background-color: rgba(0, 255, 0, 0.5); 
+  background-color: rgba(0, 255, 0, 0.5);
 }
-
 </style>

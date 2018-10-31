@@ -15,7 +15,7 @@ const MapUtils = {
     else {
       minZoom =  marker.minZoom ? marker.minZoom : (marker.mapResource.minZoom ? marker.mapResource.minZoom : 0);
     }
-    return map.getBounds().contains(marker.getLatLng())
+    return map.getBounds().contains(marker.getLatLng()) // + buffer
       && (map.getZoom() >= minZoom);
   },
 

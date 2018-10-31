@@ -2,7 +2,7 @@
  window.PC = {
     
     // Checkboxes disponibles
-    map_options: ["pred_nivmar", "pred_corrientes", "pred_temperatura", "pred_viento", "pred_salinidad", "tr_oleaje"],,
+    map_options: ["pred_nivmar", "pred_corrientes", "pred_temperatura", "pred_viento", "pred_salinidad", "tr_oleaje"],
 
     // Opciones iniciales del mapa
     // España: [-19.204102, 30.675715, 5.009766, 46.195042]

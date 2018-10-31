@@ -3,9 +3,9 @@
 <div style="height: 100%">
     <div id="map"></div>
     <LayersPanel :mapOptions="mapOptions" @option-click="mapOptionClick" /> 
-    <FloatingLayerOptions v-for="mapOption in activeMapOptions" :key="mapOption.id" :mapOption="mapOption" />
+    <FloatingLayerOptions v-for="mapOption in mapState.activeMapOptions" :key="mapOption.id" :mapOption="mapOption" />
     <MarkerInfoPanel :marker='markerSelected' />
-    <img class="predictionScale" :src="predictionScaleImg" />
+    <img class="predictionScale" :src="mapState.predictionScaleImg" />
 </div>
 
 </template>
@@ -31,9 +31,7 @@ export default {
   },
   data() {
     return {
-      map: null,
-      activeMapOptions: [],
-      predictionScaleImg: null,
+      mapState: MapState,
       markerSelected: null
     };
   },
@@ -54,9 +52,9 @@ export default {
 
     mapOptionClick: function(mapOption) {
       if (mapOption.active)
-        this.activeMapOptions.push(mapOption);
+        this.mapState.activeMapOptions.push(mapOption);
       else
-        this.activeMapOptions = this.activeMapOptions.filter(opt => { return opt.id != mapOption.id});
+        this.mapState.activeMapOptions = this.mapState.activeMapOptions.filter(opt => { return opt.id != mapOption.id});
     },
 
     initMap: function() {
@@ -66,39 +64,37 @@ export default {
         new L.LatLng(mapExtent[3], mapExtent[2])
       );
 
-      this.map = L.map("map", {
+      var map = L.map("map", {
         zoomSnap: 0.1,
+        zoomControl: false,
         fullscreenControl: true,
         timeDimensionControl: false,
         timeDimension: true,
         timeDimensionOptions: {}
       }).fitBounds(bounds);
 
+      L.control.zoom({
+        position: 'bottomright' //PC.options_panel_align == 'right' ? 'topleft' : 'topright'
+      }).addTo(map);
+
       var vm = this;
-      this.map.on("zoomend", function() {
+      map.on("zoomend", function() {
         MapState.setVisibleMarkerLayers();
         MapState.setVisibleTimeLineLayers();
-        console.log("Zoom: " + vm.map.getZoom());
+        console.log("Zoom: " + vm.mapState.map.getZoom());
       });
-      this.map.on("moveend", function() {
+      map.on("moveend", function() {
         MapState.setVisibleMarkerLayers();
         MapState.setVisibleTimeLineLayers();
       });
-      this.map.on("layeradd", function(e) {
-        if (e.layer.options.predictionScaleImg) {
-          vm.predictionScaleImg = e.layer.options.predictionScaleImg;
-        }
+      map.on("layeradd", function(e) {
         if (e.layer.mapResource && e.layer.mapResource.type == "MarkerLayer") {
           e.layer.on("click", vm.markerClick);
         }
       });
-      this.map.on("layerremove", function(e) {
-        if (e.layer.options.predictionScaleImg) {
-          vm.predictionScaleImg = "";
-        }
-      });
 
-      MapState.init(this.map);
+      MapState.init(map);
+      
     },
     setBaseLayer: function() {
       if (this.baseMap) {

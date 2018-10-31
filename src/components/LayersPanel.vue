@@ -55,8 +55,7 @@ export default {
        if (mapOption.active) {
         mapOption.mapResources.forEach(resId => {
           var mapResource = MapState.getMapResource(resId);
-          MapState["add" + mapResource.type](mapResource, mapResource.type == "MarkerLayer" ? this.markerClick : null
-          );
+          MapState["add" + mapResource.type](mapResource, mapResource.type == "TimeLineLayer" ? mapResource.defaultVectors : null);
         });
       } else {
         mapOption.mapResources.forEach(resId => {
@@ -72,12 +71,10 @@ export default {
 <style scoped>
 .leftAlign {
   left: 12px;
-  top: 85px;
 }
 
 .rightAlign {
   right: 12px;
-  top: 9px;
 }
 
 .blueTheme {
@@ -92,6 +89,7 @@ export default {
   position: absolute;
   z-index: 2;
   width: 320px;
+  top: 9px;
   /* background-color: rgba(0, 123, 255, 0.5);
   padding: 10px; */
   border-radius: 8px;

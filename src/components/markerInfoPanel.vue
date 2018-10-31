@@ -28,15 +28,17 @@
 
 <script>
 
+import { MarkerClass } from "@/common/enums";
+
 export default {
   name: "MarkerInfoPanel",
   props: {
     marker: { type: Object, default: null, required: false }
   },
   data() {
-      return {
-          modalShow: false
-      }
+    return {
+      modalShow: false
+    };
   },
   watch: {
     marker: function() {
@@ -44,22 +46,51 @@ export default {
     }
   },
   computed: {
-    markerModel () {
-        // TODO: controlar tipo de marker, para crear unas secciones u otras
+    // Unificar mejor
+    markerModel() {
+      if (this.marker.mapResource.markerClass == MarkerClass.UBICACION) {
         return {
-            ModalTitle: this.marker.tipoUbicacion + `: ` + this.marker.nombre,
-            Informacion : [
-                {key: 'Longitud', value: this.marker.longitud.toFixed(2) + ' O'  }, 
-                {key: 'Latitud', value: this.marker.latitud.toFixed(2) + ' N' }, 
-                {key: 'Código modelo', value: this.marker.codigoModelo},
-                {key: 'Verificación', value: this.marker.mareografo}
-             ],
-            BancoDatos: []
-        }
+          ModalTitle: this.marker.tipoUbicacion + `: ` + this.marker.nombre,
+          Informacion: [
+            { key: "Longitud", value: this.marker.longitud.toFixed(2) + " O" },
+            { key: "Latitud", value: this.marker.latitud.toFixed(2) + " N" },
+            { key: "Código modelo", value: this.marker.codigoModelo },
+            { key: "Verificación", value: this.marker.mareografo } // Mirar
+          ],
+          BancoDatos: []
+        };
+      }
+      else if (this.marker.mapResource.markerClass == MarkerClass.PUNTO_MALLA) {
+         return {
+          ModalTitle: this.marker.mapResource.name + ": Lat " + this.marker.latitud.toFixed(2) + " N" + ": Lon " + this.marker.longitud.toFixed(2) + " O" ,
+          Informacion: [
+            { key: "Longitud", value: this.marker.longitud.toFixed(2) + " O" },
+            { key: "Latitud", value: this.marker.latitud.toFixed(2) + " N" },
+            { key: "Código modelo", value: this.marker.id },
+            { key: "Cadencia", value: (this.marker.tdelta * 60) + ' Minutos'  },
+            { key: "Malla", value: this.marker.malla },
+            // { key: "Verificación", value: this.marker.mareografo } // ?
+          ],
+          BancoDatos: []
+        };
+      }
+      else if (this.marker.mapResource.markerClass == MarkerClass.ESTACION) {
+         return {
+          ModalTitle: this.marker.nombre,
+          Informacion: [
+            { key: "Longitud", value: this.marker.longitud.toFixed(2) + " O" },
+            { key: "Latitud", value: this.marker.latitud.toFixed(2) + " N" },
+            { key: "Código", value: this.marker.id },
+            { key: "Cadencia", value: this.marker.cadencia + ' Minutos'  },
+            // ...
+          ],
+          BancoDatos: []
+        };
+      }
     },
-    imgUrl () {
-        //"https://maps.googleapis.com/maps/api/staticmap?zoom=5&size=160x140&maptype=satellite&markers=color:red%7Clabel:%7C" + this.marker.latitud + "," + this.marker.latitud + "&sensor=false&key=" + GOOGLE_API_KEY;
-        return require('@/assets/markers/markerImg.png');
+    imgUrl() {
+      //"https://maps.googleapis.com/maps/api/staticmap?zoom=5&size=160x140&maptype=satellite&markers=color:red%7Clabel:%7C" + this.marker.latitud + "," + this.marker.latitud + "&sensor=false&key=" + GOOGLE_API_KEY;
+      return require("@/assets/markers/markerImg.png");
     }
   },
   mounted() {},
@@ -68,9 +99,7 @@ export default {
 </script>
 
 <style scoped>
-
-  .infoPanelClass {
-    font-size: 12px; 
-  }
-
+.infoPanelClass {
+  font-size: 12px;
+}
 </style>
