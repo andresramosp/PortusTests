@@ -27,6 +27,19 @@
         </b-row>
         </b-container>
       </b-card>
+
+       <b-card header="Histórico" class="text-center panel-section" :class="theme" >
+        <b-container>
+           <b-row >
+               <b-col cols="6" class="form-check text-left" v-if="mapOption.group == 'historico'" v-for="mapOption in mapOptions" :key="mapOption.id">
+              <label class="form-check-label">
+                <input class="form-check-input" type="checkbox" v-model="mapOption.active" @change="mapOptionChanged(mapOption)" />
+                {{ mapOption.name }}
+              </label>
+            </b-col> 
+        </b-row>
+        </b-container>
+      </b-card>
   </div>
 
 </div>
@@ -35,7 +48,6 @@
 
 
 <script>
-
 import MapState from "@/state/map.state";
 
 export default {
@@ -52,17 +64,25 @@ export default {
   mounted() {},
   methods: {
     mapOptionChanged: function(mapOption) {
-       if (mapOption.active) {
+      if (mapOption.active) {
         mapOption.mapResources.forEach(resId => {
           var mapResource = MapState.getMapResource(resId);
-          MapState["add" + mapResource.type](mapResource, mapResource.type == "TimeLineLayer" ? mapResource.defaultVectors : null);
+          MapState["add" + mapResource.type](
+            mapResource,
+            mapResource.type == "TimeLineLayer"
+              ? mapResource.defaultVectors
+              : null
+          );
         });
+        MapState.activeMapOptions.push(mapOption);
       } else {
         mapOption.mapResources.forEach(resId => {
           MapState.removeLayer(resId);
         });
+        MapState.activeMapOptions = MapState.activeMapOptions.filter(opt => {
+          return opt.id != mapOption.id;
+        });
       }
-      this.$emit("option-click", mapOption);
     }
   }
 };
@@ -78,11 +98,11 @@ export default {
 }
 
 .blueTheme {
-  background-color: rgba(0, 123, 255, 0.5); 
+  background-color: rgba(0, 123, 255, 0.6);
 }
 
 .greenTheme {
-  background-color: rgba(0, 255, 0, 0.5); 
+  background-color: rgba(0, 255, 0, 0.6);
 }
 
 .layersPanel {
@@ -111,15 +131,14 @@ input[type="checkbox"] {
   margin-right: 5px;
 }
 
-.card-header{
+.card-header {
   background-color: #091c3259;
-  font-size: 19px
+  font-size: 19px;
 }
 
 .panel-section {
   /* background-color: rgba(0, 123, 255, 0.5);  */
-  margin-top: 12px; 
+  margin-top: 12px;
   border-radius: 8px;
 }
-
 </style>

@@ -2,7 +2,7 @@
 
 <div style="height: 100%">
     <div id="map"></div>
-    <LayersPanel :mapOptions="mapOptions" @option-click="mapOptionClick" /> 
+    <LayersPanel :mapOptions="mapOptions" /> 
     <FloatingLayerOptions v-for="mapOption in mapState.activeMapOptions" :key="mapOption.id" :mapOption="mapOption" />
     <MarkerInfoPanel :marker='markerSelected' />
     <img class="predictionScale" :src="mapState.predictionScaleImg" />
@@ -25,7 +25,6 @@ export default {
     MarkerInfoPanel
   },
   props: {
-    mapResources: Array,
     mapOptions: Array,
     baseMap: Object
   },
@@ -48,13 +47,6 @@ export default {
     markerClick: function(evt) {
       var marker = evt.sourceTarget;
       this.markerSelected = marker;
-    },
-
-    mapOptionClick: function(mapOption) {
-      if (mapOption.active)
-        this.mapState.activeMapOptions.push(mapOption);
-      else
-        this.mapState.activeMapOptions = this.mapState.activeMapOptions.filter(opt => { return opt.id != mapOption.id});
     },
 
     initMap: function() {

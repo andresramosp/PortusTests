@@ -135,10 +135,10 @@ export default {
 }
 
 .blueTheme {
-  background-color: rgba(0, 123, 255, 0.5);
+  background-color: rgba(0, 123, 255, 0.6);
 }
 
 .greenTheme {
-  background-color: rgba(0, 255, 0, 0.5);
+  background-color: rgba(0, 255, 0, 0.6);
 }
 </style>

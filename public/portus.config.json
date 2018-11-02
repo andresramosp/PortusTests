@@ -1,6 +1,6 @@
 {
     
-    "map_options": [], 
+    "map_options": ["pred_nivmar", "pred_corrientes", "pred_temperatura", "pred_oleaje_atl", "pred_oleaje_med", "pred_viento", "pred_salinidad"], 
 
     "map_initial_bounds": [-19.204102, 30.675715, 5.009766, 46.195042], 
     "map_initial_zoom": 5,

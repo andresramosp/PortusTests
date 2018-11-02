@@ -1,6 +1,6 @@
 <template>
 <div id="app" >
-   <Map :baseMap='baseMap' :mapResources='mapResources' :mapOptions='mapOptions' >
+   <Map :baseMap='baseMap' :mapOptions='mapOptions' >
    </Map>
 </div>
 </template>
@@ -8,7 +8,7 @@
 <script>
 
 import Map from "./components/map.vue";
-import { MapResources, MapOptions } from '@/common/mapResourceManager';
+import { MapOptions } from '@/common/mapResourceManager';
 
 export default {
   name: "app",
@@ -17,7 +17,6 @@ export default {
   },
   data () {
     return {
-      mapResources: [],
       mapOptions: [],
       baseMap: null
     }    
@@ -33,7 +32,6 @@ export default {
       }
     );
 
-    this.mapResources = MapResources;
     this.mapOptions = MapOptions.filter(opt => { return PC.map_options.length == 0 || PC.map_options.indexOf(opt.id) != -1});
       
   }

@@ -1,36 +1,12 @@
 import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import { API_URL } from '@/common/config'
 
 const ApiService = {
   init () {
     Vue.use(VueAxios, axios)
-    Vue.axios.defaults.baseURL = API_URL
+    Vue.axios.defaults.baseURL = process.env.VUE_APP_API_URL; 
   },
-
-   setHeader () {
-     //Vue.axios.defaults.headers.common['Authorization'] = `Token ${JwtService.getToken()}`
-   },
-
-  // get (resource, slug = '') {
-  //   return Vue.axios
-  //     .get(`${resource}/${slug}`)
-  //     .catch((error) => {
-  //       throw new Error(`[RWV] ApiService ${error}`)
-  //     })
-      
-  // },
-
-  // async get (resource, slug = '') {
-  //   var result = await Vue.axios
-  //     .get(`${resource}/${slug}`)
-  //     .catch((error) => {
-  //       throw new Error(`[RWV] ApiService ${error}`)
-  //     });
-  //   return result;
-      
-  // },
 
   async get (url) {
     var result = await Vue.axios
@@ -41,7 +17,6 @@ const ApiService = {
     return result;
       
   },
-
 
   post (resource, params) {
     return Vue.axios.post(`${resource}`, params)
@@ -62,7 +37,30 @@ const ApiService = {
       .catch((error) => {
         throw new Error(`[RWV] ApiService ${error}`)
       })
-  }
+  },
+
+  setHeader () {
+    //Vue.axios.defaults.headers.common['Authorization'] = `Token ${JwtService.getToken()}`
+  },
+
+ // get (resource, slug = '') {
+ //   return Vue.axios
+ //     .get(`${resource}/${slug}`)
+ //     .catch((error) => {
+ //       throw new Error(`[RWV] ApiService ${error}`)
+ //     })
+     
+ // },
+
+ // async get (resource, slug = '') {
+ //   var result = await Vue.axios
+ //     .get(`${resource}/${slug}`)
+ //     .catch((error) => {
+ //       throw new Error(`[RWV] ApiService ${error}`)
+ //     });
+ //   return result;
+     
+ // },
 }
 
 export default ApiService

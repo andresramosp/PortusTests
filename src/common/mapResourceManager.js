@@ -2,6 +2,7 @@ export default {}
 
 import { MarkerClass } from "@/common/enums"; 
 
+// Recursos de Tiles y Markers
 export const MapResources = [
   {
     id: 1,
@@ -14,7 +15,7 @@ export const MapResources = [
     id: 2,
     type: 'MarkerLayer',
     name: 'Nivmar Puertos',
-    resourceApi: 'ubicacionesNivmar/1',
+    resourceApi: 'ubicacionesNivmar/Puerto',
     markerClass: MarkerClass.UBICACION,
     minZoom: 0,
     icon: 'nivmar-puerto.png'
@@ -23,7 +24,7 @@ export const MapResources = [
     id: 3,
     type: 'MarkerLayer',
     name: 'Nivmar Localidades',
-    resourceApi: 'ubicacionesNivmar/2',
+    resourceApi: 'ubicacionesNivmar/Localidad',
     markerClass: MarkerClass.UBICACION,
     minZoom: 7,
     icon: 'nivmar-localidad.png'
@@ -32,33 +33,11 @@ export const MapResources = [
     id: 4,
     type: 'MarkerLayer',
     name: 'Nivmar Playas',
-    resourceApi: 'ubicacionesNivmar/3',
+    resourceApi: 'ubicacionesNivmar/Playa',
     markerClass: MarkerClass.UBICACION,
     minZoom: 8,
     icon: 'nivmar-playa.png'
   },
-  // { 
-  //   id: 2, 
-  //   type: 'MarkerLayer', 
-  //   name: 'Nivmar Ubic. Puertos', 
-  //   resourceApi: 'ubicacionesNivmar', 
-  //   minZoom: function (ubicacion) {
-  //     if (ubicacion.tipoUbicacion == 1)
-  //       return 0;
-  //     if (ubicacion.tipoUbicacion == 2)
-  //       return 7;
-  //     if (ubicacion.tipoUbicacion == 3)
-  //       return 8;
-  //   }, 
-  //   icon: function (ubicacion) {
-  //     if (ubicacion.tipoUbicacion == 1)
-  //       return 'nivmar-puerto.png';
-  //     if (ubicacion.tipoUbicacion == 2)
-  //       return 'nivmar-localidad.png';
-  //     if (ubicacion.tipoUbicacion == 3)
-  //       return 'nivmar-playa.png';
-  //   }
-  // },
   {
     id: 5,
     type: 'TimeLineLayer',
@@ -120,29 +99,53 @@ export const MapResources = [
     id: 12,
     type: 'MarkerLayer',
     name: 'Puntos Cirana',
-    resourceApi: 'puntosMalla/cirana/x',
+    resourceApi: 'puntosMalla/Cirana',
     markerClass: MarkerClass.PUNTO_MALLA,
     minZoom: 0,
-    icon: 'nivmar-puerto.png'
+    icon: 'punto-malla-cirana.png'
   },
   {
     id: 16,
     type: 'MarkerLayer',
-    name: 'Puntos Cirana',
-    resourceApi: 'puntosMalla/wana/atl',
+    name: 'Puntos Wana Atl.',
+    resourceApi: 'puntosMalla/Wana/atl',
     markerClass: MarkerClass.PUNTO_MALLA,
     minZoom: 0,
-    icon: 'nivmar-puerto.png'
+    icon: 'punto-malla-wana.png'
   },
   {
     id: 17,
     type: 'MarkerLayer',
-    name: 'Puntos Cirana',
-    resourceApi: 'puntosMalla/wana/med',
+    name: 'Puntos Wana Med.',
+    resourceApi: 'puntosMalla/Wana/med',
     markerClass: MarkerClass.PUNTO_MALLA,
     minZoom: 0,
-    icon: 'nivmar-puerto.png'
+    icon: 'punto-malla-wana.png'
   },
+  {
+    id: 18,
+    type: 'MarkerLayer',
+    name: 'Puntos Atmósfera',
+    resourceApi: 'puntosMalla/Atmosfera',
+    markerClass: MarkerClass.PUNTO_MALLA,
+    minZoom: 0,
+    icon: 'punto-malla-atmosfera.png'
+  },
+  {
+    id: 19,
+    type: 'TileLayer',
+    name: 'Prueba TileLayer',
+    resourceUrl: 'https://tile.waymarkedtrails.org/cycling/{z}/{x}/{y}.png'
+  },
+  // {
+  //   id: 19,
+  //   type: 'MarkerLayer',
+  //   name: 'Verificación Atmósfera',
+  //   resourceApi: 'puntosMalla/atmosfera',
+  //   markerClass: MarkerClass.PUNTO_MALLA,
+  //   minZoom: 0,
+  //   icon: 'nivmar-puerto.png'
+  // },
   {
     id: 13,
     type: 'MarkerLayer',
@@ -202,23 +205,16 @@ export const MapResources = [
   }
 ];
 
-
+// Checkboxes 
 export const MapOptions = [
   { id: 'pred_nivmar', group: 'predicciones', name: 'Nivel del Mar', mapResources: [1, 2, 3, 4] },
   { id: 'pred_corrientes', group: 'predicciones', name: 'Corrientes', mapResources: [8, 12] },
   { id: 'pred_temperatura', group: 'predicciones', name: 'Temperatura', mapResources: [9, 12] },
   { id: 'pred_oleaje_atl', group: 'predicciones', name: 'Oleaje Atl', mapResources: [5, 16] }, // 7
   { id: 'pred_oleaje_med', group: 'predicciones', name: 'Oleaje Med', mapResources: [6, 17] }, // 7
-  { id: 'pred_viento', group: 'predicciones', name: 'Viento', mapResources: [10] },
+  { id: 'pred_viento', group: 'predicciones', name: 'Viento', mapResources: [10, 18] },
   { id: 'pred_salinidad', group: 'predicciones', name: 'Salinidad', mapResources: [11, 12] },
   { id: 'tr_oleaje', group: 'tiempo_real', name: 'Oleaje', mapResources: [13] },
   { id: 'tr_nivmar', group: 'tiempo_real', name: 'Nivel del Mar', mapResources: [14] },
-  // { id: 'tr_onda_larga', group: 'tiempo_real', name: 'Onda Larga', mapResources: [13] },
-  { id: 'tr_agitacion', group: 'tiempo_real', name: 'Agitación', mapResources: [15] },
-  // { id: 'tr_viento', group: 'tiempo_real', name: 'Viento', mapResources: [13] },
-  // { id: 'tr_presion_atm', group: 'tiempo_real', name: 'Presión Atm.', mapResources: [13] },
-  // { id: 'tr_temp_agua', group: 'tiempo_real', name: 'Temp. del Agua', mapResources: [13] },
-  // { id: 'tr_temp_aire', group: 'tiempo_real', name: 'Temp. del Aire', mapResources: [13] },
-  // { id: 'tr_corrientes', group: 'tiempo_real', name: 'Corrientes', mapResources: [13] },
-  // { id: 'tr_salinidad', group: 'tiempo_real', name: 'Salinidad', mapResources: [13] }
+  { id: 'tr_agitacion', group: 'tiempo_real', name: 'Agitación', mapResources: [15] }
 ]
