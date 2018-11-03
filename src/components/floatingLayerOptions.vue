@@ -14,7 +14,6 @@
 </template>
 
 <script>
-
 import MapState from "@/state/map.state";
 
 export default {
@@ -30,7 +29,9 @@ export default {
   },
   computed: {
     appearClass() {
-      return PC.options_panel_align == 'right' ? 'slide-menu-right' : 'slide-menu-left';
+      return PC.options_panel_align == "right"
+        ? "slide-menu-right"
+        : "slide-menu-left";
     },
     floatingOptions() {
       var result = [];
@@ -49,24 +50,26 @@ export default {
           }
           if (multiLayer) {
             result.push({
-              name: mapResource.name, // Markers o Animaciones, algo más genérico... Reservar el name para infoPanel y otros.
+              name:
+                mapResource.type == "TimeLineLayer"
+                  ? "Pred. " + mapResource.name
+                  : mapResource.name,
+                  // : mapResource.markerClass == "PuntoMalla"
+                  //   ? "Puntos Modelo"
+                  //   : mapResource.name,
               method: vm.toggleVisibility,
               resourceId: resId,
-              active: true
+              active: mapResource.unchecked ? false : true
             });
           }
         });
-        
+
         return result;
       }
     }
   },
-  created() {
-    
-  },
-  mounted() {
-    
-  },
+  created() {},
+  mounted() {},
   methods: {
     floatingOptionChanged: function(floatingOption) {
       floatingOption.method(floatingOption.resourceId, floatingOption.active);
@@ -77,39 +80,38 @@ export default {
       var mapResource = MapState.getMapResource(mapResourceId);
       MapState.addTimeLineLayer(mapResource, vectorial);
     },
-
+    // TODO: plantear jugar solo con la visibilidad
     toggleVisibility: function(mapResourceId, visible) {
       if (visible) {
         // && !MapState.hasLayer...
         // Buscar si entre las floatingOptions hay un toggleVectorial, y si está activo, enviarlo en caso de TimeLineLayer
         // (Si no, al quitar y poner el layer, no respeta los vectores. Otra forma sería desactivar vectores automáticamente)
         var mapResource = MapState.getMapResource(mapResourceId);
-        MapState["add" + mapResource.type](mapResource);
+        if (mapResource.type == "MarkerLayer")
+          MapState.addMarkerLayer(mapResource, this.mapOption);
+        if (mapResource.type == "TimeLineLayer")
+          MapState.addTimeLineLayer(mapResource); // segundo parámetro con model del check de dirección
       } else {
         MapState.removeLayer(mapResourceId);
       }
-    }
+    },
+
   }
 };
 </script>
 
 <style scoped>
-
-
 .slide-menu-right {
   position: fixed;
-  transform: translate(150px, 0);
-  -webkit-transform: translate(150px, 0);
+  transform: translate(170px, 0);
+  -webkit-transform: translate(170px, 0);
 }
-
 
 .slide-menu-left {
   position: fixed;
-  transform: translate(-150px, 0);
-  -webkit-transform: translate(-150px, 0);
+  transform: translate(-170px, 0);
+  -webkit-transform: translate(-170px, 0);
 }
-
-
 
 .slide-menu-enter-active {
   transition: all 0.5s ease;
@@ -127,11 +129,11 @@ export default {
 }
 
 .leftAlign {
-  left: 9px;
+  left: 12px;
 }
 
 .rightAlign {
-  right: 9px;
+  right: 12px;
 }
 
 .blueTheme {

@@ -1,18 +1,18 @@
 export default {}
 
-import { MarkerClass } from "@/common/enums"; 
+import { MarkerClass } from "@/common/enums";
 
 // Recursos de Tiles y Markers
 export const MapResources = [
   {
-    id: 1,
+    id: 'pred-tiles-nivmar',
     type: 'TimeLineLayer',
     name: 'Nivel del Mar',
     resourceApi: 'mapTileResources/RES',
     tms: true
   },
   {
-    id: 2,
+    id: 'pred-markers-nivmar-puerto',
     type: 'MarkerLayer',
     name: 'Nivmar Puertos',
     resourceApi: 'ubicacionesNivmar/Puerto',
@@ -21,7 +21,7 @@ export const MapResources = [
     icon: 'nivmar-puerto.png'
   },
   {
-    id: 3,
+    id: 'pred-markers-nivmar-localidad',
     type: 'MarkerLayer',
     name: 'Nivmar Localidades',
     resourceApi: 'ubicacionesNivmar/Localidad',
@@ -30,7 +30,7 @@ export const MapResources = [
     icon: 'nivmar-localidad.png'
   },
   {
-    id: 4,
+    id: 'pred-markers-nivmar-playa',
     type: 'MarkerLayer',
     name: 'Nivmar Playas',
     resourceApi: 'ubicacionesNivmar/Playa',
@@ -39,7 +39,7 @@ export const MapResources = [
     icon: 'nivmar-playa.png'
   },
   {
-    id: 5,
+    id: 'pred-tiles-oleaje-atl',
     type: 'TimeLineLayer',
     name: 'Oleaje Atlántico',
     resourceApi: 'mapTileResources/VHM0Atl',
@@ -48,7 +48,7 @@ export const MapResources = [
     predictionTime: 72
   },
   {
-    id: 6,
+    id: 'pred-tiles-oleaje-med',
     type: 'TimeLineLayer',
     name: 'Oleaje Mediterráneo',
     resourceApi: 'mapTileResources/VHM0Med',
@@ -56,7 +56,7 @@ export const MapResources = [
     vectors: true
   },
   {
-    id: 7,
+    id: 'pred-tiles-oleaje',
     type: 'TimeLineLayer',
     name: 'Oleaje',
     resourceApi: 'mapTileResources/VHM0',
@@ -64,7 +64,7 @@ export const MapResources = [
     vectors: true
   },
   {
-    id: 8,
+    id: 'pred-tiles-corriente',
     type: 'TimeLineLayer',
     name: 'Corriente',
     resourceApi: 'mapTileResources/CURR/circulation',
@@ -72,14 +72,14 @@ export const MapResources = [
     vectors: true
   },
   {
-    id: 9,
+    id: 'pred-tiles-temperatura',
     type: 'TimeLineLayer',
     name: 'Temperatura',
     resourceApi: 'mapTileResources/SST',
     tms: true
   },
   {
-    id: 10,
+    id: 'pred-tiles-viento',
     type: 'TimeLineLayer',
     name: 'Viento',
     resourceApi: 'mapTileResources/WSPD',
@@ -88,66 +88,86 @@ export const MapResources = [
     defaultVectors: true
   },
   {
-    id: 11,
+    id: 'pred-tiles-salinidad',
     type: 'TimeLineLayer',
     name: 'Salinidad',
     resourceApi: 'mapTileResources/SAL',
-    tms: true,
-    predictionTime: 120 // Está en BD?
+    tms: true
   },
   {
-    id: 12,
+    id: 'pred-markers-cirana',
     type: 'MarkerLayer',
-    name: 'Puntos Cirana',
+    name: 'Puntos Modelo',
     resourceApi: 'puntosMalla/Cirana',
     markerClass: MarkerClass.PUNTO_MALLA,
     minZoom: 0,
     icon: 'punto-malla-cirana.png'
   },
   {
-    id: 16,
+    id: 'pred-markers-wana-atl',
     type: 'MarkerLayer',
-    name: 'Puntos Wana Atl.',
+    name: 'Puntos Modelo',
     resourceApi: 'puntosMalla/Wana/atl',
     markerClass: MarkerClass.PUNTO_MALLA,
     minZoom: 0,
     icon: 'punto-malla-wana.png'
   },
   {
-    id: 17,
+    id: 'pred-markers-wana-atl-verif',
     type: 'MarkerLayer',
-    name: 'Puntos Wana Med.',
+    name: 'Verificación',
+    resourceApi: 'puntosMalla/Wana/atl?verif=true',
+    markerClass: MarkerClass.PUNTO_MALLA,
+    unchecked: true,
+    minZoom: 0,
+    icon: 'punto-malla-verif.png' // cambiar
+  },
+  {
+    id: 'pred-markers-wana-med',
+    type: 'MarkerLayer',
+    name: 'Puntos Modelo',
     resourceApi: 'puntosMalla/Wana/med',
     markerClass: MarkerClass.PUNTO_MALLA,
     minZoom: 0,
     icon: 'punto-malla-wana.png'
   },
   {
-    id: 18,
+    id: 'pred-markers-wana-med-verif',
     type: 'MarkerLayer',
-    name: 'Puntos Atmósfera',
+    name: 'Verificación',
+    resourceApi: 'puntosMalla/Wana/med?verif=true',
+    markerClass: MarkerClass.PUNTO_MALLA,
+    unchecked: true,
+    minZoom: 0,
+    icon: 'punto-malla-verif.png'
+  },
+  {
+    id: 'pred-markers-atmosfera',
+    type: 'MarkerLayer',
+    name: 'Puntos Modelo',
     resourceApi: 'puntosMalla/Atmosfera',
     markerClass: MarkerClass.PUNTO_MALLA,
     minZoom: 0,
-    icon: 'punto-malla-atmosfera.png'
+    icon: 'punto-malla-atmosfera.png',
   },
   {
-    id: 19,
+    id: 'pred-markers-atmosfera-verif',
+    type: 'MarkerLayer',
+    name: 'Verificación',
+    resourceApi: 'puntosMalla/Atmosfera?verif=true',
+    markerClass: MarkerClass.PUNTO_MALLA,
+    unchecked: true,
+    minZoom: 0,
+    icon: 'punto-malla-verif.png', 
+  },
+  {
+    id: 'tile-layer-prueba',
     type: 'TileLayer',
     name: 'Prueba TileLayer',
     resourceUrl: 'https://tile.waymarkedtrails.org/cycling/{z}/{x}/{y}.png'
   },
-  // {
-  //   id: 19,
-  //   type: 'MarkerLayer',
-  //   name: 'Verificación Atmósfera',
-  //   resourceApi: 'puntosMalla/atmosfera',
-  //   markerClass: MarkerClass.PUNTO_MALLA,
-  //   minZoom: 0,
-  //   icon: 'nivmar-puerto.png'
-  // },
   {
-    id: 13,
+    id: 'rt-markers-ojeale',
     type: 'MarkerLayer',
     name: 'RT - Oleaje',
     resourceApi: 'estaciones/RT_WAVE',
@@ -166,7 +186,7 @@ export const MapResources = [
     cached: true
   },
   {
-    id: 14,
+    id: 'rt-markers-nivmar',
     type: 'MarkerLayer',
     name: 'RT - Nivel del Mar',
     resourceApi: 'estaciones/RT_SEA_LEVEL',
@@ -185,7 +205,7 @@ export const MapResources = [
     cached: true
   },
   {
-    id: 15,
+    id: 'rt-markers-agitacion',
     type: 'MarkerLayer',
     name: 'RT - Agitacion',
     resourceApi: 'estaciones/RT_AGITATION',
@@ -207,14 +227,64 @@ export const MapResources = [
 
 // Checkboxes 
 export const MapOptions = [
-  { id: 'pred_nivmar', group: 'predicciones', name: 'Nivel del Mar', mapResources: [1, 2, 3, 4] },
-  { id: 'pred_corrientes', group: 'predicciones', name: 'Corrientes', mapResources: [8, 12] },
-  { id: 'pred_temperatura', group: 'predicciones', name: 'Temperatura', mapResources: [9, 12] },
-  { id: 'pred_oleaje_atl', group: 'predicciones', name: 'Oleaje Atl', mapResources: [5, 16] }, // 7
-  { id: 'pred_oleaje_med', group: 'predicciones', name: 'Oleaje Med', mapResources: [6, 17] }, // 7
-  { id: 'pred_viento', group: 'predicciones', name: 'Viento', mapResources: [10, 18] },
-  { id: 'pred_salinidad', group: 'predicciones', name: 'Salinidad', mapResources: [11, 12] },
-  { id: 'tr_oleaje', group: 'tiempo_real', name: 'Oleaje', mapResources: [13] },
-  { id: 'tr_nivmar', group: 'tiempo_real', name: 'Nivel del Mar', mapResources: [14] },
-  { id: 'tr_agitacion', group: 'tiempo_real', name: 'Agitación', mapResources: [15] }
+  {
+    id: 'pred_oleaje_atl',
+    group: 'Predicciones',
+    name: 'Oleaje Atlántico',
+    mapResources: ['pred-tiles-oleaje-atl', 'pred-markers-wana-atl', 'pred-markers-wana-atl-verif'] // 'pred-tiles-oleaje'
+  },
+  {
+    id: 'pred_oleaje_med',
+    group: 'Predicciones',
+    name: 'Oleaje Medit.',
+    mapResources: ['pred-tiles-oleaje-med', 'pred-markers-wana-med', 'pred-markers-wana-med-verif'] // 'pred-tiles-oleaje'
+  },
+  {
+    id: 'pred_viento',
+    group: 'Predicciones',
+    name: 'Viento',
+    mapResources: ['pred-tiles-viento', 'pred-markers-atmosfera', 'pred-markers-atmosfera-verif']
+  },
+  {
+    id: 'pred_nivmar',
+    group: 'Predicciones',
+    name: 'Nivel del Mar',
+    mapResources: ['pred-tiles-nivmar', 'pred-markers-nivmar-puerto', 'pred-markers-nivmar-localidad', 'pred-markers-nivmar-playa']
+  },
+  {
+    id: 'pred_corrientes',
+    group: 'Predicciones',
+    name: 'Corrientes',
+    mapResources: ['pred-tiles-corriente', 'pred-markers-cirana']
+  },
+  {
+    id: 'pred_temperatura',
+    group: 'Predicciones',
+    name: 'Temperatura',
+    mapResources: ['pred-tiles-temperatura', 'pred-markers-cirana']
+  },
+  {
+    id: 'pred_salinidad',
+    group: 'Predicciones',
+    name: 'Salinidad',
+    mapResources: ['pred-tiles-salinidad', 'pred-markers-cirana']
+  },
+  // {
+  //   id: 'tr_oleaje',
+  //   group: 'Tiempo Real',
+  //   name: 'Oleaje',
+  //   mapResources: ['rt-markers-ojeale']
+  // },
+  // {
+  //   id: 'tr_nivmar',
+  //   group: 'Tiempo Real',
+  //   name: 'Nivel del Mar',
+  //   mapResources: ['rt-markers-nivmar']
+  // },
+  // {
+  //   id: 'tr_agitacion',
+  //   group: 'Tiempo Real',
+  //   name: 'Agitación',
+  //   mapResources: ['rt-markers-agitacion']
+  // }
 ]

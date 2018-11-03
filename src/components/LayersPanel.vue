@@ -2,10 +2,10 @@
 <div>
   
   <div class='layersPanel' :class="{ 'leftAlign': align == 'left', 'rightAlign': align == 'right' }">
-      <b-card header="Predicciones" class="text-center panel-section" :class="theme" >
+      <b-card v-for="optGrp in optionGroups" :header="optGrp" class="text-center panel-section" :class="theme" :key="optGrp.id">
         <b-container>
            <b-row >
-               <b-col cols="6" class="form-check text-left" v-if="mapOption.group == 'predicciones'" v-for="mapOption in mapOptions" :key="mapOption.id">
+               <b-col cols="6" class="form-check text-left" v-if="mapOption.group == optGrp" v-for="mapOption in mapOptions" :key="mapOption.id">
               <label class="form-check-label">
                 <input class="form-check-input" type="checkbox" v-model="mapOption.active" @change="mapOptionChanged(mapOption)" />
                 {{ mapOption.name }}
@@ -13,33 +13,7 @@
             </b-col> 
            </b-row>
         </b-container>
-         
-      </b-card>
-      <b-card header="Tiempo Real" class="text-center panel-section" :class="theme" >
-        <b-container>
-           <b-row >
-               <b-col cols="6" class="form-check text-left" v-if="mapOption.group == 'tiempo_real'" v-for="mapOption in mapOptions" :key="mapOption.id">
-              <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" v-model="mapOption.active" @change="mapOptionChanged(mapOption)" />
-                {{ mapOption.name }}
-              </label>
-            </b-col> 
-        </b-row>
-        </b-container>
-      </b-card>
-
-       <b-card header="Histórico" class="text-center panel-section" :class="theme" >
-        <b-container>
-           <b-row >
-               <b-col cols="6" class="form-check text-left" v-if="mapOption.group == 'historico'" v-for="mapOption in mapOptions" :key="mapOption.id">
-              <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" v-model="mapOption.active" @change="mapOptionChanged(mapOption)" />
-                {{ mapOption.name }}
-              </label>
-            </b-col> 
-        </b-row>
-        </b-container>
-      </b-card>
+       </b-card>
   </div>
 
 </div>
@@ -61,18 +35,28 @@ export default {
   props: {
     mapOptions: { type: Array, default: [], required: false }
   },
+  computed: {
+    optionGroups() {
+      var groupsList = this.mapOptions
+        .map(m => {
+          return m.group;
+        })
+        .filter(function (value, index, self) {
+          return self.indexOf(value) === index;
+        });
+      return groupsList;
+    }
+  },
   mounted() {},
   methods: {
     mapOptionChanged: function(mapOption) {
       if (mapOption.active) {
         mapOption.mapResources.forEach(resId => {
           var mapResource = MapState.getMapResource(resId);
-          MapState["add" + mapResource.type](
-            mapResource,
-            mapResource.type == "TimeLineLayer"
-              ? mapResource.defaultVectors
-              : null
-          );
+          if (mapResource.type == "MarkerLayer" && !mapResource.unchecked)
+            MapState.addMarkerLayer(mapResource, mapOption);
+          if (mapResource.type == "TimeLineLayer")
+            MapState.addTimeLineLayer(mapResource, mapResource.defaultVectors);
         });
         MapState.activeMapOptions.push(mapOption);
       } else {

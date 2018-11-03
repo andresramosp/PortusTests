@@ -1,4 +1,4 @@
-
+import { MarkerClass } from "@/common/enums";
 
 const MapUtils = {
 
@@ -17,6 +17,25 @@ const MapUtils = {
     }
     return map.getBounds().contains(marker.getLatLng()) // + buffer
       && (map.getZoom() >= minZoom);
+  },
+
+  openMarkerPopup(marker) {
+    var tooltip;
+    // comprobar zoom, si alejado añadir nota para acercarse...
+    // maquetar
+    switch (marker.mapResource.markerClass) {
+        case MarkerClass.UBICACION:
+            tooltip = marker.tipoUbicacion + ": " + marker.nombre;
+            break;
+        case MarkerClass.PUNTO_MALLA:
+            tooltip = "Pred. " + marker.mapOption.name + ": " + (marker.nombre ? marker.nombre : " Lat " + marker.latitud.toFixed(2) + " N" + ": Lon " + marker.longitud.toFixed(2) + " O");
+            break;
+        case MarkerClass.ESTACION:
+            tooltip = "Last Data..."
+            break;
+    }
+    marker.bindPopup(tooltip);
+    marker.openPopup();
   },
 
   convertYMDHToDate(str) {

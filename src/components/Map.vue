@@ -4,7 +4,7 @@
     <div id="map"></div>
     <LayersPanel :mapOptions="mapOptions" /> 
     <FloatingLayerOptions v-for="mapOption in mapState.activeMapOptions" :key="mapOption.id" :mapOption="mapOption" />
-    <MarkerInfoPanel :marker='markerSelected' />
+    <MarkerInfoPanel :marker='mapState.markerSelected' />
     <img class="predictionScale" :src="mapState.predictionScaleImg" />
 </div>
 
@@ -30,8 +30,7 @@ export default {
   },
   data() {
     return {
-      mapState: MapState,
-      markerSelected: null
+      mapState: MapState
     };
   },
   watch: {
@@ -44,11 +43,7 @@ export default {
     this.setBaseLayer();
   },
   methods: {
-    markerClick: function(evt) {
-      var marker = evt.sourceTarget;
-      this.markerSelected = marker;
-    },
-
+   
     initMap: function() {
       var mapExtent = PC.map_initial_bounds;
       var bounds = new L.LatLngBounds(
@@ -79,11 +74,11 @@ export default {
         MapState.setVisibleMarkerLayers();
         MapState.setVisibleTimeLineLayers();
       });
-      map.on("layeradd", function(e) {
-        if (e.layer.mapResource && e.layer.mapResource.type == "MarkerLayer") {
-          e.layer.on("click", vm.markerClick);
-        }
-      });
+      // map.on("layeradd", function(e) {
+      //   if (e.layer.mapResource && e.layer.mapResource.type == "MarkerLayer") {
+      //     e.layer.on("click", vm.markerClick);
+      //   }
+      // });
 
       MapState.init(map);
       

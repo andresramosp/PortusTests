@@ -50,7 +50,7 @@ export default {
     markerModel() {
       if (this.marker.mapResource.markerClass == MarkerClass.UBICACION) {
         return {
-          ModalTitle: this.marker.tipoUbicacion + `: ` + this.marker.nombre,
+          ModalTitle: this.marker.tipoUbicacion + ": " + this.marker.nombre,
           Informacion: [
             { key: "Longitud", value: this.marker.longitud.toFixed(2) + " O" },
             { key: "Latitud", value: this.marker.latitud.toFixed(2) + " N" },
@@ -62,7 +62,7 @@ export default {
       }
       else if (this.marker.mapResource.markerClass == MarkerClass.PUNTO_MALLA) {
          return {
-          ModalTitle: this.marker.mapResource.name + ": Lat " + this.marker.latitud.toFixed(2) + " N" + ": Lon " + this.marker.longitud.toFixed(2) + " O" ,
+          ModalTitle: "Pred. " + this.marker.mapOption.name + ": " + (this.marker.nombre ? this.marker.nombre : " Lat " + this.marker.latitud.toFixed(2) + " N" + ": Lon " + this.marker.longitud.toFixed(2) + " O"),
           Informacion: [
             { key: "Longitud", value: this.marker.longitud.toFixed(2) + " O" },
             { key: "Latitud", value: this.marker.latitud.toFixed(2) + " N" },

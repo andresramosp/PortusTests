@@ -1,11 +1,12 @@
 import { MapResources } from '@/common/mapResourceManager';
 import ApiService from "@/services/api.service";
-import MapUtils from "@/services/map.utils"; // MapUtils o GeoUtils
+import MapUtils from "@/services/map.utils";
 import { BASE_URL_PORTUS } from '@/common/config';
 
 const MapState = {
 
     map: null,
+    markerSelected: null,
     predictionScaleImg: null,
     preloadedTimeLineLayers: [],
     preloadedMarkers: [],
@@ -38,15 +39,24 @@ const MapState = {
         });
     },
 
-    async addMarkerLayer(mapResource) {
+    async addMarkerLayer(mapResource, mapOption) {
         var result = mapResource.cachedData || await ApiService.get(mapResource.resourceApi + (mapResource.locale ? ('?locale=' + 'es') : ''));
-        if (mapResource.cached)
-            mapResource.cachedData = result;
         result.data.forEach(m => {
             var iconUrl = typeof mapResource.icon === "function" ? mapResource.icon(m) : mapResource.icon;
             var customIcon = L.icon({ iconUrl: require('@/assets/markers/' + iconUrl), iconSize: [17, 17] });
-            var marker = L.marker([m.latitud, m.longitud], { icon: customIcon }).bindPopup(m.nombre);
+            var marker = L.marker([m.latitud, m.longitud], { icon: customIcon });
+            var ms = this;
+            marker.on('click', function (e) {
+                ms.markerSelected = this;
+            });
+            marker.on('mouseover', function (e) {
+                MapUtils.openMarkerPopup(this);
+            });
+            marker.on('mouseout', function (e) {
+                this.closePopup();
+            });
             marker.mapResource = mapResource;
+            marker.mapOption = mapOption;
             Object.assign(marker, m);
             if (mapResource.showAll) {
                 marker.addTo(this.map);
@@ -55,6 +65,9 @@ const MapState = {
                 this.preloadedMarkers.push(marker);
             }
         });
+        if (mapResource.subLayers) {
+            this.addSubLayers(result.data, mapResource, mapOption);
+        }
         this.setVisibleMarkerLayers();
     },
 
@@ -148,10 +161,10 @@ const MapState = {
 
                     console.log('Removed: ' + preLayer._baseLayer._url);
                 }
-
             }
         })
     },
+
     addTileLayer(mapResource) {
         var tileLayer = L.tileLayer(mapResource.resourceUrl, {
             tms: mapResource.tms,
