@@ -11,6 +11,7 @@ const MapState = {
     preloadedTimeLineLayers: [],
     preloadedMarkers: [],
     activeMapOptions: [],
+    loadingThings: [],
 
     init(map) {
         this.map = map;
@@ -40,6 +41,7 @@ const MapState = {
     },
 
     async addMarkerLayer(mapResource, mapOption) {
+        this.addLoading('markers');
         var result = mapResource.cachedData || await ApiService.get(mapResource.resourceApi + (mapResource.locale ? ('?locale=' + 'es') : ''));
         result.data.forEach(m => {
             var iconUrl = typeof mapResource.icon === "function" ? mapResource.icon(m) : mapResource.icon;
@@ -65,13 +67,13 @@ const MapState = {
                 this.preloadedMarkers.push(marker);
             }
         });
-        if (mapResource.subLayers) {
-            this.addSubLayers(result.data, mapResource, mapOption);
-        }
+
         this.setVisibleMarkerLayers();
+        this.removeLoading('markers');
     },
 
     async addTimeLineLayer(mapResource, vectorial) {
+        this.addLoading('timelines');
         var result = await ApiService.get(mapResource.resourceApi);
         result.data.forEach(res => {
             var tileLayer = L.tileLayer(BASE_URL_PORTUS + res.url + '{d}{h}/' + (vectorial ? 'vec' : 'map') + '//{z}/{x}/{y}.png', {
@@ -99,6 +101,7 @@ const MapState = {
             // rect.mapResource = mapResource;
         })
         this.setVisibleTimeLineLayers();
+        this.removeLoading('timelines');
     },
 
     setVisibleMarkerLayers() {
@@ -187,6 +190,16 @@ const MapState = {
             ms.predictionScaleImg = '';
         }
     },
+
+    addLoading(thing) {
+        if (this.loadingThings.indexOf(thing) == -1)
+            this.loadingThings.push(thing);
+    },
+
+    removeLoading(thing) {
+        //this.loadingThings.splice(this.loadingThings.indexOf(thing), 1);
+        this.loadingThings = this.loadingThings.filter(t => { return t != thing });
+    }
 };
 
 export default MapState

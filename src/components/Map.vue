@@ -6,6 +6,7 @@
     <FloatingLayerOptions v-for="mapOption in mapState.activeMapOptions" :key="mapOption.id" :mapOption="mapOption" />
     <MarkerInfoPanel :marker='mapState.markerSelected' />
     <img class="predictionScale" :src="mapState.predictionScaleImg" />
+    <img class="loaderGif" :src="require('@/assets/gifs/loading.gif')" v-show="loading" width="70" height="70" />
 </div>
 
 </template>
@@ -38,6 +39,11 @@ export default {
       this.setBaseLayer();
     }
   },
+  computed: {
+    loading() {
+      return this.mapState.loadingThings.length > 0;
+    }
+  },
   mounted() {
     this.initMap();
     this.setBaseLayer();
@@ -57,7 +63,7 @@ export default {
         fullscreenControl: true,
         timeDimensionControl: false,
         timeDimension: true,
-        timeDimensionOptions: {}
+        timeDimensionOptions: { mapState: this.mapState }
       }).fitBounds(bounds);
 
       L.control.zoom({
@@ -114,6 +120,13 @@ export default {
   padding: 10px;
   border-radius: 6px;
   width: 27%;
+}
+
+.loaderGif {
+    position: absolute;
+    z-index: 5;
+    right: 55px;
+    bottom: 20px;
 }
 
 input[type="checkbox"] {

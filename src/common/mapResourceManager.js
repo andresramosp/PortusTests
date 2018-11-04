@@ -7,7 +7,7 @@ export const MapResources = [
   {
     id: 'pred-tiles-nivmar',
     type: 'TimeLineLayer',
-    name: 'Nivel del Mar',
+    name: 'Pred. Nivel del Mar',
     resourceApi: 'mapTileResources/RES',
     tms: true
   },
@@ -18,7 +18,8 @@ export const MapResources = [
     resourceApi: 'ubicacionesNivmar/Puerto',
     markerClass: MarkerClass.UBICACION,
     minZoom: 0,
-    icon: 'nivmar-puerto.png'
+    icon: 'nivmar-puerto.png',
+    cached: true
   },
   {
     id: 'pred-markers-nivmar-localidad',
@@ -27,7 +28,8 @@ export const MapResources = [
     resourceApi: 'ubicacionesNivmar/Localidad',
     markerClass: MarkerClass.UBICACION,
     minZoom: 7,
-    icon: 'nivmar-localidad.png'
+    icon: 'nivmar-localidad.png',
+    cached: true
   },
   {
     id: 'pred-markers-nivmar-playa',
@@ -36,12 +38,13 @@ export const MapResources = [
     resourceApi: 'ubicacionesNivmar/Playa',
     markerClass: MarkerClass.UBICACION,
     minZoom: 8,
-    icon: 'nivmar-playa.png'
+    icon: 'nivmar-playa.png',
+    cached: true
   },
   {
     id: 'pred-tiles-oleaje-atl',
     type: 'TimeLineLayer',
-    name: 'Oleaje Atlántico',
+    name: 'Pred. Oleaje Atlántico',
     resourceApi: 'mapTileResources/VHM0Atl',
     tms: true,
     vectors: true,
@@ -50,7 +53,7 @@ export const MapResources = [
   {
     id: 'pred-tiles-oleaje-med',
     type: 'TimeLineLayer',
-    name: 'Oleaje Mediterráneo',
+    name: 'Pred. Oleaje Mediterráneo',
     resourceApi: 'mapTileResources/VHM0Med',
     tms: true,
     vectors: true
@@ -58,7 +61,7 @@ export const MapResources = [
   {
     id: 'pred-tiles-oleaje',
     type: 'TimeLineLayer',
-    name: 'Oleaje',
+    name: 'Pred. Oleaje',
     resourceApi: 'mapTileResources/VHM0',
     tms: true,
     vectors: true
@@ -66,7 +69,7 @@ export const MapResources = [
   {
     id: 'pred-tiles-corriente',
     type: 'TimeLineLayer',
-    name: 'Corriente',
+    name: 'Pred. Corriente',
     resourceApi: 'mapTileResources/CURR/circulation',
     tms: true,
     vectors: true
@@ -74,14 +77,14 @@ export const MapResources = [
   {
     id: 'pred-tiles-temperatura',
     type: 'TimeLineLayer',
-    name: 'Temperatura',
+    name: 'Pred. Temperatura',
     resourceApi: 'mapTileResources/SST',
     tms: true
   },
   {
     id: 'pred-tiles-viento',
     type: 'TimeLineLayer',
-    name: 'Viento',
+    name: 'Pred. Viento',
     resourceApi: 'mapTileResources/WSPD',
     tms: true,
     vectors: true,
@@ -90,7 +93,7 @@ export const MapResources = [
   {
     id: 'pred-tiles-salinidad',
     type: 'TimeLineLayer',
-    name: 'Salinidad',
+    name: 'Pred. Salinidad',
     resourceApi: 'mapTileResources/SAL',
     tms: true
   },
@@ -117,10 +120,10 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Verificación',
     resourceApi: 'puntosMalla/Wana/atl?verif=true',
-    markerClass: MarkerClass.PUNTO_MALLA,
+    markerClass: MarkerClass.PUNTO_MALLA_VERIF,
     unchecked: true,
     minZoom: 0,
-    icon: 'punto-malla-verif.png' // cambiar
+    icon: 'punto-malla-verif.png' 
   },
   {
     id: 'pred-markers-wana-med',
@@ -136,7 +139,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Verificación',
     resourceApi: 'puntosMalla/Wana/med?verif=true',
-    markerClass: MarkerClass.PUNTO_MALLA,
+    markerClass: MarkerClass.PUNTO_MALLA_VERIF,
     unchecked: true,
     minZoom: 0,
     icon: 'punto-malla-verif.png'
@@ -155,7 +158,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Verificación',
     resourceApi: 'puntosMalla/Atmosfera?verif=true',
-    markerClass: MarkerClass.PUNTO_MALLA,
+    markerClass: MarkerClass.PUNTO_MALLA_VERIF,
     unchecked: true,
     minZoom: 0,
     icon: 'punto-malla-verif.png', 

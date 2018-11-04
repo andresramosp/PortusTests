@@ -50,13 +50,7 @@ export default {
           }
           if (multiLayer) {
             result.push({
-              name:
-                mapResource.type == "TimeLineLayer"
-                  ? "Pred. " + mapResource.name
-                  : mapResource.name,
-                  // : mapResource.markerClass == "PuntoMalla"
-                  //   ? "Puntos Modelo"
-                  //   : mapResource.name,
+              name:  mapResource.name,
               method: vm.toggleVisibility,
               resourceId: resId,
               active: mapResource.unchecked ? false : true
@@ -80,7 +74,7 @@ export default {
       var mapResource = MapState.getMapResource(mapResourceId);
       MapState.addTimeLineLayer(mapResource, vectorial);
     },
-    // TODO: plantear jugar solo con la visibilidad
+    
     toggleVisibility: function(mapResourceId, visible) {
       if (visible) {
         // && !MapState.hasLayer...

@@ -6,14 +6,14 @@ const MapUtils = {
     return map.getBounds().intersects(layer.options.bounds)
       && (layer.options.minZoom <= map.getZoom() && (map.getZoom() <= layer.options.maxZoom));
   },
-  
+
   markerVisible(map, marker) {
     var minZoom;
     if (marker.mapResource.minZoom && typeof marker.mapResource.minZoom === "function") {
       minZoom = layer.mapResource.minZoom(marker);
     }
     else {
-      minZoom =  marker.minZoom ? marker.minZoom : (marker.mapResource.minZoom ? marker.mapResource.minZoom : 0);
+      minZoom = marker.minZoom ? marker.minZoom : (marker.mapResource.minZoom ? marker.mapResource.minZoom : 0);
     }
     return map.getBounds().contains(marker.getLatLng()) // + buffer
       && (map.getZoom() >= minZoom);
@@ -24,15 +24,18 @@ const MapUtils = {
     // comprobar zoom, si alejado añadir nota para acercarse...
     // maquetar
     switch (marker.mapResource.markerClass) {
-        case MarkerClass.UBICACION:
-            tooltip = marker.tipoUbicacion + ": " + marker.nombre;
-            break;
-        case MarkerClass.PUNTO_MALLA:
-            tooltip = "Pred. " + marker.mapOption.name + ": " + (marker.nombre ? marker.nombre : " Lat " + marker.latitud.toFixed(2) + " N" + ": Lon " + marker.longitud.toFixed(2) + " O");
-            break;
-        case MarkerClass.ESTACION:
-            tooltip = "Last Data..."
-            break;
+      case MarkerClass.UBICACION:
+        tooltip = marker.tipoUbicacion + ": " + marker.nombre;
+        break;
+      case MarkerClass.PUNTO_MALLA:
+        tooltip = "Pred. " + marker.mapOption.name + ": " + (marker.nombre ? marker.nombre : " Lat " + marker.latitud.toFixed(2) + " N" + ": Lon " + marker.longitud.toFixed(2) + " O");
+        break;
+      case MarkerClass.PUNTO_MALLA_VERIF:
+        tooltip = "Verificación: " + marker.nombre;
+        break;
+      case MarkerClass.ESTACION:
+        tooltip = "Last Data..."
+        break;
     }
     marker.bindPopup(tooltip);
     marker.openPopup();

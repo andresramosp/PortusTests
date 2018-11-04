@@ -74,6 +74,20 @@ export default {
           BancoDatos: []
         };
       }
+      else if (this.marker.mapResource.markerClass == MarkerClass.PUNTO_MALLA_VERIF) {
+         return {
+          ModalTitle: "Verificación: " + this.marker.nombre,
+          Informacion: [
+            { key: "Longitud", value: this.marker.longitud.toFixed(2) + " O" },
+            { key: "Latitud", value: this.marker.latitud.toFixed(2) + " N" },
+            { key: "Código modelo", value: this.marker.id },
+            { key: "Cadencia", value: (this.marker.tdelta * 60) + ' Minutos'  },
+            { key: "Malla", value: this.marker.malla },
+            // { key: "Verificación", value: this.marker.mareografo } // ?
+          ],
+          BancoDatos: []
+        };
+      }
       else if (this.marker.mapResource.markerClass == MarkerClass.ESTACION) {
          return {
           ModalTitle: this.marker.nombre,

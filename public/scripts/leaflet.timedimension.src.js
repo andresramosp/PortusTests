@@ -28,6 +28,8 @@ L.TimeDimension = (L.Layer || L.Class).extend({
 
     initialize: function (options) {
         L.setOptions(this, options);
+        // añadido para controlar el loader del mapa
+        this.mapState = options.mapState;
         // _availableTimes is an array with all the available times in ms.
         this._availableTimes = this._generateAvailableTimes();
         this._currentTimeIndex = -1;
@@ -1760,6 +1762,7 @@ L.Control.TimeDimension = L.Control.extend({
         this._map = map;
         if (!this._timeDimension && map.timeDimension) {
             this._timeDimension = map.timeDimension;
+            this.mapState = map.timeDimension.options.mapState;
         }
         this._initPlayer();
 
@@ -1810,6 +1813,7 @@ L.Control.TimeDimension = L.Control.extend({
         return this;
     },
     onRemove: function() {
+        this.mapState.removeLoading('player')
         this._player.off('play stop running loopchange speedchange', this._onPlayerStateChange, this);
         this._player.off('waiting', this._onPlayerWaiting, this);
         //this._player = null;  keep it for later re-add
@@ -1839,7 +1843,8 @@ L.Control.TimeDimension = L.Control.extend({
     _onTimeLoading : function(data) {
         if (data.time == this._timeDimension.getCurrentTime()) {
             if (this._displayDate) {
-                L.DomUtil.addClass(this._displayDate, 'loading');
+                //L.DomUtil.addClass(this._displayDate, 'loading');
+                this.mapState.addLoading('player');
             }
         }
     },
@@ -1863,12 +1868,14 @@ L.Control.TimeDimension = L.Control.extend({
 
     _onPlayerWaiting: function(evt) {
         if (this._buttonPlayPause && this._player.getSteps() > 0) {
-            L.DomUtil.addClass(this._buttonPlayPause, 'loading');
-            this._buttonPlayPause.innerHTML = this._getDisplayLoadingText(evt.available, evt.buffer);
+            //L.DomUtil.addClass(this._buttonPlayPause, 'loading');
+            this.mapState.addLoading('player');
+            //this._buttonPlayPause.innerHTML = this._getDisplayLoadingText(evt.available, evt.buffer);
         }
         if (this._buttonPlayReversePause && this._player.getSteps() < 0) {
-            L.DomUtil.addClass(this._buttonPlayReversePause, 'loading');
-            this._buttonPlayReversePause.innerHTML = this._getDisplayLoadingText(evt.available, evt.buffer);
+            //L.DomUtil.addClass(this._buttonPlayReversePause, 'loading');
+            this.mapState.addLoading('player');
+            //this._buttonPlayReversePause.innerHTML = this._getDisplayLoadingText(evt.available, evt.buffer);
         }
     },
     _onPlayerStateChange: function() {
@@ -1881,10 +1888,12 @@ L.Control.TimeDimension = L.Control.extend({
                 L.DomUtil.addClass(this._buttonPlayPause, 'play');
             }
             if (this._player.isWaiting() && this._player.getSteps() > 0) {
-                L.DomUtil.addClass(this._buttonPlayPause, 'loading');
+                //L.DomUtil.addClass(this._buttonPlayPause, 'loading');
+                this.mapState.addLoading('player');
             } else {
                 this._buttonPlayPause.innerHTML = '';
-                L.DomUtil.removeClass(this._buttonPlayPause, 'loading');
+                //L.DomUtil.removeClass(this._buttonPlayPause, 'loading');
+                this.mapState.removeLoading('player');
             }
         }
         if (this._buttonPlayReversePause) {
@@ -1894,10 +1903,12 @@ L.Control.TimeDimension = L.Control.extend({
                 L.DomUtil.removeClass(this._buttonPlayReversePause, 'pause');
             }
             if (this._player.isWaiting() && this._player.getSteps() < 0) {
-                L.DomUtil.addClass(this._buttonPlayReversePause, 'loading');
+                //L.DomUtil.addClass(this._buttonPlayReversePause, 'loading');
+                this.mapState.addLoading('player');
             } else {
                 this._buttonPlayReversePause.innerHTML = '';
-                L.DomUtil.removeClass(this._buttonPlayReversePause, 'loading');
+                //L.DomUtil.removeClass(this._buttonPlayReversePause, 'loading');
+                this.mapState.removeLoading('player');
             }
         }
         if (this._buttonLoop) {
