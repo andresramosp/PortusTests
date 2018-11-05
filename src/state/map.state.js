@@ -94,11 +94,11 @@ const MapState = {
             portusTimeLayer.mapResource = mapResource;
             this.preloadedTimeLineLayers.push(portusTimeLayer);
 
-            // var rect = L.rectangle([[res.limN, res.limW], [res.limS, res.limE]], { color: 'white', fillOpacity: 0.0, weight: 1 }).on('click', function (e) {
-            //   console.info(e);
-            // }).addTo(this.map);
+            var rect = L.rectangle([[res.limN, res.limW], [res.limS, res.limE]], { color: 'white', fillOpacity: 0.0, weight: 1 }).on('click', function (e) {
+              console.info(e);
+            }).addTo(this.map);
 
-            // rect.mapResource = mapResource;
+            rect.mapResource = mapResource;
         })
         this.setVisibleTimeLineLayers();
         this.removeLoading('timelines');

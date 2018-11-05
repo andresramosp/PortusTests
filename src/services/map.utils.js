@@ -34,7 +34,7 @@ const MapUtils = {
         tooltip = "Verificación: " + marker.nombre;
         break;
       case MarkerClass.ESTACION:
-        tooltip = "Last Data..."
+        tooltip = marker.nombre + "\n" + JSON.stringify(marker.lastData);
         break;
     }
     marker.bindPopup(tooltip);

@@ -272,22 +272,22 @@ export const MapOptions = [
     name: 'Salinidad',
     mapResources: ['pred-tiles-salinidad', 'pred-markers-cirana']
   },
-  // {
-  //   id: 'tr_oleaje',
-  //   group: 'Tiempo Real',
-  //   name: 'Oleaje',
-  //   mapResources: ['rt-markers-ojeale']
-  // },
-  // {
-  //   id: 'tr_nivmar',
-  //   group: 'Tiempo Real',
-  //   name: 'Nivel del Mar',
-  //   mapResources: ['rt-markers-nivmar']
-  // },
-  // {
-  //   id: 'tr_agitacion',
-  //   group: 'Tiempo Real',
-  //   name: 'Agitación',
-  //   mapResources: ['rt-markers-agitacion']
-  // }
+  {
+    id: 'tr_oleaje',
+    group: 'Tiempo Real',
+    name: 'Oleaje',
+    mapResources: ['rt-markers-ojeale']
+  },
+  {
+    id: 'tr_nivmar',
+    group: 'Tiempo Real',
+    name: 'Nivel del Mar',
+    mapResources: ['rt-markers-nivmar']
+  },
+  {
+    id: 'tr_agitacion',
+    group: 'Tiempo Real',
+    name: 'Agitación',
+    mapResources: ['rt-markers-agitacion']
+  }
 ]
