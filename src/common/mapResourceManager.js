@@ -186,7 +186,7 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true
+    cached: false
   },
   {
     id: 'rt-markers-nivmar',
@@ -205,7 +205,7 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true
+    cached: false
   },
   {
     id: 'rt-markers-agitacion',
@@ -224,7 +224,45 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true
+    cached: false
+  },
+  {
+    id: 'rt-markers-viento',
+    type: 'MarkerLayer',
+    name: 'RT - Viento',
+    resourceApi: 'estaciones/RT_WIND',
+    markerClass: MarkerClass.ESTACION,
+    minZoom: 0,
+    icon: function (m) {
+      if (m.propagacion) {
+        return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
+      }
+      else {
+        return (1 <= m.estado && m.estado <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
+      }
+    },
+    showAll: true,
+    locale: true,
+    cached: false
+  },
+  {
+    id: 'rt-markers-salinidad',
+    type: 'MarkerLayer',
+    name: 'RT - Salinidad',
+    resourceApi: 'estaciones/RT_SALINITY',
+    markerClass: MarkerClass.ESTACION,
+    minZoom: 0,
+    icon: function (m) {
+      if (m.propagacion) {
+        return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
+      }
+      else {
+        return (1 <= m.estado && m.estado <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
+      }
+    },
+    showAll: true,
+    locale: true,
+    cached: false
   }
 ];
 
@@ -289,5 +327,17 @@ export const MapOptions = [
     group: 'Tiempo Real',
     name: 'Agitación',
     mapResources: ['rt-markers-agitacion']
+  },
+  {
+    id: 'tr_viento',
+    group: 'Tiempo Real',
+    name: 'Viento',
+    mapResources: ['rt-markers-viento']
+  },
+  {
+    id: 'tr_salinidad',
+    group: 'Tiempo Real',
+    name: 'Salinidad',
+    mapResources: ['rt-markers-salinidad']
   }
 ]

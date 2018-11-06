@@ -1,4 +1,5 @@
 import { MarkerClass } from "@/common/enums";
+import ApiService from "@/services/api.service";
 
 const MapUtils = {
 
@@ -19,26 +20,57 @@ const MapUtils = {
       && (map.getZoom() >= minZoom);
   },
 
-  openMarkerPopup(marker) {
+  openMarkerPopup(map, marker) {
     var tooltip;
     // comprobar zoom, si alejado añadir nota para acercarse...
     // maquetar
     switch (marker.mapResource.markerClass) {
       case MarkerClass.UBICACION:
         tooltip = marker.tipoUbicacion + ": " + marker.nombre;
+        marker.bindPopup(tooltip);
+        marker.openPopup();
         break;
       case MarkerClass.PUNTO_MALLA:
         tooltip = "Pred. " + marker.mapOption.name + ": " + (marker.nombre ? marker.nombre : " Lat " + marker.latitud.toFixed(2) + " N" + ": Lon " + marker.longitud.toFixed(2) + " O");
+        marker.bindPopup(tooltip);
+        marker.openPopup();
         break;
       case MarkerClass.PUNTO_MALLA_VERIF:
         tooltip = "Verificación: " + marker.nombre;
+        marker.bindPopup(tooltip);
+        marker.openPopup();
         break;
       case MarkerClass.ESTACION:
-        tooltip = marker.nombre + "\n" + JSON.stringify(marker.lastData);
+      var tooltip = {};
+        var markersAtPoint = this.getMarkersById(map, marker.id);
+        // Hace falta?
+        this.asyncForEach(markersAtPoint, async m => {
+          var lastData = await ApiService.get('lastDataEstacion/' + m.id + '/' + m.variable + '?locale=es')
+          Object.assign(tooltip, lastData.data);
+          marker.bindPopup(JSON.stringify(tooltip));
+          marker.openPopup();
+        })
+       
         break;
     }
-    marker.bindPopup(tooltip);
-    marker.openPopup();
+    
+  },
+
+  async asyncForEach(array, callback) {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array)
+    }
+  },
+
+  getMarkersById(map, id) {
+    var result = [];
+    map.eachLayer(function (layer) {
+      if (layer.mapResource && layer.mapResource.type == "MarkerLayer") {
+        if (layer.id == id)
+          result.push(layer);
+      }  
+    });
+  return result;
   },
 
   convertYMDHToDate(str) {

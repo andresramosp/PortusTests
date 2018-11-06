@@ -18,6 +18,15 @@ const ApiService = {
       
   },
 
+   getNotAsync (resource, slug = '') {
+   return Vue.axios
+     .get(`${resource}/${slug}`)
+     .catch((error) => {
+       throw new Error(`[RWV] ApiService ${error}`)
+     })
+     
+ },
+
   post (resource, params) {
     return Vue.axios.post(`${resource}`, params)
   },
