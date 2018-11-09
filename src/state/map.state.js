@@ -58,7 +58,7 @@ const MapState = {
                 MapUtils.openMarkerPopup(ms.map, this);
             });
             marker.on('mouseout', function (e) {
-                this.closePopup();
+                MapUtils.closeMarkerPopup(ms.map, this);
             });
             marker.mapResource = mapResource;
             marker.mapOption = mapOption;

@@ -45,15 +45,22 @@ const MapUtils = {
         var markersAtPoint = this.getMarkersById(map, marker.id);
         // Hace falta?
         this.asyncForEach(markersAtPoint, async m => {
-          var lastData = await ApiService.get('lastDataEstacion/' + m.id + '/' + m.variable + '?locale=es')
+          m.popUp = true;
+          var lastData = await ApiService.get('lastDataEstacion/' + m.id + '/' + m.variable + '?locale=en')
           Object.assign(tooltip, lastData.data);
-          marker.bindPopup(JSON.stringify(tooltip));
-          marker.openPopup();
+          if (m.popUp) {
+            marker.bindPopup(JSON.stringify(tooltip));
+            marker.openPopup();
+          }
         })
-       
         break;
     }
     
+  },
+
+  closeMarkerPopup(map, marker) {
+    marker.popUp = false;
+    marker.closePopup();
   },
 
   async asyncForEach(array, callback) {

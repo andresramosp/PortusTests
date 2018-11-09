@@ -186,7 +186,7 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: false
+    cached: true
   },
   {
     id: 'rt-markers-nivmar',
@@ -205,7 +205,7 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: false
+    cached: true
   },
   {
     id: 'rt-markers-agitacion',
@@ -224,7 +224,7 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: false
+    cached: true
   },
   {
     id: 'rt-markers-viento',
@@ -243,7 +243,7 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: false
+    cached: true
   },
   {
     id: 'rt-markers-salinidad',
@@ -262,7 +262,102 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: false
+    cached: true
+  },
+  {
+    id: 'rt-markers-presion-aire',
+    type: 'MarkerLayer',
+    name: 'RT - Presión Aire',
+    resourceApi: 'estaciones/RT_AIR_PRESURE',
+    markerClass: MarkerClass.ESTACION,
+    minZoom: 0,
+    icon: function (m) {
+      if (m.propagacion) {
+        return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
+      }
+      else {
+        return (1 <= m.estado && m.estado <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
+      }
+    },
+    showAll: true,
+    locale: true,
+    cached: true
+  },
+  {
+    id: 'rt-markers-temperatura-agua',
+    type: 'MarkerLayer',
+    name: 'RT - Temp. Agua',
+    resourceApi: 'estaciones/RT_WATER_TEMP',
+    markerClass: MarkerClass.ESTACION,
+    minZoom: 0,
+    icon: function (m) {
+      if (m.propagacion) {
+        return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
+      }
+      else {
+        return (1 <= m.estado && m.estado <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
+      }
+    },
+    showAll: true,
+    locale: true,
+    cached: true
+  },
+  {
+    id: 'rt-markers-temperatura-aire',
+    type: 'MarkerLayer',
+    name: 'RT - Temp. Aire',
+    resourceApi: 'estaciones/RT_AIR_TEMP',
+    markerClass: MarkerClass.ESTACION,
+    minZoom: 0,
+    icon: function (m) {
+      if (m.propagacion) {
+        return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
+      }
+      else {
+        return (1 <= m.estado && m.estado <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
+      }
+    },
+    showAll: true,
+    locale: true,
+    cached: true
+  },
+  {
+    id: 'rt-markers-corrientes',
+    type: 'MarkerLayer',
+    name: 'RT - Corrientes',
+    resourceApi: 'estaciones/RT_CURRENTS',
+    markerClass: MarkerClass.ESTACION,
+    minZoom: 0,
+    icon: function (m) {
+      if (m.propagacion) {
+        return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
+      }
+      else {
+        return (1 <= m.estado && m.estado <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
+      }
+    },
+    showAll: true,
+    locale: true,
+    cached: true
+  },
+  {
+    id: 'rt-markers-onda-larga',
+    type: 'MarkerLayer',
+    name: 'RT - Onda Larga',
+    resourceApi: 'estaciones/RT_SEICHE',
+    markerClass: MarkerClass.ESTACION,
+    minZoom: 0,
+    icon: function (m) {
+      if (m.propagacion) {
+        return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
+      }
+      else {
+        return (1 <= m.estado && m.estado <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
+      }
+    },
+    showAll: true,
+    locale: true,
+    cached: true
   }
 ];
 
@@ -339,5 +434,35 @@ export const MapOptions = [
     group: 'Tiempo Real',
     name: 'Salinidad',
     mapResources: ['rt-markers-salinidad']
+  },
+  {
+    id: 'tr_pres_aire',
+    group: 'Tiempo Real',
+    name: 'Presión Atm.',
+    mapResources: ['rt-markers-presion-aire']
+  },
+  {
+    id: 'tr_temp_agua',
+    group: 'Tiempo Real',
+    name: 'Temp. Agua',
+    mapResources: ['rt-markers-temperatura-agua']
+  },
+  {
+    id: 'tr_temp_aire',
+    group: 'Tiempo Real',
+    name: 'Temp. Aire',
+    mapResources: ['rt-markers-temperatura-aire']
+  },
+  {
+    id: 'tr_corrientes',
+    group: 'Tiempo Real',
+    name: 'Corrientes',
+    mapResources: ['rt-markers-corrientes']
+  },
+  {
+    id: 'tr_onda_larga',
+    group: 'Tiempo Real',
+    name: 'Onda Larga',
+    mapResources: ['rt-markers-onda-larga']
   }
 ]
