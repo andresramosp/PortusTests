@@ -28,21 +28,39 @@
   <script src="./scripts/leaflet.measurecontrol.js"></script>
   <script type="text/javascript" src="https://cdn.rawgit.com/nezasa/iso8601-js-period/master/iso8601.min.js"></script>
   <!-- <script type="text/javascript" src="https://cdn.rawgit.com/socib/Leaflet.TimeDimension/master/dist/leaflet.timedimension.min.js"></script> -->
-  <script type="text/javascript" src="./scripts/leaflet.timedimension.src.js" ></script>
-  <script type="text/javascript" src="./scripts/leaflet.tileLayer.timeLine.js" ></script>
+  <script type="text/javascript" src="./scripts/leaflet.timedimension.src.js"></script>
+  <script type="text/javascript" src="./scripts/leaflet.tileLayer.timeLine.js"></script>
   <link rel="stylesheet" href="https://cdn.rawgit.com/socib/Leaflet.TimeDimension/master/dist/leaflet.timedimension.control.min.css" />
 
   <!-- Portus Config as Global Object -->
   <!-- <script type="text/javascript" src="./portus.config.js" ></script> -->
 
+  <script>
+    Date.prototype.toLocalTime = function () {
+      return new Date(this.getTime() - (this.getTimezoneOffset() * 60000));
+    }
+
+    String.prototype.replaceAll = function (search, replacement) {
+      var target = this;
+      return target.replace(new RegExp(search, 'g'), replacement);
+    };
+  </script>
+
   <!-- Fonts -->
   <link href='http://fonts.googleapis.com/css?family=Italianno' rel='stylesheet' type='text/css'>
 
   <style>
-  html { height: 100% }
-body { height: 100%; margin: 0; padding: 0;}
+    html {
+      height: 100%
+    }
+
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
   </style>
-  
+
 </head>
 
 <body>

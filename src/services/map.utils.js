@@ -48,13 +48,9 @@ const MapUtils = {
         marker.popUp = true;
         this.asyncForEach(markersAtPoint, async m => {
           var lastData = await ApiService.get('lastDataEstacion/' + m.id + '/' + m.variable + '?locale=es')
-          Object.assign(data, lastData.data);
-          if (m.popUp) {
-            var comp = new Vue({
-              ...MarkerPopup,
-              propsData: { marker: marker, data: data }
-            }).$mount()
-  
+          this.mergeLastDataStations(data, lastData.data);
+          if (m.popUp)  {
+            var comp = new Vue({...MarkerPopup, propsData: { marker: marker, data: data }}).$mount()
             var html = comp.$el.innerHTML; 
             marker.bindPopup(html, {
               maxWidth : 560
@@ -66,6 +62,19 @@ const MapUtils = {
         break;
     }
     
+  },
+
+  mergeLastDataStations(orig, source) {
+    var fechaAct = orig['Fecha'];
+    var fechaNew = source['Fecha'];
+    if (!fechaAct || !fechaNew) {
+      Object.assign(orig, source);
+    }
+    else {
+      var fechaMayor = new Date(fechaAct) >= new Date(fechaNew) ? fechaAct : fechaNew;
+      source['Fecha'] = fechaMayor;
+      Object.assign(orig, source);
+    }
   },
 
   closeMarkerPopup(map, marker) {

@@ -196,12 +196,7 @@ export const MapResources = [
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
-      if (m.propagacion) {
-        return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
-      }
-      else {
-        return (1 <= m.estado && m.estado <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
-      }
+      return (1 <= m.estado && m.estado <= 2) ? 'estacion-nivmar-na.png' : 'estacion-nivmar.png'
     },
     showAll: true,
     locale: true,
@@ -215,12 +210,7 @@ export const MapResources = [
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
-      if (m.propagacion) {
-        return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
-      }
-      else {
-        return (1 <= m.estado && m.estado <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
-      }
+       return (1 <= m.estado && m.estado <= 2) ? 'estacion-agitacion-na.png' : 'estacion-agitacion.png'
     },
     showAll: true,
     locale: true,
@@ -234,12 +224,7 @@ export const MapResources = [
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
-      if (m.propagacion) {
-        return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
-      }
-      else {
-        return (1 <= m.estado && m.estado <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
-      }
+      return (1 <= m.estado && m.estado <= 2) ? 'estacion-viento-na.png' : 'estacion-viento.png'
     },
     showAll: true,
     locale: true,
@@ -253,12 +238,7 @@ export const MapResources = [
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
-      if (m.propagacion) {
-        return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
-      }
-      else {
-        return (1 <= m.estado && m.estado <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
-      }
+      return (1 <= m.estado && m.estado <= 2) ? 'estacion-salinidad-na.png' : 'estacion-salinidad.png'
     },
     showAll: true,
     locale: true,
@@ -272,12 +252,7 @@ export const MapResources = [
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
-      if (m.propagacion) {
-        return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
-      }
-      else {
-        return (1 <= m.estado && m.estado <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
-      }
+      return (1 <= m.estado && m.estado <= 2) ? 'estacion-presionAtm-na.png' : 'estacion-presionAtm.png'
     },
     showAll: true,
     locale: true,
@@ -291,12 +266,7 @@ export const MapResources = [
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
-      if (m.propagacion) {
-        return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
-      }
-      else {
-        return (1 <= m.estado && m.estado <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
-      }
+      return (1 <= m.estado && m.estado <= 2) ? 'estacion-tempAgua-na.png' : 'estacion-tempAgua.png'
     },
     showAll: true,
     locale: true,
@@ -310,12 +280,7 @@ export const MapResources = [
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
-      if (m.propagacion) {
-        return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
-      }
-      else {
-        return (1 <= m.estado && m.estado <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
-      }
+      return (1 <= m.estado && m.estado <= 2) ? 'estacion-tempAire-na.png' : 'estacion-tempAire.png'
     },
     showAll: true,
     locale: true,
@@ -329,12 +294,7 @@ export const MapResources = [
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
-      if (m.propagacion) {
-        return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
-      }
-      else {
-        return (1 <= m.estado && m.estado <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
-      }
+      return (1 <= m.estado && m.estado <= 2) ? 'estacion-corriente-na.png' : 'estacion-corriente.png'
     },
     showAll: true,
     locale: true,
@@ -348,12 +308,7 @@ export const MapResources = [
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
-      if (m.propagacion) {
-        return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
-      }
-      else {
-        return (1 <= m.estado && m.estado <= 2) ? 'estacion-oleaje-na.png' : 'estacion-oleaje.png'
-      }
+      return (1 <= m.estado && m.estado <= 2) ? 'estacion-ondaLarga-na.png' : 'estacion-ondaLarga.png'
     },
     showAll: true,
     locale: true,

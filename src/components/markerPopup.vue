@@ -1,11 +1,20 @@
 <template>
-  <div v-if="markerModel.TiempoReal.length > 0" style="margin-top: 15px; width:400px">
-    <div class="row rowData">
-      <div class="col-md-6">{{dateTag}}</div><div class="col-md-6" style="text-align: right">{{markerModel.DateValue}}</div>
+  
+  <div v-if="markerModel.TiempoReal.length > 0" style="margin-top: 15px; width:420px">
+     <div class="row rowData">
+      <div class="col-md-5" style="font-weight: 700; font-size: 13px">{{markerModel.Title}}</div><div class="col-md-7" style="text-align: right; color: blue">{{moreInfoTag}}</div>
+    </div>
+    <div class="row rowData" style="margin-bottom: 20px;">
+      <div class="col-md-6">{{dateTag}}</div><div class="col-md-6" style="text-align: right; font-weight: 700">{{markerModel.DateValue}}</div>
     </div>
     <div class="row rowData" :class="{ 'whiteBG': index % 2 != 0, 'grayBG': index % 2 == 0 }" v-for="(data, index) in markerModel.TiempoReal" :key="data.key">
       <div class="col-md-6">{{data.key}}</div>
       <div class="col-md-6" style="text-align: right">{{data.value}}</div>
+    </div>
+  </div>
+  <div v-else>
+    <div class="row rowData">
+      <div class="col-md-12">{{emptyTag}}</div>
     </div>
   </div>
 </template>
@@ -18,7 +27,9 @@ export default {
   name: "MarkerPopup",
   data () {
     return {
-      dateTag: "Fecha último dato" // Diccionario
+      dateTag: "Hora del último dato", // Diccionario
+      emptyTag: "No hay datos para mostrar",
+      moreInfoTag: "click en icono para acceso a datos"
     }
   },
   props: {
@@ -27,27 +38,21 @@ export default {
   },
   computed: {
     markerModel() {
-      if (this.marker.mapResource.markerClass == MarkerClass.UBICACION) {
-        
-      }
-      else if (this.marker.mapResource.markerClass == MarkerClass.PUNTO_MALLA) {
-         
-      }
-      else if (this.marker.mapResource.markerClass == MarkerClass.PUNTO_MALLA_VERIF) {
-        
-      }
-      else if (this.marker.mapResource.markerClass == MarkerClass.ESTACION) {
+      var dateValue;
          var tiempoReal = Object.keys(this.data).map(k => {
             return { key: k, value: this.data[k] }
          });
-         var dateValue = tiempoReal.find(tr => { return tr.key == "Fecha"}).value;
-         tiempoReal = tiempoReal.filter(tr => { return tr.key != "Fecha" });
+         if (tiempoReal.length > 0) {
+           dateValue = tiempoReal.find(tr => { return tr.key == "Fecha"}).value;
+           dateValue = new Date(dateValue);
+           dateValue = dateValue.toISOString().slice(0, 19).replace('T', ' ') + ' GMT';    
+           tiempoReal = tiempoReal.filter(tr => { return tr.key != "Fecha" });
+         }
          return {
-          ModalTitle: this.marker.nombre,
+          Title: this.marker.nombre,
           DateValue: dateValue,
           TiempoReal: tiempoReal
         };
-      }
     }
   },
   mounted() {},
@@ -58,7 +63,7 @@ export default {
 <style scoped>
 
 .rowData {
-  width: 400px;
+  width: 420px;
 }
 
 .whiteBG {
