@@ -1,6 +1,9 @@
 import { MarkerClass } from "@/common/enums";
 import ApiService from "@/services/api.service";
 
+import MarkerPopup from "@/components/markerPopup.vue";
+import Vue from 'vue';
+
 const MapUtils = {
 
   tileLayerVisible(map, layer) {
@@ -26,8 +29,7 @@ const MapUtils = {
     // maquetar
     switch (marker.mapResource.markerClass) {
       case MarkerClass.UBICACION:
-        tooltip = marker.tipoUbicacion + ": " + marker.nombre;
-        marker.bindPopup(tooltip);
+        marker.bindPopup(marker.tipoUbicacion + ": " + marker.nombre);
         marker.openPopup();
         break;
       case MarkerClass.PUNTO_MALLA:
@@ -41,18 +43,26 @@ const MapUtils = {
         marker.openPopup();
         break;
       case MarkerClass.ESTACION:
-      var tooltip = {};
+        var data = {};
         var markersAtPoint = this.getMarkersById(map, marker.id);
-        // Hace falta?
+        marker.popUp = true;
         this.asyncForEach(markersAtPoint, async m => {
-          m.popUp = true;
-          var lastData = await ApiService.get('lastDataEstacion/' + m.id + '/' + m.variable + '?locale=en')
-          Object.assign(tooltip, lastData.data);
+          var lastData = await ApiService.get('lastDataEstacion/' + m.id + '/' + m.variable + '?locale=es')
+          Object.assign(data, lastData.data);
           if (m.popUp) {
-            marker.bindPopup(JSON.stringify(tooltip));
+            var comp = new Vue({
+              ...MarkerPopup,
+              propsData: { marker: marker, data: data }
+            }).$mount()
+  
+            var html = comp.$el.innerHTML; 
+            marker.bindPopup(html, {
+              maxWidth : 560
+            });
             marker.openPopup();
           }
-        })
+        });
+
         break;
     }
     
@@ -61,12 +71,6 @@ const MapUtils = {
   closeMarkerPopup(map, marker) {
     marker.popUp = false;
     marker.closePopup();
-  },
-
-  async asyncForEach(array, callback) {
-    for (let index = 0; index < array.length; index++) {
-      await callback(array[index], index, array)
-    }
   },
 
   getMarkersById(map, id) {
@@ -88,7 +92,13 @@ const MapUtils = {
     var date = new Date(year, month - 1, day, hour);
     date.setUTCHours(hour, 0, 0, 0);
     return date;
-  }
+  },
+
+  async asyncForEach(array, callback) {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array)
+    }
+  },
 
 }
 

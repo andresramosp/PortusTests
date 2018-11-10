@@ -23,8 +23,6 @@ const MapState = {
         MapResources.forEach(async mr => {
             if (mr.type == "MarkerLayer" && mr.cached) {
                 mr.cachedData = await ApiService.get(mr.resourceApi + (mr.locale ? ('?locale=' + 'es') : ''));
-                // setTimeOut con refreshCache(mr), que pone vuelve a llamar a la Api y, si esta activo el layer, le hace un
-                // remove + add
             }
         })
     },

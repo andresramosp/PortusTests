@@ -80,12 +80,6 @@ export default {
         MapState.setVisibleMarkerLayers();
         MapState.setVisibleTimeLineLayers();
       });
-      // map.on("layeradd", function(e) {
-      //   if (e.layer.mapResource && e.layer.mapResource.type == "MarkerLayer") {
-      //     e.layer.on("click", vm.markerClick);
-      //   }
-      // });
-
       MapState.init(map);
       
     },
