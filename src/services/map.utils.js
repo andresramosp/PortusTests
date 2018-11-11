@@ -1,7 +1,7 @@
 import { MarkerClass } from "@/common/enums";
 import ApiService from "@/services/api.service";
 
-import MarkerPopup from "@/components/markerPopup.vue";
+import LastDataPopup from "@/components/lastDataPopup.vue";
 import Vue from 'vue';
 
 const MapUtils = {
@@ -14,7 +14,7 @@ const MapUtils = {
   markerVisible(map, marker) {
     var minZoom;
     if (marker.mapResource.minZoom && typeof marker.mapResource.minZoom === "function") {
-      minZoom = layer.mapResource.minZoom(marker);
+      minZoom = marker.mapResource.minZoom(marker);
     }
     else {
       minZoom = marker.minZoom ? marker.minZoom : (marker.mapResource.minZoom ? marker.mapResource.minZoom : 0);
@@ -50,7 +50,7 @@ const MapUtils = {
           var lastData = await ApiService.get('lastDataEstacion/' + m.id + '/' + m.variable + '?locale=es')
           this.mergeLastDataStations(data, lastData.data);
           if (m.popUp)  {
-            var comp = new Vue({...MarkerPopup, propsData: { marker: marker, data: data }}).$mount()
+            var comp = new Vue({...LastDataPopup, propsData: { marker: marker, data: data }}).$mount()
             var html = comp.$el.innerHTML; 
             marker.bindPopup(html, {
               maxWidth : 560

@@ -373,6 +373,12 @@ export const MapOptions = [
     mapResources: ['rt-markers-nivmar']
   },
   {
+    id: 'tr_onda_larga',
+    group: 'Tiempo Real',
+    name: 'Onda Larga',
+    mapResources: ['rt-markers-onda-larga']
+  },
+  {
     id: 'tr_agitacion',
     group: 'Tiempo Real',
     name: 'Agitación',
@@ -383,12 +389,6 @@ export const MapOptions = [
     group: 'Tiempo Real',
     name: 'Viento',
     mapResources: ['rt-markers-viento']
-  },
-  {
-    id: 'tr_salinidad',
-    group: 'Tiempo Real',
-    name: 'Salinidad',
-    mapResources: ['rt-markers-salinidad']
   },
   {
     id: 'tr_pres_aire',
@@ -415,9 +415,10 @@ export const MapOptions = [
     mapResources: ['rt-markers-corrientes']
   },
   {
-    id: 'tr_onda_larga',
+    id: 'tr_salinidad',
     group: 'Tiempo Real',
-    name: 'Onda Larga',
-    mapResources: ['rt-markers-onda-larga']
+    name: 'Salinidad',
+    mapResources: ['rt-markers-salinidad']
   }
+
 ]
