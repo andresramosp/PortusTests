@@ -75,6 +75,16 @@ export const MapResources = [
     vectors: true
   },
   {
+    id: 'pred-tiles-corriente-radar',
+    type: 'TimeLineLayer',
+    name: 'Pred. Corriente Radar',
+    resourceApi: 'mapTileResources/CURR/radar',
+    tms: true,
+    vectors: true,
+    defaultVectors: true,
+    paintBounds: true
+  },
+  {
     id: 'pred-tiles-temperatura',
     type: 'TimeLineLayer',
     name: 'Pred. Temperatura',
@@ -289,7 +299,7 @@ export const MapResources = [
   {
     id: 'rt-markers-corrientes',
     type: 'MarkerLayer',
-    name: 'RT - Corrientes',
+    name: 'Estaciones',
     resourceApi: 'estaciones/RT_CURRENTS',
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
@@ -412,7 +422,7 @@ export const MapOptions = [
     id: 'tr_corrientes',
     group: 'Tiempo Real',
     name: 'Corrientes',
-    mapResources: ['rt-markers-corrientes']
+    mapResources: ['rt-markers-corrientes', 'pred-tiles-corriente-radar']
   },
   {
     id: 'tr_salinidad',

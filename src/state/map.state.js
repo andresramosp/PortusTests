@@ -95,11 +95,15 @@ const MapState = {
             portusTimeLayer.mapResource = mapResource;
             this.preloadedTimeLineLayers.push(portusTimeLayer);
 
-            var rect = L.rectangle([[res.limN, res.limW], [res.limS, res.limE]], { color: 'white', fillOpacity: 0.0, weight: 1 }).on('click', function (e) {
-              console.info(e);
-            }).addTo(this.map);
-
-            rect.mapResource = mapResource;
+            if (mapResource.paintBounds) {
+                var ms = this;
+                var rect = L.rectangle([[res.limN, res.limW], [res.limS, res.limE]], { color: 'red', fillOpacity: 0.1, weight: 1 }).on('click', function (e) {
+                    ms.map.fitBounds(e.target.getBounds().pad(0.25));
+                    // rectángulo invisible a partir de cierto nivel de zoom
+                }).addTo(this.map);
+                rect.mapResource = mapResource;
+            }
+           
         })
         this.setVisibleTimeLineLayers();
         this.removeLoading('timelines');
@@ -125,7 +129,7 @@ const MapState = {
                     ms.map.options.timeDimensionOptions.period = "PT" + preLayer._baseLayer.options.period + "H";
                     var date = new Date();
                     date.setUTCHours(0, 0, 0, 0);
-                    var predHours = (preLayer._baseLayer.options.gaps - 1) * 24; //preLayer.mapResource.predictionTime ? preLayer.mapResource.predictionTime : 72;
+                    var predHours = (preLayer._baseLayer.options.gaps) * 24; //preLayer.mapResource.predictionTime ? preLayer.mapResource.predictionTime : 72;
                     ms.map.options.timeDimensionOptions.timeInterval = date.toISOString() + '/PT' + predHours + 'H'; // 'PT192H/' + sv.convertYMDHToDate(preLayer._baseLayer.options.strLastate).toISOString();
                     ms.map.timeDimension.initialize(ms.map.options.timeDimensionOptions);
                     ms.map.timeDimension.setCurrentTimeIndex(0);

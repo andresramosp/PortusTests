@@ -23,7 +23,7 @@ const MapUtils = {
       && (map.getZoom() >= minZoom);
   },
 
-  openMarkerPopup(map, marker) {
+  async openMarkerPopup(map, marker) {
     var tooltip;
     // comprobar zoom, si alejado añadir nota para acercarse...
     // maquetar
@@ -46,22 +46,33 @@ const MapUtils = {
         var data = {};
         var markersAtPoint = this.getMarkersById(map, marker.id);
         marker.popUp = true;
-        this.asyncForEach(markersAtPoint, async m => {
-          var lastData = await ApiService.get('lastDataEstacion/' + m.id + '/' + m.variable + '?locale=es')
-          this.mergeLastDataStations(data, lastData.data);
-          if (m.popUp)  {
-            var comp = new Vue({...LastDataPopup, propsData: { marker: marker, data: data }}).$mount()
-            var html = comp.$el.innerHTML; 
-            marker.bindPopup(html, {
-              maxWidth : 560
-            });
-            marker.openPopup();
-          }
-        });
+        var lastData = await ApiService.post('lastDataEstacion/' + marker.id + '?locale=es',
+          markersAtPoint.map(m => { return m.variable }));
+        if (marker.popUp) {
+          var comp = new Vue({ ...LastDataPopup, propsData: { marker: marker, data: lastData.data } }).$mount()
+          var html = comp.$el.innerHTML;
+          marker.bindPopup(html, {
+            maxWidth: 560
+          });
+          marker.openPopup();
+        }
+
+        // this.asyncForEach(markersAtPoint, async m => {
+        //   var lastData = await ApiService.get('lastDataEstacion/' + m.id + '/' + m.variable + '?locale=es')
+        //   this.mergeLastDataStations(data, lastData.data);
+        //   if (m.popUp)  {
+        //     var comp = new Vue({...LastDataPopup, propsData: { marker: marker, data: data }}).$mount()
+        //     var html = comp.$el.innerHTML; 
+        //     marker.bindPopup(html, {
+        //       maxWidth : 560
+        //     });
+        //     marker.openPopup();
+        //   }
+        // });
 
         break;
     }
-    
+
   },
 
   mergeLastDataStations(orig, source) {
@@ -88,9 +99,9 @@ const MapUtils = {
       if (layer.mapResource && layer.mapResource.type == "MarkerLayer") {
         if (layer.id == id)
           result.push(layer);
-      }  
+      }
     });
-  return result;
+    return result;
   },
 
   convertYMDHToDate(str) {

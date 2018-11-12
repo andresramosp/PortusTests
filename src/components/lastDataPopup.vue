@@ -1,26 +1,33 @@
 <template>
-  
-  <div v-if="markerModel.TiempoReal.length > 0" style="margin-top: 15px; width:450px">
-     <div class="row rowData">
+  <div>
+    <div class="row rowData">
       <div class="col-md-5" style="font-weight: 700; font-size: 13px">{{markerModel.Title}}</div><div class="col-md-7" style="text-align: right; color: blue">{{moreInfoTag}}</div>
     </div>
-    <div class="row rowData" >
-      <div class="col-md-6">{{dateTag}}</div><div class="col-md-6" style="text-align: right; font-weight: 700">{{markerModel.Date}}</div>
+    <div v-if="markerModel.TiempoReal.length > 0" style="width:450px">
+      <div class="row rowData" >
+        <div class="col-md-6">{{dateTag}}</div><div class="col-md-6" style="text-align: right; font-weight: 700">{{markerModel.Date}}</div>
+      </div>
+      <div v-if="markerModel.LastPosition" class="row rowData">
+        <div class="col-md-6">{{lastPositionTag}}</div><div class="col-md-6" style="text-align: right">{{markerModel.LastPosition}}</div>
+      </div>
+      <div style="margin-bottom: 20px;"></div>
+      <div class="row rowData" :class="{ 'whiteBG': index % 2 != 0, 'grayBG': index % 2 == 0 }" v-for="(data, index) in markerModel.TiempoReal" :key="data.key">
+        <div class="col-md-6">{{data.key}}</div>
+        <div class="col-md-6" style="text-align: right">{{data.value}}</div>
+      </div>
     </div>
-    <div v-if="markerModel.LastPosition" class="row rowData">
-      <div class="col-md-6">{{lastPositionTag}}</div><div class="col-md-6" style="text-align: right">{{markerModel.LastPosition}}</div>
+    <div v-else-if="notAvailable">
+      <div class="row rowData">
+        <div class="col-md-12">{{notAvailableTag}}</div>
+      </div>
     </div>
-    <div style="margin-bottom: 20px;"></div>
-    <div class="row rowData" :class="{ 'whiteBG': index % 2 != 0, 'grayBG': index % 2 == 0 }" v-for="(data, index) in markerModel.TiempoReal" :key="data.key">
-      <div class="col-md-6">{{data.key}}</div>
-      <div class="col-md-6" style="text-align: right">{{data.value}}</div>
+    <div v-else>
+      <div class="row rowData">
+        <div class="col-md-12">{{emptyTag}}</div>
+      </div>
     </div>
   </div>
-  <div v-else>
-    <div class="row rowData">
-      <div class="col-md-12">{{emptyTag}}</div>
-    </div>
-  </div>
+
 </template>
 
 <script>
@@ -29,9 +36,10 @@ export default {
   data() {
     return {
       dateTag: "Hora del último dato", // Diccionario
-      emptyTag: "No hay datos para mostrar",
+      emptyTag: "No hay datos recientes",
       moreInfoTag: "click en icono para acceso a datos",
-      lastPositionTag: "Última posición"
+      lastPositionTag: "Última posición",
+      notAvailableTag: "Estación temporalmente fuera de servicio"
     };
   },
   props: {
@@ -39,6 +47,9 @@ export default {
     data: { type: Object, default: null, required: false }
   },
   computed: {
+    notAvailable() {
+      return (1 <= this.marker.estado && this.marker.estado <= 2);
+    },
     markerModel() {
       var dateValue;
       var lastPositionValue;
