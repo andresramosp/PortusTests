@@ -196,7 +196,8 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true
+    cached: false,
+    preventHeaping: true
   },
   {
     id: 'rt-markers-nivmar',

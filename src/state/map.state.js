@@ -62,7 +62,7 @@ const MapState = {
             marker.mapOption = mapOption;
             Object.assign(marker, m);
             if (mapResource.showAll) {
-                marker.addTo(this.map);
+                this.addMarkerToMap(marker);
             }
             else {
                 this.preloadedMarkers.push(marker);
@@ -71,6 +71,27 @@ const MapState = {
 
         this.setVisibleMarkerLayers();
         this.removeLoading('markers');
+    },
+
+    addMarkerToMap(marker) {
+        marker.addTo(this.map);
+        if (marker.mapResource.preventHeaping) {
+            marker.buffer = L.circleMarker(marker.getLatLng(), { radius: 15, weight: 1, opacity: 0.5 }).addTo(this.map);
+            marker.buffer.on('mouseover', function (e) {
+                console.log('en el buffer');
+                // función de mapUtils que chequea cuantos del mismo mapResource hay en el circulo
+                // si más de N, tooltip especial (heapTooltip)
+            });
+            marker.buffer.on('mouseout', function (e) {
+                console.log('fuera del buffer');
+            });
+        }
+    },
+
+    removeMarkerFromMap(marker) {
+        marker.remove();
+        if (marker.buffer)
+            marker.buffer.remove();
     },
 
     async addTimeLineLayer(mapResource, vectorial) {
@@ -113,10 +134,10 @@ const MapState = {
         var ms = this;
         this.preloadedMarkers.forEach(function (marker) {
             if (MapUtils.markerVisible(ms.map, marker)) {
-                marker.addTo(ms.map);
+                this.addMarkerToMap(marker);
             }
             else {
-                marker.remove();
+                this.removeMarkerFromMap(marker);
             }
         });
     },

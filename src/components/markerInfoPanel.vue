@@ -34,6 +34,7 @@
 import { MarkerClass } from "@/common/enums";
 import MapState from "@/state/map.state";
 import ApiService from "@/services/api.service";
+import { INFORMES_URL } from '@/common/config';
 
 export default {
   name: "MarkerInfoPanel",
@@ -88,6 +89,21 @@ export default {
           };
         }
         else if (this.marker.mapResource.markerClass == MarkerClass.ESTACION) {
+          //   this.markerModel = {
+          //     ModalTitle: this.marker.nombre,
+          //     Informacion: [
+          //       { key: "Longitud", value: this.marker.longitud.toFixed(2) + " O" },
+          //       { key: "Latitud", value: this.marker.latitud.toFixed(2) + " N" },
+          //       { key: "Código", value: this.marker.id },
+          //       { key: "Cadencia", value: this.marker.cadencia + ' Minutos'  },
+          //       { key: "Profundidad", value: this.marker.altitudProfundidad + ' m' },
+          //       { key: "Fecha inicial de fondeo", value: this.marker.fechaAlta },
+          //       { key: "Tipo de sensor", value: this.marker.tipoSensor },
+          //       { key: "Modelo", value: this.marker.modelo },
+          //       { key: "Conjunto de datos", value: this.marker.red.descripcion, bold: true, href: 'www.elpais.es' }
+          //     ],
+          //     BancoDatos: []
+          // };
           var mi = this;
           ApiService.getNotAsync('redes/' + this.marker.redId + '?locale=' + 'es')
           .then((red) => {
@@ -99,10 +115,10 @@ export default {
                 { key: "Código", value: mi.marker.id },
                 { key: "Cadencia", value: mi.marker.cadencia + ' Minutos'  },
                 { key: "Profundidad", value: mi.marker.altitudProfundidad + ' m' },
-                { key: "Fecha inicial de fondeo", value: mi.marker.fechaAlta },
+                { key: "Fecha inicial de fondeo", value: new Date(mi.marker.fechaAlta).toISOString().split('T')[0] },
                 { key: "Tipo de sensor", value: mi.marker.tipoSensor },
                 { key: "Modelo", value: mi.marker.modelo },
-                { key: "Conjunto de datos", value: red.data.descripcion, bold: true, href: 'www.elpais.es' }
+                { key: "Conjunto de datos", value: red.data.descripcion, bold: true, href: INFORMES_URL + 'BD/informes/INT_'	+ red.data.id + '.pdf' }
               ],
               BancoDatos: []
           };

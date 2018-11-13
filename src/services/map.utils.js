@@ -27,6 +27,7 @@ const MapUtils = {
     var tooltip;
     // comprobar zoom, si alejado añadir nota para acercarse...
     // maquetar
+    
     switch (marker.mapResource.markerClass) {
       case MarkerClass.UBICACION:
         marker.bindPopup(marker.tipoUbicacion + ": " + marker.nombre);
