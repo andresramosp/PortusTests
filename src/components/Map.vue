@@ -5,6 +5,7 @@
     <LayersPanel :mapOptions="mapOptions" /> 
     <FloatingLayerOptions v-for="mapOption in mapState.activeMapOptions" :key="mapOption.id" :mapOption="mapOption" />
     <MarkerInfoPanel :marker='mapState.markerSelected' />
+    <div ref="rere"></div>
     <img class="predictionScale" :src="mapState.predictionScaleImg" />
     <img class="loaderGif" :src="require('@/assets/gifs/loading.gif')" v-show="loading" width="70" height="70" />
 </div>
@@ -60,6 +61,7 @@ export default {
       var map = L.map("map", {
         zoomSnap: 0.1,
         zoomControl: false,
+        closePopupOnClick: false,
         fullscreenControl: true,
         timeDimensionControl: false,
         timeDimension: true,
@@ -80,8 +82,10 @@ export default {
         MapState.setVisibleMarkerLayers();
         MapState.setVisibleTimeLineLayers();
       });
+      map.on('popupclose', function(e) {
+        MapState.popupFixed = false;
+      });
       MapState.init(map);
-      
     },
     setBaseLayer: function() {
       if (this.baseMap) {

@@ -19,7 +19,7 @@ export const MapResources = [
     markerClass: MarkerClass.UBICACION,
     minZoom: 0,
     icon: 'nivmar-puerto.png',
-    cached: true
+    cached: false
   },
   {
     id: 'pred-markers-nivmar-localidad',
@@ -29,7 +29,7 @@ export const MapResources = [
     markerClass: MarkerClass.UBICACION,
     minZoom: 7,
     icon: 'nivmar-localidad.png',
-    cached: true
+    cached: false
   },
   {
     id: 'pred-markers-nivmar-playa',
@@ -39,7 +39,7 @@ export const MapResources = [
     markerClass: MarkerClass.UBICACION,
     minZoom: 8,
     icon: 'nivmar-playa.png',
-    cached: true
+    cached: false
   },
   {
     id: 'pred-tiles-oleaje-atl',
@@ -47,8 +47,7 @@ export const MapResources = [
     name: 'Pred. Oleaje Atlántico',
     resourceApi: 'mapTileResources/VHM0Atl',
     tms: true,
-    vectors: true,
-    predictionTime: 72
+    vectors: true
   },
   {
     id: 'pred-tiles-oleaje-med',
@@ -211,7 +210,8 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true
+    cached: false,
+    preventHeaping: true
   },
   {
     id: 'rt-markers-agitacion',
@@ -225,7 +225,8 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true
+    cached: false,
+    preventHeaping: true
   },
   {
     id: 'rt-markers-viento',
@@ -239,7 +240,8 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true
+    cached: false,
+    preventHeaping: true
   },
   {
     id: 'rt-markers-salinidad',
@@ -253,7 +255,8 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true
+    cached: false,
+    preventHeaping: true
   },
   {
     id: 'rt-markers-presion-aire',
@@ -267,7 +270,8 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true
+    cached: false,
+    preventHeaping: true
   },
   {
     id: 'rt-markers-temperatura-agua',
@@ -281,7 +285,8 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true
+    cached: false,
+    preventHeaping: true
   },
   {
     id: 'rt-markers-temperatura-aire',
@@ -295,7 +300,8 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true
+    cached: false,
+    preventHeaping: true
   },
   {
     id: 'rt-markers-corrientes',
@@ -309,7 +315,8 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true
+    cached: false,
+    preventHeaping: true
   },
   {
     id: 'rt-markers-onda-larga',
@@ -323,7 +330,8 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true
+    cached: false,
+    preventHeaping: true
   }
 ];
 

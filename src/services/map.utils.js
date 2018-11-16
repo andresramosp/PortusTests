@@ -1,7 +1,9 @@
 import { MarkerClass } from "@/common/enums";
 import ApiService from "@/services/api.service";
+import MapState from "@/state/map.state";
 
 import LastDataPopup from "@/components/lastDataPopup.vue";
+import HeapedMarkersPopup from "@/components/heapedMarkersPopup.vue";
 import Vue from 'vue';
 
 const MapUtils = {
@@ -21,6 +23,44 @@ const MapUtils = {
     }
     return map.getBounds().contains(marker.getLatLng()) // + buffer
       && (map.getZoom() >= minZoom);
+  },
+
+  getHeapedMarkers(map, marker) {
+    var mu = this;
+    map.eachLayer(function (layer) {
+      if (layer instanceof L.Marker && layer.mapResource.preventHeaping) {
+        if(layer.id != marker.id && mu.distanceInPixels(map, marker.getLatLng(), layer.getLatLng()) < 12) {
+           layer.heaped = true;
+           heapedMarkers.push(layer)
+        }
+        else {
+          layer.heaped = false;
+        }
+      }
+    });
+    return heapedMarkers;
+  },
+
+  markerMouseOver(map, marker) {
+    if (!MapState.popupFixed) {
+      var heapedMarkers = new Array();
+      if (marker.mapResource.preventHeaping) {
+        heapedMarkers = this.getHeapedMarkers(map, marker);
+      }
+      if (heapedMarkers.length > 0) {
+        heapedMarkers.push(marker);
+        marker.heaped = true;
+        new Vue({ ...HeapedMarkersPopup, 
+          propsData: { markers: heapedMarkers, markerHovered: marker } 
+        }).$mount()
+        .$on('marker-item-clicked', function (marker) {
+          MapState.markerSelected = marker;
+        });
+      }
+      else {
+        this.openMarkerPopup(map, marker);
+      }
+    }
   },
 
   async openMarkerPopup(map, marker) {
@@ -44,7 +84,6 @@ const MapUtils = {
         marker.openPopup();
         break;
       case MarkerClass.ESTACION:
-        var data = {};
         var markersAtPoint = this.getMarkersById(map, marker.id);
         marker.popUp = true;
         var lastData = await ApiService.post('lastDataEstacion/' + marker.id + '?locale=es',
@@ -92,6 +131,10 @@ const MapUtils = {
   closeMarkerPopup(map, marker) {
     marker.popUp = false;
     marker.closePopup();
+    marker.unbindPopup();
+    if (!MapState.popupFixed) { 
+      MapState.closeHeapedPopup();
+    }
   },
 
   getMarkersById(map, id) {
@@ -103,6 +146,11 @@ const MapUtils = {
       }
     });
     return result;
+  },
+
+  distanceInPixels(map, coord1, coord2) {
+    return map.latLngToLayerPoint(coord1)
+    .distanceTo(map.latLngToLayerPoint(coord2))
   },
 
   convertYMDHToDate(str) {

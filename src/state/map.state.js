@@ -12,10 +12,11 @@ const MapState = {
     preloadedMarkers: [],
     activeMapOptions: [],
     loadingThings: [],
-    intervalCache: null,
+    heapedPopup: null,
 
-    init(map) {
+    init(map, mapComponent) {
         this.map = map;
+        this.mapComponent = mapComponent;
         this.cacheLayers();
     },
 
@@ -43,17 +44,22 @@ const MapState = {
 
     async addMarkerLayer(mapResource, mapOption) {
         this.addLoading('markers');
-        var result = mapResource.cachedData || await ApiService.get(mapResource.resourceApi + (mapResource.locale ? ('?locale=' + 'es') : ''));
+        var result = mapResource.cachedData || await ApiService.get(mapResource.resourceApi + (mapResource.locale ? ('?locale=' + 'es') : '')); // {data: [{latitud: 80, longitud: 80, id:'1', icon: 'estacion-agitacion.png', nombre:'hola' }, {latitud: 80, longitud: 82, id:'2', icon: 'estacion-agitacion.png', nombre: 'adios' }]};/
         result.data.forEach(m => {
             var iconUrl = typeof mapResource.icon === "function" ? mapResource.icon(m) : mapResource.icon;
             var customIcon = L.icon({ iconUrl: require('@/assets/markers/' + iconUrl), iconSize: [17, 17] });
             var marker = L.marker([m.latitud, m.longitud], { icon: customIcon });
             var ms = this;
             marker.on('click', function (e) {
-                ms.markerSelected = this;
+                if (!this.heaped) {
+                    ms.markerSelected = this;
+                }
+                else {
+                    ms.popupFixed = true;
+                }
             });
             marker.on('mouseover', function (e) {
-                MapUtils.openMarkerPopup(ms.map, this);
+                MapUtils.markerMouseOver(ms.map, this);
             });
             marker.on('mouseout', function (e) {
                 MapUtils.closeMarkerPopup(ms.map, this);
@@ -62,7 +68,7 @@ const MapState = {
             marker.mapOption = mapOption;
             Object.assign(marker, m);
             if (mapResource.showAll) {
-                this.addMarkerToMap(marker);
+                marker.addTo(ms.map);
             }
             else {
                 this.preloadedMarkers.push(marker);
@@ -71,27 +77,6 @@ const MapState = {
 
         this.setVisibleMarkerLayers();
         this.removeLoading('markers');
-    },
-
-    addMarkerToMap(marker) {
-        marker.addTo(this.map);
-        if (marker.mapResource.preventHeaping) {
-            marker.buffer = L.circleMarker(marker.getLatLng(), { radius: 15, weight: 1, opacity: 0.5 }).addTo(this.map);
-            marker.buffer.on('mouseover', function (e) {
-                console.log('en el buffer');
-                // función de mapUtils que chequea cuantos del mismo mapResource hay en el circulo
-                // si más de N, tooltip especial (heapTooltip)
-            });
-            marker.buffer.on('mouseout', function (e) {
-                console.log('fuera del buffer');
-            });
-        }
-    },
-
-    removeMarkerFromMap(marker) {
-        marker.remove();
-        if (marker.buffer)
-            marker.buffer.remove();
     },
 
     async addTimeLineLayer(mapResource, vectorial) {
@@ -134,10 +119,10 @@ const MapState = {
         var ms = this;
         this.preloadedMarkers.forEach(function (marker) {
             if (MapUtils.markerVisible(ms.map, marker)) {
-                this.addMarkerToMap(marker);
+                marker.addTo(ms.map);
             }
             else {
-                this.removeMarkerFromMap(marker);
+                marker.remove();
             }
         });
     },
@@ -225,6 +210,15 @@ const MapState = {
     removeLoading(thing) {
         //this.loadingThings.splice(this.loadingThings.indexOf(thing), 1);
         this.loadingThings = this.loadingThings.filter(t => { return t != thing });
+    },
+
+    setHeapedPopup(popup) {
+        this.heapedPopup = popup;
+        popup.openOn(this.map);
+    },
+
+    closeHeapedPopup() {
+        this.map.closePopup();
     }
 };
 
