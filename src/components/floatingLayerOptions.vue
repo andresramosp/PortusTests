@@ -5,7 +5,7 @@
         <div class="form-check" v-for="floatingOption in floatingOptions" :key="floatingOptions.indexOf(floatingOption)">
            <label class="form-check-label">
              <input class="form-check-input" type="checkbox" v-model="floatingOption.active" @change="floatingOptionChanged(floatingOption)" />
-               {{ floatingOption.name }}
+               {{ $t(floatingOption.name) }}
             </label>
         </div> 
       </div>

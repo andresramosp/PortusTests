@@ -23,6 +23,8 @@ export default {
   },
   mounted () {
 
+    this.$setLocale(this.$route.query.locale ? this.$route.query.locale : 'es');
+
     this.baseMap = L.tileLayer(
       PC.base_layer,
       {

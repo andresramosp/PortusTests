@@ -27,6 +27,7 @@ const MapUtils = {
 
   getHeapedMarkers(map, marker) {
     var mu = this;
+    var heapedMarkers = new Array();
     map.eachLayer(function (layer) {
       if (layer instanceof L.Marker && layer.mapResource.preventHeaping) {
         if(layer.id != marker.id && mu.distanceInPixels(map, marker.getLatLng(), layer.getLatLng()) < 12) {
@@ -70,23 +71,23 @@ const MapUtils = {
     
     switch (marker.mapResource.markerClass) {
       case MarkerClass.UBICACION:
-        marker.bindPopup(marker.tipoUbicacion + ": " + marker.nombre);
+        marker.bindPopup(Vue.$t("{tipoUbicacion" + marker.tipoUbicacion+"}") + ": " + marker.nombre);
         marker.openPopup();
         break;
       case MarkerClass.PUNTO_MALLA:
-        tooltip = "Pred. " + marker.mapOption.name + ": " + (marker.nombre ? marker.nombre : " Lat " + marker.latitud.toFixed(2) + " N" + ": Lon " + marker.longitud.toFixed(2) + " O");
+        tooltip = "Pred. " + Vue.$t(marker.mapOption.name) + ": " + (marker.nombre ? marker.nombre : " Lat " + marker.latitud.toFixed(2) + " N" + ": Lon " + marker.longitud.toFixed(2) + " O");
         marker.bindPopup(tooltip);
         marker.openPopup();
         break;
       case MarkerClass.PUNTO_MALLA_VERIF:
-        tooltip = "Verificación: " + marker.nombre;
+        tooltip = Vue.$t("{verificacionInfo}") + ": " + marker.nombre;
         marker.bindPopup(tooltip);
         marker.openPopup();
         break;
       case MarkerClass.ESTACION:
         var markersAtPoint = this.getMarkersById(map, marker.id);
         marker.popUp = true;
-        var lastData = await ApiService.post('lastDataEstacion/' + marker.id + '?locale=es',
+        var lastData = await ApiService.post('lastDataEstacion/' + marker.id + '?locale=' + Vue.$getLocale(),
           markersAtPoint.map(m => { return m.variable }));
         if (marker.popUp) {
           var comp = new Vue({ ...LastDataPopup, propsData: { marker: marker, data: lastData.data } }).$mount()

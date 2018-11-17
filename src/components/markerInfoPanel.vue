@@ -1,7 +1,7 @@
 <template>
 <b-modal v-model="modalShow" v-if="markerModel" @hidden="onHidden" size="lg" :title="markerModel.ModalTitle">
     <b-tabs class='infoPanelClass' >
-        <b-tab title="Acceso a datos" active v-if="markerModel.BancoDatos">
+        <b-tab :title="$t('{accesoADatosTab}')" active v-if="markerModel.BancoDatos">
             <b-container style="margin-top: 15px">
                 <b-row v-for="data in markerModel.BancoDatos" :key="data.key">
                     <b-col>{{data.key}}</b-col>
@@ -9,7 +9,7 @@
                 </b-row>
             </b-container>
         </b-tab>
-        <b-tab title="Informacion" v-if="markerModel.Informacion">
+        <b-tab :title="$t('{informacionTab}')" v-if="markerModel.Informacion">
            <b-container style="margin-top: 15px">
                <b-row>
                    <b-col cols="8">
@@ -52,25 +52,25 @@ export default {
       if (this.marker) {
           if (this.marker.mapResource.markerClass == MarkerClass.UBICACION) {
             this.markerModel = {
-              ModalTitle: this.marker.tipoUbicacion + ": " + this.marker.nombre,
+              ModalTitle: this.$t("{tipoUbicacion"+this.marker.tipoUbicacion+"}") + ": " + this.marker.nombre,
               Informacion: [
-                { key: "Longitud", value: this.marker.longitud.toFixed(2) + " O" },
-                { key: "Latitud", value: this.marker.latitud.toFixed(2) + " N" },
-                { key: "Código modelo", value: this.marker.codigoModelo },
-                { key: "Verificación", value: this.marker.mareografo } // Mirar
+                { key: this.$t("{longitudInfo}"), value: this.marker.longitud.toFixed(2) + " O" },
+                { key: this.$t("{latitudInfo}"), value: this.marker.latitud.toFixed(2) + " N" },
+                { key: this.$t("{codigoModeloInfo}"), value: this.marker.codigoModelo },
+                { key: this.$t("{verificacionInfo}"), value: this.marker.mareografo } // Mirar
               ],
               BancoDatos: []
             };
           }
         else if (this.marker.mapResource.markerClass == MarkerClass.PUNTO_MALLA) {
           this.markerModel = {
-            ModalTitle: "Pred. " + this.marker.mapOption.name + ": " + (this.marker.nombre ? this.marker.nombre : " Lat " + this.marker.latitud.toFixed(2) + " N" + ": Lon " + this.marker.longitud.toFixed(2) + " O"),
+            ModalTitle: "Pred. " +  this.$t(this.marker.mapOption.name) + ": " + (this.marker.nombre ? this.marker.nombre : " Lat " + this.marker.latitud.toFixed(2) + " N" + ": Lon " + this.marker.longitud.toFixed(2) + " O"),
             Informacion: [
-              { key: "Longitud", value: this.marker.longitud.toFixed(2) + " O" },
-              { key: "Latitud", value: this.marker.latitud.toFixed(2) + " N" },
-              { key: "Código modelo", value: this.marker.id },
-              { key: "Cadencia", value: (this.marker.tdelta * 60) + ' Minutos'  },
-              { key: "Malla", value: this.marker.malla },
+              { key: this.$t("{longitudInfo}"), value: this.marker.longitud.toFixed(2) + " O" },
+              { key: this.$t("{latitudInfo}"), value: this.marker.latitud.toFixed(2) + " N" },
+              { key: this.$t("{codigoModeloInfo}"), value: this.marker.id },
+              { key: this.$t("{cadencyInfo}"), value: (this.marker.tdelta * 60) + ' Min'  },
+              { key: this.$t("{mallaInfo}"), value: this.marker.malla },
               // { key: "Verificación", value: this.marker.mareografo } // ?
             ],
             BancoDatos: []
@@ -78,12 +78,12 @@ export default {
         }
         else if (this.marker.mapResource.markerClass == MarkerClass.PUNTO_MALLA_VERIF) {
           this.markerModel = {
-            ModalTitle: "Verificación: " + this.marker.nombre,
+            ModalTitle: this.$t("{verificacionInfo}") + ": " + this.marker.nombre,
             Informacion: [
-              { key: "Longitud", value: this.marker.longitud.toFixed(2) + " O" },
-              { key: "Latitud", value: this.marker.latitud.toFixed(2) + " N" },
-              { key: "Código modelo", value: this.marker.id },
-              { key: "Cadencia", value: (this.marker.tdelta * 60) + ' Minutos'  }
+              { key: this.$t("{longitudInfo}"), value: this.marker.longitud.toFixed(2) + " O" },
+              { key: this.$t("{latitudInfo}"), value: this.marker.latitud.toFixed(2) + " N" },
+              { key:  this.$t("{codigoModeloInfo}"), value: this.marker.id },
+              { key: this.$t("{cadencyInfo}"), value: (this.marker.tdelta * 60) + ' Min'  }
             ],
             BancoDatos: []
           };
@@ -105,20 +105,20 @@ export default {
           //     BancoDatos: []
           // };
           var mi = this;
-          ApiService.getNotAsync('redes/' + this.marker.redId + '?locale=' + 'es')
+          ApiService.getNotAsync('redes/' + this.marker.redId + '?locale=' + this.$getLocale())
           .then((red) => {
             mi.markerModel = {
               ModalTitle: mi.marker.nombre,
               Informacion: [
-                { key: "Longitud", value: mi.marker.longitud.toFixed(2) + " O" },
-                { key: "Latitud", value: mi.marker.latitud.toFixed(2) + " N" },
-                { key: "Código", value: mi.marker.id },
-                { key: "Cadencia", value: mi.marker.cadencia + ' Minutos'  },
-                { key: "Profundidad", value: mi.marker.altitudProfundidad + ' m' },
-                { key: "Fecha inicial de fondeo", value: new Date(mi.marker.fechaAlta).toISOString().split('T')[0] },
-                { key: "Tipo de sensor", value: mi.marker.tipoSensor },
-                { key: "Modelo", value: mi.marker.modelo },
-                { key: "Conjunto de datos", value: red.data.descripcion, bold: true, href: INFORMES_URL + 'BD/informes/INT_'	+ red.data.id + '.pdf' }
+                { key: this.$t("{longitudInfo}"), value: mi.marker.longitud.toFixed(2) + " O" },
+                { key: this.$t("{latitudInfo}"), value: mi.marker.latitud.toFixed(2) + " N" },
+                { key: this.$t("{codigoEstacionInfo}"), value: mi.marker.id },
+                { key: this.$t("{cadencyInfo}"), value: mi.marker.cadencia + ' Min'  },
+                { key: this.$t("{profundidadEstacionInfo}"), value: mi.marker.altitudProfundidad + ' m' },
+                { key: this.$t("{fechaInicialFondeoInfo}"), value: new Date(mi.marker.fechaAlta).toISOString().split('T')[0] },
+                { key: this.$t("{tipoSensorInfo}"), value: mi.marker.tipoSensor },
+                { key: this.$t("{modeloEstacionInfo}"), value: mi.marker.modelo },
+                { key: this.$t("{conjuntoDatosInfo}"), value: red.data.descripcion, bold: true, href: INFORMES_URL + 'BD/informes/INT_'	+ red.data.id + '.pdf' }
               ],
               BancoDatos: []
           };

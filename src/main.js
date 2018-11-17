@@ -1,25 +1,40 @@
 import Vue from 'vue'
 import App from './app.vue'
 import ApiService from '@/services/api.service'
+import LocalePlugin from '@/services/locale.plugin'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import AsyncComputed from 'vue-async-computed'
+import VueRouter from 'vue-router'
 
 Vue.use(BootstrapVue);
 Vue.use(AsyncComputed);
-Vue.config.productionTip = false
+Vue.use(VueRouter);
+Vue.use(LocalePlugin);
 
-ApiService.init()
+Vue.config.productionTip = false
+ApiService.init();
 
 StartApp();
 
 async function StartApp() {
+
   var config = await fetch('portus.config.json')
   config = await config.json();
   window.PC = config;
 
+  const routes = [
+    { path: '/', component: App }
+  ]
+
+  const router = new VueRouter({
+    routes,
+    mode: 'history'
+  })
+
   new Vue({
+    router,
     render: h => h(App)
   }).$mount('#app')
 }

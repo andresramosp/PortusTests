@@ -2,6 +2,7 @@ import { MapResources } from '@/common/mapResourceManager';
 import ApiService from "@/services/api.service";
 import MapUtils from "@/services/map.utils";
 import { BASE_URL_PORTUS } from '@/common/config';
+import Vue from 'vue';
 
 const MapState = {
 
@@ -14,16 +15,15 @@ const MapState = {
     loadingThings: [],
     heapedPopup: null,
 
-    init(map, mapComponent) {
+    init(map) {
         this.map = map;
-        this.mapComponent = mapComponent;
         this.cacheLayers();
     },
 
     cacheLayers() {
         MapResources.forEach(async mr => {
             if (mr.type == "MarkerLayer" && mr.cached) {
-                mr.cachedData = await ApiService.get(mr.resourceApi + (mr.locale ? ('?locale=' + 'es') : ''));
+                mr.cachedData = await ApiService.get(mr.resourceApi + (mr.locale ? (('?locale=' + Vue.$getLocale())) : ''));
             }
         })
     },
@@ -44,7 +44,7 @@ const MapState = {
 
     async addMarkerLayer(mapResource, mapOption) {
         this.addLoading('markers');
-        var result = mapResource.cachedData || await ApiService.get(mapResource.resourceApi + (mapResource.locale ? ('?locale=' + 'es') : '')); // {data: [{latitud: 80, longitud: 80, id:'1', icon: 'estacion-agitacion.png', nombre:'hola' }, {latitud: 80, longitud: 82, id:'2', icon: 'estacion-agitacion.png', nombre: 'adios' }]};/
+        var result = mapResource.cachedData || await ApiService.get(mapResource.resourceApi + (mapResource.locale ? (('?locale=' + Vue.$getLocale())) : '')); // {data: [{latitud: 80, longitud: 80, id:'1', icon: 'estacion-agitacion.png', nombre:'hola' }, {latitud: 80, longitud: 82, id:'2', icon: 'estacion-agitacion.png', nombre: 'adios' }]};/
         result.data.forEach(m => {
             var iconUrl = typeof mapResource.icon === "function" ? mapResource.icon(m) : mapResource.icon;
             var customIcon = L.icon({ iconUrl: require('@/assets/markers/' + iconUrl), iconSize: [17, 17] });

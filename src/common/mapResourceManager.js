@@ -24,7 +24,7 @@ export const MapResources = [
   {
     id: 'pred-markers-nivmar-localidad',
     type: 'MarkerLayer',
-    name: 'Nivmar Localidades',
+    name: '{nivmarLocalidadesRes}',
     resourceApi: 'ubicacionesNivmar/Localidad',
     markerClass: MarkerClass.UBICACION,
     minZoom: 7,
@@ -339,104 +339,104 @@ export const MapResources = [
 export const MapOptions = [
   {
     id: 'pred_oleaje_atl',
-    group: 'Predicciones',
-    name: 'Oleaje Atlántico',
+    group: '{prediccionesGroup}',
+    name: '{oleajeAtlanticoOption}',
     mapResources: ['pred-tiles-oleaje-atl', 'pred-markers-wana-atl', 'pred-markers-wana-atl-verif'] // 'pred-tiles-oleaje'
   },
   {
     id: 'pred_oleaje_med',
-    group: 'Predicciones',
-    name: 'Oleaje Medit.',
+    group:  '{prediccionesGroup}',
+    name: '{oleajeMeditOption}',
     mapResources: ['pred-tiles-oleaje-med', 'pred-markers-wana-med', 'pred-markers-wana-med-verif'] // 'pred-tiles-oleaje'
   },
   {
     id: 'pred_viento',
-    group: 'Predicciones',
-    name: 'Viento',
+    group:  '{prediccionesGroup}',
+    name: '{vientoOption}',
     mapResources: ['pred-tiles-viento', 'pred-markers-atmosfera', 'pred-markers-atmosfera-verif']
   },
   {
     id: 'pred_nivmar',
-    group: 'Predicciones',
-    name: 'Nivel del Mar',
+    group:  '{prediccionesGroup}',
+    name: '{nivelDelMarOption}',
     mapResources: ['pred-tiles-nivmar', 'pred-markers-nivmar-puerto', 'pred-markers-nivmar-localidad', 'pred-markers-nivmar-playa']
   },
   {
     id: 'pred_corrientes',
-    group: 'Predicciones',
-    name: 'Corrientes',
+    group:  '{prediccionesGroup}',
+    name: '{corrientesOption}',
     mapResources: ['pred-tiles-corriente', 'pred-markers-cirana']
   },
   {
     id: 'pred_temperatura',
-    group: 'Predicciones',
-    name: 'Temperatura',
+    group:  '{prediccionesGroup}',
+    name: '{temperaturaOption}',
     mapResources: ['pred-tiles-temperatura', 'pred-markers-cirana']
   },
   {
     id: 'pred_salinidad',
-    group: 'Predicciones',
-    name: 'Salinidad',
+    group:  '{prediccionesGroup}',
+    name: '{salinidadOption}',
     mapResources: ['pred-tiles-salinidad', 'pred-markers-cirana']
   },
   {
     id: 'tr_oleaje',
-    group: 'Tiempo Real',
-    name: 'Oleaje',
+    group: '{tiempoRealGroup}',
+    name: '{oleajeOption}',
     mapResources: ['rt-markers-ojeale']
   },
   {
     id: 'tr_nivmar',
-    group: 'Tiempo Real',
-    name: 'Nivel del Mar',
+    group: '{tiempoRealGroup}',
+    name: '{nivelDelMarOption}',
     mapResources: ['rt-markers-nivmar']
   },
   {
     id: 'tr_onda_larga',
-    group: 'Tiempo Real',
-    name: 'Onda Larga',
+    group: '{tiempoRealGroup}',
+    name: '{ondaLargaOption}',
     mapResources: ['rt-markers-onda-larga']
   },
   {
     id: 'tr_agitacion',
-    group: 'Tiempo Real',
-    name: 'Agitación',
+    group: '{tiempoRealGroup}',
+    name: '{agitacionOption}',
     mapResources: ['rt-markers-agitacion']
   },
   {
     id: 'tr_viento',
-    group: 'Tiempo Real',
-    name: 'Viento',
+    group: '{tiempoRealGroup}',
+    name: '{vientoOption}',
     mapResources: ['rt-markers-viento']
   },
   {
     id: 'tr_pres_aire',
-    group: 'Tiempo Real',
-    name: 'Presión Atm.',
+    group: '{tiempoRealGroup}',
+    name: '{presionAtmOption}',
     mapResources: ['rt-markers-presion-aire']
   },
   {
     id: 'tr_temp_agua',
-    group: 'Tiempo Real',
-    name: 'Temp. Agua',
+    group: '{tiempoRealGroup}',
+    name: '{temperaturaOption}',
     mapResources: ['rt-markers-temperatura-agua']
   },
   {
     id: 'tr_temp_aire',
-    group: 'Tiempo Real',
-    name: 'Temp. Aire',
+    group: '{tiempoRealGroup}',
+    name: '{temperaturaAireOption}',
     mapResources: ['rt-markers-temperatura-aire']
   },
   {
     id: 'tr_corrientes',
-    group: 'Tiempo Real',
-    name: 'Corrientes',
+    group: '{tiempoRealGroup}',
+    name: '{corrientesOption}',
     mapResources: ['rt-markers-corrientes', 'pred-tiles-corriente-radar']
   },
   {
     id: 'tr_salinidad',
-    group: 'Tiempo Real',
-    name: 'Salinidad',
+    group: '{tiempoRealGroup}',
+    name: '{salinidadOption}',
     mapResources: ['rt-markers-salinidad']
   }
 

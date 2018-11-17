@@ -2,13 +2,13 @@
 <div>
   
   <div class='layersPanel' :class="{ 'leftAlign': align == 'left', 'rightAlign': align == 'right' }">
-      <b-card v-for="optGrp in optionGroups" :header="optGrp" class="text-center panel-section" :class="theme" :key="optGrp.id">
+      <b-card v-for="optGrp in optionGroups" :header="$t(optGrp)" class="text-center panel-section" :class="theme" :key="optGrp.id">
         <b-container>
            <b-row >
                <b-col cols="6" class="form-check text-left" v-if="mapOption.group == optGrp" v-for="mapOption in mapOptions" :key="mapOption.id">
               <label class="form-check-label">
                 <input class="form-check-input" type="checkbox" v-model="mapOption.active" @change="mapOptionChanged(mapOption)" />
-                {{ mapOption.name }}
+                {{ $t(mapOption.name) }}
               </label>
             </b-col> 
            </b-row>
@@ -29,7 +29,8 @@ export default {
   data() {
     return {
       align: PC.options_panel_align,
-      theme: PC.color_theme
+      theme: PC.color_theme,
+      $t: this.$t
     };
   },
   props: {

@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="row rowData">
-      <div class="col-md-12" style="font-weight: 700; font-size: 13px">{{heapedPanelTitle}}</div>
+      <div class="col-md-12" style="font-weight: 700; font-size: 13px">{{ $t('{markersProximosTitulo}') }}</div>
     </div>
      <div class="row">
-      <div class="col-md-12" style="font-weight: 700; font-size: 13px">{{heapedPanelText}}</div>
+      <div class="col-md-12" style="font-weight: 700; font-size: 13px">{{ $t('{markersProximosText}') }}</div>
     </div>
     <br />
     <div class="row rowData" v-for="marker in markers" :key="marker.id">
@@ -23,9 +23,7 @@ export default {
   name: "HeapedMarkersPopup",
   data() {
     return {
-      popUp : null,
-      heapedPanelTitle: "Markers muy próximos",
-      heapedPanelText: "Haga zoom para verlos o seleccione para acceso a datos."
+      popUp : null
     };
   },
   props: {
