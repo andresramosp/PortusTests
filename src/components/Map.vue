@@ -2,11 +2,6 @@
 
 <div style="height: 100%">
     <div id="map"></div>
-    <LayersPanel :mapOptions="mapOptions" /> 
-    <FloatingLayerOptions v-for="mapOption in mapState.activeMapOptions" :key="mapOption.id" :mapOption="mapOption" />
-    <MarkerInfoPanel :marker='mapState.markerSelected' />
-    <div ref="rere"></div>
-    <img class="predictionScale" :src="mapState.predictionScaleImg" />
     <img class="loaderGif" :src="require('@/assets/gifs/loading.gif')" v-show="loading" width="70" height="70" />
 </div>
 
@@ -14,21 +9,13 @@
 
 <script>
 
-import LayersPanel from "@/components/layersPanel.vue";
-import FloatingLayerOptions from "@/components/floatingLayerOptions.vue";
-import MarkerInfoPanel from "@/components/markerInfoPanel.vue";
 import MapState from "@/state/map.state";
 
 export default {
   name: "Map",
-  components: {
-    LayersPanel,
-    FloatingLayerOptions,
-    MarkerInfoPanel
-  },
   props: {
-    mapOptions: Array,
-    baseMap: Object
+    baseMap: Object,
+    zoomControl: { default: true, required: false }
   },
   data() {
     return {
@@ -68,10 +55,12 @@ export default {
         timeDimensionOptions: { mapState: this.mapState }
       }).fitBounds(bounds);
 
-      L.control.zoom({
-        position: 'bottomright' //PC.options_panel_align == 'right' ? 'topleft' : 'topright'
-      }).addTo(map);
-
+      if (this.zoomControl) {
+        L.control.zoom({
+          position: PC.options_panel_align == 'right' ? 'topleft' : 'topright'
+        }).addTo(map);
+      }
+     
       var vm = this;
       map.on("zoomend", function() {
         MapState.setVisibleMarkerLayers();

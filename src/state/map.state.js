@@ -23,7 +23,7 @@ const MapState = {
     cacheLayers() {
         MapResources.forEach(async mr => {
             if (mr.type == "MarkerLayer" && mr.cached) {
-                mr.cachedData = await ApiService.get(mr.resourceApi + (mr.locale ? (('?locale=' + Vue.$getLocale())) : ''));
+                mr.cachedData = await ApiService.get(mr.resourceApi, (mr.locale ? { locale: Vue.$getLocale() } : null ));
             }
         })
     },
@@ -44,10 +44,10 @@ const MapState = {
 
     async addMarkerLayer(mapResource, mapOption) {
         this.addLoading('markers');
-        var result = mapResource.cachedData || await ApiService.get(mapResource.resourceApi + (mapResource.locale ? (('?locale=' + Vue.$getLocale())) : '')); // {data: [{latitud: 80, longitud: 80, id:'1', icon: 'estacion-agitacion.png', nombre:'hola' }, {latitud: 80, longitud: 82, id:'2', icon: 'estacion-agitacion.png', nombre: 'adios' }]};/
+        var result = mapResource.cachedData || await ApiService.get(mapResource.resourceApi, (mapResource.locale ? { locale: Vue.$getLocale() } : null )); // {data: [{latitud: 80, longitud: 80, id:'1', icon: 'estacion-agitacion.png', nombre:'hola' }, {latitud: 80, longitud: 82, id:'2', icon: 'estacion-agitacion.png', nombre: 'adios' }]};/
         result.data.forEach(m => {
             var iconUrl = typeof mapResource.icon === "function" ? mapResource.icon(m) : mapResource.icon;
-            var customIcon = L.icon({ iconUrl: require('@/assets/markers/' + iconUrl), iconSize: [17, 17] });
+            var customIcon = L.icon({ iconUrl: require('@/assets/markers/' + iconUrl), iconSize: mapResource.iconSize ? mapResource.iconSize : [17, 17] });
             var marker = L.marker([m.latitud, m.longitud], { icon: customIcon });
             var ms = this;
             marker.on('click', function (e) {

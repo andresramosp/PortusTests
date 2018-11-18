@@ -16,18 +16,26 @@
        </b-card>
   </div>
 
+  <FloatingLayerOptions v-for="mapOption in mapState.activeMapOptions" :key="mapOption.id" :mapOption="mapOption" />
+
 </div>
   
 </template>
 
 
 <script>
+
 import MapState from "@/state/map.state";
+import FloatingLayerOptions from "@/components/floatingLayerOptions.vue";
 
 export default {
   name: "LayersPanel",
+  components: {
+    FloatingLayerOptions
+  },
   data() {
     return {
+      mapState: MapState,
       align: PC.options_panel_align,
       theme: PC.color_theme,
       $t: this.$t
@@ -119,6 +127,7 @@ input[type="checkbox"] {
 .card-header {
   background-color: #091c3259;
   font-size: 19px;
+  padding: 7px 5px 7px 5px
 }
 
 .panel-section {

@@ -1,5 +1,7 @@
 import Vue from 'vue'
+
 import App from './app.vue'
+
 import ApiService from '@/services/api.service'
 import LocalePlugin from '@/services/locale.plugin'
 import BootstrapVue from 'bootstrap-vue'
@@ -25,7 +27,17 @@ async function StartApp() {
   window.PC = config;
 
   const routes = [
-    { path: '/', component: App }
+    { 
+      name: 'home',
+      path: '/', 
+      component: () => import('@/views/homeView.vue') 
+    },
+    { 
+      name: 'predictionWidget', 
+      path: '/predictionWidget', // :resourceId 
+      props: true,
+      component: () => import('@/views/predictionWidgetView.vue')
+    }
   ]
 
   const router = new VueRouter({

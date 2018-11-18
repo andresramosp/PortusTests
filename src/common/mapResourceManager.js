@@ -110,7 +110,7 @@ export const MapResources = [
     id: 'pred-markers-cirana',
     type: 'MarkerLayer',
     name: 'Puntos Modelo',
-    resourceApi: 'puntosMalla/Cirana',
+    resourceApi: 'puntosMalla/pred/Cirana',
     markerClass: MarkerClass.PUNTO_MALLA,
     minZoom: 0,
     icon: 'punto-malla-cirana.png'
@@ -119,7 +119,7 @@ export const MapResources = [
     id: 'pred-markers-wana-atl',
     type: 'MarkerLayer',
     name: 'Puntos Modelo',
-    resourceApi: 'puntosMalla/Wana/atl',
+    resourceApi: 'puntosMalla/pred/Wana/atl',
     markerClass: MarkerClass.PUNTO_MALLA,
     minZoom: 0,
     icon: 'punto-malla-wana.png'
@@ -128,7 +128,7 @@ export const MapResources = [
     id: 'pred-markers-wana-atl-verif',
     type: 'MarkerLayer',
     name: 'Verificación',
-    resourceApi: 'puntosMalla/Wana/atl?verif=true',
+    resourceApi: 'puntosMalla/pred/Wana/atl?verif=true',
     markerClass: MarkerClass.PUNTO_MALLA_VERIF,
     unchecked: true,
     minZoom: 0,
@@ -138,7 +138,7 @@ export const MapResources = [
     id: 'pred-markers-wana-med',
     type: 'MarkerLayer',
     name: 'Puntos Modelo',
-    resourceApi: 'puntosMalla/Wana/med',
+    resourceApi: 'puntosMalla/pred/Wana/med',
     markerClass: MarkerClass.PUNTO_MALLA,
     minZoom: 0,
     icon: 'punto-malla-wana.png'
@@ -147,7 +147,7 @@ export const MapResources = [
     id: 'pred-markers-wana-med-verif',
     type: 'MarkerLayer',
     name: 'Verificación',
-    resourceApi: 'puntosMalla/Wana/med?verif=true',
+    resourceApi: 'puntosMalla/pred/Wana/med?verif=true',
     markerClass: MarkerClass.PUNTO_MALLA_VERIF,
     unchecked: true,
     minZoom: 0,
@@ -157,7 +157,7 @@ export const MapResources = [
     id: 'pred-markers-atmosfera',
     type: 'MarkerLayer',
     name: 'Puntos Modelo',
-    resourceApi: 'puntosMalla/Atmosfera',
+    resourceApi: 'puntosMalla/pred/Atmosfera',
     markerClass: MarkerClass.PUNTO_MALLA,
     minZoom: 0,
     icon: 'punto-malla-atmosfera.png',
@@ -166,7 +166,7 @@ export const MapResources = [
     id: 'pred-markers-atmosfera-verif',
     type: 'MarkerLayer',
     name: 'Verificación',
-    resourceApi: 'puntosMalla/Atmosfera?verif=true',
+    resourceApi: 'puntosMalla/pred/Atmosfera?verif=true',
     markerClass: MarkerClass.PUNTO_MALLA_VERIF,
     unchecked: true,
     minZoom: 0,
@@ -182,7 +182,7 @@ export const MapResources = [
     id: 'rt-markers-ojeale',
     type: 'MarkerLayer',
     name: 'RT - Oleaje',
-    resourceApi: 'estaciones/RT_WAVE',
+    resourceApi: 'estaciones/rt/WAVE',
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
@@ -202,7 +202,7 @@ export const MapResources = [
     id: 'rt-markers-nivmar',
     type: 'MarkerLayer',
     name: 'RT - Nivel del Mar',
-    resourceApi: 'estaciones/RT_SEA_LEVEL',
+    resourceApi: 'estaciones/rt/SEA_LEVEL',
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
@@ -217,7 +217,7 @@ export const MapResources = [
     id: 'rt-markers-agitacion',
     type: 'MarkerLayer',
     name: 'RT - Agitacion',
-    resourceApi: 'estaciones/RT_AGITATION',
+    resourceApi: 'estaciones/rt/AGITATION',
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
@@ -232,7 +232,7 @@ export const MapResources = [
     id: 'rt-markers-viento',
     type: 'MarkerLayer',
     name: 'RT - Viento',
-    resourceApi: 'estaciones/RT_WIND',
+    resourceApi: 'estaciones/rt/WIND',
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
@@ -247,7 +247,7 @@ export const MapResources = [
     id: 'rt-markers-salinidad',
     type: 'MarkerLayer',
     name: 'RT - Salinidad',
-    resourceApi: 'estaciones/RT_SALINITY',
+    resourceApi: 'estaciones/rt/SALINITY',
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
@@ -262,7 +262,7 @@ export const MapResources = [
     id: 'rt-markers-presion-aire',
     type: 'MarkerLayer',
     name: 'RT - Presión Aire',
-    resourceApi: 'estaciones/RT_AIR_PRESURE',
+    resourceApi: 'estaciones/rt/AIR_PRESURE',
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
@@ -277,7 +277,7 @@ export const MapResources = [
     id: 'rt-markers-temperatura-agua',
     type: 'MarkerLayer',
     name: 'RT - Temp. Agua',
-    resourceApi: 'estaciones/RT_WATER_TEMP',
+    resourceApi: 'estaciones/rt/WATER_TEMP',
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
@@ -292,7 +292,7 @@ export const MapResources = [
     id: 'rt-markers-temperatura-aire',
     type: 'MarkerLayer',
     name: 'RT - Temp. Aire',
-    resourceApi: 'estaciones/RT_AIR_TEMP',
+    resourceApi: 'estaciones/rt/AIR_TEMP',
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
@@ -307,7 +307,7 @@ export const MapResources = [
     id: 'rt-markers-corrientes',
     type: 'MarkerLayer',
     name: 'Estaciones',
-    resourceApi: 'estaciones/RT_CURRENTS',
+    resourceApi: 'estaciones/rt/CURRENTS',
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
@@ -322,7 +322,7 @@ export const MapResources = [
     id: 'rt-markers-onda-larga',
     type: 'MarkerLayer',
     name: 'RT - Onda Larga',
-    resourceApi: 'estaciones/RT_SEICHE',
+    resourceApi: 'estaciones/rt/SEICHE',
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
@@ -330,13 +330,52 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
+    cached: true,
+    preventHeaping: true
+  },
+  {
+    id: 'hist-markers-estaciones-oleaje',
+    type: 'MarkerLayer',
+    name: 'Historico - Oleaje',
+    resourceApi: 'estaciones/hist/WAVE',
+    markerClass: MarkerClass.ESTACION_HISTORICO,
+    minZoom: 0,
+    icon: 'estacion-hist-oleaje.png',
+    iconSize: [25, 25],
+    showAll: true,
+    locale: true,
     cached: false,
     preventHeaping: true
-  }
+  },
+  {
+    id: 'hist-markers-estaciones-salinidad',
+    type: 'MarkerLayer',
+    name: 'Historico - Salinidad',
+    resourceApi: 'estaciones/hist/SALINITY',
+    markerClass: MarkerClass.ESTACION_HISTORICO,
+    minZoom: 0,
+    icon: 'estacion-hist-salinidad.png',
+    iconSize: [25, 25],
+    showAll: true,
+    locale: true,
+    cached: false,
+    preventHeaping: true
+  },
+  {
+    id: 'hist-markers-modelos-oleaje',
+    type: 'MarkerLayer',
+    name: 'Puntos modelo',
+    resourceApi: 'puntosMalla/hist/WAVE',
+    markerClass: MarkerClass.PUNTO_MALLA, // PUNTO_MALLA_HIST
+    minZoom: 0,
+    iconSize: [25, 25],
+    icon: 'punto-malla-hist-oleaje.png', 
+  },
 ];
 
 // Checkboxes 
 export const MapOptions = [
+  // Predicciones
   {
     id: 'pred_oleaje_atl',
     group: '{prediccionesGroup}',
@@ -379,6 +418,7 @@ export const MapOptions = [
     name: '{salinidadOption}',
     mapResources: ['pred-tiles-salinidad', 'pred-markers-cirana']
   },
+  // Tiempo Real
   {
     id: 'tr_oleaje',
     group: '{tiempoRealGroup}',
@@ -438,6 +478,19 @@ export const MapOptions = [
     group: '{tiempoRealGroup}',
     name: '{salinidadOption}',
     mapResources: ['rt-markers-salinidad']
-  }
+  },
+  //Histórico
+  // {
+  //   id: 'hist_oleaje',
+  //   group: '{historicoGroup}',
+  //   name: '{oleajeOption}',
+  //   mapResources: ['hist-markers-estaciones-oleaje', 'hist-markers-modelos-oleaje']
+  // },
+  // {
+  //   id: 'hist_salinidad',
+  //   group: '{historicoGroup}',
+  //   name: '{salinidadOption}',
+  //   mapResources: ['hist-markers-estaciones-salinidad']
+  // }
 
 ]

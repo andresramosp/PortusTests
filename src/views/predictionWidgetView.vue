@@ -1,0 +1,65 @@
+<template>
+<div id="app" >
+   <Map :baseMap='baseMap' :zoomControl='false' />
+   <img class="predictionScale" :src="mapState.predictionScaleImg" />
+</div>
+</template>
+
+<script>
+
+import Map from "@/components/map.vue";
+import MapState from "@/state/map.state";
+
+export default {
+  name: "PredictionWidgetView",
+  components: {
+    Map
+  },
+  props: {
+      resourceId: {
+        type: String,
+        required: true
+      }
+    },
+  data () {
+    return {
+      mapState: MapState,
+      baseMap: null
+    }    
+  },
+  created() {
+    this.$setLocale(this.$route.query.locale ? this.$route.query.locale : 'es');
+  },
+  mounted () {
+    this.baseMap = L.tileLayer(
+      PC.base_layer,
+      {
+        minZoom: PC.base_layer_min_zoom,
+        maxZoom: PC.base_layer_max_zoom,
+        tms: false
+      }
+    );
+
+    var resourceId = this.$route.query.resourceId;
+    var predictionResource = MapState.getMapResource('pred-tiles-' + resourceId);
+    MapState.addTimeLineLayer(predictionResource, predictionResource.defaultVectors);
+    
+    var zoom = this.$route.query.zoom;
+    var lat = this.$route.query.lat;
+    var lon = this.$route.query.lon;
+    MapState.getMap().setView(L.latLng(lat, lon), zoom);
+    
+    MapState.getMap().scrollWheelZoom.disable();
+    MapState.getMap().dragging.disable();
+
+  }
+};
+</script>
+
+<style scoped>
+
+#app { height: 100%;}
+ 
+</style>
+
+

@@ -38,11 +38,6 @@ export default {
 
     MapState.setHeapedPopup(popup);
     
-  },
-  methods: {
-    openMarkerInfoPanel: function(marker) {
-      MapState.markerSelected = marker;
-    }
   }
 };
 </script>

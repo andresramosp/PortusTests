@@ -71,6 +71,10 @@ const LocalePlugin = {
             es: "Tiempo Real",
             en: "Real Time Data"
         },
+        historicoGroup: {
+            es: "Datos Históricos",
+            en: "Historical Data"
+        },
         // marker info tags
         accesoADatosTab: {
             es: "Acceso a datos",

@@ -115,11 +115,11 @@ export default {
   position: absolute;
   z-index: 2;
   /* right: 9px; */
-  top: 500px;
+  bottom: 50px;
   padding: 10px;
   border-radius: 6px;
   color: white;
-  font-size: 17px;
+  font-size: 14px;
 }
 
 .leftAlign {
