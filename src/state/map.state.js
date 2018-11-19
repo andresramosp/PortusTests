@@ -104,7 +104,7 @@ const MapState = {
             if (mapResource.paintBounds) {
                 var ms = this;
                 var rect = L.rectangle([[res.limN, res.limW], [res.limS, res.limE]], { color: 'red', fillOpacity: 0.1, weight: 1 }).on('click', function (e) {
-                    ms.map.fitBounds(e.target.getBounds().pad(0.25));
+                    ms.map.flyToBounds(e.target.getBounds().pad(0.25));
                     // rectángulo invisible a partir de cierto nivel de zoom
                 }).addTo(this.map);
                 rect.mapResource = mapResource;

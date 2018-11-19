@@ -3,7 +3,11 @@
 <div style="height: 100%">
     <div id="map"></div>
     <img class="loaderGif" :src="require('@/assets/gifs/loading.gif')" v-show="loading" width="70" height="70" />
-</div>
+    <div v-show="mapState.predictionScaleImg">
+       <img class="predictionScale" :src="mapState.predictionScaleImg" />
+       <img v-show='predictionWidget' class="predictionWidgetIcon" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
+    </div>
+   </div>
 
 </template>
 
@@ -15,7 +19,8 @@ export default {
   name: "Map",
   props: {
     baseMap: Object,
-    zoomControl: { default: true, required: false }
+    zoomControl: { default: true, required: false },
+    predictionWidget: { default: true, required: false }
   },
   data() {
     return {
@@ -76,9 +81,36 @@ export default {
       });
       MapState.init(map);
     },
+
     setBaseLayer: function() {
       if (this.baseMap) {
         MapState.setBaseLayer(this.baseMap);
+      }
+    },
+
+    openPredictionWidget: function() {
+
+      var map = MapState.getMap();
+      var currentPredLayer = null;
+
+      map.eachLayer(function (layer) {
+        if (layer.mapResource && layer.mapResource.type == 'TimeLineLayer') {
+          currentPredLayer = layer;
+        }
+      });
+
+      if (currentPredLayer) {
+        var routeData = this.$router.resolve({ path: '/predictionWidget', 
+          query: 
+          { 
+            resourceId : currentPredLayer.mapResource.id.replace('pred-tiles-', ''), 
+            zoom: map.getZoom(), 
+            lat: map.getCenter().lat, 
+            lon: map.getCenter().lng,
+            vec: currentPredLayer._baseLayer._url.indexOf('vec') != -1
+          }
+        });
+        window.open(routeData.href, '_blank');
       }
     }
   }
@@ -107,6 +139,17 @@ export default {
   padding: 10px;
   border-radius: 6px;
   width: 27%;
+}
+
+.predictionWidgetIcon {
+    position: absolute;
+    z-index: 2;
+    left: 41%;
+    bottom: 8px;
+    width: 35px;
+    height: 35px;
+    border-radius: 6px;
+    cursor: pointer;
 }
 
 .loaderGif {
@@ -142,6 +185,10 @@ input[type="checkbox"] {
 .leaflet-marker-icon-fadeout,
 .leaflet-marker-shadow-fadeout {
   animation: fadeout 1s;
+}
+
+.blueTheme {
+  background-color: rgba(0, 123, 255, 0.6);
 }
 
 @keyframes fadein {

@@ -3,7 +3,6 @@
    <Map :baseMap='baseMap' />
    <LayersPanel :mapOptions="mapOptions" /> 
    <MarkerInfoPanel :marker='mapState.markerSelected' />
-   <img class="predictionScale" :src="mapState.predictionScaleImg" />
 </div>
 </template>
 

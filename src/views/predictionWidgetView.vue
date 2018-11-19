@@ -1,7 +1,6 @@
 <template>
 <div id="app" >
-   <Map :baseMap='baseMap' :zoomControl='false' />
-   <img class="predictionScale" :src="mapState.predictionScaleImg" />
+   <Map :baseMap='baseMap' :zoomControl='false' :predictionWidget='false' />
 </div>
 </template>
 
@@ -15,12 +14,12 @@ export default {
   components: {
     Map
   },
-  props: {
-      resourceId: {
-        type: String,
-        required: true
-      }
-    },
+  // props: {
+  //     resourceId: {
+  //       type: String,
+  //       required: true
+  //     }
+  //   },
   data () {
     return {
       mapState: MapState,
@@ -42,7 +41,7 @@ export default {
 
     var resourceId = this.$route.query.resourceId;
     var predictionResource = MapState.getMapResource('pred-tiles-' + resourceId);
-    MapState.addTimeLineLayer(predictionResource, predictionResource.defaultVectors);
+    MapState.addTimeLineLayer(predictionResource, this.$route.query.vec == 'true');
     
     var zoom = this.$route.query.zoom;
     var lat = this.$route.query.lat;
