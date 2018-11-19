@@ -195,7 +195,7 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: false,
+    cached: true,
     preventHeaping: true
   },
   {
@@ -210,7 +210,7 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: false,
+    cached: true,
     preventHeaping: true
   },
   {
@@ -225,7 +225,7 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: false,
+    cached: true,
     preventHeaping: true
   },
   {
@@ -240,7 +240,7 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: false,
+    cached: true,
     preventHeaping: true
   },
   {
@@ -253,9 +253,10 @@ export const MapResources = [
     icon: function (m) {
       return (1 <= m.estado && m.estado <= 2) ? 'estacion-salinidad-na.png' : 'estacion-salinidad.png'
     },
+    iconSize: [25, 25],
     showAll: true,
     locale: true,
-    cached: false,
+    cached: true,
     preventHeaping: true
   },
   {
@@ -268,9 +269,10 @@ export const MapResources = [
     icon: function (m) {
       return (1 <= m.estado && m.estado <= 2) ? 'estacion-presionAtm-na.png' : 'estacion-presionAtm.png'
     },
+    iconSize: [25, 25],
     showAll: true,
     locale: true,
-    cached: false,
+    cached: true,
     preventHeaping: true
   },
   {
@@ -285,7 +287,7 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: false,
+    cached: true,
     preventHeaping: true
   },
   {
@@ -300,7 +302,7 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: false,
+    cached: true,
     preventHeaping: true
   },
   {
@@ -315,7 +317,7 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: false,
+    cached: true,
     preventHeaping: true
   },
   {
@@ -344,7 +346,7 @@ export const MapResources = [
     iconSize: [25, 25],
     showAll: true,
     locale: true,
-    cached: false,
+    cached: true,
     preventHeaping: true
   },
   {
@@ -358,7 +360,7 @@ export const MapResources = [
     iconSize: [25, 25],
     showAll: true,
     locale: true,
-    cached: false,
+    cached: true,
     preventHeaping: true
   },
   {

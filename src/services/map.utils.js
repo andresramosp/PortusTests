@@ -61,7 +61,20 @@ const MapUtils = {
       else {
         this.openMarkerPopup(map, marker);
       }
+      var icon = marker.options.icon;
+      icon.options.iconSize = [icon.options.iconSize[0] + 5, icon.options.iconSize[1] + 5];
+      marker.setIcon(icon);
     }
+  },
+
+  markerMouseOut(map, marker) {
+    if (marker.timeOut) {
+      clearTimeout(marker.timeOut);
+    }
+    var icon = marker.options.icon;
+    icon.options.iconSize = [icon.options.iconSize[0] - 5, icon.options.iconSize[1] - 5];
+    marker.setIcon(icon);
+    this.closeMarkerPopup(map, marker);
   },
 
   async openMarkerPopup(map, marker) {
@@ -85,18 +98,16 @@ const MapUtils = {
         marker.openPopup();
         break;
       case MarkerClass.ESTACION:
-        var markersAtPoint = this.getMarkersById(map, marker.id);
-        marker.popUp = true;
-        var lastData = await ApiService.post('lastDataEstacion/' + marker.id + '?locale=' + Vue.$getLocale(),
-          markersAtPoint.map(m => { return m.variable }));
-        if (marker.popUp) {
+        marker.timeOut = setTimeout(async () => {
+          var markersAtPoint = this.getMarkersById(map, marker.id);
+          var lastData = await ApiService.post('lastDataEstacion/' + marker.id + '?locale=' + Vue.$getLocale(),
+          markersAtPoint.map(m => { return m.variable }), true);
           var comp = new Vue({ ...LastDataPopup, propsData: { marker: marker, data: lastData.data } }).$mount()
-          var html = comp.$el.innerHTML;
-          marker.bindPopup(html, {
+          marker.bindPopup(comp.$el, {
             maxWidth: 560
           });
           marker.openPopup();
-        }
+        }, 200);
 
         // this.asyncForEach(markersAtPoint, async m => {
         //   var lastData = await ApiService.get('lastDataEstacion/' + m.id + '/' + m.variable + '?locale=es')
@@ -130,7 +141,6 @@ const MapUtils = {
   },
 
   closeMarkerPopup(map, marker) {
-    marker.popUp = false;
     marker.closePopup();
     marker.unbindPopup();
     if (!MapState.popupFixed) { 
