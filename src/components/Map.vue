@@ -3,9 +3,10 @@
 <div style="height: 100%">
     <div id="map"></div>
     <img class="loaderGif" :src="require('@/assets/gifs/loading.gif')" v-show="loading" width="70" height="70" />
-    <div v-show="mapState.predictionScaleImg">
-       <img class="predictionScale" :src="mapState.predictionScaleImg" />
+    <div v-show="playingTimeLineLayer">
+       <img :src="mapState.predictionScaleImg" class="predictionScale" />
        <img v-show='predictionWidget' class="predictionWidgetIcon" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
+       <img v-show='hasStaticMaps' class="staticMapsWidgetIcon" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
     </div>
    </div>
 
@@ -35,6 +36,12 @@ export default {
   computed: {
     loading() {
       return this.mapState.loadingThings.length > 0;
+    },
+    playingTimeLineLayer() {
+      return this.mapState.currentTimeLineLayer != null;
+    },
+    hasStaticMaps() {
+      return this.mapState.currentTimeLineLayer && this.mapState.currentTimeLineLayer.mapResource.mapsResourceApi != null;
     }
   },
   mounted() {
@@ -91,14 +98,7 @@ export default {
     openPredictionWidget: function() {
 
       var map = MapState.getMap();
-      var currentPredLayer = null;
-
-      map.eachLayer(function (layer) {
-        if (layer.mapResource && layer.mapResource.type == 'TimeLineLayer') {
-          currentPredLayer = layer;
-        }
-      });
-
+      var currentPredLayer = this.mapState.currentTimeLineLayer; //MapState.getCurrentTimeLineLayer();
       if (currentPredLayer) {
         var routeData = this.$router.resolve({ path: '/predictionWidget', 
           query: 
@@ -111,6 +111,15 @@ export default {
           }
         });
         window.open(routeData.href, '_blank');
+      }
+    },
+
+    openStaticMapsWidget: function() {
+
+      var map = MapState.getMap();
+      var currentPredLayer = this.mapState.currentTimeLineLayer; //MapState.getCurrentTimeLineLayer();
+      if (currentPredLayer) {
+        MapState.setStaticMapResourceSelected(currentPredLayer.mapResource);
       }
     }
   }
@@ -145,6 +154,17 @@ export default {
     position: absolute;
     z-index: 2;
     left: 41%;
+    bottom: 8px;
+    width: 35px;
+    height: 35px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.staticMapsWidgetIcon {
+    position: absolute;
+    z-index: 2;
+    left: 44%;
     bottom: 8px;
     width: 35px;
     height: 35px;
@@ -189,6 +209,14 @@ input[type="checkbox"] {
 
 .blueTheme {
   background-color: rgba(0, 123, 255, 0.6);
+}
+
+.grayTheme {
+  background-color: #39434fbf;
+}
+
+.greenTheme {
+  background-color: rgba(0, 255, 0, 0.6);
 }
 
 @keyframes fadein {

@@ -3,6 +3,7 @@
    <Map :baseMap='baseMap' />
    <LayersPanel :mapOptions="mapOptions" /> 
    <MarkerInfoPanel :marker='mapState.markerSelected' />
+   <StaticMapsPanel :mapResource='mapState.staticMapResourceSelected' />
 </div>
 </template>
 
@@ -12,6 +13,7 @@ import Map from "@/components/map.vue";
 import MapState from "@/state/map.state";
 import LayersPanel from "@/components/layersPanel.vue";
 import MarkerInfoPanel from "@/components/markerInfoPanel.vue";
+import StaticMapsPanel from "@/components/staticMapsPanel.vue";
 import { MapOptions } from '@/common/mapResourceManager';
 
 export default {
@@ -19,7 +21,8 @@ export default {
   components: {
     Map,
     LayersPanel,
-    MarkerInfoPanel
+    MarkerInfoPanel,
+    StaticMapsPanel
   },
   data () {
     return {

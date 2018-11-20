@@ -134,6 +134,10 @@ export default {
   background-color: rgba(0, 123, 255, 0.6);
 }
 
+.grayTheme {
+  background-color: #39434fbf;
+}
+
 .greenTheme {
   background-color: rgba(0, 255, 0, 0.6);
 }

@@ -46,6 +46,7 @@ export const MapResources = [
     type: 'TimeLineLayer',
     name: 'Pred. Oleaje Atlántico',
     resourceApi: 'mapTileResources/VHM0Atl',
+    mapsResourceApi: 'mapStaticResources/VHM0Atl',
     tms: true,
     vectors: true
   },
@@ -95,6 +96,7 @@ export const MapResources = [
     type: 'TimeLineLayer',
     name: 'Pred. Viento',
     resourceApi: 'mapTileResources/WSPD',
+    mapsResourceApi: 'mapStaticResources/WSPD',
     tms: true,
     vectors: true,
     defaultVectors: true
@@ -482,17 +484,17 @@ export const MapOptions = [
     mapResources: ['rt-markers-salinidad']
   },
   //Histórico
-  // {
-  //   id: 'hist_oleaje',
-  //   group: '{historicoGroup}',
-  //   name: '{oleajeOption}',
-  //   mapResources: ['hist-markers-estaciones-oleaje', 'hist-markers-modelos-oleaje']
-  // },
-  // {
-  //   id: 'hist_salinidad',
-  //   group: '{historicoGroup}',
-  //   name: '{salinidadOption}',
-  //   mapResources: ['hist-markers-estaciones-salinidad']
-  // }
+  {
+    id: 'hist_oleaje',
+    group: '{historicoGroup}',
+    name: '{oleajeOption}',
+    mapResources: ['hist-markers-estaciones-oleaje', 'hist-markers-modelos-oleaje']
+  },
+  {
+    id: 'hist_salinidad',
+    group: '{historicoGroup}',
+    name: '{salinidadOption}',
+    mapResources: ['hist-markers-estaciones-salinidad']
+  }
 
 ]

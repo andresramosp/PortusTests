@@ -11,6 +11,8 @@ const MapState = {
     predictionScaleImg: null,
     preloadedTimeLineLayers: [],
     preloadedMarkers: [],
+    currentTimeLineLayer: null,
+    staticMapResourceSelected: null,
     activeMapOptions: [],
     loadingThings: [],
     heapedPopup: null,
@@ -154,6 +156,7 @@ const MapState = {
                     })
                     ms.map.addControl(ms.map.timeDimensionControl);
                     preLayer.addTo(ms.map);
+                    ms.currentTimeLineLayer = preLayer;
 
                     if (preLayer._baseLayer.options.predictionScaleImg) {
                         ms.predictionScaleImg = preLayer._baseLayer.options.predictionScaleImg;
@@ -165,6 +168,7 @@ const MapState = {
             else {
                 if (ms.map.hasLayer(preLayer)) {
                     preLayer.remove();
+                    ms.currentTimeLineLayer = null;
                     if (ms.map.timeDimensionControl) {
                         ms.map.timeDimensionControl._player.stop();
                         ms.map.removeControl(ms.map.timeDimensionControl);
@@ -177,6 +181,22 @@ const MapState = {
                 }
             }
         })
+    },
+
+    // getCurrentTimeLineLayer() {
+    //     var currentLayer = null;
+    //     if (this.map) {
+    //         this.map.eachLayer(function (layer) {
+    //             if (layer.mapResource && layer.mapResource.type == 'TimeLineLayer') {
+    //                 currentLayer = layer;
+    //             }
+    //         });     
+    //     }
+    //     return currentLayer;
+    // },
+
+    setStaticMapResourceSelected(mapResource) {
+        this.staticMapResourceSelected = mapResource;
     },
 
     addTileLayer(mapResource) {
@@ -199,6 +219,7 @@ const MapState = {
         if (this.preloadedTimeLineLayers.length == 0 && this.map.timeDimensionControl) {
             this.map.removeControl(this.map.timeDimensionControl);
             ms.predictionScaleImg = '';
+            ms.currentTimeLineLayer = null;
         }
     },
 

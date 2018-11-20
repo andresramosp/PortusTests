@@ -132,6 +132,10 @@ const LocalePlugin = {
             es: "Fecha inicial de fondeo",
             en: "First record date"
         },
+        fechaFinFondeoInfo: {
+            es: "Fin de medidas",
+            en: "Last record date"
+        },
         tipoSensorInfo: {
             es: "Tipo de sensor",
             en: "Type of sensor"
@@ -139,6 +143,10 @@ const LocalePlugin = {
         modeloEstacionInfo: {
             es: "Modelo",
             en: "Model"
+        },
+        comentariosEstacionInfo: {
+            es: "Comentarios",
+            en: "Comments"
         },
         conjuntoDatosInfo: {
             es: "Conjunto de datos",
@@ -173,6 +181,20 @@ const LocalePlugin = {
         estacionNoDisponible: {
             es: "Estación temporalmente fuera de servicio",
             en: "Station out of service"
+        },
+        // Markers tooltips
+        estacionHistTooltip: {
+            es: "Información Histórica",
+            en: "Historical Data"
+        },
+        // Static Maps Widget
+        mapasPrediccionTitulo: {
+            es: "Mapas de predicción",
+            en: "Forecast maps"
+        },
+        listaDominiosTexto: {
+            es: "Dominios",
+            en: "Domains"
         }
     },
    

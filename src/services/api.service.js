@@ -29,9 +29,9 @@ const ApiService = {
 
   },
 
-  getNotAsync(resource) {
+  getNotAsync(resource, params) {
     return Vue.axios
-      .get(`${resource}`)
+      .get(`${resource}`, { params: params })
       .catch((error) => {
         throw new Error(`[RWV] ApiService ${error}`)
       })

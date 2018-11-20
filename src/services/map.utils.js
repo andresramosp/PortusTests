@@ -79,6 +79,7 @@ const MapUtils = {
 
   async openMarkerPopup(map, marker) {
     var tooltip;
+
     // comprobar zoom, si alejado añadir nota para acercarse...
     // maquetar
     
@@ -94,6 +95,11 @@ const MapUtils = {
         break;
       case MarkerClass.PUNTO_MALLA_VERIF:
         tooltip = Vue.$t("{verificacionInfo}") + ": " + marker.nombre;
+        marker.bindPopup(tooltip);
+        marker.openPopup();
+        break;
+      case MarkerClass.ESTACION_HISTORICO:
+        tooltip = Vue.$t("{estacionHistTooltip}") + ": " + marker.nombre;
         marker.bindPopup(tooltip);
         marker.openPopup();
         break;
