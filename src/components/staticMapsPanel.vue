@@ -1,22 +1,28 @@
 <template>
-    <b-modal v-model="modalShow" v-if="mapResource" @hidden="onHidden" class="staticmaps-modal" size="lg" :title="$t('{mapasPrediccionTitulo}')">
+    <b-modal class="my-modal" v-model="modalShow" v-if="mapResource" @hidden="onHidden" size="lg" :title="$t('{mapasPrediccionTitulo}')">
        <!-- <div class="custom-modal-header" slot="modal-header">{{$t('{mapasPrediccionTitulo}')}}</div> -->
-       <b-container style="height: 570px; ">
+       <b-container style="height: 570px;">
             <b-row>
                 <b-col cols="2">
                      <b-row style="font-size: 12px; margin-top: 0px">
-                       <b-col v-for="day in dayGroups" :key="day" cols="12"  >
+                       <b-col cols="12" >
+                         <label style="margin-left: 10px" class="form-check-label">
+                              <input class="form-check-input" type="checkbox" v-model="selectAllModel" @change="selectAll(selectAllModel)" />
+                              {{$t('{mapasImprimirTodos}')}}
+                          </label>
+                          <div v-for="day in dayGroups" :key="day" >
                           <label style="margin-left: -10px; margin-top: 5px; margin-bottom: 0px !important; font-weight: bold">{{day}}</label>
                           <div v-if="date.dayName == day" v-for="date in datesAvailables" :key="date.value" class="form-check text-left">
                               <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" v-model="date.active" @change="paintMaps()" />
-                                {{ date.name }}
+                              <input class="form-check-input" type="checkbox" v-model="date.active" @change="paintMaps()" />
+                                  {{ date.name }}
                               </label>
+                            </div>
                           </div>
                        </b-col>
                     </b-row>
                 </b-col>
-                <b-col>
+                <b-col >
                   <b-row style="font-size: 12px">
                       <select style="margin-left: 0px; overflow-y: scroll" v-model="domainSelected">
                           <option :value="null" disabled="disabled">-{{$t('{listaDominiosTexto}')}}-</option>
@@ -25,12 +31,19 @@
                   </b-row>
                    <b-row>
                       <b-container ref="mapsContainer" style="overflow-y: scroll; height: 470px; margin-top: 20px">
-                        <img v-for="mapUrl in mapsUrlList" :key="mapsUrlList.indexOf(mapUrl)" :src="mapUrl" />
+                        <div style="text-align: center;" >
+                          <img width="550" v-for="mapUrl in mapsUrlList" :key="mapsUrlList.indexOf(mapUrl)" :src="mapUrl"  />
+                        </div>
                       </b-container>
                    </b-row>
                 </b-col>
             </b-row>
         </b-container>
+        <div slot="modal-footer">
+          <b-button size="sm" variant="primary" @click="printMaps()">{{$t('{botonImprimirMapas}')}}</b-button>
+          <b-button style="margin-left: 5px" size="sm" variant="primary" @click="clearMaps()">{{$t('{botonBorrarMapas}')}}</b-button>
+          <!-- <b-button style="margin-left: 5px" size="sm" variant="secundary" @click="closeWindow()">{{$t('{botonBorrarMapas}')}}</b-button> -->
+        </div>
     </b-modal>
 </template>
 
@@ -53,7 +66,8 @@ export default {
       domainsList: [],
       domainSelected: null,
       datesAvailables: [],
-      mapsUrlList: []
+      mapsUrlList: [],
+      selectAllModel: false
     };
   },
   computed: {
@@ -79,7 +93,9 @@ export default {
     }
   },
   methods: {
+
     init() {
+      this.selectAllModel = false;
       this.modalShow = true;
       this.mapsUrlList = [];
       this.domainSelected = null;
@@ -88,7 +104,6 @@ export default {
       .then((result) => {
         sm.domainsList = result.data;
       });
-
       this.datesAvailables = [];
       var hoursGap = 3;
       var hoursInterval = 72;
@@ -101,8 +116,7 @@ export default {
         var opt = { dayName: date.toLocaleDateString(), name: ("0" + date.getHours()).slice(-2) + ":00", value: MapUtils.convertDateToYMDH(date), active: false};
         this.datesAvailables.push(opt);
         today.setHours(today.getHours() + hoursGap)
-      }
-    
+      }  
     },
 
     paintMaps() {
@@ -119,7 +133,31 @@ export default {
         // }, 500);
         
       }
+    },
 
+    printMaps() {
+      var printContents = this.$refs.mapsContainer.innerHTML; 
+      var w = window.open();
+      w.document.write(printContents);
+      w.print();
+      //w.close();
+    },
+
+    clearMaps() {
+      this.datesAvailables.forEach(d => 
+      { 
+        d.active = false 
+      });
+      this.mapsUrlList = [];
+      this.selectAllModel = false;
+    },
+
+    selectAll(value) {
+      this.datesAvailables.forEach(d => 
+      { 
+        d.active = value 
+      });
+      this.paintMaps();
     },
 
     onHidden (evt) {
@@ -131,13 +169,40 @@ export default {
 
 <style scoped>
 
-div.modal.staticmaps-modal .modal-dialog {
+.modal-header {
+  background-color: red !important;
+}
+
+/* @media (min-width: 992px)
+{
+  .modal-lg {
+      max-width: 900px !important;
+      width: 900px !important;
+  }
+}
+
+.modal-dialog {
+      max-width: 900px !important;
+      width: 900px !important;
+  } */
+
+/* div.modal.my-modal .modal-dialog {
+  width: 900px !important;
+  max-width: 900px !important;
+}
+
+.my-modal {
+  width: 900px !important;
+  max-width: 900px !important;
+} */
+
+/* div.modal.staticmaps-modal .modal-dialog {
   max-width: 900px !important;
   width: 900px !important;
 }
 
 .custom-modal-header {
   background-color: #e9ecef;
-}
+} */
 
 </style>

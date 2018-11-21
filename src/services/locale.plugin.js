@@ -195,6 +195,18 @@ const LocalePlugin = {
         listaDominiosTexto: {
             es: "Dominios",
             en: "Domains"
+        },
+        botonImprimirMapas: {
+            es: "Imprimir",
+            en: "Print"
+        },
+        botonBorrarMapas: {
+            es: "Borrar",
+            en: "Delete"
+        },
+        mapasImprimirTodos: {
+            es: "Marcar todos",
+            en: "Print all"
         }
     },
    
