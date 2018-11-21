@@ -9,6 +9,7 @@ export const MapResources = [
     type: 'TimeLineLayer',
     name: 'Pred. Nivel del Mar',
     resourceApi: 'mapTileResources/RES',
+    mapsResourceApi: 'mapStaticResources/RES',
     tms: true
   },
   {
@@ -55,6 +56,7 @@ export const MapResources = [
     type: 'TimeLineLayer',
     name: 'Pred. Oleaje Mediterráneo',
     resourceApi: 'mapTileResources/VHM0Med',
+    mapsResourceApi: 'mapStaticResources/VHM0Med',
     tms: true,
     vectors: true
   },

@@ -180,6 +180,13 @@ const MapUtils = {
     return date;
   },
 
+  convertDateToYMDH(date) {
+    return date.getFullYear().toString() 
+        + (date.getMonth() + 1).toString() 
+        + date.getDate().toString() 
+        + ("0" + date.getHours()).slice(-2);
+  },
+
   async asyncForEach(array, callback) {
     for (let index = 0; index < array.length; index++) {
       await callback(array[index], index, array)

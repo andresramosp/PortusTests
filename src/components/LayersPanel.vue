@@ -6,7 +6,7 @@
         <b-container>
            <b-row >
                <b-col cols="6" class="form-check text-left" v-if="mapOption.group == optGrp" v-for="mapOption in mapOptions" :key="mapOption.id">
-              <label class="form-check-label">
+                <label class="form-check-label">
                 <input class="form-check-input" type="checkbox" v-model="mapOption.active" @change="mapOptionChanged(mapOption)" />
                 {{ $t(mapOption.name) }}
               </label>
