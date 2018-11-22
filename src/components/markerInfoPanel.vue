@@ -1,12 +1,26 @@
 <template>
-<b-modal v-model="modalShow" v-if="markers.length > 0" @hidden="onHidden" size="lg" :title="modalTitle">
+<b-modal v-model="modalShow" v-if="markers && markers.length > 0" @hidden="onHidden" size="lg" :title="modalTitle">
     <b-tabs class='infoPanelClass' >
         <b-tab :title="$t('{accesoADatosTab}')" active>
             <b-container style="margin-top: 15px">
+                <b-row>
+                  <b-col style="text-align: left; font-weight:600;" offset="4">
+                    {{$t('{bancoDatosGraficos}')}}
+                  </b-col>
+                  <b-col style="text-align: left; font-weight:600;">
+                    {{$t('{bancoDatosTablas}')}}
+                  </b-col>
+                </b-row>
                 <b-row v-for="param in bancoDatos" :key="param.id">
-                    <b-col>{{param.nombre}}</b-col>
-                    <b-col>x</b-col>
-                    <b-col>x</b-col>
+                    <b-col style="font-weight:600;">
+                      {{param.nombre}}
+                    </b-col>
+                    <b-col>
+                      <input class="form-check-input" type="checkbox" />
+                    </b-col>
+                    <b-col>
+                      <input class="form-check-input" type="checkbox" />
+                    </b-col>
                 </b-row>
             </b-container>
         </b-tab>
@@ -40,7 +54,7 @@ import { INFORMES_URL } from '@/common/config';
 export default {
   name: "MarkerInfoPanel",
   props: {
-    markers: { type: Array, default: null, required: false }
+    markers: { type: Array, default: [], required: false }
   },
   data() {
     return {
@@ -120,7 +134,8 @@ export default {
           })
         }
         var mi = this;
-        ApiService.get('parametros/' + this.markers[0].mapOption.variableType + '?locale=' + this.$getLocale())
+        ApiService.post('parametros?locale=' + this.$getLocale(),
+          this.markers.map(m => m.mapOption.variableType))
         .then((params) => {
           mi.bancoDatos = params.data;
         })

@@ -32,7 +32,8 @@ const MapUtils = {
       if (layer instanceof L.Marker && layer.mapResource.preventHeaping) {
         if(layer.id != marker.id && mu.distanceInPixels(map, marker.getLatLng(), layer.getLatLng()) < 12) {
            layer.heaped = true;
-           heapedMarkers.push(layer)
+           if (heapedMarkers.find(m => { return m.id == layer.id}) == null) // Prevenimos que se repitan estaciones
+              heapedMarkers.push(layer)
         }
         else {
           layer.heaped = false;
@@ -56,11 +57,12 @@ const MapUtils = {
       if (heapedMarkers.length > 0) {
         heapedMarkers.push(marker);
         marker.heaped = true;
+        var mu = this;
         new Vue({ ...HeapedMarkersPopup, 
           propsData: { markers: heapedMarkers, markerHovered: marker } 
         }).$mount()
         .$on('marker-item-clicked', function (marker) {
-          MapState.markerSelected = marker;
+          MapState.markersSelected = mu.getMarkersById(map, marker.id);
         });
       }
       else {

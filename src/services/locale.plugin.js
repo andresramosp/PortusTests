@@ -75,7 +75,15 @@ const LocalePlugin = {
             es: "Datos Históricos",
             en: "Historical Data"
         },
-        // marker info tags
+        // Info Panel
+        bancoDatosGraficos: {
+            es: "Gráficos",
+            en: "Graphics"
+        },
+        bancoDatosTablas: {
+            es: "Tablas",
+            en: "Tables"
+        },
         accesoADatosTab: {
             es: "Acceso a datos",
             en: "Access to data"
