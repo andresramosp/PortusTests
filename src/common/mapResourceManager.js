@@ -1,6 +1,6 @@
 export default {}
 
-import { MarkerClass } from "@/common/enums";
+import { MarkerClass, VariableType } from "@/common/enums";
 
 // Recursos de Tiles y Markers
 export const MapResources = [
@@ -386,42 +386,49 @@ export const MapOptions = [
     id: 'pred_oleaje_atl',
     group: '{prediccionesGroup}',
     name: '{oleajeAtlanticoOption}',
+    variableType: VariableType.WAVE,
     mapResources: ['pred-tiles-oleaje-atl', 'pred-markers-wana-atl', 'pred-markers-wana-atl-verif'] // 'pred-tiles-oleaje'
   },
   {
     id: 'pred_oleaje_med',
     group:  '{prediccionesGroup}',
     name: '{oleajeMeditOption}',
+    variableType: VariableType.WAVE,
     mapResources: ['pred-tiles-oleaje-med', 'pred-markers-wana-med', 'pred-markers-wana-med-verif'] // 'pred-tiles-oleaje'
   },
   {
     id: 'pred_viento',
     group:  '{prediccionesGroup}',
     name: '{vientoOption}',
+    variableType: VariableType.WIND,
     mapResources: ['pred-tiles-viento', 'pred-markers-atmosfera', 'pred-markers-atmosfera-verif']
   },
   {
     id: 'pred_nivmar',
     group:  '{prediccionesGroup}',
     name: '{nivelDelMarOption}',
+    variableType: VariableType.SEA_LEVEL,
     mapResources: ['pred-tiles-nivmar', 'pred-markers-nivmar-puerto', 'pred-markers-nivmar-localidad', 'pred-markers-nivmar-playa']
   },
   {
     id: 'pred_corrientes',
     group:  '{prediccionesGroup}',
     name: '{corrientesOption}',
+    variableType: VariableType.CURRENTS,
     mapResources: ['pred-tiles-corriente', 'pred-markers-cirana']
   },
   {
     id: 'pred_temperatura',
     group:  '{prediccionesGroup}',
     name: '{temperaturaOption}',
+    variableType: VariableType.WATER_TEMP,
     mapResources: ['pred-tiles-temperatura', 'pred-markers-cirana']
   },
   {
     id: 'pred_salinidad',
     group:  '{prediccionesGroup}',
     name: '{salinidadOption}',
+    variableType: VariableType.SALINITY,
     mapResources: ['pred-tiles-salinidad', 'pred-markers-cirana']
   },
   // Tiempo Real
@@ -429,60 +436,70 @@ export const MapOptions = [
     id: 'tr_oleaje',
     group: '{tiempoRealGroup}',
     name: '{oleajeOption}',
+    variableType: VariableType.WAVE,
     mapResources: ['rt-markers-ojeale']
   },
   {
     id: 'tr_nivmar',
     group: '{tiempoRealGroup}',
     name: '{nivelDelMarOption}',
+    variableType: VariableType.SEA_LEVEL,
     mapResources: ['rt-markers-nivmar']
   },
   {
     id: 'tr_onda_larga',
     group: '{tiempoRealGroup}',
     name: '{ondaLargaOption}',
+    variableType: VariableType.SEICHE,
     mapResources: ['rt-markers-onda-larga']
   },
   {
     id: 'tr_agitacion',
     group: '{tiempoRealGroup}',
     name: '{agitacionOption}',
+    variableType: VariableType.AGITATION,
     mapResources: ['rt-markers-agitacion']
   },
   {
     id: 'tr_viento',
     group: '{tiempoRealGroup}',
     name: '{vientoOption}',
+    variableType: VariableType.WIND,
     mapResources: ['rt-markers-viento']
   },
   {
     id: 'tr_pres_aire',
     group: '{tiempoRealGroup}',
     name: '{presionAtmOption}',
+    variableType: VariableType.AIR_PRESURE,
     mapResources: ['rt-markers-presion-aire']
   },
   {
     id: 'tr_temp_agua',
     group: '{tiempoRealGroup}',
     name: '{temperaturaOption}',
+    variableType: VariableType.WATER_TEMP,
     mapResources: ['rt-markers-temperatura-agua']
   },
   {
     id: 'tr_temp_aire',
     group: '{tiempoRealGroup}',
     name: '{temperaturaAireOption}',
+    variableType: VariableType.AIR_TEMP,
     mapResources: ['rt-markers-temperatura-aire']
   },
   {
     id: 'tr_corrientes',
     group: '{tiempoRealGroup}',
     name: '{corrientesOption}',
+    variableType: VariableType.CURRENTS,
     mapResources: ['rt-markers-corrientes', 'pred-tiles-corriente-radar']
   },
   {
     id: 'tr_salinidad',
     group: '{tiempoRealGroup}',
     name: '{salinidadOption}',
+    variableType: VariableType.SALINITY,
     mapResources: ['rt-markers-salinidad']
   },
   //Histórico
@@ -490,12 +507,14 @@ export const MapOptions = [
     id: 'hist_oleaje',
     group: '{historicoGroup}',
     name: '{oleajeOption}',
+    variableType: VariableType.WAVE,
     mapResources: ['hist-markers-estaciones-oleaje', 'hist-markers-modelos-oleaje']
   },
   {
     id: 'hist_salinidad',
     group: '{historicoGroup}',
     name: '{salinidadOption}',
+    variableType: VariableType.SALINITY,
     mapResources: ['hist-markers-estaciones-salinidad']
   }
 

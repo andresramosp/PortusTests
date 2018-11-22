@@ -2,7 +2,7 @@
 <div id="app" >
    <Map :baseMap='baseMap' />
    <LayersPanel :mapOptions="mapOptions" /> 
-   <MarkerInfoPanel :marker='mapState.markerSelected' />
+   <MarkerInfoPanel :markers='mapState.markersSelected' />
    <StaticMapsPanel :mapResource='mapState.staticMapResourceSelected' />
 </div>
 </template>

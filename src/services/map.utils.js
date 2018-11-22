@@ -42,6 +42,11 @@ const MapUtils = {
     return heapedMarkers;
   },
 
+  markerMouseClick(map, marker) {
+    var markersAtPoint = this.getMarkersById(map, marker.id);
+    MapState.markersSelected = markersAtPoint;
+  },
+
   markerMouseOver(map, marker) {
     if (!MapState.popupFixed) {
       var heapedMarkers = new Array();
@@ -107,7 +112,7 @@ const MapUtils = {
         marker.timeOut = setTimeout(async () => {
           var markersAtPoint = this.getMarkersById(map, marker.id);
           var lastData = await ApiService.post('lastDataEstacion/' + marker.id + '?locale=' + Vue.$getLocale(),
-          markersAtPoint.map(m => { return m.variable }), true);
+          markersAtPoint.map(m => { return m.mapOption.variableType }), true);
           var comp = new Vue({ ...LastDataPopup, propsData: { marker: marker, data: lastData.data } }).$mount()
           marker.bindPopup(comp.$el, {
             maxWidth: 560

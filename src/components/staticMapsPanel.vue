@@ -1,6 +1,6 @@
 <template>
     <b-modal class="my-modal" v-model="modalShow" v-if="mapResource" @hidden="onHidden" size="lg" :title="$t('{mapasPrediccionTitulo}')">
-       <!-- <div class="custom-modal-header" slot="modal-header">{{$t('{mapasPrediccionTitulo}')}}</div> -->
+       <!-- <div class="custom-modal-header" slot="modal-header">{{$t('{mapasPrediccionTitulo}')}}</div>  -->
        <b-container style="height: 570px;">
             <b-row>
                 <b-col cols="2">
@@ -168,10 +168,6 @@ export default {
 </script>
 
 <style scoped>
-
-.modal-header {
-  background-color: red !important;
-}
 
 /* @media (min-width: 992px)
 {

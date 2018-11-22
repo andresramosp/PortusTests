@@ -7,7 +7,7 @@ import Vue from 'vue';
 const MapState = {
 
     map: null,
-    markerSelected: null,
+    markersSelected: null,
     predictionScaleImg: null,
     preloadedTimeLineLayers: [],
     preloadedMarkers: [],
@@ -54,7 +54,7 @@ const MapState = {
             var ms = this;
             marker.on('click', function (e) {
                 if (!this.heaped) {
-                    ms.markerSelected = this;
+                    MapUtils.markerMouseClick(ms.map, this);
                 }
                 else {
                     ms.popupFixed = true;
