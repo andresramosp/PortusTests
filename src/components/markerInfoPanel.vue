@@ -1,7 +1,7 @@
 <template>
 <b-modal v-model="modalShow" v-if="markers && markers.length > 0" @hidden="onHidden" size="lg" :title="modalTitle">
     <b-tabs class='infoPanelClass' >
-        <b-tab :title="$t('{accesoADatosTab}')" active>
+        <b-tab :title="$t('{accesoADatosTab}')"  active>
             <b-container style="margin-top: 15px">
                 <b-row>
                   <b-col style="text-align: left; font-weight:600;" offset="4">
@@ -24,11 +24,12 @@
                 </b-row>
             </b-container>
         </b-tab>
+        <!-- v-else Tab de acceso a datos para histórico -->
         <b-tab :title="$t('{informacionTab}')" v-if="informacion">
            <b-container style="margin-top: 15px">
                <b-row>
                    <b-col cols="8">
-                       <b-row v-for="data in informacion" :key="data.key" v-if="data.value">
+                       <b-row v-for="data in informacion" :key="data.key" v-if="data.value != null && data.value != undefined">
                           <b-col style="font-weight:600;" cols="4">{{data.key}}</b-col>
                           <b-col v-if="!data.href">{{data.value}}</b-col>
                           <b-col v-else><a v-if="data.href" :href="data.href" target='_blank'>{{data.value}}</a></b-col>
@@ -49,7 +50,7 @@
 import { MarkerClass } from "@/common/enums";
 import MapState from "@/state/map.state";
 import ApiService from "@/services/api.service";
-import { INFORMES_URL } from '@/common/config';
+import { INFORMES_URL, BASE_URL_PORTUS } from '@/common/config';
 
 export default {
   name: "MarkerInfoPanel",
@@ -75,7 +76,14 @@ export default {
   computed: {
     imgUrl() {
         //"https://maps.googleapis.com/maps/api/staticmap?zoom=5&size=160x140&maptype=satellite&markers=color:red%7Clabel:%7C" + this.markers[0].latitud + "," + this.markers[0].latitud + "&sensor=false&key=" + GOOGLE_API_KEY;
-        return require("@/assets/markers/markerImg.png");
+        if (this.markers[0].mapResource.markerClass == MarkerClass.ESTACION 
+          || this.markers[0].mapResource.markerClass == MarkerClass.ESTACION_HISTORICO) {
+          return BASE_URL_PORTUS + "/img/imgEstaciones/" + this.markers[0].id + ".png";
+        }
+        else {
+          return require("@/assets/markers/markerImg.png");
+        }
+        
       }
     },
   mounted() {
@@ -113,43 +121,59 @@ export default {
               { key: this.$t("{cadencyInfo}"), value: (this.markers[0].tdelta * 60) + ' min'  }
             ];
         }
-        else if (this.markers[0].mapResource.markerClass == MarkerClass.ESTACION || this.markers[0].mapResource.markerClass == MarkerClass.ESTACION_HISTORICO) {
+        else if (this.markers[0].mapResource.markerClass == MarkerClass.ESTACION 
+              || this.markers[0].mapResource.markerClass == MarkerClass.ESTACION_HISTORICO
+              || this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA_HISTORICO) {
+            this.modalTitle = this.markers[0].nombre;
+            this.informacion = [
+                { key: this.$t("{ubicacionEstacionInfo}"), value: this.markers[0].ubicacion },
+                { key: this.$t("{longitudInfo}"), value: this.markers[0].longitud.toFixed(2) + " O" },
+                { key: this.$t("{latitudInfo}"), value: this.markers[0].latitud.toFixed(2) + " N" },
+                { key: this.$t("{cadencyInfo}"), value: this.markers[0].cadencia + ' Min'  },
+                { key: this.$t("{codigoEstacionInfo}"), value: this.markers[0].id },
+                { key: this.$t("{profundidadEstacionInfo}"), value: this.markers[0].altitudProfundidad + ' m' },
+                { key: this.$t("{fechaInicialFondeoInfo}"), value: this.markers[0].fechaAlta ? new Date(this.markers[0].fechaAlta).toISOString().split('T')[0] : null },
+                { key: this.$t("{fechaFinFondeoInfo}"), value: this.markers[0].fechaFin ? new Date(this.markers[0].fechaFin).toISOString().split('T')[0] : null },
+                { key: this.$t("{tipoSensorInfo}"), value: this.markers[0].tipoSensor },
+                { key: this.$t("{modeloEstacionInfo}"), value: this.markers[0].modelo },
+                { key: this.$t("{comentariosEstacionInfo}"), value: this.markers[0].comentarios }
+              ];
           var mi = this;
           ApiService.get('redes/' + this.markers[0].redId + '?locale=' + this.$getLocale())
           .then((red) => {
-              mi.modalTitle = mi.markers[0].nombre;
-              mi.informacion = [
-                { key: this.$t("{longitudInfo}"), value: mi.markers[0].longitud.toFixed(2) + " O" },
-                { key: this.$t("{latitudInfo}"), value: mi.markers[0].latitud.toFixed(2) + " N" },
-                { key: this.$t("{cadencyInfo}"), value: mi.markers[0].cadencia + ' Min'  },
-                { key: this.$t("{codigoEstacionInfo}"), value: mi.markers[0].id },
-                { key: this.$t("{profundidadEstacionInfo}"), value: mi.markers[0].altitudProfundidad + ' m' },
-                { key: this.$t("{fechaInicialFondeoInfo}"), value: mi.markers[0].fechaAlta ? new Date(mi.markers[0].fechaAlta).toISOString().split('T')[0] : null },
-                { key: this.$t("{fechaFinFondeoInfo}"), value: mi.markers[0].fechaFin ? new Date(mi.markers[0].fechaFin).toISOString().split('T')[0] : null },
-                { key: this.$t("{tipoSensorInfo}"), value: mi.markers[0].tipoSensor },
-                { key: this.$t("{modeloEstacionInfo}"), value: mi.markers[0].modelo },
-                { key: this.$t("{comentariosEstacionInfo}"), value: mi.markers[0].comentarios },
-                { key: this.$t("{conjuntoDatosInfo}"), value: red.data.descripcion, bold: true, href: INFORMES_URL + 'BD/informes/INT_'	+ red.data.id + '.pdf' }
-              ];
+              this.informacion.push({ key: this.$t("{conjuntoDatosInfo}"), value: red.data.descripcion, bold: true, href: INFORMES_URL + 'BD/informes/INT_'	+ red.data.id + '.pdf' })
           })
         }
-        var mi = this;
-        ApiService.post('parametros?locale=' + this.$getLocale(),
-          this.markers.map(m => m.mapOption.variableType))
-        .then((params) => {
-          mi.bancoDatos = params.data;
-        })
+
+        if (this.markers[0].mapResource.markerClass == MarkerClass.ESTACION_HISTORICO
+         || this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA_HISTORICO) {
+          // Banco de datos para históricos
+        }
+        else {
+           var mi = this;
+           ApiService.post('parametros?locale=' + this.$getLocale(),
+            this.markers.map(m => m.mapOption.variableType))
+           .then((params) => {
+              this.bancoDatos = params.data;
+              // TODO: parámetro extra si es nivel del mar, ver cómo hacer
+              // TODO: botones extras, ver
+          })
+        }
+        
 
     },
 
     onHidden (evt) {
        MapState.markersSelected = [];
+       this.informacion = null;
+       this.bancoDatos = null;
     }
   }
 };
 </script>
 
 <style scoped>
+
 .infoPanelClass {
   font-size: 12px;
 }

@@ -152,6 +152,10 @@ const LocalePlugin = {
             es: "Modelo",
             en: "Model"
         },
+        ubicacionEstacionInfo: {
+            es: "Ubicación",
+            en: "Location"
+        },
         comentariosEstacionInfo: {
             es: "Comentarios",
             en: "Comments"
@@ -185,10 +189,6 @@ const LocalePlugin = {
         mensajeMasInformacion: {
             es: "click en icono para acceso a datos",
             en: "click the icon to access data"
-        },
-        estacionNoDisponible: {
-            es: "Estación temporalmente fuera de servicio",
-            en: "Station out of service"
         },
         // Markers tooltips
         estacionHistTooltip: {

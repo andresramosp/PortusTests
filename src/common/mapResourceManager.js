@@ -229,7 +229,7 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true,
+    cached: false,
     preventHeaping: true
   },
   {
@@ -372,7 +372,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Puntos modelo',
     resourceApi: 'puntosMalla/hist/WAVE',
-    markerClass: MarkerClass.PUNTO_MALLA, // PUNTO_MALLA_HIST
+    markerClass: MarkerClass.PUNTO_MALLA_HISTORICO, 
     minZoom: 0,
     iconSize: [25, 25],
     icon: 'punto-malla-hist-oleaje.png', 

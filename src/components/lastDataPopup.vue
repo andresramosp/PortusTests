@@ -5,7 +5,7 @@
     </div>
      <div v-if="notAvailable">
       <div class="row rowData">
-        <div class="col-md-12">{{ $t('{estacionNoDisponible}') }}</div>
+        <div class="col-md-12">{{ marker.incidencia }}</div>
       </div>
     </div>
     <div v-else-if="markerModel.TiempoReal.length > 0" style="width:450px">
@@ -47,6 +47,7 @@ export default {
         (1 <= this.marker.estado && this.marker.estado <= 2) ||
         (this.marker.propagacion && this.marker.estado > 0)
       );
+      //return this.marker.incidencia != null;
     },
     markerModel() {
       var dateValue;
