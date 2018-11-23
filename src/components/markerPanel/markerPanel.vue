@@ -1,0 +1,106 @@
+<template>
+<b-modal v-model="modalShow" v-if="markers && markers.length > 0" @hidden="onHidden" size="lg" :title="modalTitle">
+    <b-tabs class='infoPanelClass' >
+        <b-tab :title="$t('{accesoADatosTab}')" active>
+            <!-- <BancoDatosHistoricoTab v-if="esHistorico()" :markers="markers" /> -->
+            <BancoDatosTab :markers="mapState.markersSelected" /> 
+        </b-tab>
+        <b-tab :title="$t('{informacionTab}')">
+            <InformacionTab :markers="mapState.markersSelected" />
+        </b-tab>
+        <b-tab v-if="esBoya()" :title="'Ultimas posiciones'" >
+            Ultimas posiciones
+            <!-- <UltimasPosicionesTab :boya="markerRef" /> -->
+        </b-tab>
+         <b-tab v-else-if="esNivmar()" :title="'Cero referencias'" >
+            <!-- <CeroReferenciasTab /> -->
+        </b-tab>
+      </b-tabs>
+</b-modal>
+</template>
+
+<script>
+
+import { MarkerClass } from "@/common/enums";
+import MapState from "@/state/map.state";
+import InformacionTab from "@/components/markerPanel/informacionTab.vue"
+import BancoDatosTab from "@/components/markerPanel/bancoDatosTab.vue"
+
+export default {
+  name: "MarkerPanel",
+  components: {
+    InformacionTab,
+    BancoDatosTab
+  },
+  props: {
+    markers: { type: Array, default: [], required: false }
+  },
+  data() {
+    return {
+      mapState: MapState,
+      markerRef: null,
+      modalShow: false
+    };
+  },
+  computed: {
+    modalTitle() {
+        if (this.markerRef.mapResource.markerClass == MarkerClass.UBICACION) {
+            return this.$t("{tipoUbicacion"+this.markerRef.tipoUbicacion+"}") + ": " + this.markerRef.nombre;
+        }
+        else if (this.markerRef.mapResource.markerClass == MarkerClass.PUNTO_MALLA) {
+            return "Pred. " +  this.$t(this.markerRef.mapOption.name) + ": " + (this.markerRef.nombre ? this.markerRef.nombre : " Lat " + this.markerRef.latitud.toFixed(2) + " N" + ": Lon " + this.markerRef.longitud.toFixed(2) + " O");
+        }
+        else if (this.markerRef.mapResource.markerClass == MarkerClass.PUNTO_MALLA_VERIF) {
+           return this.$t("{verificacionInfo}") + ": " + this.markerRef.nombre;
+        }
+        else if (this.markerRef.mapResource.markerClass == MarkerClass.ESTACION 
+              || this.markerRef.mapResource.markerClass == MarkerClass.ESTACION_HISTORICO
+              || this.markerRef.mapResource.markerClass == MarkerClass.PUNTO_MALLA_HISTORICO) {
+            return this.markerRef.nombre;
+        }
+    }
+  },
+  watch: {
+    markers: function() {
+      if (this.markers.length > 0) {
+        this.modalShow = true;
+        this.markerRef = this.markers[0]; // TODO: El de mayor index
+      }
+    }
+  },
+  mounted() {
+  },
+  created() {
+  },
+  methods: {
+
+    esHistorico() {
+        return (this.markerRef.mapResource.markerClass == MarkerClass.PUNTO_MALLA_HISTORICO
+             || this.markerRef.mapResource.markerClass == MarkerClass.ESTACION_HISTORICO)
+    },
+
+    esBoya() {
+        return (this.markerRef.mapResource.markerClass == MarkerClass.ESTACION
+             || this.markerRef.mapResource.markerClass == MarkerClass.ESTACION_HISTORICO)
+                &&   this.markerRef.boya;
+    },
+
+    esNivmar() {
+        return this.markerRef.mapResource.markerClass == MarkerClass.UBICACION;
+    },
+    
+    onHidden (evt) {
+       // Importante para que el v-if re-cree los subcomponentes, relanzando los create()
+       // Como alternativa, se pueden usar computed/asyncComputed para actualizar los valores 
+       MapState.markersSelected = [];
+    }
+  }
+};
+</script>
+
+<style scoped>
+
+.infoPanelClass {
+  font-size: 12px;
+}
+</style>
