@@ -67,20 +67,44 @@ const MapUtils = {
       }
       else {
         this.openMarkerPopup(map, marker);
+        this.hoverEffect(map, marker, true);
       }
-      var icon = marker.options.icon;
-      icon.options.iconSize = [icon.options.iconSize[0] + 5, icon.options.iconSize[1] + 5];
-      marker.setIcon(icon);
+      
     }
+  },
+
+  hoverEffect(map, marker, activate) {
+    if (activate) {
+      if (!this.hovered) {
+        var markersAtPoint = this.getMarkersById(map, marker.id);
+        markersAtPoint.forEach(m => {
+          var icon = m.options.icon;
+          icon.options.iconSize = [icon.options.iconSize[0] + 5, icon.options.iconSize[1] + 5];
+          m.setIcon(icon);
+          m.hovered = true;
+        });
+      }
+    }
+    else {
+      if (marker.hovered) {
+        var markersAtPoint = this.getMarkersById(map, marker.id);
+        markersAtPoint.forEach(m => {
+          var icon = m.options.icon;
+          icon.options.iconSize = [icon.options.iconSize[0] - 5, icon.options.iconSize[1] - 5];
+          m.setIcon(icon);
+          m.hovered = false;
+        });
+      }
+     
+    }
+     
   },
 
   markerMouseOut(map, marker) {
     if (marker.timeOut) {
       clearTimeout(marker.timeOut);
     }
-    var icon = marker.options.icon;
-    icon.options.iconSize = [icon.options.iconSize[0] - 5, icon.options.iconSize[1] - 5];
-    marker.setIcon(icon);
+    this.hoverEffect(map, marker, false);
     this.closeMarkerPopup(map, marker);
   },
 
@@ -110,6 +134,11 @@ const MapUtils = {
         marker.bindPopup(tooltip);
         marker.openPopup();
         break;
+      case MarkerClass.ANTENA_RADAR:
+        tooltip = Vue.$t("Radar - X - ") + ": " + marker.nombre;
+        marker.bindPopup(tooltip);
+        marker.openPopup();
+        break;
       case MarkerClass.ESTACION:
         marker.timeOut = setTimeout(async () => {
           var markersAtPoint = this.getMarkersById(map, marker.id);
@@ -120,7 +149,7 @@ const MapUtils = {
             maxWidth: 560
           });
           marker.openPopup();
-        }, 200);
+        }, 250);
 
         // this.asyncForEach(markersAtPoint, async m => {
         //   var lastData = await ApiService.get('lastDataEstacion/' + m.id + '/' + m.variable + '?locale=es')

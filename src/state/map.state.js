@@ -105,7 +105,8 @@ const MapState = {
 
             if (mapResource.paintBounds) {
                 var ms = this;
-                var rect = L.rectangle([[res.limN, res.limW], [res.limS, res.limE]], { color: 'red', fillOpacity: 0.1, weight: 1 }).on('click', function (e) {
+                var rect = L.rectangle([[res.limN, res.limW], [res.limS, res.limE]], { color: 'red', fillOpacity: 0.1, weight: 1 })
+                .on('click', function (e) {
                     ms.map.flyToBounds(e.target.getBounds().pad(0.25));
                     // rectángulo invisible a partir de cierto nivel de zoom
                 }).addTo(this.map);
@@ -182,18 +183,6 @@ const MapState = {
             }
         })
     },
-
-    // getCurrentTimeLineLayer() {
-    //     var currentLayer = null;
-    //     if (this.map) {
-    //         this.map.eachLayer(function (layer) {
-    //             if (layer.mapResource && layer.mapResource.type == 'TimeLineLayer') {
-    //                 currentLayer = layer;
-    //             }
-    //         });     
-    //     }
-    //     return currentLayer;
-    // },
 
     setStaticMapResourceSelected(mapResource) {
         this.staticMapResourceSelected = mapResource;

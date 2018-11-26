@@ -1,6 +1,6 @@
 <template>
 <div id="app" >
-   <Map :baseMap='baseMap' :zoomControl='false' :predictionWidget='false' />
+   <Map :baseMap='baseMap' :zoomControl='false' :predictionWidget='false' :staticMapsWidget="false" />
 </div>
 </template>
 

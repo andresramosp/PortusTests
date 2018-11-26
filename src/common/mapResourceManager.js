@@ -74,7 +74,8 @@ export const MapResources = [
     name: 'Pred. Corriente',
     resourceApi: 'mapTileResources/CURR/circulation',
     tms: true,
-    vectors: true
+    vectors: true,
+    paintBounds: false
   },
   {
     id: 'pred-tiles-corriente-radar',
@@ -276,7 +277,7 @@ export const MapResources = [
     iconSize: [25, 25],
     showAll: true,
     locale: true,
-    cached: true,
+    cached: false,
     preventHeaping: true
   },
   {
@@ -321,8 +322,22 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true,
+    cached: false,
     preventHeaping: true
+  },
+  {
+    id: 'rt-markers-antenas-corrientes',
+    type: 'MarkerLayer',
+    name: 'Antenas Radares',
+    resourceApi: 'antenas',
+    markerClass: MarkerClass.ANTENA_RADAR,
+    minZoom: 7, // TODO: intentar  ligar a los extent de las corrientes
+    icon: 'antena-corrientes.png',
+    showAll: false,
+    locale: true,
+    cached: false,
+    iconSize: [25, 25],
+    preventHeaping: false
   },
   {
     id: 'rt-markers-onda-larga',
@@ -493,7 +508,7 @@ export const MapOptions = [
     group: '{tiempoRealGroup}',
     name: '{corrientesOption}',
     variableType: VariableType.CURRENTS,
-    mapResources: ['rt-markers-corrientes', 'pred-tiles-corriente-radar']
+    mapResources: ['rt-markers-corrientes', 'pred-tiles-corriente-radar', 'rt-markers-antenas-corrientes']
   },
   {
     id: 'tr_salinidad',
@@ -502,20 +517,20 @@ export const MapOptions = [
     variableType: VariableType.SALINITY,
     mapResources: ['rt-markers-salinidad']
   },
-  //Histórico
-  {
-    id: 'hist_oleaje',
-    group: '{historicoGroup}',
-    name: '{oleajeOption}',
-    variableType: VariableType.WAVE,
-    mapResources: ['hist-markers-estaciones-oleaje', 'hist-markers-modelos-oleaje']
-  },
-  {
-    id: 'hist_salinidad',
-    group: '{historicoGroup}',
-    name: '{salinidadOption}',
-    variableType: VariableType.SALINITY,
-    mapResources: ['hist-markers-estaciones-salinidad']
-  }
+  // Histórico
+  // {
+  //   id: 'hist_oleaje',
+  //   group: '{historicoGroup}',
+  //   name: '{oleajeOption}',
+  //   variableType: VariableType.WAVE,
+  //   mapResources: ['hist-markers-estaciones-oleaje', 'hist-markers-modelos-oleaje']
+  // },
+  // {
+  //   id: 'hist_salinidad',
+  //   group: '{historicoGroup}',
+  //   name: '{salinidadOption}',
+  //   variableType: VariableType.SALINITY,
+  //   mapResources: ['hist-markers-estaciones-salinidad']
+  // }
 
 ]

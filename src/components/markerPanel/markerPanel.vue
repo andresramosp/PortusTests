@@ -1,16 +1,15 @@
 <template>
 <b-modal v-model="modalShow" v-if="markers && markers.length > 0" @hidden="onHidden" size="lg" :title="modalTitle">
     <b-tabs class='infoPanelClass' >
-        <b-tab :title="$t('{accesoADatosTab}')" active>
-            <!-- <BancoDatosHistoricoTab v-if="esHistorico()" :markers="markers" /> -->
+        <b-tab v-if="!esAntena()" :title="$t('{accesoADatosTab}')" active>
+            <!-- <BancoDatosHistoricoTab v-if="esHistorico()" :markers="markers" />  -->
             <BancoDatosTab :markers="mapState.markersSelected" /> 
         </b-tab>
         <b-tab :title="$t('{informacionTab}')">
             <InformacionTab :markers="mapState.markersSelected" />
         </b-tab>
-        <b-tab v-if="esBoya()" :title="'Ultimas posiciones'" >
-            Ultimas posiciones
-            <!-- <UltimasPosicionesTab :boya="markerRef" /> -->
+        <b-tab v-if="esBoya() && !esHistorico()" :title="'Ultimas posiciones'" >
+            <LastPositionsTab :boya="markerRef" />
         </b-tab>
          <b-tab v-else-if="esNivmar()" :title="'Cero referencias'" >
             <!-- <CeroReferenciasTab /> -->
@@ -25,12 +24,14 @@ import { MarkerClass } from "@/common/enums";
 import MapState from "@/state/map.state";
 import InformacionTab from "@/components/markerPanel/informacionTab.vue"
 import BancoDatosTab from "@/components/markerPanel/bancoDatosTab.vue"
+import LastPositionsTab from "@/components/markerPanel/lastPositionsTab.vue"
 
 export default {
   name: "MarkerPanel",
   components: {
     InformacionTab,
-    BancoDatosTab
+    BancoDatosTab,
+    LastPositionsTab
   },
   props: {
     markers: { type: Array, default: [], required: false }
@@ -87,6 +88,10 @@ export default {
 
     esNivmar() {
         return this.markerRef.mapResource.markerClass == MarkerClass.UBICACION;
+    },
+
+    esAntena() {
+        return this.markerRef.mapResource.markerClass == MarkerClass.ANTENA_RADAR;
     },
     
     onHidden (evt) {

@@ -3,7 +3,7 @@
     <div class="row rowData">
       <div class="col-md-5" style="font-weight: 700; font-size: 13px">{{markerModel.Title}}</div><div class="col-md-7" style="text-align: right; color: blue">{{ $t('{mensajeMasInformacion}') }}</div>
     </div>
-     <div v-if="notAvailable">
+  <div v-if="notAvailable">
       <div class="row rowData">
         <div class="col-md-12">{{ marker.incidencia }}</div>
       </div>

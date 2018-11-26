@@ -37,20 +37,20 @@ export default {
       }
   },
   props: {
-    markers: { type: Array, default: [], required: false }
+    markers: { type: Array, default: null, required: false }
   },
 
   mounted() {
   },
   created() {
        var mi = this;
-        ApiService.post('parametros?locale=' + this.$getLocale(),
+       ApiService.post('parametros?locale=' + this.$getLocale(),
         this.markers.map(m => m.mapOption.variableType))
-        .then((params) => {
-            this.bancoDatos = params.data;
-              // TODO: parámetro extra si es nivel del mar, ver cómo hacer
-              // TODO: botones extras, ver
-        })
+       .then((params) => {
+           this.bancoDatos = params.data;
+             // TODO: parámetro extra si es nivel del mar, ver cómo hacer
+             // TODO: botones extras, ver
+       })
   }
 };
 

@@ -164,6 +164,10 @@ const LocalePlugin = {
             es: "Conjunto de datos",
             en: "Data set"
         },
+        ultimaPosicionFecha: {
+            es: "Fecha (GMT)",
+            en: "Date (GMT)"
+        },
         // markers heaped tooltip
         markersProximosTitulo: {
             es: "Markers muy próximos",

@@ -14,9 +14,9 @@ Vue.use(BootstrapVue);
 Vue.use(AsyncComputed);
 Vue.use(VueRouter);
 Vue.use(LocalePlugin);
+ApiService.init();
 
 Vue.config.productionTip = false
-ApiService.init();
 
 StartApp();
 

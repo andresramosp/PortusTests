@@ -6,7 +6,7 @@
     <div v-show="playingTimeLineLayer">
        <img :src="mapState.predictionScaleImg" class="predictionScale" />
        <img v-show='predictionWidget' class="predictionWidgetIcon" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
-       <img v-show='hasStaticMaps' class="staticMapsWidgetIcon" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
+       <img v-show='staticMapsWidget && hasStaticMaps' class="staticMapsWidgetIcon" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
     </div>
    </div>
 
@@ -21,7 +21,8 @@ export default {
   props: {
     baseMap: Object,
     zoomControl: { default: true, required: false },
-    predictionWidget: { default: true, required: false }
+    predictionWidget: { default: true, required: false },
+    staticMapsWidget: { default: true, required: false }
   },
   data() {
     return {
@@ -143,7 +144,8 @@ export default {
 .predictionScale {
   position: absolute;
   z-index: 2;
-  left: 55%;
+  /* left: 55%; */
+  right: 10px;
   bottom: -3px;
   padding: 10px;
   border-radius: 6px;
@@ -153,8 +155,10 @@ export default {
 .predictionWidgetIcon {
     position: absolute;
     z-index: 2;
-    left: 41%;
-    bottom: 8px;
+    /* left: 41%; */
+    right: 20px;
+    /* bottom: 8px; */
+    bottom: 42px;
     width: 35px;
     height: 35px;
     border-radius: 6px;
@@ -164,8 +168,10 @@ export default {
 .staticMapsWidgetIcon {
     position: absolute;
     z-index: 2;
-    left: 44%;
-    bottom: 8px;
+    /* left: 44%; */
+     right: 55px;
+    /* bottom: 8px; */
+    bottom: 45px;
     width: 35px;
     height: 35px;
     border-radius: 6px;
