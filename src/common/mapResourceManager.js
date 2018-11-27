@@ -72,7 +72,7 @@ export const MapResources = [
     id: 'pred-tiles-corriente',
     type: 'TimeLineLayer',
     name: 'Pred. Corriente',
-    resourceApi: 'mapTileResources/CURR/circulation',
+    resourceApi: 'mapTileResources?idOperativa=circulation&idVariable=CURR',
     tms: true,
     vectors: true,
     paintBounds: false
@@ -81,7 +81,7 @@ export const MapResources = [
     id: 'pred-tiles-corriente-radar',
     type: 'TimeLineLayer',
     name: 'Pred. Corriente Radar',
-    resourceApi: 'mapTileResources/CURR/radar',
+    resourceApi: 'mapTileResources?idOperativa=radar&idVariable=CURR',
     tms: true,
     vectors: true,
     defaultVectors: true,
@@ -331,7 +331,7 @@ export const MapResources = [
     name: 'Antenas Radares',
     resourceApi: 'antenas',
     markerClass: MarkerClass.ANTENA_RADAR,
-    minZoom: 7, // TODO: intentar  ligar a los extent de las corrientes
+    //minZoom: 7, 
     icon: 'antena-corrientes.png',
     showAll: false,
     locale: true,

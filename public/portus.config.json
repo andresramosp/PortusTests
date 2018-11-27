@@ -9,7 +9,7 @@
     "base_layer_min_zoom": 1,
     "base_layer_max_zoom": 17,
 
-    "options_panel_align": "left",
+    "options_panel_align": "right",
     "color_theme": "blueTheme"
 
 }
