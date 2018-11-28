@@ -8,7 +8,14 @@
                {{ $t(floatingOption.name) }}
             </label>
         </div> 
+         <div class="form-check" v-if="vectorsOption" >
+           <label class="form-check-label">
+             <input class="form-check-input" type="checkbox" v-model="vectorsOption.active" @change="floatingOptionChanged(vectorsOption)" />
+               {{ $t(vectorsOption.name) }}
+            </label>
+        </div> 
       </div>
+     
    </transition>
  </div>
 </template>
@@ -21,11 +28,9 @@ export default {
   data() {
     return {
       align: PC.options_panel_align,
-      theme: PC.color_theme
+      theme: PC.color_theme,
+      mapState: MapState
     };
-  },
-  props: {
-    mapOption: { type: Object, default: null, required: false }
   },
   computed: {
     appearClass() {
@@ -33,40 +38,68 @@ export default {
         ? "slide-menu-right"
         : "slide-menu-left";
     },
+
+    vectorsOption() {
+      // TODO: sacar solo el primero, o devolver lista
+      var result = null;
+      var vm = this;
+      this.mapState.activeMapOptions.forEach(opt => {
+         opt.mapResources.forEach(resId => {
+            var mapResource = MapState.getMapResource(resId);
+            if (mapResource.vectors) {
+              result = {
+                name: "Dirección",
+                method: vm.toggleVectorial,
+                args: resId,
+                active: mapResource.defaultVectors
+              };
+            }
+        });
+      })
+      return result;
+      
+    },
+
     floatingOptions() {
+
       var result = [];
       var vm = this;
-      var multiLayer = this.mapOption.mapResources.length > 1;
-      if (this.mapOption) {
-        this.mapOption.mapResources.forEach(resId => {
-          var mapResource = MapState.getMapResource(resId);
-          if (mapResource.vectors) {
-            result.push({
-              name: "Dirección",
-              method: vm.toggleVectorial,
-              resourceId: resId,
-              active: mapResource.defaultVectors
-            });
-          }
-          if (multiLayer) {
-            result.push({
-              name:  mapResource.name,
-              method: vm.toggleVisibility,
-              resourceId: resId,
-              active: mapResource.unchecked ? false : true
-            });
-          }
-        });
 
-        return result;
-      }
+      this.mapState.getActiveLayers().forEach(layer => {
+        var group;
+        if (layer.mapResource.groupLayersBy)
+          group = layer.mapResource.groupLayersBy.label + ': ' + layer[layer.mapResource.groupLayersBy.field];
+        else
+          group = layer.mapResource.name;
+
+        var option = result.find(opt => { return opt.name == group});
+        if (!option) {
+          option = {
+              name:  group,
+              method: vm.toggleVisibility,
+              args: [layer],
+              active: layer.visible 
+          }
+          result.push(option);
+        }
+        else {
+          option.args.push(layer);
+        }
+          
+      })
+
+      if (result.length < 2)
+        result = [];
+
+      return result;
+
     }
   },
   created() {},
   mounted() {},
   methods: {
     floatingOptionChanged: function(floatingOption) {
-      floatingOption.method(floatingOption.resourceId, floatingOption.active);
+      floatingOption.method(floatingOption.args, floatingOption.active);
     },
 
     toggleVectorial: function(mapResourceId, vectorial) {
@@ -75,19 +108,12 @@ export default {
       MapState.addTimeLineLayer(mapResource, vectorial);
     },
     
-    toggleVisibility: function(mapResourceId, visible) {
-      if (visible) {
-        // && !MapState.hasLayer...
-        // Buscar si entre las floatingOptions hay un toggleVectorial, y si está activo, enviarlo en caso de TimeLineLayer
-        // (Si no, al quitar y poner el layer, no respeta los vectores. Otra forma sería desactivar vectores automáticamente)
-        var mapResource = MapState.getMapResource(mapResourceId);
-        if (mapResource.type == "MarkerLayer")
-          MapState.addMarkerLayer(mapResource, this.mapOption);
-        if (mapResource.type == "TimeLineLayer")
-          MapState.addTimeLineLayer(mapResource); // segundo parámetro con model del check de dirección
-      } else {
-        MapState.removeLayer(mapResourceId);
-      }
+    toggleVisibility: function(layers, visible) {
+      layers.forEach(l => {
+        l.visible = visible;
+      })      
+      MapState.setVisibleTimeLineLayers();
+      MapState.setVisibleMarkerLayers();
     },
 
   }

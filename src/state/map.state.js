@@ -69,12 +69,12 @@ const MapState = {
             marker.mapResource = mapResource;
             marker.mapOption = mapOption;
             Object.assign(marker, m);
-            if (mapResource.showAll) {
-                marker.addTo(ms.map);
-            }
-            else {
-                this.preloadedMarkers.push(marker);
-            }
+            marker.visible = !marker.mapResource.unchecked &&
+                            (!marker.mapResource.groupLayersBy 
+                         || !marker.mapResource.groupLayersBy.defaultVisibles 
+                         || marker.mapResource.groupLayersBy.defaultVisibles.indexOf(marker[marker.mapResource.groupLayersBy.field]) != -1);
+            
+            this.preloadedMarkers.push(marker);
         });
 
         this.setVisibleMarkerLayers();
@@ -101,6 +101,9 @@ const MapState = {
             );
             tileLayer.mapResource = mapResource;
             portusTimeLayer.mapResource = mapResource;
+            portusTimeLayer.visible = true; 
+            portusTimeLayer.id = res.url;
+            Object.assign(portusTimeLayer, res);
             this.preloadedTimeLineLayers.push(portusTimeLayer);
 
             if (mapResource.paintBounds) {
@@ -121,7 +124,7 @@ const MapState = {
     setVisibleMarkerLayers() {
         var ms = this;
         this.preloadedMarkers.forEach(function (marker) {
-            if (MapUtils.markerVisible(ms.map, marker)) {
+            if (marker.visible && (marker.mapResource.showAll || (MapUtils.markerVisible(ms.map, marker)))) {
                 marker.addTo(ms.map);
             }
             else {
@@ -133,7 +136,7 @@ const MapState = {
     setVisibleTimeLineLayers() {
         var ms = this;
         this.preloadedTimeLineLayers.forEach(function (preLayer) {
-            if (MapUtils.tileLayerVisible(ms.map, preLayer._baseLayer)) {
+            if (MapUtils.tileLayerVisible(ms.map, preLayer._baseLayer) && preLayer.visible) {
                 if (!ms.map.hasLayer(preLayer)) {
                     ms.map.options.timeDimensionOptions.period = "PT" + preLayer._baseLayer.options.period + "H";
                     var date = new Date();
@@ -210,6 +213,14 @@ const MapState = {
             ms.predictionScaleImg = '';
             ms.currentTimeLineLayer = null;
         }
+    },
+
+    
+  getActiveLayers() {
+        var result = [];
+        result = result.concat(this.preloadedTimeLineLayers);
+        result = result.concat(this.preloadedMarkers);
+        return result;
     },
 
     addLoading(thing) {

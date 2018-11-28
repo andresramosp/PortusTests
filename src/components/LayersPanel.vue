@@ -16,7 +16,7 @@
        </b-card>
   </div>
 
-  <FloatingLayerOptions v-for="mapOption in mapState.activeMapOptions" :key="mapOption.id" :mapOption="mapOption" />
+  <FloatingLayerOptions />
 
 </div>
   
@@ -62,7 +62,7 @@ export default {
       if (mapOption.active) {
         mapOption.mapResources.forEach(resId => {
           var mapResource = MapState.getMapResource(resId);
-          if (mapResource.type == "MarkerLayer" && !mapResource.unchecked)
+          if (mapResource.type == "MarkerLayer")
             MapState.addMarkerLayer(mapResource, mapOption);
           if (mapResource.type == "TimeLineLayer")
             MapState.addTimeLineLayer(mapResource, mapResource.defaultVectors);

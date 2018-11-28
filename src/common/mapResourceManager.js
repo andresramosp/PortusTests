@@ -8,7 +8,7 @@ export const MapResources = [
     id: 'pred-tiles-nivmar',
     type: 'TimeLineLayer',
     name: 'Pred. Nivel del Mar',
-    resourceApi: 'mapTileResources/RES',
+    resourceApi: 'mapTileResources/portus/RES',
     mapsResourceApi: 'mapStaticResources/RES',
     tms: true
   },
@@ -46,7 +46,7 @@ export const MapResources = [
     id: 'pred-tiles-oleaje-atl',
     type: 'TimeLineLayer',
     name: 'Pred. Oleaje Atlántico',
-    resourceApi: 'mapTileResources/VHM0Atl',
+    resourceApi: 'mapTileResources/portus/VHM0Atl',
     mapsResourceApi: 'mapStaticResources/VHM0Atl',
     tms: true,
     vectors: true
@@ -55,7 +55,7 @@ export const MapResources = [
     id: 'pred-tiles-oleaje-med',
     type: 'TimeLineLayer',
     name: 'Pred. Oleaje Mediterráneo',
-    resourceApi: 'mapTileResources/VHM0Med',
+    resourceApi: 'mapTileResources/portus/VHM0Med',
     mapsResourceApi: 'mapStaticResources/VHM0Med',
     tms: true,
     vectors: true
@@ -64,7 +64,7 @@ export const MapResources = [
     id: 'pred-tiles-oleaje',
     type: 'TimeLineLayer',
     name: 'Pred. Oleaje',
-    resourceApi: 'mapTileResources/VHM0',
+    resourceApi: 'mapTileResources/portus/VHM0',
     tms: true,
     vectors: true
   },
@@ -72,33 +72,36 @@ export const MapResources = [
     id: 'pred-tiles-corriente',
     type: 'TimeLineLayer',
     name: 'Pred. Corriente',
-    resourceApi: 'mapTileResources?idOperativa=circulation&idVariable=CURR',
+    resourceApi: 'mapTileResources/portus?idOperativa=circulation&idVariable=CURR',
     tms: true,
     vectors: true,
-    paintBounds: false
+    paintBounds: false,
+    groupLayersBy: { field: 'idOperativa', label: 'Operativa' },
   },
   {
     id: 'pred-tiles-corriente-radar',
     type: 'TimeLineLayer',
     name: 'Pred. Corriente Radar',
-    resourceApi: 'mapTileResources?idOperativa=radar&idVariable=CURR',
+    resourceApi: 'mapTileResources/portus?idOperativa=radar&idVariable=CURR',
     tms: true,
     vectors: true,
     defaultVectors: true,
-    paintBounds: true
+    paintBounds: true,
+    groupLayersBy: { field: 'idOperativa', label: 'Operativa' }
   },
   {
     id: 'pred-tiles-temperatura',
     type: 'TimeLineLayer',
     name: 'Pred. Temperatura',
-    resourceApi: 'mapTileResources/SST',
+    resourceApi: 'mapTileResources/portus/SST',
+    //groupLayersBy: { field: 'idDominio', label: 'Dominio' },
     tms: true
   },
   {
     id: 'pred-tiles-viento',
     type: 'TimeLineLayer',
     name: 'Pred. Viento',
-    resourceApi: 'mapTileResources/WSPD',
+    resourceApi: 'mapTileResources/portus/WSPD',
     mapsResourceApi: 'mapStaticResources/WSPD',
     tms: true,
     vectors: true,
@@ -108,7 +111,8 @@ export const MapResources = [
     id: 'pred-tiles-salinidad',
     type: 'TimeLineLayer',
     name: 'Pred. Salinidad',
-    resourceApi: 'mapTileResources/SAL',
+    resourceApi: 'mapTileResources/portus/SAL',
+    //groupLayersBy: { field: 'idDominio', label: 'Dominio' },
     tms: true
   },
   {
@@ -118,6 +122,7 @@ export const MapResources = [
     resourceApi: 'puntosMalla/pred/Cirana',
     markerClass: MarkerClass.PUNTO_MALLA,
     minZoom: 0,
+    groupLayersBy: { field: 'malla', label: 'Malla' },
     icon: 'punto-malla-cirana.png'
   },
   {
@@ -145,6 +150,7 @@ export const MapResources = [
     name: 'Puntos Modelo',
     resourceApi: 'puntosMalla/pred/Wana/med',
     markerClass: MarkerClass.PUNTO_MALLA,
+    groupLayersBy: { field: 'malla', label: 'Malla' },
     minZoom: 0,
     icon: 'punto-malla-wana.png'
   },
@@ -201,6 +207,7 @@ export const MapResources = [
     showAll: true,
     locale: true,
     cached: true,
+    groupLayersBy: { field: 'tipoSensor', label: 'Sensor', defaultVisibles: ['Direccional', 'Direccional Met-Oce'] },
     preventHeaping: true
   },
   {
@@ -216,6 +223,7 @@ export const MapResources = [
     showAll: true,
     locale: true,
     cached: true,
+    //groupLayersBy: { field: 'tipoSensor', label: 'Sensor' },
     preventHeaping: true
   },
   {
@@ -323,7 +331,8 @@ export const MapResources = [
     showAll: true,
     locale: true,
     cached: false,
-    preventHeaping: true
+    preventHeaping: true,
+    groupLayersBy: { field: 'redId', label: 'red'}
   },
   {
     id: 'rt-markers-antenas-corrientes',
