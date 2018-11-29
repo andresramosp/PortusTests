@@ -168,6 +168,11 @@ const LocalePlugin = {
             es: "Fecha (GMT)",
             en: "Date (GMT)"
         },
+        // Banco datos histórico
+        informesClimaticosLabel: {
+            es: "Informes Climáticos",
+            en: "Global Reports"
+        },
         // markers heaped tooltip
         markersProximosTitulo: {
             es: "Markers muy próximos",
