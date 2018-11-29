@@ -85,7 +85,7 @@ const MapState = {
         this.addLoading('timelines');
         var result = await ApiService.get(mapResource.resourceApi);
         result.data.forEach(res => {
-            var tileLayer = L.tileLayer(BASE_URL_PORTUS + res.url + '{d}{h}/' + (vectorial ? 'vec' : 'map') + '//{z}/{x}/{y}.png', {
+            var tileLayer = L.tileLayer(BASE_URL_PORTUS + res.url + '{d}{h}/' + (vectorial ? res.urlVec : res.urlIso) + '//{z}/{x}/{y}.png', {
                 tms: true,
                 minZoom: res.zoomMin,
                 maxZoom: res.zoomMax,

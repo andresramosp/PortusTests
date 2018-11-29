@@ -43,13 +43,24 @@ export const MapResources = [
     cached: false
   },
   {
-    id: 'pred-tiles-oleaje-atl',
+    id: 'pred-tiles-oleaje-atl-portus',
     type: 'TimeLineLayer',
-    name: 'Pred. Oleaje Atlántico',
+    name: 'Pred. Oleaje Atl Portus',
     resourceApi: 'mapTileResources/portus/VHM0Atl',
     mapsResourceApi: 'mapStaticResources/VHM0Atl',
     tms: true,
-    vectors: true
+    vectors: true,
+    groupLayersBy: { field: 'modelo', label: 'Modelo' },
+  },
+  {
+    id: 'pred-tiles-oleaje-atl-ocaso',
+    type: 'TimeLineLayer',
+    name: 'Pred. Oleaje Atl Ocaso',
+    resourceApi: 'mapTileResources/ocaso/VHM0Atl',
+    mapsResourceApi: 'mapStaticResources/VHM0Atl',
+    tms: true,
+    vectors: true,
+    groupLayersBy: { field: 'modelo', label: 'Modelo' }
   },
   {
     id: 'pred-tiles-oleaje-med',
@@ -401,6 +412,34 @@ export const MapResources = [
     iconSize: [25, 25],
     icon: 'punto-malla-hist-oleaje.png', 
   },
+  {
+    id: 'hist-markers-estaciones-viento',
+    type: 'MarkerLayer',
+    name: 'Historico - Viento',
+    resourceApi: 'estaciones/hist/WIND',
+    markerClass: MarkerClass.ESTACION_HISTORICO,
+    minZoom: 0,
+    icon: 'estacion-hist-viento.png',
+    iconSize: [25, 25],
+    showAll: true,
+    locale: true,
+    cached: true,
+    preventHeaping: true
+  },
+  {
+    id: 'hist-markers-estaciones-corrientes',
+    type: 'MarkerLayer',
+    name: 'Historico - Corrientes',
+    resourceApi: 'estaciones/hist/CURRENTS',
+    markerClass: MarkerClass.ESTACION_HISTORICO,
+    minZoom: 0,
+    icon: 'estacion-hist-corrientes.png',
+    iconSize: [25, 25],
+    showAll: true,
+    locale: true,
+    cached: true,
+    preventHeaping: true
+  }
 ];
 
 // Checkboxes 
@@ -411,7 +450,7 @@ export const MapOptions = [
     group: '{prediccionesGroup}',
     name: '{oleajeAtlanticoOption}',
     variableType: VariableType.WAVE,
-    mapResources: ['pred-tiles-oleaje-atl', 'pred-markers-wana-atl', 'pred-markers-wana-atl-verif'] // 'pred-tiles-oleaje'
+    mapResources: ['pred-tiles-oleaje-atl-portus', 'pred-tiles-oleaje-atl-ocaso', 'pred-markers-wana-atl', 'pred-markers-wana-atl-verif'] // 'pred-tiles-oleaje'
   },
   {
     id: 'pred_oleaje_med',
@@ -527,19 +566,33 @@ export const MapOptions = [
     mapResources: ['rt-markers-salinidad']
   },
   // Histórico
-  // {
-  //   id: 'hist_oleaje',
-  //   group: '{historicoGroup}',
-  //   name: '{oleajeOption}',
-  //   variableType: VariableType.WAVE,
-  //   mapResources: ['hist-markers-estaciones-oleaje', 'hist-markers-modelos-oleaje']
-  // },
-  // {
-  //   id: 'hist_salinidad',
-  //   group: '{historicoGroup}',
-  //   name: '{salinidadOption}',
-  //   variableType: VariableType.SALINITY,
-  //   mapResources: ['hist-markers-estaciones-salinidad']
-  // }
+  {
+    id: 'hist_oleaje',
+    group: '{historicoGroup}',
+    name: '{oleajeOption}',
+    variableType: VariableType.WAVE,
+    mapResources: ['hist-markers-estaciones-oleaje', 'hist-markers-modelos-oleaje']
+  },
+  {
+    id: 'hist_salinidad',
+    group: '{historicoGroup}',
+    name: '{salinidadOption}',
+    variableType: VariableType.SALINITY,
+    mapResources: ['hist-markers-estaciones-salinidad']
+  },
+  {
+    id: 'hist_viento',
+    group: '{historicoGroup}',
+    name: '{vientoOption}',
+    variableType: VariableType.WIND,
+    mapResources: ['hist-markers-estaciones-viento']
+  },
+  {
+    id: 'hist_corrientes',
+    group: '{historicoGroup}',
+    name: '{corrientesOption}',
+    variableType: VariableType.CURRENTS,
+    mapResources: ['hist-markers-estaciones-corrientes']
+  }
 
 ]
