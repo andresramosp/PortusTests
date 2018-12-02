@@ -2,13 +2,13 @@
 <div>
   
   <div class='layersPanel' :class="{ 'leftAlign': align == 'left', 'rightAlign': align == 'right' }">
-      <b-card v-for="optGrp in optionGroups" :header="$t(optGrp)" class="text-center panel-section" :class="theme" :key="optGrp.id">
+      <b-card v-for="optGrp in mapOptionsGroups" :header="$t(optGrp.name)" class="text-center panel-section" :class="theme" :key="optGrp.id">
         <b-container>
            <b-row >
-               <b-col cols="6" class="form-check text-left" v-if="mapOption.group == optGrp" v-for="mapOption in mapOptions" :key="mapOption.id">
+               <b-col v-for="mapOption in mapOptions.filter(opt => opt.group == optGrp.id)" :key="mapOption.id" cols="6" class="form-check text-left" style="padding-top: 2px;" >
                 <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" v-model="mapOption.active" @change="mapOptionChanged(mapOption)" />
-                {{ $t(mapOption.name) }}
+                  <input class="form-check-input" type="checkbox" v-model="mapOption.active" @change="mapOptionChanged(mapOption)" />
+                  {{ $t(mapOption.name) }}
               </label>
             </b-col> 
            </b-row>
@@ -42,19 +42,10 @@ export default {
     };
   },
   props: {
-    mapOptions: { type: Array, default: [], required: false }
+    mapOptions: { type: Array, default: [], required: false },
+    mapOptionsGroups: { type: Array, default: [], required: false }
   },
   computed: {
-    optionGroups() {
-      var groupsList = this.mapOptions
-        .map(m => {
-          return m.group;
-        })
-        .filter(function (value, index, self) {
-          return self.indexOf(value) === index;
-        });
-      return groupsList;
-    }
   },
   mounted() {},
   methods: {
@@ -68,6 +59,7 @@ export default {
             MapState.addTimeLineLayer(mapResource, mapResource.defaultVectors);
         });
         MapState.activeMapOptions.push(mapOption);
+        this.checkMultipleAllowed(mapOption);
       } else {
         mapOption.mapResources.forEach(resId => {
           MapState.removeLayer(resId);
@@ -76,6 +68,16 @@ export default {
           return opt.id != mapOption.id;
         });
       }
+    },
+    checkMultipleAllowed: function(checkedMapOption) {
+      var optionGroup = this.mapOptionsGroups.find(optGrp => optGrp.id == checkedMapOption.group);
+        if (!optionGroup.multiple) {
+            var otherCheckedOption = this.mapOptions.find(opt => opt.id != checkedMapOption.id && opt.group == optionGroup.id && opt.active);
+            if (otherCheckedOption) {
+               otherCheckedOption.active = false;
+               this.mapOptionChanged(otherCheckedOption);
+            }
+        }
     }
   }
 };
@@ -111,7 +113,7 @@ export default {
   padding: 10px; */
   border-radius: 8px;
   color: white;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 input[type="checkbox"] {
@@ -130,7 +132,7 @@ input[type="checkbox"] {
 
 .card-header {
   background-color: #091c3259;
-  font-size: 19px;
+  font-size: 17px;
   padding: 7px 5px 7px 5px
 }
 

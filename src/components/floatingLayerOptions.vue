@@ -65,31 +65,17 @@ export default {
       var result = [];
       var vm = this;
 
-      this.mapState.getActiveLayers().forEach(layer => {
-        var group;
-        if (layer.mapResource.groupLayersBy)
-          group = layer.mapResource.groupLayersBy.label + ': ' + layer[layer.mapResource.groupLayersBy.field];
-        else
-          group = layer.mapResource.name;
-
-        var option = result.find(opt => { return opt.name == group});
-        if (!option) {
-          option = {
-              name:  group,
-              method: vm.toggleVisibility,
-              args: [layer],
-              active: layer.visible 
+      this.mapState.getActiveMapOptions().forEach(opt => {
+          if (opt.mapResources.length > 1 || opt.mapResources[0].groupLayersBy) {
+            opt.mapResources.forEach(resId => {
+                var layersResouce = vm.mapState.getActiveLayers().filter(l => l.mapResource.id == resId)
+                layersResouce.forEach(layer => {
+                  vm.addLayerToGroup(layer, result);
+                })
+            });
           }
-          result.push(option);
-        }
-        else {
-          option.args.push(layer);
-        }
-          
-      })
-
-      if (result.length < 2)
-        result = [];
+        
+      });
 
       return result;
 
@@ -116,6 +102,27 @@ export default {
       MapState.setVisibleMarkerLayers();
     },
 
+    addLayerToGroup(layer, groupList) {
+      var vm = this;
+      var group;
+      if (layer.mapResource.groupLayersBy)
+        group = layer.mapResource.groupLayersBy.label + ': ' + layer[layer.mapResource.groupLayersBy.field];
+      else
+        group = layer.mapResource.name;
+      var option = groupList.find(opt => { return opt.name == group});
+      if (!option) {
+        option = {
+          name:  group,
+          method: vm.toggleVisibility,
+          args: [layer],
+          active: layer.visible 
+        }
+        groupList.push(option);
+      }
+      else {
+        option.args.push(layer);
+      }
+    }
   }
 };
 </script>
@@ -141,19 +148,19 @@ export default {
   position: absolute;
   z-index: 2;
   /* right: 9px; */
-  bottom: 50px;
+  top: 20px;
   padding: 10px;
   border-radius: 6px;
   color: white;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .leftAlign {
-  left: 12px;
+  left: 350px;
 }
 
 .rightAlign {
-  right: 12px;
+  right: 350px;
 }
 
 .blueTheme {

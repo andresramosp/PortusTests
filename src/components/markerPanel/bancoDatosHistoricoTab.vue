@@ -13,6 +13,12 @@
                                 </template>
                             </b-form-select>
                         </b-col>
+                        <b-col cols="3">
+                              <b-form-select v-model="annioSelected" :options="anniosOptions" class="mb-3" style="width: 80%">
+                                <template slot="first">
+                                </template>
+                            </b-form-select>
+                        </b-col>
                         <b-col>
                             <b-button size="sm" variant="secundary" @click="openInformeAnual()">
                                 Descargar
@@ -28,7 +34,7 @@
                     <b-collapse visible :id="'collapse' + varGrp" class="mt-2">
                     <span style="font-size: 14px; font-weight: bold;">{{$t('{informesClimaticosLabel}')}}</span> 
                     <b-row style="margin-top: 10px">
-                        <b-col v-for="informeVar in informesVariable" :key="informeVar" v-if="informeVar.variable == varGrp" cols="3">
+                        <b-col v-for="informeVar in informesVariable" :key="informeVar.id" v-if="informeVar.variable == varGrp" cols="3">
                             <b-button size="sm" variant="secundary" @click="openLink(informeVar.url)">
                                 {{informeVar.nombre}}
                             </b-button>
@@ -54,9 +60,12 @@ export default {
   data() {
       return {
           informesVariable: [],
+          productosVariable: [],
           variables: [],
           informesAnualesOptions: [],
-          informeAnualSelected: null
+          informeAnualSelected: null,
+          anniosOptions: [],
+          annioSelected: null
       }
   },
   props: {
@@ -65,6 +74,7 @@ export default {
   mounted() {
   },
   created() {
+       var minYear, maxYear;
        var mi = this;
        this.variables = this.markers.map(m => m.mapOption.variableType);
        ApiService.post('informesHist/' + this.markers[0].id + '?locale=' + this.$getLocale(), this.variables)
@@ -72,12 +82,16 @@ export default {
            this.informesVariable = params.data;
        })
        if (this.markers[0].mareografo) {
+           minYear = new Date(this.markers[0].fechaAlta).getFullYear();;
+           maxYear = this.markers[0].estado != 3 ? 2016 : new Date(this.markers[0].fechaFin).getFullYear();
            this.informesAnualesOptions = [
                { value: 'N', text: 'Nivel'}
             ];
            this.informeAnualSelected = 'N';
        }
        else if (this.markers[0].redCos) {
+            minYear = new Date(this.markers[0].fechaAlta).getFullYear();
+            maxYear = this.markers[0].estado != 3 ? 2014 : new Date(this.markers[0].fechaFin).getFullYear();
             this.informesAnualesOptions = [
                { value: 'O', text: 'Oleaje'},
                { value: 'T', text: 'Temp. Agua'}
@@ -85,6 +99,8 @@ export default {
             this.informeAnualSelected = 'O';
        }
        else {
+            minYear = new Date(this.markers[0].fechaAlta).getFullYear();;
+            maxYear = this.markers[0].estado != 3 ? 2015 : new Date(this.markers[0].fechaFin).getFullYear();
             this.informesAnualesOptions = [
                { value: 'I', text: 'Introducción'}, 
                { value: 'R', text: 'Resumen Medidas'}, 
@@ -95,6 +111,15 @@ export default {
             ];
             this.informeAnualSelected = 'I';
        }
+       for (var i = minYear; i <= maxYear; i++) {
+           this.anniosOptions.push(i);
+       };
+       this.annioSelected = this.anniosOptions[this.anniosOptions.length - 1];
+
+       ApiService.post('productosEstacion/' + this.markers[0].id + '?locale=' + this.$getLocale(), this.variables)
+       .then((params) => {
+           this.productosVariable = params.data;
+       })
   },
   methods: {
       openLink(url) {
@@ -102,7 +127,13 @@ export default {
       },
       openInformeAnual() {
           var estacion = this.markers[0];
-          var url = INFORMES_URL + '/BD/informes/anuales/' + estacion.redId + '/' + estacion.id + this.informeAnualSelected + '12' + '.pdf';
+          var url = INFORMES_URL 
+                    + '/BD/informes/anuales/' 
+                    + estacion.redId + '/' 
+                    + estacion.id 
+                    + this.informeAnualSelected 
+                    + this.annioSelected.toString().substr(2, 2) 
+                    + '.pdf';
           this.openLink(url);
       }
   }

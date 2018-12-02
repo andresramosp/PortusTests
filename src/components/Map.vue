@@ -22,7 +22,8 @@ export default {
     baseMap: Object,
     zoomControl: { default: true, required: false },
     predictionWidget: { default: true, required: false },
-    staticMapsWidget: { default: true, required: false }
+    staticMapsWidget: { default: true, required: false },
+    mapFixed: false,
   },
   data() {
     return {
@@ -68,7 +69,7 @@ export default {
         timeDimensionOptions: { mapState: this.mapState }
       }).fitBounds(bounds);
 
-      if (this.zoomControl) {
+      if (!this.mapFixed) {
         L.control.zoom({
           position: PC.options_panel_align == 'right' ? 'topleft' : 'topright'
         }).addTo(map);
@@ -87,6 +88,12 @@ export default {
       map.on('popupclose', function(e) {
         MapState.popupFixed = false;
       });
+
+      if (this.mapFixed) {
+        map.scrollWheelZoom.disable();
+        map.dragging.disable();
+      }
+
       MapState.init(map);
     },
 

@@ -216,11 +216,15 @@ const MapState = {
     },
 
     
-  getActiveLayers() {
+    getActiveLayers() {
         var result = [];
         result = result.concat(this.preloadedTimeLineLayers);
         result = result.concat(this.preloadedMarkers);
         return result;
+    },
+
+    getActiveMapOptions() {
+        return this.activeMapOptions;
     },
 
     addLoading(thing) {

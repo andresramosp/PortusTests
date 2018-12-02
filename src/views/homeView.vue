@@ -1,7 +1,7 @@
 <template>
 <div id="app" >
-   <Map :baseMap='baseMap' />
-   <LayersPanel :mapOptions="mapOptions" /> 
+   <Map :baseMap='baseMap' :mapFixed="mapFixed" />
+   <LayersPanel :mapOptionsGroups="mapOptionsGroups" :mapOptions="mapOptions" /> 
    <MarkerPanel :markers='mapState.markersSelected' />
    <StaticMapsPanel :mapResource='mapState.staticMapResourceSelected' />
 </div>
@@ -15,6 +15,7 @@ import LayersPanel from "@/components/layersPanel.vue";
 import MarkerPanel from "@/components/markerPanel/markerPanel.vue";
 import StaticMapsPanel from "@/components/staticMapsPanel.vue";
 import { MapOptions } from '@/common/mapResourceManager';
+import { MapOptionsGroups } from '@/common/mapResourceManager';
 
 export default {
   name: "app",
@@ -28,7 +29,9 @@ export default {
     return {
       mapState: MapState,
       mapOptions: [],
-      baseMap: null
+      mapOptionsGroups: MapOptionsGroups,
+      baseMap: null,
+      mapFixed: PC.map_fixed,
     }    
   },
   created() {
@@ -44,6 +47,7 @@ export default {
       }
     );
     this.mapOptions = MapOptions.filter(opt => { return PC.map_options.length == 0 || PC.map_options.indexOf(opt.id) != -1});  
+
   }
 };
 </script>

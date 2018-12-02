@@ -1,6 +1,6 @@
 <template>
 <div id="app" >
-   <Map :baseMap='baseMap' :zoomControl='false' :predictionWidget='false' :staticMapsWidget="false" />
+   <Map :baseMap='baseMap' :mapFixed="true" :predictionWidget='false' :staticMapsWidget="false" />
 </div>
 </template>
 
@@ -14,12 +14,6 @@ export default {
   components: {
     Map
   },
-  // props: {
-  //     resourceId: {
-  //       type: String,
-  //       required: true
-  //     }
-  //   },
   data () {
     return {
       mapState: MapState,
@@ -47,9 +41,6 @@ export default {
     var lat = this.$route.query.lat;
     var lon = this.$route.query.lon;
     MapState.getMap().setView(L.latLng(lat, lon), zoom);
-    
-    MapState.getMap().scrollWheelZoom.disable();
-    MapState.getMap().dragging.disable();
 
   }
 };
