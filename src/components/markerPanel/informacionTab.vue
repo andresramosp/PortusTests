@@ -68,14 +68,15 @@ export default {
                 { key: this.$t("{verificacionInfo}"), value: this.markers[0].mareografo } // Mirar
               ];
           }
-        else if (this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA) {
+        else if (this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA 
+              || this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA_HISTORICO) {
             this.informacion = [
               { key: this.$t("{longitudInfo}"), value: this.markers[0].longitud.toFixed(2) + " O" },
               { key: this.$t("{latitudInfo}"), value: this.markers[0].latitud.toFixed(2) + " N" },
               { key: this.$t("{codigoModeloInfo}"), value: this.markers[0].id },
               { key: this.$t("{cadencyInfo}"), value: (this.markers[0].tdelta * 60) + ' min'  },
               { key: this.$t("{mallaInfo}"), value: this.markers[0].malla },
-              // { key: "Verificación", value: this.markers[0].mareografo } // ?
+              { key: this.$t("{conjuntoDatosInfo}"), value: this.markers[0].red ? this.markers[0].red.descripcion : null, bold: true, href: this.markers[0].red ? (INFORMES_URL + 'BD/informes/INT_'	+ this.markers[0].red.id + '.pdf') : null }
             ];
         }
         else if (this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA_VERIF) {
@@ -88,7 +89,6 @@ export default {
         }
         else if (this.markers[0].mapResource.markerClass == MarkerClass.ESTACION 
               || this.markers[0].mapResource.markerClass == MarkerClass.ESTACION_HISTORICO) {
-              //|| this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA_HISTORICO) {
             this.informacion = [
                 { key: this.$t("{ubicacionEstacionInfo}"), value: this.markers[0].ubicacion },
                 { key: this.$t("{longitudInfo}"), value: this.markers[0].longitud.toFixed(2) + " O" },

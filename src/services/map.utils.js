@@ -134,6 +134,11 @@ const MapUtils = {
         marker.bindPopup(tooltip);
         marker.openPopup();
         break;
+      case MarkerClass.PUNTO_MALLA_HISTORICO:
+        tooltip = Vue.$t("{estacionHistTooltip}") + ": " + Vue.$t("{puntoSimarLabel}") + ": (" + marker.id + ")";
+        marker.bindPopup(tooltip);
+        marker.openPopup();
+        break;
       case MarkerClass.ANTENA_RADAR:
         tooltip = Vue.$t("Radar - X - ") + ": " + marker.nombre;
         marker.bindPopup(tooltip);

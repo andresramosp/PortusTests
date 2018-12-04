@@ -57,9 +57,11 @@ export default {
            return this.$t("{verificacionInfo}") + ": " + this.markerRef.nombre;
         }
         else if (this.markerRef.mapResource.markerClass == MarkerClass.ESTACION 
-              || this.markerRef.mapResource.markerClass == MarkerClass.ESTACION_HISTORICO
-              || this.markerRef.mapResource.markerClass == MarkerClass.PUNTO_MALLA_HISTORICO) {
+              || this.markerRef.mapResource.markerClass == MarkerClass.ESTACION_HISTORICO) {
             return this.markerRef.nombre;
+        }
+        else if (this.markerRef.mapResource.markerClass == MarkerClass.PUNTO_MALLA_HISTORICO) {
+           return this.$t("{puntoSimarLabel}") + ": (" + this.markerRef.id + ")";
         }
     }
   },

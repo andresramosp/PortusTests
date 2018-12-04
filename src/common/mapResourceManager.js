@@ -377,7 +377,7 @@ export const MapResources = [
   {
     id: 'hist-markers-estaciones-oleaje',
     type: 'MarkerLayer',
-    name: 'Historico - Oleaje',
+    name: 'Estaciones Oleaje',
     resourceApi: 'estaciones/hist/WAVE',
     markerClass: MarkerClass.ESTACION_HISTORICO,
     minZoom: 0,
@@ -391,7 +391,7 @@ export const MapResources = [
   {
     id: 'hist-markers-estaciones-salinidad',
     type: 'MarkerLayer',
-    name: 'Historico - Salinidad',
+    name: 'Estaciones Salinidad',
     resourceApi: 'estaciones/hist/SALINITY',
     markerClass: MarkerClass.ESTACION_HISTORICO,
     minZoom: 0,
@@ -415,7 +415,7 @@ export const MapResources = [
   {
     id: 'hist-markers-estaciones-viento',
     type: 'MarkerLayer',
-    name: 'Historico - Viento',
+    name: 'Estaciones Viento',
     resourceApi: 'estaciones/hist/WIND',
     markerClass: MarkerClass.ESTACION_HISTORICO,
     minZoom: 0,
@@ -439,7 +439,7 @@ export const MapResources = [
   {
     id: 'hist-markers-estaciones-corrientes',
     type: 'MarkerLayer',
-    name: 'Historico - Corrientes',
+    name: 'Estaciones Corrientes',
     resourceApi: 'estaciones/hist/CURRENTS',
     markerClass: MarkerClass.ESTACION_HISTORICO,
     minZoom: 0,
@@ -453,7 +453,7 @@ export const MapResources = [
   {
     id: 'hist-markers-estaciones-nivmar',
     type: 'MarkerLayer',
-    name: 'Historico - Nivmar',
+    name: 'Estaciones Nivmar',
     resourceApi: 'estaciones/hist/SEA_LEVEL',
     markerClass: MarkerClass.ESTACION_HISTORICO,
     minZoom: 0,
@@ -467,7 +467,7 @@ export const MapResources = [
   {
     id: 'hist-markers-estaciones-temp-agua',
     type: 'MarkerLayer',
-    name: 'Historico - Temp Agua',
+    name: 'Estaciones Temp Agua',
     resourceApi: 'estaciones/hist/WATER_TEMP',
     markerClass: MarkerClass.ESTACION_HISTORICO,
     minZoom: 0,
@@ -481,7 +481,7 @@ export const MapResources = [
   {
     id: 'hist-markers-estaciones-agitacion',
     type: 'MarkerLayer',
-    name: 'Historico - Agitacion',
+    name: 'Estaciones Agitacion',
     resourceApi: 'estaciones/hist/AGITATION',
     markerClass: MarkerClass.ESTACION_HISTORICO,
     minZoom: 0,
@@ -495,7 +495,7 @@ export const MapResources = [
   {
     id: 'hist-markers-estaciones-presion-aire',
     type: 'MarkerLayer',
-    name: 'Historico - Pres. Aire',
+    name: 'Estaciones Pres. Aire',
     resourceApi: 'estaciones/hist/AIR_PRESURE',
     markerClass: MarkerClass.ESTACION_HISTORICO,
     minZoom: 0,
@@ -509,7 +509,7 @@ export const MapResources = [
   {
     id: 'hist-markers-estaciones-temp-aire',
     type: 'MarkerLayer',
-    name: 'Historico - Temp Aire',
+    name: 'Estaciones Temp Aire',
     resourceApi: 'estaciones/hist/AIR_TEMP',
     markerClass: MarkerClass.ESTACION_HISTORICO,
     minZoom: 0,

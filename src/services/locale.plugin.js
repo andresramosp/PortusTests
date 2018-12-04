@@ -210,6 +210,10 @@ const LocalePlugin = {
             en: "Date (GMT)"
         },
         // Banco datos histórico
+        puntoSimarLabel: {
+            es: "Punto SIMAR",
+            en: "SIMAR Point"
+        },
         informesClimaticosLabel: {
             es: "Informes Climáticos",
             en: "Global Reports"

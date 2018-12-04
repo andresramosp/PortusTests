@@ -92,6 +92,8 @@ export default {
   mounted() {
   },
   created() {
+
+      this.variables = this.markers.map(m => m.mapOption.variableType);
       
        if (!this.isMeteorologica() && !this.isModelo()) {
            this.getInformesAnuales();
@@ -129,7 +131,6 @@ export default {
          this.openLink(url);
       },
       getInformes() {
-          this.variables = this.markers.map(m => m.mapOption.variableType);
           var subruta = this.isModelo() ? 'modelo' : 'estacion';
           ApiService.post('informesHist/'+ subruta + '/' + this.markers[0].id + '?locale=' + this.$getLocale(), this.variables)
           .then((params) => {
@@ -137,12 +138,11 @@ export default {
           })
       },
       getProductos() {
-          if (!this.isModelo()) {
-            ApiService.post('productosEstacion/' + this.markers[0].id + '?locale=' + this.$getLocale(), this.variables)
-            .then((params) => {
-                this.productosVariable = params.data;
-            })
-          }
+          var subruta = this.isModelo() ? 'modelo' : 'estacion';
+          ApiService.post('productosHist/'+ subruta + '/' + this.markers[0].id + '?locale=' + this.$getLocale(), this.variables)
+          .then((params) => {
+            this.productosVariable = params.data;
+          })
          
       },
       getInformesAnuales() {
