@@ -4,6 +4,47 @@ const LocalePlugin = {
     locale : null,
 
     dictionary: {
+        // variables
+        WAVE: {
+            es: "Oleaje",
+            en: "Wave"
+        },
+        SEA_LEVEL: {
+            es: "Nivel del Mar",
+            en: "Sea Level"
+        },
+        SEICHE: {
+            es: "Onda Larga",
+            en: "Seiche"
+        },
+        AGITATION: {
+            es: "Agitación",
+            en: "Agitation"
+        },
+        WIND: {
+            es: "Viento",
+            en: "Wind"
+        },
+        AIR_PRESURE: {
+            es: "Presión Atm.",
+            en: "Aire Presure"
+        },
+        WATER_TEMP: {
+            es: "Temp. Agua",
+            en: "Water Temp."
+        },
+        AIR_TEMP: {
+            es: "Temp. Aire",
+            en: "Air Temp."
+        },
+        CURRENTS: {
+            es: "Corrientes",
+            en: "Currents"
+        },
+        SALINITY: {
+            es: "Salinidad",
+            en: "Salinity"
+        },
         // resources
         nivmarLocalidadesRes: {
             es: "Nivmar Localidades",
@@ -172,6 +213,14 @@ const LocalePlugin = {
         informesClimaticosLabel: {
             es: "Informes Climáticos",
             en: "Global Reports"
+        },
+        analisisInteractivosLabel: {
+            es: "Análisis Interactivos",
+            en: "Interactive Analysis"
+        },
+        estacionHistInactivaLabel: {
+            es: "Estación inactiva en la actualidad",
+            en: "Dismantled station"
         },
         // markers heaped tooltip
         markersProximosTitulo: {

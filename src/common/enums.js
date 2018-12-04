@@ -25,4 +25,12 @@ export const MarkerClass =
     SALINITY: "SALINITY"
   }
 
+  export const RedType =
+  {
+    REDCOS: "REDCOS",
+    REDEXT: "REDEXT",
+    REDMAR: "REDMAR",
+    PROPAGACION: "PROPAGACION"
+  }
+
   // TypeLayer...

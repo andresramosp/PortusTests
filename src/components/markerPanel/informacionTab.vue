@@ -13,6 +13,13 @@
                 <img :src="imgUrl"  />
             </b-col>
         </b-row>
+        <b-row v-if="hasPeriodosFondeo()" style="margin-top: 10px">
+          <b-col>
+            <b-button size="sm" variant="outline-primary" @click="openPeriodosFondeo()">
+              Períodos de fondeo
+             </b-button>
+          </b-col>
+        </b-row>
 </b-container>
 
 </template>
@@ -22,7 +29,7 @@
 import { MarkerClass } from "@/common/enums";
 import MapState from "@/state/map.state";
 import ApiService from "@/services/api.service";
-import { INFORMES_URL, BASE_URL_PORTUS } from '@/common/config';
+import { INFORMES_URL, BASE_URL_PORTUS, STATIC_URL } from '@/common/config';
 
 export default {
   name: "InformacionTab",
@@ -80,8 +87,8 @@ export default {
             ];
         }
         else if (this.markers[0].mapResource.markerClass == MarkerClass.ESTACION 
-              || this.markers[0].mapResource.markerClass == MarkerClass.ESTACION_HISTORICO
-              || this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA_HISTORICO) {
+              || this.markers[0].mapResource.markerClass == MarkerClass.ESTACION_HISTORICO) {
+              //|| this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA_HISTORICO) {
             this.informacion = [
                 { key: this.$t("{ubicacionEstacionInfo}"), value: this.markers[0].ubicacion },
                 { key: this.$t("{longitudInfo}"), value: this.markers[0].longitud.toFixed(2) + " O" },
@@ -93,14 +100,15 @@ export default {
                 { key: this.$t("{fechaFinFondeoInfo}"), value: this.markers[0].fechaFin ? new Date(this.markers[0].fechaFin).toISOString().split('T')[0] : null },
                 { key: this.$t("{tipoSensorInfo}"), value: this.markers[0].tipoSensor },
                 { key: this.$t("{modeloEstacionInfo}"), value: this.markers[0].modelo },
-                { key: this.$t("{comentariosEstacionInfo}"), value: this.markers[0].comentarios }
+                { key: this.$t("{comentariosEstacionInfo}"), value: this.markers[0].comentarios },
+                { key: this.$t("{conjuntoDatosInfo}"), value: this.markers[0].red.descripcion, bold: true, href: INFORMES_URL + 'BD/informes/INT_'	+ this.markers[0].red.id + '.pdf' }
               ];
 
-          var mi = this;
-          ApiService.get('redes/' + this.markers[0].redId + '?locale=' + this.$getLocale())
-          .then((red) => {
-              this.informacion.push({ key: this.$t("{conjuntoDatosInfo}"), value: red.data.descripcion, bold: true, href: INFORMES_URL + 'BD/informes/INT_'	+ red.data.id + '.pdf' })
-          })
+          // var mi = this;
+          // ApiService.get('redes/' + this.markers[0].redId + '?locale=' + this.$getLocale())
+          // .then((red) => {
+          //     this.informacion.push({ key: this.$t("{conjuntoDatosInfo}"), value: red.data.descripcion, bold: true, href: INFORMES_URL + 'BD/informes/INT_'	+ red.data.id + '.pdf' })
+          // })
         }
         else if (this.markers[0].mapResource.markerClass == MarkerClass.ANTENA_RADAR) {
             this.informacion = [
@@ -125,6 +133,13 @@ export default {
 
   },
   methods: {
+    hasPeriodosFondeo() {
+      return this.markers[0].mapResource.markerClass == MarkerClass.ESTACION_HISTORICO
+          && this.markers[0].red.tipoRed == "REDEXT";
+    },
+    openPeriodosFondeo() {
+      window.open(STATIC_URL + 'pdf/pfondeo/' + this.markers[0].id + '.pdf', '_blank');
+    }
   }
 };
 

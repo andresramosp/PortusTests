@@ -30,7 +30,12 @@
 
 </template>
 
+
+
 <script>
+
+import { RedType } from "@/common/enums";
+
 export default {
   name: "LastDataPopup",
   data() {
@@ -45,7 +50,7 @@ export default {
     notAvailable() {
       return (
         (1 <= this.marker.estado && this.marker.estado <= 2) ||
-        (this.marker.propagacion && this.marker.estado > 0)
+        (this.marker.red.tipoRed == RedType.PROPAGACION && this.marker.estado > 0)
       );
       //return this.marker.incidencia != null;
     },

@@ -1,6 +1,6 @@
 export default {}
 
-import { MarkerClass, VariableType } from "@/common/enums";
+import { MarkerClass, VariableType, RedType } from "@/common/enums";
 
 // Recursos de Tiles y Markers
 export const MapResources = [
@@ -208,7 +208,7 @@ export const MapResources = [
     markerClass: MarkerClass.ESTACION,
     minZoom: 0,
     icon: function (m) {
-      if (m.propagacion) {
+      if (m.red.tipoRed == RedType.PROPAGACION) {
         return (m.estado > 0) ? 'estacion-oleaje-prop-na.png' : 'estacion-oleaje-prop.png'
       }
       else {
