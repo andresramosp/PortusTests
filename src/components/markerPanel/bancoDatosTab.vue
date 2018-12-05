@@ -35,7 +35,7 @@
 
 import MapState from "@/state/map.state";
 import ApiService from "@/services/api.service";
-import { STATIC_URL } from '@/common/config';
+import { BASE_URL_PORTUS } from '@/common/config';
 
 export default {
   name: "BancoDatosTab",
@@ -61,7 +61,7 @@ export default {
        });
        
        if (this.markers[0].propietario != null) {
-          this.imgPropietario = STATIC_URL + "/img/logosOrganismos/" + this.markers[0].propietario + ".png";
+          this.imgPropietario = BASE_URL_PORTUS + "/img/logosOrganismos/" + this.markers[0].propietario + ".png";
           this.hrefPropietario = this.markers[0].urlPropietario;
        }
   }

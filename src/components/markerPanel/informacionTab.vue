@@ -29,7 +29,7 @@
 import { MarkerClass } from "@/common/enums";
 import MapState from "@/state/map.state";
 import ApiService from "@/services/api.service";
-import { INFORMES_URL, BASE_URL_PORTUS, STATIC_URL } from '@/common/config';
+import { INFORMES_URL, BASE_URL_PORTUS } from '@/common/config';
 
 export default {
   name: "InformacionTab",
@@ -138,7 +138,7 @@ export default {
           && this.markers[0].red.tipoRed == "REDEXT";
     },
     openPeriodosFondeo() {
-      window.open(STATIC_URL + 'pdf/pfondeo/' + this.markers[0].id + '.pdf', '_blank');
+      window.open(BASE_URL_PORTUS + 'pdf/pfondeo/' + this.markers[0].id + '.pdf', '_blank');
     }
   }
 };

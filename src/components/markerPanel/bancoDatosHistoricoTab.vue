@@ -77,7 +77,7 @@
 
 import MapState from "@/state/map.state";
 import ApiService from "@/services/api.service";
-import { INFORMES_URL, STATIC_URL, PUERTOS_URL } from '@/common/config';
+import { INFORMES_URL, BASE_URL_PORTUS, PUERTOS_URL } from '@/common/config';
 import { RedType, MarkerClass } from "@/common/enums";
 
 export default {
@@ -111,11 +111,11 @@ export default {
     this.getProductos();
 
     if (this.markers[0].propietario != null) {
-       this.imgPropietario = STATIC_URL + "/img/logosOrganismos/" + this.markers[0].propietario + ".png";
+       this.imgPropietario = BASE_URL_PORTUS + "/img/logosOrganismos/" + this.markers[0].propietario + ".png";
        this.hrefPropietario = this.markers[0].urlPropietario;
     }
     else {
-       this.imgPropietario = STATIC_URL + "/img/logosOrganismos/0.png";
+       this.imgPropietario = BASE_URL_PORTUS + "/img/logosOrganismos/0.png";
        this.hrefPropietario = PUERTOS_URL;
      }
   },

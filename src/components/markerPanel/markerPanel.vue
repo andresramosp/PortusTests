@@ -11,7 +11,7 @@
         <b-tab v-if="esBoya() && !esHistorico()" :title="'Ultimas posiciones'" >
             <LastPositionsTab :boya="markerRef" />
         </b-tab>
-         <b-tab v-else-if="esMareografo()" :title="'Cero referencias'" >
+         <b-tab v-else-if="esMareografo()" :title="'Ceros - Referencias'" >
             <CeroRefsTab :mareografo="markerRef" /> 
         </b-tab>
       </b-tabs>

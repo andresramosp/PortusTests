@@ -13,13 +13,30 @@
                 <img :src="imgUrl"  />
             </b-col>
         </b-row>
-        <!-- <b-row v-if="hasPeriodosFondeo()" style="margin-top: 10px">
-          <b-col>
-            <b-button size="sm" variant="outline-primary" @click="openPeriodosFondeo()">
-              Períodos de fondeo
+        <b-row v-if="infoCero">
+           <b-col  md="auto">
+            <label class="infoCero">
+              {{infoCero}}
+            </label>
+          </b-col>
+        </b-row>
+        <b-row style="margin-top: 10px">
+          <b-col md="auto">
+            <b-button size="sm" variant="outline-primary" @click="openInformeNivelacion()">
+              Informe nivelación
+             </b-button>
+          </b-col >
+          <b-col md="auto">
+            <b-button size="sm" variant="outline-primary" @click="openEsquemaDatum()">
+              Esquema Datum
              </b-button>
           </b-col>
-        </b-row> -->
+          <b-col md="auto">
+            <b-button size="sm" variant="outline-primary" @click="openDefiniciones()">
+              Definiciones
+             </b-button>
+          </b-col>
+        </b-row>
 </b-container>
 
 </template>
@@ -27,9 +44,8 @@
 <script>
 
 import { MarkerClass } from "@/common/enums";
-import MapState from "@/state/map.state";
 import ApiService from "@/services/api.service";
-import { INFORMES_URL, BASE_URL_PORTUS, STATIC_URL } from '@/common/config';
+import { INFORMES_URL, BASE_URL_PORTUS } from '@/common/config';
 
 export default {
   name: "ceroRefsTab",
@@ -38,34 +54,55 @@ export default {
   },
   data() {
     return {
-      mapState: MapState,
-      informacion: []
+      mareografoDetalle: null,
+      imgUrl: null,
+      informacion: [],
+      infoCero: null
     };
-  },
-  computed: {
-    imgUrl() {
-      return '';
-      }
   },
   mounted() {
   },
   created() {
 
-      // this.informacion = [
-      //           { key: this.$t("{longitudInfo}"), value: this.markers[0].longitud.toFixed(2) + " O" },
-      //           { key: this.$t("{latitudInfo}"), value: this.markers[0].latitud.toFixed(2) + " N" },
-      //           { key: this.$t("{codigoModeloInfo}"), value: this.markers[0].codigoModelo },
-      //           { key: this.$t("{verificacionInfo}"), value: this.markers[0].mareografo } // Mirar
-      //         ];
+       var cr = this;
+       ApiService.get('mareografoDetalle/' + this.mareografo.id + '?locale=' + this.$getLocale())
+       .then((result) => {
+           cr.mareografoDetalle = result.data;
+           cr.informacion = [
+              { key: 'Clavo de Referencia', value: this.mareografoDetalle.clavoRef + (this.mareografoDetalle.ubicacion ? ('. ' + this.mareografoDetalle.ubicacion) : '') },
+              { key: 'Cero ' + cr.mareografo.red.descripcion, value: this.mareografoDetalle.ceroRedmar },
+              { key: 'Cota', value: this.mareografoDetalle.cotaCero.toFixed(2) + ' m. bajo Clavo de Referencia' }
+            ];
+          if (this.mareografoDetalle.diffRedmarNacional) {
+            this.infoCero = 'Para referir al cero geodésico nacional (IGN): nivel ' 
+            + (this.mareografoDetalle.diffRedmarNacional < 0 ? '+ ' : '- ') 
+            + Math.abs(this.mareografoDetalle.diffRedmarNacional).toFixed(3);
+          }
+          else if (this.mareografoDetalle.diffRedmarHidrografico) {
+            this.infoCero = 'Para referir al cero hidrográfico: nivel ' 
+            + (this.mareografoDetalle.diffRedmarHidrografico < 0 ? '+ ' : '- ') 
+            + Math.abs(this.mareografoDetalle.diffRedmarHidrografico).toFixed(3);
+          }
+          else if (this.mareografoDetalle.diffRedmarElipsoidal) {
+            this.infoCero = 'Para referir al elipsoide (WGS84): nivel ' 
+            + (this.mareografoDetalle.diffRedmarElipsoidal < 0 ? '+ ' : '- ') 
+            + Math.abs(this.mareografoDetalle.diffRedmarElipsoidal).toFixed(3);
+          }
+
+       });
+
+      this.imgUrl = BASE_URL_PORTUS + 'img/imgmareografos/' + this.mareografo.id + '.png';
 
   },
   methods: {
-    hasPeriodosFondeo() {
-      return this.markers[0].mapResource.markerClass == MarkerClass.ESTACION_HISTORICO
-          && this.markers[0].red.tipoRed == "REDEXT";
+    openInformeNivelacion() {
+      window.open(BASE_URL_PORTUS + 'pdf/nivelacion/' + this.mareografo.id + '.pdf', '_blank');
     },
-    openPeriodosFondeo() {
-      window.open(STATIC_URL + 'pdf/pfondeo/' + this.markers[0].id + '.pdf', '_blank');
+    openEsquemaDatum() {
+      window.open(BASE_URL_PORTUS + 'pdf/datums/' + this.mareografo.id + '.pdf', '_blank');
+    },
+    openDefiniciones() {
+      window.open(BASE_URL_PORTUS + 'pdf/referencias/Descripcion_Referencia_NivelDelMar_es.pdf', '_blank');
     }
   }
 };
@@ -79,6 +116,15 @@ export default {
 .infoPanelClass {
   font-size: 12px;
 }
+
+.infoCero {
+  border-radius: 5px;
+  border: 1px solid;
+  padding: 10px;
+  background-color: #f8f8f8;
+  font-weight: 600;
+}
+
 </style>
 
 
