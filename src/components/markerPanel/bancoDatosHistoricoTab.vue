@@ -1,6 +1,13 @@
 <template>
 
     <b-container style="margin-top: 15px; max-height: 500px; overflow-y: scroll">
+            <b-row style="margin-bottom: 10px">
+                <b-col col-md="12" offset-md="8">
+                    <a :href="hrefPropietario" target='_blank'>
+                        <img :src="imgPropietario"  />
+                    </a>
+                </b-col>
+            </b-row>
             <!-- INFORMES ANUALES -->
             <div v-if="informesAnualesOptions.length > 0" style="margin-bottom: 10px">
                 <img :src="require('@/assets/icons/collapsible.png')" style="width: 25px; height: 25px; cursor: pointer" v-b-toggle="'collapseAnuales'" />
@@ -70,7 +77,7 @@
 
 import MapState from "@/state/map.state";
 import ApiService from "@/services/api.service";
-import { INFORMES_URL } from '@/common/config';
+import { INFORMES_URL, STATIC_URL, PUERTOS_URL } from '@/common/config';
 import { RedType, MarkerClass } from "@/common/enums";
 
 export default {
@@ -83,7 +90,9 @@ export default {
           informesAnualesOptions: [],
           informeAnualSelected: null,
           anniosOptions: [],
-          annioSelected: null
+          annioSelected: null,
+          imgPropietario: null,
+          hrefPropietario: null
       }
   },
   props: {
@@ -93,13 +102,22 @@ export default {
   },
   created() {
 
-      this.variables = this.markers.map(m => m.mapOption.variableType);
+    this.variables = this.markers.map(m => m.mapOption.variableType);
       
-       if (!this.isMeteorologica() && !this.isModelo()) {
-           this.getInformesAnuales();
-       }
-       this.getInformes();
-       this.getProductos();
+    if (!this.isMeteorologica() && !this.isModelo()) {
+        this.getInformesAnuales();
+    }
+    this.getInformes();
+    this.getProductos();
+
+    if (this.markers[0].propietario != null) {
+       this.imgPropietario = STATIC_URL + "/img/logosOrganismos/" + this.markers[0].propietario + ".png";
+       this.hrefPropietario = this.markers[0].urlPropietario;
+    }
+    else {
+       this.imgPropietario = STATIC_URL + "/img/logosOrganismos/0.png";
+       this.hrefPropietario = PUERTOS_URL;
+     }
   },
   methods: {
       isModelo() {
@@ -160,9 +178,10 @@ export default {
                 minYear = 2009;
                 maxYear = !this.isInactiva() ? 2014 : new Date(this.markers[0].fechaFin).getFullYear();
                 this.informesAnualesOptions = [
-                { value: 'O', text: 'Oleaje'},
-                { value: 'H', text: 'Temp. Agua'}
+                    { value: 'O', text: 'Oleaje'}
                 ];
+                if (this.markers[0].modelo == "Triaxys")
+                    this.informesAnualesOptions.push({ value: 'H', text: 'Temp. Agua'});
                 this.informeAnualSelected = 'O';
         }
         else {

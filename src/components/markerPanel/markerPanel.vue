@@ -11,8 +11,8 @@
         <b-tab v-if="esBoya() && !esHistorico()" :title="'Ultimas posiciones'" >
             <LastPositionsTab :boya="markerRef" />
         </b-tab>
-         <b-tab v-else-if="esNivmar()" :title="'Cero referencias'" >
-            <!-- <CeroReferenciasTab /> -->
+         <b-tab v-else-if="esMareografo()" :title="'Cero referencias'" >
+            <CeroRefsTab :mareografo="markerRef" /> 
         </b-tab>
       </b-tabs>
 </b-modal>
@@ -26,6 +26,7 @@ import InformacionTab from "@/components/markerPanel/informacionTab.vue"
 import BancoDatosTab from "@/components/markerPanel/bancoDatosTab.vue"
 import BancoDatosHistoricoTab from "@/components/markerPanel/bancoDatosHistoricoTab.vue"
 import LastPositionsTab from "@/components/markerPanel/lastPositionsTab.vue"
+import CeroRefsTab from "@/components/markerPanel/ceroRefsTab.vue"
 
 export default {
   name: "MarkerPanel",
@@ -33,7 +34,8 @@ export default {
     InformacionTab,
     BancoDatosTab,
     LastPositionsTab,
-    BancoDatosHistoricoTab
+    BancoDatosHistoricoTab,
+    CeroRefsTab
   },
   props: {
     markers: { type: Array, default: [], required: false }
@@ -90,8 +92,10 @@ export default {
                 &&   this.markerRef.boya;
     },
 
-    esNivmar() {
-        return this.markerRef.mapResource.markerClass == MarkerClass.UBICACION;
+    esMareografo() {
+        return (this.markerRef.mapResource.markerClass == MarkerClass.ESTACION
+             || this.markerRef.mapResource.markerClass == MarkerClass.ESTACION_HISTORICO)
+                &&   this.markerRef.mareografo;
     },
 
     esAntena() {
