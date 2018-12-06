@@ -4,6 +4,7 @@
    <LayersPanel :mapOptionsGroups="mapOptionsGroups" :mapOptions="mapOptions" /> 
    <MarkerPanel :markers='mapState.markersSelected' />
    <StaticMapsPanel :mapResource='mapState.staticMapResourceSelected' />
+   <UbicacionesPanelJQ />
 </div>
 </template>
 
@@ -14,6 +15,7 @@ import MapState from "@/state/map.state";
 import LayersPanel from "@/components/layersPanel.vue";
 import MarkerPanel from "@/components/markerPanel/markerPanel.vue";
 import StaticMapsPanel from "@/components/staticMapsPanel.vue";
+import UbicacionesPanelJQ from "@/components/ubicacionesPanelJQ.vue";
 import { MapOptions } from '@/common/mapResourceManager';
 import { MapOptionsGroups } from '@/common/mapResourceManager';
 
@@ -23,7 +25,8 @@ export default {
     Map,
     LayersPanel,
     MarkerPanel,
-    StaticMapsPanel
+    StaticMapsPanel,
+    UbicacionesPanelJQ
   },
   data () {
     return {

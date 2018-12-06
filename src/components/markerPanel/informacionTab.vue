@@ -120,7 +120,8 @@ export default {
                 { key: this.$t("{fechaFinFondeoInfo}"), value: this.markers[0].fechaFin ? new Date(this.markers[0].fechaFin).toISOString().split('T')[0] : null },
                 { key: this.$t("{tipoSensorInfo}"), value: this.markers[0].tipoSensor },
                 { key: this.$t("{modeloEstacionInfo}"), value: this.markers[0].modelo },
-                { key: this.$t("{comentariosEstacionInfo}"), value: this.markers[0].comentarios }
+                { key: this.$t("{comentariosEstacionInfo}"), value: this.markers[0].comentarios },
+                { key: this.$t("{conjuntoDatosInfo}"), value: this.markers[0].radar.red.nombre, bold: true, href: INFORMES_URL + 'BD/informes/INT_'	+ this.markers[0].radar.red.id + '.pdf' }
               ];
               
           // TODO
@@ -134,8 +135,9 @@ export default {
   },
   methods: {
     hasPeriodosFondeo() {
-      return this.markers[0].mapResource.markerClass == MarkerClass.ESTACION_HISTORICO
-          && this.markers[0].red.tipoRed == "REDEXT";
+      return (this.markers[0].mapResource.markerClass == MarkerClass.ESTACION_HISTORICO
+          && this.markers[0].red.tipoRed == "REDEXT") 
+          || (this.markers[0].mapResource.markerClass == MarkerClass.ANTENA_RADAR);
     },
     openPeriodosFondeo() {
       window.open(BASE_URL_PORTUS + 'pdf/pfondeo/' + this.markers[0].id + '.pdf', '_blank');

@@ -65,6 +65,9 @@ export default {
         else if (this.markerRef.mapResource.markerClass == MarkerClass.PUNTO_MALLA_HISTORICO) {
            return this.$t("{puntoSimarLabel}") + ": (" + this.markerRef.id + ")";
         }
+        else if (this.markerRef.mapResource.markerClass == MarkerClass.ANTENA_RADAR) {
+           return this.markerRef.radar.nombre + " - " + this.markerRef.nombre;
+        }
     }
   },
   watch: {

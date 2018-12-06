@@ -140,7 +140,7 @@ const MapUtils = {
         marker.openPopup();
         break;
       case MarkerClass.ANTENA_RADAR:
-        tooltip = Vue.$t("Radar - X - ") + ": " + marker.nombre;
+        tooltip = marker.radar.nombre + " - " + marker.nombre;
         marker.bindPopup(tooltip);
         marker.openPopup();
         break;

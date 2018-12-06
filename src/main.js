@@ -5,12 +5,15 @@ import App from './app.vue'
 import ApiService from '@/services/api.service'
 import LocalePlugin from '@/services/locale.plugin'
 import BootstrapVue from 'bootstrap-vue'
+import VueMaterial from 'vue-material'
+import 'vue-material/dist/vue-material.min.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import AsyncComputed from 'vue-async-computed'
 import VueRouter from 'vue-router'
 
 Vue.use(BootstrapVue);
+Vue.use(VueMaterial);
 Vue.use(AsyncComputed);
 Vue.use(VueRouter);
 Vue.use(LocalePlugin);
