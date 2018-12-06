@@ -1,6 +1,30 @@
  <template>
  <div class="ubicacionesPanel blueTheme leftAlign">
-    <div id="autocomplete" />
+      <div class="dx-fieldset">
+      <div class="dx-fieldset-header">With Custom Search Options</div>
+      <div class="dx-field">
+        <div class="dx-field-value">
+          <dx-autocomplete
+            :data-source="ubicacionesList"
+            :value.sync="city"
+            value-expr="id"
+            :maxItemCount="100"
+            :min-search-length="1"
+            :search-timeout="500"
+            searchExpr="nombre"
+            placeholder="Type two symbols to search..."
+            item-template="stateTemplate"
+          >
+
+           <div slot="stateTemplate" slot-scope="data" >
+              <span>{{ data.tipoUbicacion }} ({{ data.nombre }})</span>
+            </div>
+            
+          </dx-autocomplete>
+        </div>
+      </div>
+    </div>
+
  </div>
 </template>
 
@@ -8,24 +32,25 @@
 
 import MapState from "@/state/map.state";
 import ApiService from "@/services/api.service";
+import { DxAutocomplete } from 'devextreme-vue/autocomplete';
+
 
 export default {
   name: "UbicacionesPanelJQ",
+   components: {
+    DxAutocomplete
+  },
   data() {
     return {
       align: PC.options_panel_align,
       theme: PC.color_theme,
       mapState: MapState,
       ubicacionesList: [],
-      ubicaciones: [],
-      ubicacion: {}
+      city: ''
     };
   },
   created() {
-    this.getUbicaciones();
-    jQuery( "#autocomplete" ).autocomplete({
-      source: this.ubicacionesList
-    });
+      this.getUbicaciones();
   },
   mounted() {
      
