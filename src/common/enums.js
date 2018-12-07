@@ -33,4 +33,9 @@ export const MarkerClass =
     PROPAGACION: "PROPAGACION"
   }
 
-  // TypeLayer...
+  export const UbicacionType =
+  {
+    PUERTO: "Puerto",
+    LOCALIDAD: "Localidad",
+    PLAYA: "Playa"
+  }

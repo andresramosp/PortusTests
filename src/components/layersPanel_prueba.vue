@@ -7,7 +7,7 @@
            <b-row >
                <b-col v-for="mapOption in mapOptions.filter(opt => opt.group == optGrp.id)" :key="mapOption.id" cols="6" class="form-check text-left" style="padding-top: 2px;" >
                 <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" v-model="mapOption.active" :value="mapOption.active" @change="mapOptionChanged(mapOption)" />
+                  <input class="form-check-input" type="checkbox" v-model="mapOption.active" @change="mapOptionChanged(mapOption)" />
                   {{ $t(mapOption.name) }}
               </label>
             </b-col> 
@@ -24,8 +24,10 @@
 
 
 <script>
+
 import MapState from "@/state/map.state";
 import FloatingLayerOptions from "@/components/floatingLayerOptions.vue";
+
 export default {
   name: "LayersPanel",
   components: {
@@ -36,8 +38,27 @@ export default {
       mapState: MapState,
       align: PC.options_panel_align,
       theme: PC.color_theme,
-      $t: this.$t
+      $t: this.$t,
+      optionsOld: [],
+      activeOptions: MapState.activeOptions
     };
+  },
+  watch: {
+    activeOptions: function (options){
+        var addedOptsIds = options.map(opt => opt.id).filter(optId => this.optionsOld.map(opt => opt.id).indexOf(optId) == -1);
+        var removedOptsIds = this.optionsOld.map(opt => opt.id).filter(optId => options.map(opt => opt.id).indexOf(optId) == -1);
+        addedOptsIds.forEach(optId => {
+          var option = options.find(opt => opt.id == optId);
+          this.processMapOption(option, true);
+        })
+        removedOptsIds.forEach(optId => {
+          var option = this.optionsOld.find(opt => opt.id == optId);
+          this.processMapOption(option, false);
+        })
+        
+      },
+      //deep: true
+    
   },
   props: {
     mapOptions: { type: Array, default: [], required: false },
@@ -48,7 +69,16 @@ export default {
   mounted() {},
   methods: {
     mapOptionChanged: function(mapOption) {
+      this.optionsOld = this.activeOptions.slice(0);
       if (mapOption.active) {
+        this.activeOptions.push(mapOption);
+      }
+      else {
+        this.activeOptions = this.activeOptions.filter(opt => opt.id != mapOption.id);
+      } 
+    },
+    processMapOption: function(mapOption, active) {
+      if (active) {
         mapOption.mapResources.forEach(resId => {
           var mapResource = MapState.getMapResource(resId);
           if (mapResource.type == "MarkerLayer")
@@ -63,6 +93,22 @@ export default {
         });
       }
     },
+    // processMapOption: function(mapOption) {
+    //   if (mapOption.active) {
+    //     mapOption.mapResources.forEach(resId => {
+    //       var mapResource = MapState.getMapResource(resId);
+    //       if (mapResource.type == "MarkerLayer")
+    //         MapState.addMarkerLayer(mapResource, mapOption);
+    //       if (mapResource.type == "TimeLineLayer")
+    //         MapState.addTimeLineLayer(mapResource, mapResource.defaultVectors);
+    //     });
+    //     this.checkMultipleAllowed(mapOption);
+    //   } else {
+    //     mapOption.mapResources.forEach(resId => {
+    //       MapState.removeLayer(resId);
+    //     });
+    //   }
+    // },
     checkMultipleAllowed: function(checkedMapOption) {
       var optionGroup = this.mapOptionsGroups.find(optGrp => optGrp.id == checkedMapOption.group);
         if (!optionGroup.multiple) {
@@ -81,18 +127,23 @@ export default {
 .leftAlign {
   left: 12px;
 }
+
 .rightAlign {
   right: 12px;
 }
+
 .blueTheme {
   background-color: rgba(0, 123, 255, 0.6);
 }
+
 .grayTheme {
   background-color: #39434fbf;
 }
+
 .greenTheme {
   background-color: rgba(0, 255, 0, 0.6);
 }
+
 .layersPanel {
   position: absolute;
   z-index: 2;
@@ -104,22 +155,27 @@ export default {
   color: white;
   font-size: 13px;
 }
+
 input[type="checkbox"] {
   width: 1.1em;
   height: 1.1em;
   padding-right: 3px;
 }
+
 .form-check {
   padding-top: 5px;
 }
+
 .form-check-input {
   margin-right: 5px;
 }
+
 .card-header {
   background-color: #091c3259;
   font-size: 17px;
   padding: 7px 5px 7px 5px
 }
+
 .panel-section {
   /* background-color: rgba(0, 123, 255, 0.5);  */
   margin-top: 12px;

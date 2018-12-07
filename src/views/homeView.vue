@@ -1,10 +1,10 @@
 <template>
 <div id="app" >
    <Map :baseMap='baseMap' :mapFixed="mapFixed" />
-   <LayersPanel :mapOptionsGroups="mapOptionsGroups" :mapOptions="mapOptions" /> 
+   <LayersPanel :mapOptionsGroups="mapState.mapOptionsGroups" :mapOptions="mapState.mapOptions" /> 
    <MarkerPanel :markers='mapState.markersSelected' />
    <StaticMapsPanel :mapResource='mapState.staticMapResourceSelected' />
-   <UbicacionesPanelJQ />
+   <UbicacionesPanel />
 </div>
 </template>
 
@@ -15,7 +15,7 @@ import MapState from "@/state/map.state";
 import LayersPanel from "@/components/layersPanel.vue";
 import MarkerPanel from "@/components/markerPanel/markerPanel.vue";
 import StaticMapsPanel from "@/components/staticMapsPanel.vue";
-import UbicacionesPanelJQ from "@/components/ubicacionesPanelJQ.vue";
+import UbicacionesPanel from "@/components/ubicacionesPanel.vue";
 import { MapOptions } from '@/common/mapResourceManager';
 import { MapOptionsGroups } from '@/common/mapResourceManager';
 
@@ -26,13 +26,11 @@ export default {
     LayersPanel,
     MarkerPanel,
     StaticMapsPanel,
-    UbicacionesPanelJQ
+    UbicacionesPanel
   },
   data () {
     return {
       mapState: MapState,
-      mapOptions: [],
-      mapOptionsGroups: MapOptionsGroups,
       baseMap: null,
       mapFixed: PC.map_fixed,
     }    
@@ -49,7 +47,9 @@ export default {
         tms: false
       }
     );
-    this.mapOptions = MapOptions.filter(opt => { return PC.map_options.length == 0 || PC.map_options.indexOf(opt.id) != -1});  
+    this.mapState.mapOptionsGroups = MapOptionsGroups;
+    this.mapState.mapOptions = MapOptions.filter(opt => { return PC.map_options.length == 0 || PC.map_options.indexOf(opt.id) != -1});  
+    //this.mapState.mapOptions.forEach(opt => opt.active = false);
 
   }
 };

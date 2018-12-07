@@ -43,7 +43,7 @@ export default {
       // TODO: sacar solo el primero, o devolver lista
       var result = null;
       var vm = this;
-      this.mapState.activeMapOptions.forEach(opt => {
+      this.mapState.getActiveMapOptions().forEach(opt => {
          opt.mapResources.forEach(resId => {
             var mapResource = MapState.getMapResource(resId);
             if (mapResource.vectors) {

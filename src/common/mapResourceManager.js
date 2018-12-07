@@ -535,7 +535,7 @@ export const MapOptions = [
     group: 'predicciones',
     name: '{oleajeAtlanticoOption}',
     variableType: VariableType.WAVE,
-    mapResources: ['pred-tiles-oleaje-atl-portus', 'pred-tiles-oleaje-atl-ocaso', 'pred-markers-wana-atl', 'pred-markers-wana-atl-verif'] // 'pred-tiles-oleaje'
+    mapResources: ['pred-tiles-oleaje-atl-portus', 'pred-markers-wana-atl', 'pred-markers-wana-atl-verif'] // 'pred-tiles-oleaje'
   },
   {
     id: 'pred_oleaje_med',

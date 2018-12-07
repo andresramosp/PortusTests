@@ -7,13 +7,15 @@ import Vue from 'vue';
 const MapState = {
 
     map: null,
+    mapOptionsGroups: [],
+    mapOptions: [],
+    //activeOptions: [],
     markersSelected: null,
     predictionScaleImg: null,
     preloadedTimeLineLayers: [],
     preloadedMarkers: [],
     currentTimeLineLayer: null,
     staticMapResourceSelected: null,
-    activeMapOptions: [],
     loadingThings: [],
     heapedPopup: null,
 
@@ -224,7 +226,7 @@ const MapState = {
     },
 
     getActiveMapOptions() {
-        return this.activeMapOptions;
+        return this.mapOptions.filter(opt => opt.active);
     },
 
     addLoading(thing) {
