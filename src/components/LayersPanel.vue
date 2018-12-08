@@ -48,31 +48,8 @@ export default {
   mounted() {},
   methods: {
     mapOptionChanged: function(mapOption) {
-      if (mapOption.active) {
-        mapOption.mapResources.forEach(resId => {
-          var mapResource = MapState.getMapResource(resId);
-          if (mapResource.type == "MarkerLayer")
-            MapState.addMarkerLayer(mapResource, mapOption);
-          if (mapResource.type == "TimeLineLayer")
-            MapState.addTimeLineLayer(mapResource, mapResource.defaultVectors);
-        });
-        this.checkMultipleAllowed(mapOption);
-      } else {
-        mapOption.mapResources.forEach(resId => {
-          MapState.removeLayer(resId);
-        });
-      }
+        this.mapState.setMapOption(mapOption.id, mapOption.active);
     },
-    checkMultipleAllowed: function(checkedMapOption) {
-      var optionGroup = this.mapOptionsGroups.find(optGrp => optGrp.id == checkedMapOption.group);
-        if (!optionGroup.multiple) {
-            var otherCheckedOption = this.mapOptions.find(opt => opt.id != checkedMapOption.id && opt.group == optionGroup.id && opt.active);
-            if (otherCheckedOption) {
-               otherCheckedOption.active = false;
-               this.mapOptionChanged(otherCheckedOption);
-            }
-        }
-    }
   }
 };
 </script>

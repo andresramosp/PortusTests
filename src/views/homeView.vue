@@ -5,6 +5,9 @@
    <MarkerPanel :markers='mapState.markersSelected' />
    <StaticMapsPanel :mapResource='mapState.staticMapResourceSelected' />
    <UbicacionesPanel />
+   <RegionesPanel />
+   <!-- Componente de logos, que tenga una lista -->
+   <img :src="require('@/assets/logos/logoPuertos.jpeg')" style="position: absolute; right: 10px; bottom: 10px; z-index: 2" />
 </div>
 </template>
 
@@ -16,6 +19,7 @@ import LayersPanel from "@/components/layersPanel.vue";
 import MarkerPanel from "@/components/markerPanel/markerPanel.vue";
 import StaticMapsPanel from "@/components/staticMapsPanel.vue";
 import UbicacionesPanel from "@/components/ubicacionesPanel.vue";
+import RegionesPanel from "@/components/regionesPanel.vue";
 import { MapOptions } from '@/common/mapResourceManager';
 import { MapOptionsGroups } from '@/common/mapResourceManager';
 
@@ -26,7 +30,8 @@ export default {
     LayersPanel,
     MarkerPanel,
     StaticMapsPanel,
-    UbicacionesPanel
+    UbicacionesPanel,
+    RegionesPanel
   },
   data () {
     return {

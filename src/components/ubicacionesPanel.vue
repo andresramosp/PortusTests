@@ -8,10 +8,11 @@
             :search-timeout="200"
             valueExpr="nombre"
             searchExpr="nombre"
-            placeholder="Búsqueda de localidades, puertos y playas..."
+            :placeholder="$t('{ubicacionesPlaceHolder}')"
             item-template="itemTemplate"
             @itemClick="abrirUbicacion"
-            @valueChanged="checkValue"
+            @valueChanged="checkEmptyValue"
+            :show-clear-button="true"
             width="300px" >
 
            <div slot="itemTemplate" slot-scope="item">
@@ -45,7 +46,10 @@ export default {
       ubicacionesList: null,
       defaultZoom: 6,
       marker: null,
-      mapOptionActivated: null
+      mapOptionIdActivated: null,
+      predResourceActivated: null,
+      waveMapResourcePrefix: 'pred-tiles-oleaje-', // + region del puerto
+      waveMapOptionPrefix: 'pred_oleaje_' // + region del puerto
     };
   },
   created() {
@@ -84,7 +88,7 @@ export default {
       
     },
 
-    checkValue(ev) {
+    checkEmptyValue(ev) {
       if (!ev.value) {
         if (this.marker) {
           this.marker.remove();
@@ -94,27 +98,27 @@ export default {
     },
 
     addPrediction(ubicacion) {
-        this.mapOptionActivated = this.mapState.mapOptions.find(m => m.id == 'pred_oleaje_' + ubicacion.region.toLowerCase());
-        if (!this.mapOptionActivated.active) {
-          Vue.set(this.mapOptionActivated, 'active', true);
-          this.mapOptionActivated.mapResources.forEach(resId => {
-              var mapResource = this.mapState.getMapResource(resId);
-              if (mapResource.type == "MarkerLayer")
-                this.mapState.addMarkerLayer(mapResource, this.mapOptionActivated);
-              if (mapResource.type == "TimeLineLayer")
-                this.mapState.addTimeLineLayer(mapResource, true);
-          });
-        }
+        this.predResourceActivated = this.mapState.getMapResource(this.waveMapResourcePrefix + ubicacion.region.toLowerCase());
+        this.predResourceActivated.oldVectorsValue = this.predResourceActivated.defaultVectors;
+        this.predResourceActivated.defaultVectors = true;
+
+        this.mapOptionIdActivated = this.waveMapOptionPrefix + ubicacion.region.toLowerCase();
+        this.mapState.setMapOption(this.mapOptionIdActivated, true);
        
     },
 
     removePrediction() {
-        if (this.mapOptionActivated) {
-          Vue.set(this.mapOptionActivated, 'active', false);
-          this.mapOptionActivated.mapResources.forEach(resId => {
-            MapState.removeLayer(resId);
-          });
-          this.mapOptionActivated = null;
+        if (this.mapOptionIdActivated) {
+          this.mapState.setMapOption(this.mapOptionIdActivated, false);
+          this.mapOptionIdActivated = null;
+          this.predResourceActivated.defaultVectors = this.predResourceActivated.oldVectorsValue;
+
+          var mapExtent = PC.map_initial_bounds;
+          var bounds = new L.LatLngBounds(
+            new L.LatLng(mapExtent[1], mapExtent[0]),
+            new L.LatLng(mapExtent[3], mapExtent[2])
+          );
+          this.mapState.getMap().flyToBounds(bounds);
         }
     }
 

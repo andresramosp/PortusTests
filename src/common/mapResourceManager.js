@@ -43,7 +43,7 @@ export const MapResources = [
     cached: false
   },
   {
-    id: 'pred-tiles-oleaje-atl-portus',
+    id: 'pred-tiles-oleaje-atl',
     type: 'TimeLineLayer',
     name: 'Pred. Oleaje Atl Portus',
     resourceApi: 'mapTileResources/portus/VHM0Atl',
@@ -535,7 +535,7 @@ export const MapOptions = [
     group: 'predicciones',
     name: '{oleajeAtlanticoOption}',
     variableType: VariableType.WAVE,
-    mapResources: ['pred-tiles-oleaje-atl-portus', 'pred-markers-wana-atl', 'pred-markers-wana-atl-verif'] // 'pred-tiles-oleaje'
+    mapResources: ['pred-tiles-oleaje-atl', 'pred-markers-wana-atl', 'pred-markers-wana-atl-verif'] // 'pred-tiles-oleaje'
   },
   {
     id: 'pred_oleaje_med',

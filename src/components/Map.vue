@@ -151,8 +151,8 @@ export default {
 .predictionScale {
   position: absolute;
   z-index: 2;
-  /* left: 55%; */
-  right: 10px;
+  left: 55%;
+  /* right: 10px; */
   bottom: -3px;
   padding: 10px;
   border-radius: 6px;
@@ -162,10 +162,10 @@ export default {
 .predictionWidgetIcon {
     position: absolute;
     z-index: 2;
-    /* left: 41%; */
-    right: 20px;
-    /* bottom: 8px; */
-    bottom: 42px;
+    left: 41%;
+    /* right: 20px; */
+    bottom: 8px;
+    /* bottom: 42px; */
     width: 35px;
     height: 35px;
     border-radius: 6px;
@@ -175,10 +175,10 @@ export default {
 .staticMapsWidgetIcon {
     position: absolute;
     z-index: 2;
-    /* left: 44%; */
-     right: 55px;
-    /* bottom: 8px; */
-    bottom: 45px;
+    left: 44%;
+     /* right: 55px; */
+    bottom: 8px;
+    /* bottom: 45px; */
     width: 35px;
     height: 35px;
     border-radius: 6px;
@@ -189,7 +189,7 @@ export default {
     position: absolute;
     z-index: 5;
     right: 55px;
-    bottom: 20px;
+    bottom: 50px;
 }
 
 input[type="checkbox"] {

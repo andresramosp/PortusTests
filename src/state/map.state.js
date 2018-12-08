@@ -9,7 +9,6 @@ const MapState = {
     map: null,
     mapOptionsGroups: [],
     mapOptions: [],
-    //activeOptions: [],
     markersSelected: null,
     predictionScaleImg: null,
     preloadedTimeLineLayers: [],
@@ -227,6 +226,40 @@ const MapState = {
 
     getActiveMapOptions() {
         return this.mapOptions.filter(opt => opt.active);
+    },
+
+    setMapOption(mapOptionId, active) {
+        var mapOption = this.mapOptions.find(m => m.id == mapOptionId);
+        if (active) {
+          this.checkMultipleAllowed(mapOption)
+          mapOption.mapResources.forEach(resId => {
+              var mapResource = this.getMapResource(resId);
+              if (mapResource.type == "MarkerLayer")
+                this.addMarkerLayer(mapResource, mapOption);
+              if (mapResource.type == "TimeLineLayer")
+                this.addTimeLineLayer(mapResource, mapResource.defaultVectors);
+          });
+        }
+        else {
+            mapOption.mapResources.forEach(resId => {
+              this.removeLayer(resId);
+            });
+        }
+        // Si activamos el mapOption de manera programática, 
+        // debemos también marcar/desmarcar el checkbox
+        if (mapOption.active != active)
+            Vue.set(mapOption, 'active', active);
+    },
+
+    checkMultipleAllowed(checkedMapOption) {
+        var optionGroup = this.mapOptionsGroups.find(optGrp => optGrp.id == checkedMapOption.group);
+          if (!optionGroup.multiple) {
+              var otherCheckedOption = this.mapOptions.find(opt => opt.id != checkedMapOption.id && opt.group == optionGroup.id && opt.active);
+              if (otherCheckedOption) {
+                 otherCheckedOption.active = false;
+                 this.setMapOption(otherCheckedOption.id, false);
+              }
+          }
     },
 
     addLoading(thing) {

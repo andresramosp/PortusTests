@@ -277,6 +277,11 @@ const LocalePlugin = {
         mapasImprimirTodos: {
             es: "Marcar todos",
             en: "Print all"
+        },
+        // Ubicaciones Panel
+        ubicacionesPlaceHolder: {
+            es: "Búsqueda de localidades, puertos y playas...",
+            en: "Search by town, port or beach..."
         }
     },
    
