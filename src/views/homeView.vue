@@ -6,8 +6,7 @@
    <StaticMapsPanel :mapResource='mapState.staticMapResourceSelected' />
    <UbicacionesPanel />
    <RegionesPanel />
-   <!-- Componente de logos, que tenga una lista -->
-   <img :src="require('@/assets/logos/logoPuertos.jpeg')" style="position: absolute; right: 10px; bottom: 10px; z-index: 2" />
+   <LogosList :logos="mapState.mapLogos" :defaultLogo="defaultLogo" />
 </div>
 </template>
 
@@ -20,6 +19,7 @@ import MarkerPanel from "@/components/markerPanel/markerPanel.vue";
 import StaticMapsPanel from "@/components/staticMapsPanel.vue";
 import UbicacionesPanel from "@/components/ubicacionesPanel.vue";
 import RegionesPanel from "@/components/regionesPanel.vue";
+import LogosList from "@/components/logosList.vue";
 import { MapOptions } from '@/common/mapResourceManager';
 import { MapOptionsGroups } from '@/common/mapResourceManager';
 
@@ -31,13 +31,15 @@ export default {
     MarkerPanel,
     StaticMapsPanel,
     UbicacionesPanel,
-    RegionesPanel
+    RegionesPanel,
+    LogosList
   },
   data () {
     return {
       mapState: MapState,
       baseMap: null,
       mapFixed: PC.map_fixed,
+      defaultLogo: PC.default_map_logo
     }    
   },
   created() {
@@ -54,15 +56,24 @@ export default {
     );
     this.mapState.mapOptionsGroups = MapOptionsGroups;
     this.mapState.mapOptions = MapOptions.filter(opt => { return PC.map_options.length == 0 || PC.map_options.indexOf(opt.id) != -1});  
-    //this.mapState.mapOptions.forEach(opt => opt.active = false);
-
   }
 };
 </script>
 
-<style scoped>
+<style>
 
 #app { height: 100%;}
+
+.fadeIn {
+    -webkit-animation: animat_show 1.2s;
+    animation: animat_show 1.2s;
+    visibility: visible !important;
+}
+
+@-webkit-keyframes animat_show{
+    0%{opacity:0}
+    100%{opacity:1}
+ }
  
 </style>
 

@@ -17,6 +17,7 @@ const MapState = {
     staticMapResourceSelected: null,
     loadingThings: [],
     heapedPopup: null,
+    mapLogos: [],
 
     init(map) {
         this.map = map;
@@ -94,7 +95,8 @@ const MapState = {
                 period: res.numStep,
                 strLastate: res.strLastate,
                 gaps: res.numGap,
-                predictionScaleImg: res.urlPaleta
+                predictionScaleImg: res.urlPaleta,
+                logosImgs: res.urlLogos ? res.urlLogos.split(';') : []
             });
             var portusTimeLayer = L.timeDimension.layer.tileLayer.timeLine(
                 tileLayer,
@@ -167,6 +169,12 @@ const MapState = {
                         ms.predictionScaleImg = preLayer._baseLayer.options.predictionScaleImg;
                     }
 
+                    preLayer._baseLayer.options.logosImgs.forEach(url => {
+                        //var urlParts = url.split('/');
+                        //var file = urlParts[urlParts.length - 1];
+                        ms.addMapLogo(url);
+                    })
+
                     console.log('Added: ' + preLayer._baseLayer._url)
                 }
             }
@@ -181,6 +189,12 @@ const MapState = {
 
                     if (preLayer._baseLayer.options.predictionScaleImg)
                         ms.predictionScaleImg = '';
+
+                    preLayer._baseLayer.options.logosImgs.forEach(url => {
+                        //var urlParts = url.split('/');
+                        //var file = urlParts[urlParts.length - 1];
+                        ms.removeMapLogo(url);
+                    })
 
                     console.log('Removed: ' + preLayer._baseLayer._url);
                 }
@@ -203,9 +217,16 @@ const MapState = {
     removeLayer(mapResourceId) {
         var ms = this;
         this.map.eachLayer(function (layer) {
-            if (layer.mapResource && layer.mapResource.id == mapResourceId)
+            if (layer.mapResource && layer.mapResource.id == mapResourceId) {
                 layer.remove();
+                if (layer.mapResource.type == "TimeLineLayer" && layer._baseLayer) {
+                    layer._baseLayer.options.logosImgs.forEach(url => {
+                        ms.removeMapLogo(url);
+                    })
+                }
+            }
         });
+
         this.preloadedTimeLineLayers = this.preloadedTimeLineLayers.filter((plt) => { return plt.mapResource.id != mapResourceId });
         this.preloadedMarkers = this.preloadedMarkers.filter((plm) => { return plm.mapResource.id != mapResourceId });
 
@@ -279,6 +300,17 @@ const MapState = {
 
     closeHeapedPopup() {
         this.map.closePopup();
+    },
+
+    addMapLogo(logo, emptyAll) {
+        if (emptyAll)
+            this.mapLogos = [];
+        if (this.mapLogos.indexOf(logo) == -1)
+            this.mapLogos.push(logo)
+    },
+
+    removeMapLogo(logo) {
+        this.mapLogos = this.mapLogos.filter(l => l != logo);
     }
 };
 

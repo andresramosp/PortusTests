@@ -1,7 +1,7 @@
  <template>
- <div>
+ <div >
     <transition appear :appear-class="appearClass" appear-to-class="slide-menu-enter-active">
-      <div v-if="floatingOptions.length > 0" class="floatingPanel"  :class="{ 'leftAlign': align == 'left', 'rightAlign': align == 'right', blueTheme: theme == 'blueTheme', greenTheme: theme == 'greenTheme' }">
+      <div v-if="floatingOptions.length > 0" class="floatingPanel fadeIn"  :class="{ 'leftAlign': align == 'left', 'rightAlign': align == 'right', blueTheme: theme == 'blueTheme', greenTheme: theme == 'greenTheme' }">
         <div class="form-check" v-for="floatingOption in floatingOptions" :key="floatingOptions.indexOf(floatingOption)">
            <label class="form-check-label">
              <input class="form-check-input" type="checkbox" v-model="floatingOption.active" @change="floatingOptionChanged(floatingOption)" />

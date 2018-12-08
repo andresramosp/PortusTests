@@ -11,6 +11,8 @@
     "base_layer_min_zoom": 1,
     "base_layer_max_zoom": 20,
 
+    "default_map_logo": "https://portus.puertos.es/Portus_RT/portusgwt/img/logoPuertos.jpeg",
+
     "options_panel_align": "left",
     "color_theme": "blueTheme"
 

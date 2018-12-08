@@ -2,11 +2,11 @@
 
 <div style="height: 100%">
     <div id="map"></div>
-    <img class="loaderGif" :src="require('@/assets/gifs/loading.gif')" v-show="loading" width="70" height="70" />
+    <img class="loaderGif" :src="require('@/assets/gifs/loadingBars.gif')" v-show="loading" width="100"  /> <!-- width="70" height="70" -->
     <div v-show="playingTimeLineLayer">
-       <img :src="mapState.predictionScaleImg" class="predictionScale" />
-       <img v-show='predictionWidget' class="predictionWidgetIcon" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
-       <img v-show='staticMapsWidget && hasStaticMaps' class="staticMapsWidgetIcon" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
+       <img :src="mapState.predictionScaleImg" class="predictionScale fadeIn" />
+       <img v-show='predictionWidget' class="predictionWidgetIcon fadeIn" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
+       <img v-show='staticMapsWidget && hasStaticMaps' class="staticMapsWidgetIcon fadeIn" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
     </div>
    </div>
 
@@ -151,12 +151,14 @@ export default {
 .predictionScale {
   position: absolute;
   z-index: 2;
-  left: 55%;
+  /* left: 55%; */
   /* right: 10px; */
-  bottom: -3px;
+  /* bottom: -3px; */
   padding: 10px;
   border-radius: 6px;
   width: 27%;
+  left: 100px;
+    bottom: 45px;
 }
 
 .predictionWidgetIcon {
@@ -189,7 +191,8 @@ export default {
     position: absolute;
     z-index: 5;
     right: 55px;
-    bottom: 50px;
+    /* bottom: 50px; */
+    bottom: 70px;
 }
 
 input[type="checkbox"] {
@@ -289,4 +292,7 @@ input[type="checkbox"] {
     opacity: 1;
   }
 }
+
+
+
 </style>

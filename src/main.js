@@ -12,6 +12,9 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import AsyncComputed from 'vue-async-computed'
 import VueRouter from 'vue-router'
 
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
+
 Vue.use(BootstrapVue);
 Vue.use(AsyncComputed);
 Vue.use(VueRouter);

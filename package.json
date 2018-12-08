@@ -12,6 +12,8 @@
     "bootstrap-vue": "^2.0.0-rc.11",
     "devextreme": "^18.2.3",
     "devextreme-vue": "^18.2.3",
+    "es6-promise": "^4.2.5",
+    "isomorphic-fetch": "^2.2.1",
     "vue": "^2.5.17",
     "vue-async-computed": "^3.5.0",
     "vue-axios": "^2.1.4",
