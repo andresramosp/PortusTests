@@ -888,10 +888,12 @@ L.TimeDimension.Layer.WMS = L.TimeDimension.Layer.extend({
         }
     },
     _showLayer: function(layer, time) {
-        if (this._currentLayer && this._currentLayer !== layer) {
-            this._currentLayer.hide();
-        }
+        
         layer.show();
+        // if (this._currentLayer && this._currentLayer !== layer) {
+        //     this._currentLayer.hide();
+        // }
+       
         if (this._currentLayer && this._currentLayer === layer) {
             return;
         }
@@ -1196,23 +1198,45 @@ L.TileLayer.include({
     },
 
     hide: function() {
+
         this._visible = false;
-        if (this._container) {
+        if (this._container) 
             this._container.style.display = 'none';
-            // L.DomUtil.removeClass(this._container, 'leaflet-marker-icon-fadeout')
-            // L.DomUtil.removeClass(this._container, 'leaflet-marker-icon-fadein')
-            // L.DomUtil.addClass(this._container, 'leaflet-marker-icon-fadeout')
-        }
+
+        //console.log('hide: ')
+        //this._visible = false;
+        // if (this._container) 
+        //     this._container.style.display = 'none';
+        // if (this.timeOut) {
+        //     clearTimeout(this.timeOut);
+        //     if (this._container) 
+        //         this._container.style.display = 'none';
+        // }
+        // else {
+        //     var that = this;
+        //     this.timeOut = setTimeout(() => {
+        //         if (that._container) {
+        //             that._container.style.display = 'none';
+        //            // L.DomUtil.removeClass(this._container, 'leaflet-marker-icon-fadeout')
+        //            // L.DomUtil.removeClass(this._container, 'leaflet-marker-icon-fadein')
+        //            // L.DomUtil.addClass(this._container, 'leaflet-marker-icon-fadeout')
+        //        }
+        //     }, 1000);
+        // }
+       
+        
+       
        
     },
 
     show: function() {
         this._visible = true;
+        //console.log('show: ' + new Date().toISOString())
         if (this._container) {
             this._container.style.display = 'block';
             // L.DomUtil.removeClass(this._container, 'leaflet-marker-icon-fadein')
             // L.DomUtil.removeClass(this._container, 'leaflet-marker-icon-fadeout')
-            // //L.DomUtil.addClass(this._container, 'leaflet-marker-icon-fadein')
+            // L.DomUtil.addClass(this._container, 'leaflet-marker-icon-fadein')
         }
       
     },
@@ -1454,9 +1478,9 @@ L.TimeDimension.Player = (L.Layer || L.Class).extend({
         L.setOptions(this, options);
         this._timeDimension = timeDimension;
         this._paused = false;
-        this._buffer = this.options.buffer || 5;
-        this._minBufferReady = this.options.minBufferReady || 1;
-        this._waitingForBuffer = false;
+        this._buffer = this.options.buffer || 50;
+        this._minBufferReady = 50; // this.options.minBufferReady || 1;
+        this._waitingForBuffer = true;
         this._loop = this.options.loop || false;
         this._steps = 1;
         this._timeDimension.on('timeload', (function(data) {

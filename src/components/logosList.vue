@@ -1,5 +1,5 @@
 <template>
-<div  class="logosList" :class="{ 'leftAlign': align == 'right', 'rightAlign': align == 'left' }" >
+<div  class="logosList rightAlign" >
   
   <!-- <img v-for="logo in logosList" :key="logo" :src="'/images/logos/' + logo" style="margin-left: 5px" /> -->
   <img v-for="logo in logosList" :key="logo" :src="logo" class="fadeIn" style="margin-left: 5px" />

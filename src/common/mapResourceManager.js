@@ -86,7 +86,7 @@ export const MapResources = [
     resourceApi: 'mapTileResources/portus?idOperativa=circulation&idVariable=CURR',
     tms: true,
     vectors: true,
-    paintBounds: true,
+    paintBounds: false,
     //groupLayersBy: { field: 'idOperativa', label: 'Operativa' },
   },
   {

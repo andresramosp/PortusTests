@@ -18,8 +18,8 @@ L.TimeDimension.Layer.TileLayer.TimeLine = L.TimeDimension.Layer.TileLayer.exten
         this._layers = {};
         this._defaultTime = 0;
         this._availableTimes = [];
-        this._timeCacheBackward = this.options.cacheBackward || this.options.cache || 0;
-        this._timeCacheForward = this.options.cacheForward || this.options.cache || 0;
+        this._timeCacheBackward = this.options.cacheBackward || this.options.cache || 20;
+        this._timeCacheForward = this.options.cacheForward || this.options.cache || 20;
 
         this._baseLayer.on('load', (function() {
             this._baseLayer.setLoaded(true);
@@ -132,10 +132,13 @@ L.TimeDimension.Layer.TileLayer.TimeLine = L.TimeDimension.Layer.TileLayer.exten
 
     _showLayer: function(layer, time) {
 
-        if (this._currentLayer && this._currentLayer !== layer) {
-            this._currentLayer.hide();
-        }
         layer.show();
+        if (this._currentLayer && this._currentLayer !== layer) {
+             this._currentLayer.hide();
+        }        
+        
+        
+       
         if (this._currentLayer && this._currentLayer === layer) {
             return;
         }
@@ -143,7 +146,7 @@ L.TimeDimension.Layer.TileLayer.TimeLine = L.TimeDimension.Layer.TileLayer.exten
         this._currentTime = time;
         //console.log('Show layer with time: ' + new Date(time).toISOString());
 
-        this._evictCachedTimes(this._timeCacheForward, this._timeCacheBackward);
+        //this._evictCachedTimes(this._timeCacheForward, this._timeCacheBackward);
 
         
     },
@@ -184,7 +187,11 @@ L.TimeDimension.Layer.TileLayer.TimeLine = L.TimeDimension.Layer.TileLayer.exten
         // It will be shown when timeload event is fired from the map (after all layers are loaded)
         newLayer.onAdd = (function(map) {
             Object.getPrototypeOf(this).onAdd.call(this, map);
-            this.hide();
+            // if (!this._added) {
+                this.hide();
+            //     this._added = true;
+            // }
+                
         }).bind(newLayer);
         return newLayer;
     },

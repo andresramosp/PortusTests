@@ -162,6 +162,10 @@ const MapState = {
                         autoPlay: true
                     })
                     ms.map.addControl(ms.map.timeDimensionControl);
+                    // Pensar instanciar aquí el TimeLayer
+                    preLayer._layers = {};
+                    preLayer._defaultTime = 0;
+                    preLayer._availableTimes = [];
                     preLayer.addTo(ms.map);
                     ms.currentTimeLineLayer = preLayer;
 
@@ -224,6 +228,7 @@ const MapState = {
                         ms.removeMapLogo(url);
                     })
                 }
+                
             }
         });
 
