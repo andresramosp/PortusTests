@@ -18,8 +18,8 @@ L.TimeDimension.Layer.TileLayer.TimeLine = L.TimeDimension.Layer.TileLayer.exten
         this._layers = {};
         this._defaultTime = 0;
         this._availableTimes = [];
-        this._timeCacheBackward = this.options.cacheBackward || this.options.cache || 20;
-        this._timeCacheForward = this.options.cacheForward || this.options.cache || 20;
+        this._timeCacheBackward = this.options.cacheBackward || this.options.cache || 0;
+        this._timeCacheForward = this.options.cacheForward || this.options.cache || 0;
 
         this._baseLayer.on('load', (function() {
             this._baseLayer.setLoaded(true);

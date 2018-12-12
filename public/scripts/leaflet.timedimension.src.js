@@ -1478,8 +1478,8 @@ L.TimeDimension.Player = (L.Layer || L.Class).extend({
         L.setOptions(this, options);
         this._timeDimension = timeDimension;
         this._paused = false;
-        this._buffer = this.options.buffer || 50;
-        this._minBufferReady = 50; // this.options.minBufferReady || 1;
+        this._buffer = this.options.buffer || 25;
+        this._minBufferReady = 25; // this.options.minBufferReady || 1;
         this._waitingForBuffer = true;
         this._loop = this.options.loop || false;
         this._steps = 1;
