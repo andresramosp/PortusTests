@@ -82,7 +82,7 @@ export default {
     ubicacion: function() {
       if (this.ubicacion != null) {
         // TODO: puerto / localidad de...
-        this.titulo = 'Previsiones y estado actual del mar en ' + this.ubicacion.nombre;
+        this.titulo = 'Previsiones y estado actual del mar en ' + this.ubicacion.tipoUbicacion.toLowerCase() + ' de ' + this.ubicacion.nombre;
       }
     }
   },

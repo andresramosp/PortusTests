@@ -11,11 +11,11 @@
         <img :src="require('@/assets/locationsWidget/header_pred.png')" width="360">
 
         <div class="variableBGSection" style="background-color: #bdc9dc;">
-          <div class="variableDate">15/12/2018</div>
+          <div class="variableDate">{{fechaD1}}</div>
           <div class="variableSection">
             <span class="variableValue">
-              <div v-if="nivMar != null && !isNaN(nivMar)">
-                {{nivMar}}
+              <div v-if="oleajeD1 != null && !isNaN(oleajeD1)">
+                {{oleajeD1}}
                 <span class="variableUnit">m</span>
               </div>
               <span v-else class>N/D</span>
@@ -24,8 +24,8 @@
           </div>
           <div class="variableSection">
             <span class="variableValue">
-              <div v-if="viento != null && !isNaN(viento)">
-                {{viento}}
+              <div v-if="vientoD1 != null && !isNaN(vientoD1)">
+                {{vientoD1}}
                 <span class="variableUnit">m/s</span>
               </div>
               <span v-else class>N/D</span>
@@ -35,11 +35,11 @@
         </div>
 
         <div class="variableBGSection" style="background-color: #dae0ea;">
-          <div class="variableDate">15/12/2018</div>
+          <div class="variableDate">{{fechaD2}}</div>
           <div class="variableSection">
             <span class="variableValue">
-              <div v-if="nivMar != null && !isNaN(nivMar)">
-                {{nivMar}}
+              <div v-if="oleajeD2 != null && !isNaN(oleajeD2)">
+                {{oleajeD2}}
                 <span class="variableUnit">m</span>
               </div>
               <span v-else class>N/D</span>
@@ -48,8 +48,8 @@
           </div>
           <div class="variableSection">
             <span class="variableValue">
-              <div v-if="viento != null && !isNaN(viento)">
-                {{viento}}
+              <div v-if="vientoD2 != null && !isNaN(vientoD2)">
+                {{vientoD2}}
                 <span class="variableUnit">m/s</span>
               </div>
               <span v-else class>N/D</span>
@@ -58,11 +58,11 @@
           </div>
         </div>
         <div class="variableBGSection" style="background-color: #e8ebf1;">
-          <div class="variableDate">15/12/2018</div>
+          <div class="variableDate">{{fechaD3}}</div>
           <div class="variableSection">
             <span class="variableValue">
-              <div v-if="nivMar != null && !isNaN(nivMar)">
-                {{nivMar}}
+              <div v-if="oleajeD3 != null && !isNaN(oleajeD3)">
+                {{oleajeD3}}
                 <span class="variableUnit">m</span>
               </div>
               <span v-else class>N/D</span>
@@ -71,8 +71,8 @@
           </div>
           <div class="variableSection">
             <span class="variableValue">
-              <div v-if="viento != null && !isNaN(viento)">
-                {{viento}}
+              <div v-if="vientoD3 != null && !isNaN(vientoD3)">
+                {{vientoD3}}
                 <span class="variableUnit">m/s</span>
               </div>
               <span v-else class>N/D</span>
@@ -82,8 +82,9 @@
         </div>
       </div>
     </b-card>
-
-    <div class="pleaBajaSection" style="margin-left: 35px;">
+ 
+   <div v-if="!loading" class="fadeIn">  
+         <div class="pleaBajaSection" style="margin-left: 35px;">
       <b-row>
         <b-col cols="2" style="padding-top: 7px">
           <div style="font-weight: bold">plea
@@ -96,12 +97,12 @@
         <b-col>
           <b-row>
             <b-col>
-              <span>07:29 (0.57m)</span>
+              <span>{{plea1DateD1}} ({{plea1LevelD1}}m)</span>
             </b-col>
           </b-row>
           <b-row>
             <b-col>
-              <span>20:15 (0.40m)</span>
+              <span>{{plea2DateD1}} ({{plea2LevelD1}}m)</span>
             </b-col>
           </b-row>
         </b-col>
@@ -118,12 +119,12 @@
         <b-col>
           <b-row>
             <b-col>
-              <span>07:29 (0.57m)</span>
+              <span>{{baja1DateD1}} ({{baja1LevelD1}}m)</span>
             </b-col>
           </b-row>
           <b-row>
             <b-col>
-              <span>20:15 (0.40m)</span>
+               <span>{{baja2DateD1}} ({{baja2LevelD1}}m)</span>
             </b-col>
           </b-row>
         </b-col>
@@ -143,12 +144,12 @@
         <b-col>
           <b-row>
             <b-col>
-              <span>07:29 (0.57m)</span>
+              <span>{{plea1DateD2}} ({{plea1LevelD2}}m)</span>
             </b-col>
           </b-row>
           <b-row>
             <b-col>
-              <span>20:15 (0.40m)</span>
+              <span>{{plea2DateD2}} ({{plea2LevelD2}}m)</span>
             </b-col>
           </b-row>
         </b-col>
@@ -165,12 +166,12 @@
         <b-col>
           <b-row>
             <b-col>
-              <span>07:29 (0.57m)</span>
+               <span>{{baja1DateD2}} ({{baja1LevelD2}}m)</span>
             </b-col>
           </b-row>
           <b-row>
             <b-col>
-              <span>20:15 (0.40m)</span>
+              <span>{{baja2DateD2}} ({{baja2LevelD2}}m)</span>
             </b-col>
           </b-row>
         </b-col>
@@ -187,15 +188,15 @@
             >-->
           </div>
         </b-col>
-        <b-col>
+          <b-col>
           <b-row>
             <b-col>
-              <span>07:29 (0.57m)</span>
+              <span>{{plea1DateD3}} ({{plea1LevelD3}}m)</span>
             </b-col>
           </b-row>
           <b-row>
             <b-col>
-              <span>20:15 (0.40m)</span>
+              <span>{{plea2DateD3}} ({{plea2LevelD3}}m)</span>
             </b-col>
           </b-row>
         </b-col>
@@ -209,20 +210,23 @@
             >-->
           </div>
         </b-col>
-        <b-col>
+          <b-col>
           <b-row>
             <b-col>
-              <span>07:29 (0.57m)</span>
+              <span>{{baja1DateD3}} ({{baja1LevelD3}}m)</span>
             </b-col>
           </b-row>
           <b-row>
             <b-col>
-              <span>20:15 (0.40m)</span>
+              <span>{{baja2DateD3}} ({{baja2LevelD3}}m)</span>
             </b-col>
           </b-row>
         </b-col>
       </b-row>
     </div>
+   </div>
+
+
   </div>
 </template>
 
@@ -235,9 +239,40 @@ export default {
   data() {
     return {
       mapUtils: MapUtils,
-      nivMar: null,
-      viento: null,
+      fechaD1: null,
+      fechaD2: null,
+      fechaD3: null,
+      oleajeD1: null,
+      oleajeD2: null,
+      oleajeD3: null,
+      vientoD1: null,
+      vientoD2: null,
+      vientoD3: null,
       oleajeImg: null,
+      plea1DateD1: null,
+      plea1LevelD1: null,
+      plea2DateD1: null,
+      plea2LevelD1: null,
+      baja1DateD1: null,
+      baja1LevelD1: null,
+      baja2DateD1: null,
+      baja2LevelD1: null,
+      plea1DateD2: null,
+      plea1LevelD2: null,
+      plea2DateD2: null,
+      plea2LevelD2: null,
+      baja1DateD2: null,
+      baja1LevelD2: null,
+      baja2DateD2: null,
+      baja2LevelD2: null,
+      plea1DateD3: null,
+      plea1LevelD3: null,
+      plea2DateD3: null,
+      plea2LevelD3: null,
+      baja1DateD3: null,
+      baja1LevelD3: null,
+      baja2DateD3: null,
+      baja2LevelD3: null,
       vientoImg: null,
       loading: true,
       interval: null
@@ -262,18 +297,27 @@ export default {
       var tipo = this.locationType == "Puerto" ? "harbor" : "city";
       var result = await Vue.axios
         .get(
-          "https://movil.puertos.es/simo/seastate/" +
-            tipo +
-            "/" +
-            this.code +
-            "/daily_extended"
+          "https://movil.puertos.es/simo/seastate/" + tipo + "/" + this.code + "/daily_extended"
         )
         .catch(error => {
           throw new Error(`[RWV] ApiService ${error}`);
         });
       var data = result.data;
-      this.nivMar = 1.2;
-      this.viento = 6.1;
+      var count = 1;
+      for (var fecha in data) {
+        this['fechaD' + count] = this.printDate(fecha);
+        this['oleajeD' + count] = parseFloat(data[fecha][0].mt_hm0).toFixed(1);
+        this['vientoD' + count] = parseFloat(data[fecha][0].vv_imd *  0.27777).toFixed(2);
+        this['plea1DateD' + count] = this.printHour(data[fecha][0].high_tide1_date)
+        this['plea1LevelD' + count] = parseFloat(data[fecha][0].high_tide1_level).toFixed(2);
+        this['plea2DateD' + count] = this.printHour(data[fecha][0].high_tide2_date)
+        this['plea2LevelD' + count] = parseFloat(data[fecha][0].high_tide2_level).toFixed(2);
+        this['baja1DateD' + count] = this.printHour(data[fecha][0].low_tide1_date)
+        this['baja1LevelD' + count] = parseFloat(data[fecha][0].low_tide1_level).toFixed(2);
+        this['baja2DateD' + count] = this.printHour(data[fecha][0].low_tide2_date)
+        this['baja2LevelD' + count] = parseFloat(data[fecha][0].low_tide2_level).toFixed(2);
+        count++;
+      }
       this.oleajeImg = require("@/assets/locationsWidget/prueba.png"); //require("@/assets/locationsWidget/surfP_" + 1 + ".png");
       this.vientoImg = require("@/assets/locationsWidget/prueba2.png");
       this.loading = false;
@@ -282,15 +326,14 @@ export default {
     printDate(dateInSecs) {
       var date = new Date(dateInSecs * 1000);
       return (
-        date.toLocaleDateString() +
-        " - " +
-        date
-          .toISOString()
-          .split("T")[1]
-          .substr(0, 5) +
-        "h"
+        date.toLocaleDateString() 
       );
-    }
+    },
+
+    printHour(dateInSecs) {
+        var date = new Date(dateInSecs * 1000);
+        return date.toISOString().split('T')[1].substr(0, 5) + 'h';
+      }
   }
 };
 </script>
@@ -304,7 +347,7 @@ export default {
 .pleaBajaSection {
   position: absolute;
   margin-top: -83px;
-  font-size: 11.5px;
+  font-size: 11px;
 }
 
 .pleaBajaSection {
