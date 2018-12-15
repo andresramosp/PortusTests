@@ -29,16 +29,7 @@ const ApiService = {
 
   },
 
-  getNotAsync(resource, params) {
-    return Vue.axios
-      .get(`${resource}`, { params: params })
-      .catch((error) => {
-        throw new Error(`[RWV] ApiService ${error}`)
-      })
 
-  },
-
- 
   setHeader() {
     //Vue.axios.defaults.headers.common['Authorization'] = `Token ${JwtService.getToken()}`
   },

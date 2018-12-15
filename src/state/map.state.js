@@ -10,6 +10,7 @@ const MapState = {
     mapOptionsGroups: [],
     mapOptions: [],
     markersSelected: null,
+    ubicacionSelected: null,
     predictionScaleImg: null,
     preloadedTimeLineLayers: [],
     preloadedMarkers: [],
@@ -147,66 +148,56 @@ const MapState = {
         }
         ms.currentTimeLineLayer = null;
         this.preloadedTimeLineLayers.forEach(function (preLayer) {
-            ms.removeTimeLineLayer(preLayer);
-            if (MapUtils.tileLayerVisible(ms.map, preLayer._baseLayer) && preLayer.visible) {
-                if (true) { //(!ms.currentTimeLineLayer || ms.currentTimeLineLayer.id != preLayer.id) {
-                    ms.map.options.timeDimensionOptions.period = "PT" + preLayer._baseLayer.options.hoursStep + "H";
-                    var date = new Date();
-                    date.setUTCHours(0, 0, 0, 0);
-                    var predHours = (preLayer._baseLayer.options.numDays) * 24; //preLayer.mapResource.predictionTime ? preLayer.mapResource.predictionTime : 72;
-                    ms.map.options.timeDimensionOptions.timeInterval = date.toISOString() + '/PT' + predHours + 'H'; // 'PT192H/' + sv.convertYMDHToDate(preLayer._baseLayer.options.strLastate).toISOString();
-                    ms.map.timeDimension.initialize(ms.map.options.timeDimensionOptions);
-                    ms.map.timeDimension.setCurrentTimeIndex(0);
-                    if (!ms.map.timeDimensionControl) {
-                        ms.map.timeDimensionControl = L.control.timeDimension({
-                            position: "bottomleft",
-                            playerOptions: {
-                                transitionTime: 500,
-                                loopButton: true,
-                                loop: true
-                            },
-                            autoPlay: true
-                        })
-                        ms.map.addControl(ms.map.timeDimensionControl);
-                    }
-                    preLayer.addTo(ms.map);
-                    ms.currentTimeLineLayer = preLayer;
-
-                    if (preLayer._baseLayer.options.predictionScaleImg) {
-                        ms.predictionScaleImg = preLayer._baseLayer.options.predictionScaleImg;
-                    }
-
+            if (ms.map.hasLayer(preLayer)) {
+                preLayer.remove();
+                preLayer._layers = {};
+                preLayer._defaultTime = 0;
+                preLayer._availableTimes = [];
+                if (preLayer._baseLayer.options.predictionScaleImg)
+                    ms.predictionScaleImg = '';
+    
                     preLayer._baseLayer.options.logosImgs.forEach(url => {
-                        //var urlParts = url.split('/');
-                        //var file = urlParts[urlParts.length - 1];
-                        ms.addMapLogo(url);
-                    })
-
-                    console.log('Added: ' + preLayer._baseLayer._url)
-                }
+                    ms.removeMapLogo(url);
+                })
+    
+                console.log('Removed: ' + preLayer._baseLayer._url);
             }
-            else {
-               //this.removeTimeLineLayer(preLayer);
+            if (MapUtils.tileLayerVisible(ms.map, preLayer._baseLayer) && preLayer.visible) {
+                ms.map.options.timeDimensionOptions.period = "PT" + preLayer._baseLayer.options.hoursStep + "H";
+                var date = new Date();
+                date.setUTCHours(0, 0, 0, 0);
+                var predHours = (preLayer._baseLayer.options.numDays) * 24; //preLayer.mapResource.predictionTime ? preLayer.mapResource.predictionTime : 72;
+                ms.map.options.timeDimensionOptions.timeInterval = date.toISOString() + '/PT' + predHours + 'H'; // 'PT192H/' + sv.convertYMDHToDate(preLayer._baseLayer.options.strLastate).toISOString();
+                ms.map.timeDimension.initialize(ms.map.options.timeDimensionOptions);
+                ms.map.timeDimension.setCurrentTimeIndex(0);
+                if (!ms.map.timeDimensionControl) {
+                    ms.map.timeDimensionControl = L.control.timeDimension({
+                        position: "bottomleft",
+                        playerOptions: {
+                            transitionTime: 500,
+                            loopButton: true,
+                            loop: true
+                        },
+                        autoPlay: true
+                    })
+                    ms.map.addControl(ms.map.timeDimensionControl);
+                }
+                preLayer.addTo(ms.map);
+                ms.currentTimeLineLayer = preLayer;
+
+                if (preLayer._baseLayer.options.predictionScaleImg) {
+                    ms.predictionScaleImg = preLayer._baseLayer.options.predictionScaleImg;
+                }
+
+                preLayer._baseLayer.options.logosImgs.forEach(url => {
+                    //var urlParts = url.split('/');
+                    //var file = urlParts[urlParts.length - 1];
+                    ms.addMapLogo(url);
+                })
+
+                console.log('Added: ' + preLayer._baseLayer._url)
             }
         })
-    },
-
-    removeTimeLineLayer(layer) {
-        var ms = this;
-        if (ms.map.hasLayer(layer)) {
-            layer.remove();
-            layer._layers = {};
-            layer._defaultTime = 0;
-            layer._availableTimes = [];
-            if (layer._baseLayer.options.predictionScaleImg)
-                ms.predictionScaleImg = '';
-
-            layer._baseLayer.options.logosImgs.forEach(url => {
-                ms.removeMapLogo(url);
-            })
-
-            console.log('Removed: ' + layer._baseLayer._url);
-        }
     },
 
     setStaticMapResourceSelected(mapResource) {
@@ -325,3 +316,58 @@ const MapState = {
 };
 
 export default MapState
+
+
+// setVisibleTimeLineLayers() {
+    //     var ms = this;
+    //     this.preloadedTimeLineLayers.forEach(function (preLayer) {
+    //         if (MapUtils.tileLayerVisible(ms.map, preLayer._baseLayer)) {
+    //             if (!ms.map.hasLayer(preLayer)) {
+    //                 ms.map.options.timeDimensionOptions.period = "PT" + preLayer._baseLayer.options.hoursStep + "H";
+    //                 var date = new Date();
+    //                 date.setUTCHours(0, 0, 0, 0);
+    //                 var predHours = (preLayer._baseLayer.options.numDays) * 24; //preLayer.mapResource.predictionTime ? preLayer.mapResource.predictionTime : 72;
+    //                 ms.map.options.timeDimensionOptions.timeInterval = date.toISOString() + '/PT' + predHours + 'H'; // 'PT192H/' + sv.convertYMDHToDate(preLayer._baseLayer.options.strLastate).toISOString();
+    //                 ms.map.timeDimension.initialize(ms.map.options.timeDimensionOptions);
+    //                 ms.map.timeDimension.setCurrentTimeIndex(0);
+    //                 if (ms.map.timeDimensionControl) {
+    //                     ms.map.timeDimensionControl._player.stop();
+    //                     ms.map.removeControl(ms.map.timeDimensionControl);
+    //                 }
+    //                 ms.map.timeDimensionControl = L.control.timeDimension({
+    //                     position: "bottomleft",
+    //                     playerOptions: {
+    //                         transitionTime: 500,
+    //                         loopButton: true,
+    //                         loop: true
+    //                     },
+    //                     autoPlay: true
+    //                 })
+    //                 ms.map.addControl(ms.map.timeDimensionControl);
+    //                 preLayer.addTo(ms.map);
+    //                 ms.currentTimeLineLayer = preLayer;
+
+    //                 if (preLayer._baseLayer.options.predictionScaleImg) {
+    //                     ms.predictionScaleImg = preLayer._baseLayer.options.predictionScaleImg;
+    //                 }
+
+    //                 console.log('Added: ' + preLayer._baseLayer._url)
+    //             }
+    //         }
+    //         else {
+    //             if (ms.map.hasLayer(preLayer)) {
+    //                 preLayer.remove();
+    //                 ms.currentTimeLineLayer = null;
+    //                 if (ms.map.timeDimensionControl) {
+    //                     ms.map.timeDimensionControl._player.stop();
+    //                     ms.map.removeControl(ms.map.timeDimensionControl);
+    //                 }
+
+    //                 if (preLayer._baseLayer.options.predictionScaleImg)
+    //                     ms.predictionScaleImg = '';
+
+    //                 console.log('Removed: ' + preLayer._baseLayer._url);
+    //             }
+    //         }
+    //     })
+    // },

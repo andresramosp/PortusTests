@@ -18,8 +18,8 @@ L.TimeDimension.Layer.TileLayer.TimeLine = L.TimeDimension.Layer.TileLayer.exten
         this._layers = {};
         this._defaultTime = 0;
         this._availableTimes = [];
-        this._timeCacheBackward = this.options.cacheBackward || this.options.cache || 0;
-        this._timeCacheForward = this.options.cacheForward || this.options.cache || 0;
+        this._timeCacheBackward = this.options.cacheBackward || this.options.cache || 50;
+        this._timeCacheForward = this.options.cacheForward || this.options.cache || 50;
 
         this._baseLayer.on('load', (function() {
             this._baseLayer.setLoaded(true);
@@ -104,6 +104,7 @@ L.TimeDimension.Layer.TileLayer.TimeLine = L.TimeDimension.Layer.TileLayer.exten
                 this._layers[prop].redraw();
             }
         }
+      
     },
 
     _evictCachedTimes: function(keepforward, keepbackward) {
@@ -132,13 +133,10 @@ L.TimeDimension.Layer.TileLayer.TimeLine = L.TimeDimension.Layer.TileLayer.exten
 
     _showLayer: function(layer, time) {
 
-        layer.show();
         if (this._currentLayer && this._currentLayer !== layer) {
-             this._currentLayer.hide();
-        }        
-        
-        
-       
+            this._currentLayer.hide();
+        }
+        layer.show();
         if (this._currentLayer && this._currentLayer === layer) {
             return;
         }
@@ -146,7 +144,7 @@ L.TimeDimension.Layer.TileLayer.TimeLine = L.TimeDimension.Layer.TileLayer.exten
         this._currentTime = time;
         //console.log('Show layer with time: ' + new Date(time).toISOString());
 
-        //this._evictCachedTimes(this._timeCacheForward, this._timeCacheBackward);
+        this._evictCachedTimes(this._timeCacheForward, this._timeCacheBackward);
 
         
     },
@@ -187,11 +185,7 @@ L.TimeDimension.Layer.TileLayer.TimeLine = L.TimeDimension.Layer.TileLayer.exten
         // It will be shown when timeload event is fired from the map (after all layers are loaded)
         newLayer.onAdd = (function(map) {
             Object.getPrototypeOf(this).onAdd.call(this, map);
-            // if (!this._added) {
-                this.hide();
-            //     this._added = true;
-            // }
-                
+            this.hide();
         }).bind(newLayer);
         return newLayer;
     },
@@ -262,6 +256,14 @@ L.TimeDimension.Layer.TileLayer.TimeLine = L.TimeDimension.Layer.TileLayer.exten
         }
         return this._availableTimes[index];
     },
+
+    // getEvents: function() {
+    //     var clearCache = L.bind(this._unvalidateCache, this);
+    //     return {
+    //         moveend: clearCache,
+    //         zoomend: clearCache
+    //     }
+    // },
 
 });
 

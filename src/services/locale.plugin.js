@@ -278,10 +278,43 @@ const LocalePlugin = {
             es: "Marcar todos",
             en: "Print all"
         },
-        // Ubicaciones Panel
+        // Ubicaciones Toolbar
         ubicacionesPlaceHolder: {
             es: "Búsqueda de localidades, puertos y playas...",
             en: "Search by town, port or beach..."
+        },
+        // Widget Ubicaciones
+        variableOleaje: {
+            es: "oleaje",
+            en: "waves"
+        },
+        variableNivMar: {
+            es: "nivel mar",
+            en: "sea level"
+        },
+        variableViento: {
+            es: "viento",
+            en: "wind"
+        },
+        variableTempAgua: {
+            es: "Temperatura agua",
+            en: "Water temperature"
+        },
+        variablePeriodoMedOleaje: {
+            es: "Periodo med. oleaje",
+            en: "Average wave period"
+        },
+        variablePresionAtm: {
+            es: "Presión atmosférica",
+            en: "Atmospheric pressure"
+        },
+        headerTiempoReal: {
+            es: "Tiempo real",
+            en: "Real time"
+        },
+        headerPredicciones: {
+            es: "Predicciones: extremos diarios",
+            en: "Forecasts: daily extremes"
         }
     },
    

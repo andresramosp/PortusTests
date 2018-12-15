@@ -98,8 +98,13 @@ export default {
       layers.forEach(l => {
         l.visible = visible;
       })      
-      MapState.setVisibleTimeLineLayers();
-      MapState.setVisibleMarkerLayers();
+      var typeLayer = layers[0].mapResource.type;
+      if (typeLayer == 'TimeLineLayer') {
+        MapState.setVisibleTimeLineLayers();
+      }
+      else {
+        MapState.setVisibleMarkerLayers();
+      }
     },
 
     addLayerToGroup(layer, groupList) {

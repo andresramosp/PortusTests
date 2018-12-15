@@ -888,12 +888,10 @@ L.TimeDimension.Layer.WMS = L.TimeDimension.Layer.extend({
         }
     },
     _showLayer: function(layer, time) {
-        
+        if (this._currentLayer && this._currentLayer !== layer) {
+            this._currentLayer.hide();
+        }
         layer.show();
-        // if (this._currentLayer && this._currentLayer !== layer) {
-        //     this._currentLayer.hide();
-        // }
-       
         if (this._currentLayer && this._currentLayer === layer) {
             return;
         }
@@ -1198,45 +1196,30 @@ L.TileLayer.include({
     },
 
     hide: function() {
-
         this._visible = false;
-        if (this._container) 
+        if (this._container) {
             this._container.style.display = 'none';
-
-        //console.log('hide: ')
-        //this._visible = false;
-        // if (this._container) 
-        //     this._container.style.display = 'none';
-        // if (this.timeOut) {
-        //     clearTimeout(this.timeOut);
-        //     if (this._container) 
-        //         this._container.style.display = 'none';
-        // }
-        // else {
-        //     var that = this;
-        //     this.timeOut = setTimeout(() => {
-        //         if (that._container) {
-        //             that._container.style.display = 'none';
-        //            // L.DomUtil.removeClass(this._container, 'leaflet-marker-icon-fadeout')
-        //            // L.DomUtil.removeClass(this._container, 'leaflet-marker-icon-fadein')
-        //            // L.DomUtil.addClass(this._container, 'leaflet-marker-icon-fadeout')
-        //        }
-        //     }, 1000);
-        // }
-       
-        
-       
+            // L.DomUtil.removeClass(this._container, 'leaflet-marker-icon-fadeout')
+            // L.DomUtil.removeClass(this._container, 'leaflet-marker-icon-fadein')
+            // L.DomUtil.addClass(this._container, 'leaflet-marker-icon-fadeout')
+        }
        
     },
 
     show: function() {
+
+        if (this._map.timeDimensionControl && this._map.timeDimensionControl._player._preloadBuffer) 
+            this.setOpacity(0.1);
+        else
+            this.setOpacity(1);
+
         this._visible = true;
-        //console.log('show: ' + new Date().toISOString())
         if (this._container) {
             this._container.style.display = 'block';
+        
             // L.DomUtil.removeClass(this._container, 'leaflet-marker-icon-fadein')
             // L.DomUtil.removeClass(this._container, 'leaflet-marker-icon-fadeout')
-            // L.DomUtil.addClass(this._container, 'leaflet-marker-icon-fadein')
+            // //L.DomUtil.addClass(this._container, 'leaflet-marker-icon-fadein')
         }
       
     },
@@ -1475,19 +1458,24 @@ L.TimeDimension.Player = (L.Layer || L.Class).extend({
 
     includes: (L.Evented || L.Mixin.Events),
     initialize: function(options, timeDimension) {
+        var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+        this._preloadBuffer = !isChrome;
         L.setOptions(this, options);
         this._timeDimension = timeDimension;
         this._paused = false;
-        this._buffer = this.options.buffer || 25;
-        this._minBufferReady = 25; // this.options.minBufferReady || 1;
-        this._waitingForBuffer = true;
+        this._buffer = this.options.buffer || (isChrome ? 5 : 15);
+        this._minBufferReady =  this.options.minBufferReady || (isChrome ? 1 : 5); 
+        this._waitingForBuffer = false;
         this._loop = this.options.loop || false;
         this._steps = 1;
         this._timeDimension.on('timeload', (function(data) {
             this.release(); // free clock
             this._waitingForBuffer = false; // reset buffer
         }).bind(this));
-        this.setTransitionTime(this.options.transitionTime || 1000);
+        if (!this._preloadBuffer)
+            this.setTransitionTime(this.options.transitionTime || 1000);
+        else
+            this.setTransitionTime(50);
         
         this._timeDimension.on('limitschanged availabletimeschanged timeload', (function(data) {
             this._timeDimension.prepareNextTimes(this._steps, this._minBufferReady, this._loop);
@@ -1501,7 +1489,11 @@ L.TimeDimension.Player = (L.Layer || L.Class).extend({
         var maxForward = (this._timeDimension.getCurrentTimeIndex() >= maxIndex) && (this._steps > 0);
         var maxBackward = (this._timeDimension.getCurrentTimeIndex() == 0) && (this._steps < 0);
         if (maxForward || maxBackward) {
-            // we reached the last step
+            // Ya hemos dado la primera vuelta y ponemos la velocidad normal
+            if (maxForward && this._preloadBuffer) {
+                this._preloadBuffer = false;
+                this.setTransitionTime(this.options.transitionTime || 1000);
+            }
             if (!this._loop) {
                 this.pause();
                 this.stop();

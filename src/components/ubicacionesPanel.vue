@@ -31,7 +31,7 @@ import ApiService from "@/services/api.service";
 import { DxAutocomplete } from 'devextreme-vue/autocomplete';
 import { UbicacionType } from "@/common/enums";
 import Vue from 'vue';
-
+import LocationsRTWidget from "@/components/locationsWidget/locationsRTWidget.vue";
 
 export default {
   name: "UbicacionesPanel",
@@ -76,15 +76,57 @@ export default {
 
       this.removePrediction();
 
-      var customIcon = L.icon({ iconUrl: require('@/assets/markers/' + ubicacion.tipoUbicacion.toLowerCase() + '.png'), iconSize: [30, 30], iconAnchor: [15, 30] });
+      var customIcon = L.icon({ 
+        iconUrl: require('@/assets/markers/' + ubicacion.tipoUbicacion.toLowerCase() + '.png'), 
+        iconSize: [30, 30], 
+        iconAnchor: [15, 30],
+        popupAnchor:  [0, -30] 
+        });
+
       this.marker = L.marker([ubicacion.latitud, ubicacion.longitud], { icon: customIcon });
+      this.marker.mapResource = {};
+
+      var up = this;
+      this.marker.on('click', function (e) {
+        up.mapState.ubicacionSelected = null;
+        up.mapState.ubicacionSelected = ubicacion;
+      });
+      this.marker.on('mouseover', function (e) {
+        var marker = this;
+        marker.timeOut = setTimeout(() => {
+        marker.locationsRTComponent = new Vue({ 
+            ...LocationsRTWidget, 
+            propsData: { 
+              locationType: ubicacion.tipoUbicacion,
+              code: ubicacion.id, 
+              showExtraData: false,
+              showLogo: true
+            } }).$mount()
+          marker.bindPopup(marker.locationsRTComponent.$el, {
+            maxWidth: 560
+          });
+          marker.openPopup();
+        }, 50);
+      });
+      this.marker.on('mouseout', function (e) {
+        var marker = this;
+        if (marker.timeOut) {
+          clearTimeout(marker.timeOut);
+        }
+        marker.closePopup();
+        marker.unbindPopup();
+        marker.locationsRTComponent.$destroy(true);
+      });
       this.marker.addTo(map);
+
       var latLng = new L.LatLng(ubicacion.latitud, ubicacion.longitud);
       map.flyTo(latLng, ubicacion.minZoom != -1 ? ubicacion.minZoom : this.defaultZoom);
 
       if (ubicacion.tipoUbicacion == UbicacionType.PUERTO) {
         this.addPrediction(ubicacion);
       }
+
+      this.mapState.ubicacionSelected = ubicacion;
       
     },
 
@@ -94,6 +136,7 @@ export default {
           this.marker.remove();
         }
         this.removePrediction();
+        this.mapState.ubicacionSelected = null;
       }
     },
 
@@ -121,8 +164,6 @@ export default {
           this.mapState.getMap().flyToBounds(bounds);
         }
     }
-
-    
   }
 };
 </script>
@@ -163,5 +204,7 @@ export default {
 .greenTheme {
   background-color: rgba(0, 255, 0, 0.6);
 }
+
+
 
 </style>

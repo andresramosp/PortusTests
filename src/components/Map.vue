@@ -76,14 +76,15 @@ export default {
       }
      
       var vm = this;
-      map.on("zoomend", function() {
-        MapState.setVisibleMarkerLayers();
-        MapState.setVisibleTimeLineLayers();
-        console.log("Zoom: " + vm.mapState.map.getZoom());
-      });
       map.on("moveend", function() {
-        MapState.setVisibleMarkerLayers();
-        MapState.setVisibleTimeLineLayers();
+        vm.moveEndTimeOut = setTimeout(() => {
+          MapState.setVisibleTimeLineLayers();
+          MapState.setVisibleMarkerLayers();
+        }, 750);
+      });
+      map.on("movestart", function() {
+        if (vm.moveEndTimeOut)
+          clearTimeout(vm.moveEndTimeOut);
       });
       map.on('popupclose', function(e) {
         MapState.popupFixed = false;
@@ -93,7 +94,6 @@ export default {
         map.scrollWheelZoom.disable();
         map.dragging.disable();
       }
-
       MapState.init(map);
     },
 
@@ -106,7 +106,7 @@ export default {
     openPredictionWidget: function() {
 
       var map = MapState.getMap();
-      var currentPredLayer = this.mapState.currentTimeLineLayer; //MapState.getCurrentTimeLineLayer();
+      var currentPredLayer = this.mapState.currentTimeLineLayer; 
       if (currentPredLayer) {
         var routeData = this.$router.resolve({ path: '/predictionWidget', 
           query: 

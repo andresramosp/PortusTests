@@ -73,6 +73,15 @@ const MapUtils = {
     }
   },
 
+  markerMouseOut(map, marker) {
+    if (marker.timeOut) {
+      clearTimeout(marker.timeOut);
+    }
+    this.hoverEffect(map, marker, false);
+    this.closeMarkerPopup(map, marker);
+  },
+
+
   hoverEffect(map, marker, activate) {
     if (activate) {
       if (!this.hovered) {
@@ -100,20 +109,9 @@ const MapUtils = {
      
   },
 
-  markerMouseOut(map, marker) {
-    if (marker.timeOut) {
-      clearTimeout(marker.timeOut);
-    }
-    this.hoverEffect(map, marker, false);
-    this.closeMarkerPopup(map, marker);
-  },
-
   async openMarkerPopup(map, marker) {
     var tooltip;
 
-    // comprobar zoom, si alejado añadir nota para acercarse...
-    // maquetar
-    
     switch (marker.mapResource.markerClass) {
       case MarkerClass.UBICACION:
         marker.bindPopup(Vue.$t("{tipoUbicacion" + marker.tipoUbicacion+"}") + ": " + marker.nombre);
@@ -149,42 +147,16 @@ const MapUtils = {
           var markersAtPoint = this.getMarkersById(map, marker.id);
           var lastData = await ApiService.post('lastDataEstacion/' + marker.id + '?locale=' + Vue.$getLocale(),
           markersAtPoint.map(m => { return m.mapOption.variableType }), true);
-          var comp = new Vue({ ...LastDataPopup, propsData: { marker: marker, data: lastData.data } }).$mount()
-          marker.bindPopup(comp.$el, {
+          marker.lastDataComponent  = new Vue({ ...LastDataPopup, propsData: { marker: marker, data: lastData.data } }).$mount()
+          marker.bindPopup(marker.lastDataComponent.$el, {
             maxWidth: 560
           });
           marker.openPopup();
         }, 250);
 
-        // this.asyncForEach(markersAtPoint, async m => {
-        //   var lastData = await ApiService.get('lastDataEstacion/' + m.id + '/' + m.variable + '?locale=es')
-        //   this.mergeLastDataStations(data, lastData.data);
-        //   if (m.popUp)  {
-        //     var comp = new Vue({...LastDataPopup, propsData: { marker: marker, data: data }}).$mount()
-        //     var html = comp.$el.innerHTML; 
-        //     marker.bindPopup(html, {
-        //       maxWidth : 560
-        //     });
-        //     marker.openPopup();
-        //   }
-        // });
-
         break;
     }
 
-  },
-
-  mergeLastDataStations(orig, source) {
-    var fechaAct = orig['Fecha'];
-    var fechaNew = source['Fecha'];
-    if (!fechaAct || !fechaNew) {
-      Object.assign(orig, source);
-    }
-    else {
-      var fechaMayor = new Date(fechaAct) >= new Date(fechaNew) ? fechaAct : fechaNew;
-      source['Fecha'] = fechaMayor;
-      Object.assign(orig, source);
-    }
   },
 
   closeMarkerPopup(map, marker) {
@@ -192,6 +164,9 @@ const MapUtils = {
     marker.unbindPopup();
     if (!MapState.popupFixed) { 
       MapState.closeHeapedPopup();
+    }
+    if (marker.lastDataComponent) {
+      marker.lastDataComponent.$destroy();
     }
   },
 
@@ -228,6 +203,37 @@ const MapUtils = {
         + ("0" + date.getHours()).slice(-2);
   },
 
+  getDirNameFromDeg(degrees) {
+    degrees = (degrees + 180) % 360;
+        	
+    if (degrees >= 338 || degrees <= 21) {
+      return 'N';
+      
+    } else if (degrees >= 22 && degrees <= 67) {
+      return 'NE';
+      
+    } else if (degrees >= 68 && degrees <= 112) {
+      return 'E';
+      
+    } else if (degrees >= 113 && degrees <= 157) {
+      return 'SE';
+      
+    } else if (degrees >= 158 && degrees <= 202) {
+      return 'S';
+      
+    } else if (degrees >= 203 && degrees <= 247) {
+      return 'SW';
+      
+    } else if (degrees >= 248 && degrees <= 292) {
+      return 'W';
+      
+    } else if (degrees >= 293 && degrees <= 337) {
+      return 'NW';
+    }
+    
+    return 'N';
+  },
+
   async asyncForEach(array, callback) {
     for (let index = 0; index < array.length; index++) {
       await callback(array[index], index, array)
@@ -237,6 +243,35 @@ const MapUtils = {
 }
 
 export default MapUtils
+
+
+
+        // this.asyncForEach(markersAtPoint, async m => {
+        //   var lastData = await ApiService.get('lastDataEstacion/' + m.id + '/' + m.variable + '?locale=es')
+        //   this.mergeLastDataStations(data, lastData.data);
+        //   if (m.popUp)  {
+        //     var comp = new Vue({...LastDataPopup, propsData: { marker: marker, data: data }}).$mount()
+        //     var html = comp.$el.innerHTML; 
+        //     marker.bindPopup(html, {
+        //       maxWidth : 560
+        //     });
+        //     marker.openPopup();
+        //   }
+        // });
+
+  // mergeLastDataStations(orig, source) {
+  //   var fechaAct = orig['Fecha'];
+  //   var fechaNew = source['Fecha'];
+  //   if (!fechaAct || !fechaNew) {
+  //     Object.assign(orig, source);
+  //   }
+  //   else {
+  //     var fechaMayor = new Date(fechaAct) >= new Date(fechaNew) ? fechaAct : fechaNew;
+  //     source['Fecha'] = fechaMayor;
+  //     Object.assign(orig, source);
+  //   }
+  // },
+
 
 
 

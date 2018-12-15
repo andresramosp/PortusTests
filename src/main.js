@@ -39,9 +39,27 @@ async function StartApp() {
     },
     { 
       name: 'predictionWidget', 
-      path: '/predictionWidget', // :resourceId 
+      path: '/predictionWidget', 
       props: true,
       component: () => import('@/views/predictionWidgetView.vue')
+    },
+    { 
+      name: 'locationsWidget', 
+      path: '/locationsWidget', 
+      props: true,
+      component: () => import('@/views/locationsWidgetView.vue')
+    },
+    { 
+      name: 'locationsRTWidget', 
+      path: '/locationsRTWidget', 
+      props: true,
+      component: () => import('@/views/locationsRTWidgetView.vue')
+    },
+    { 
+      name: 'locationsPredWidget', 
+      path: '/locationsPredWidget', 
+      props: true,
+      component: () => import('@/views/locationsPredWidgetView.vue')
     }
   ]
 

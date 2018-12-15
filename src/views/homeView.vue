@@ -6,6 +6,7 @@
    <StaticMapsPanel :mapResource='mapState.staticMapResourceSelected' />
    <UbicacionesPanel />
    <RegionesPanel />
+   <LocationsWidget :ubicacion="mapState.ubicacionSelected" />
    <LogosList :logos="mapState.mapLogos" :defaultLogo="defaultLogo" />
 </div>
 </template>
@@ -19,6 +20,7 @@ import MarkerPanel from "@/components/markerPanel/markerPanel.vue";
 import StaticMapsPanel from "@/components/staticMapsPanel.vue";
 import UbicacionesPanel from "@/components/ubicacionesPanel.vue";
 import RegionesPanel from "@/components/regionesPanel.vue";
+import LocationsWidget from "@/components/locationsWidget/locationsWidget.vue";
 import LogosList from "@/components/logosList.vue";
 import { MapOptions } from '@/common/mapResourceManager';
 import { MapOptionsGroups } from '@/common/mapResourceManager';
@@ -32,6 +34,7 @@ export default {
     StaticMapsPanel,
     UbicacionesPanel,
     RegionesPanel,
+    LocationsWidget,
     LogosList
   },
   data () {
