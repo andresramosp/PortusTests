@@ -5,7 +5,7 @@
       :visible="true"
       :resize-enabled="true"
       :drag-enabled="true"
-      :close-on-outside-click="true"
+      :close-on-outside-click="false"
       :show-title="true"
       :width="1000"
       :height="545"
