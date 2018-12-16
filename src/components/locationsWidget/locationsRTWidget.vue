@@ -2,7 +2,13 @@
     
     <div style="width: 420px;" >
        
-        <b-card :header="$t('{headerTiempoReal}')" >
+        <b-card>
+
+            <div slot="header">
+                <img :src='require("@/assets/icons/shareIcon.png")' class="shareIcon" @click="openShareInfo" />
+                {{$t('{headerTiempoReal}')}}
+            </div>
+          
             <img style="margin-left: 130px" :src="require('@/assets/gifs/loadingBars.gif')" v-show="loading" width="100"  />
            <b-row v-if="!loading" class="fadeIn">
                <b-col>
@@ -105,7 +111,9 @@ export default {
       loading: true,
       vientoRotation: '',
       mapUtils: MapUtils,
-      interval: null
+      interval: null,
+      shareUrl: '{baseUrl}/locationsRTWidget?locationType={locationType}&code={code}',
+      iFrameCode: "<iframe width='430' height='239' src='{shareUrl}' frameborder='0' />"
     };
   },
   props: {
@@ -157,12 +165,31 @@ export default {
       printDate(dateInSecs) {
         var date = new Date(dateInSecs * 1000);
         return date.toLocaleDateString() + ' - ' + date.toISOString().split('T')[1].substr(0, 5) + 'h';
-      }
+      },
+
+      openShareInfo() {
+        var routeData = this.$router.resolve({ path: '/locationsRTWidget', 
+          query: 
+          { 
+            locationType: this.locationType,
+            code: this.code
+          }
+        });
+        window.open(routeData.href, '_blank');
+    },
   }
 };
 </script>
 
 <style scoped>
+
+.shareIcon {
+  margin-top: 2px;
+  float: left;
+  cursor: pointer;
+  width: 19px;
+  margin-right: 6px;
+}
 
 .variableTitle {
     position: absolute; 

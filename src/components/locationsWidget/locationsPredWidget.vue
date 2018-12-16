@@ -1,6 +1,12 @@
 <template>
   <div style="width: 420px;">
-    <b-card :header="$t('{headerPredicciones}')">
+    <b-card>
+
+    <div slot="header">
+        <img :src='require("@/assets/icons/shareIcon.png")' class="shareIcon" @click="openShareInfo" />
+        {{$t('{headerPredicciones}')}}        
+    </div>
+
       <img
         style="margin-left: 130px"
         :src="require('@/assets/gifs/loadingBars.gif')"
@@ -28,7 +34,10 @@
               </div>
               <span v-else class>N/D</span>
             </span>
-            <img :src="vientoImgD1">
+             <img  v-if="vientoRotationD1 != null && !isNaN(vientoRotationD1)" class="winDirName" :src='vientoDirImgD1' />
+             <img class="winDirRotation" :style="'transform: rotate(' + vientoRotationD1 + 'deg)'" :src='require("@/assets/locationsWidget/windDir.png")' />
+             <img :src="vientoImgD1">
+          
           </div>
         </div>
 
@@ -50,6 +59,8 @@
               </div>
               <span v-else class>N/D</span>
             </span>
+             <img  v-if="vientoRotationD2 != null && !isNaN(vientoRotationD2)" class="winDirName" :src='vientoDirImgD2' />
+             <img class="winDirRotation" :style="'transform: rotate(' + vientoRotationD2 + 'deg)'" :src='require("@/assets/locationsWidget/windDir.png")' />
             <img :src="vientoImgD2">
           </div>
         </div>
@@ -71,6 +82,8 @@
               </div>
               <span v-else class>N/D</span>
             </span>
+            <img  v-if="vientoRotationD3 != null && !isNaN(vientoRotationD3)" class="winDirName" :src='vientoDirImgD3' />
+            <img class="winDirRotation" :style="'transform: rotate(' + vientoRotationD3 + 'deg)'" :src='require("@/assets/locationsWidget/windDir.png")' />
             <img :src="vientoImgD3">
           </div>
         </div>
@@ -286,8 +299,16 @@ export default {
       vientoImgD2: null,
       oleajeImgD3: null,
       vientoImgD3: null,
+      vientoRotationD1: null,
+      vientoRotationD2: null,
+      vientoRotationD3: null,
+      vientoDirImgD1: null,
+      vientoDirImgD1: null,
+      vientoDirImgD1: null,
       loading: true,
-      interval: null
+      interval: null,
+      shareUrl: '{baseUrl}/locationsPredWidget?locationType={locationType}&code={code}',
+      iFrameCode: "<iframe width='430' height='239' src='{shareUrl}' frameborder='0' />"
     };
   },
   props: {
@@ -320,6 +341,7 @@ export default {
         this['fechaD' + count] = this.printDate(fecha);
         this['oleajeD' + count] = parseFloat(data[fecha][0].mt_hm0).toFixed(1);
         this['vientoD' + count] = parseFloat(data[fecha][0].vv_imd *  0.27777).toFixed(1);
+        this['vientoRotationD' + count] = parseFloat(data[fecha][0].vv_dmd);
         this['plea1DateD' + count] = this.printHour(data[fecha][0].high_tide1_date)
         this['plea1LevelD' + count] = parseFloat(data[fecha][0].high_tide1_level).toFixed(2);
         this['plea2DateD' + count] = this.printHour(data[fecha][0].high_tide2_date)
@@ -330,6 +352,7 @@ export default {
         this['baja2LevelD' + count] = parseFloat(data[fecha][0].low_tide2_level).toFixed(2);
         this['oleajeImgD' + count] = require("@/assets/locationsWidget/surfP_" + data[fecha][0].alert_surf + ".png");
         this['vientoImgD' + count] = require("@/assets/locationsWidget/windP_" +  data[fecha][0].alert_wind + ".png");
+        this['vientoDirImgD' + count] = require("@/assets/locationsWidget/" + this.mapUtils.getDirNameFromDeg(this['vientoRotationD' + count]).toLowerCase() + "_w.png");
         count++;
       }
       
@@ -346,12 +369,33 @@ export default {
     printHour(dateInSecs) {
         var date = new Date(dateInSecs * 1000);
         return date.toISOString().split('T')[1].substr(0, 5) + 'h';
-      }
+      },
+
+    openShareInfo() {
+      var routeData = this.$router.resolve({ path: '/locationsPredWidget', 
+        query: 
+        { 
+          locationType: this.locationType,
+          code: this.code
+        }
+      });
+      window.open(routeData.href, '_blank');
+    }
+
   }
 };
 </script>
 
 <style scoped>
+
+.shareIcon {
+  margin-top: 2px;
+  float: left;
+  cursor: pointer;
+  width: 19px;
+  margin-right: 6px;
+}
+
 .noPaddingCol {
   padding-right: 0px;
   padding-left: 0px;
@@ -442,16 +486,16 @@ export default {
   /* margin-top: -80px; 
     margin-left: -2px;  */
   position: absolute;
-  margin-left: -109px;
-  margin-top: 17px;
+  margin-left: -4px;
+  margin-top: -7px;
 }
 
 .winDirName {
   /* margin-top: -80px; 
     margin-left: -2px;  */
   position: absolute;
-  margin-left: -106px;
-  margin-top: 20px;
+  margin-left: -3px;
+  margin-top: -2px;
 }
 
 .card-body {

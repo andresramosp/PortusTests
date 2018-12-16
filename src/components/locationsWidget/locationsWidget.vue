@@ -13,16 +13,14 @@
       :title="titulo"
       class="popup"
       @hidden="cerrar"
-      
+      title-template="titleTemplate"
     >
-      <!-- title-template="titleTemplate" -->
-       <!-- <div slot="titleTemplate" slot-scope="title" style="font-size: 15px; background: #606060; color: white">
+      
+       <div slot="titleTemplate" slot-scope="title" style="font-size: 15px; background: #606060; color: white">
             {{titulo}} 
-        </div> -->
-
-     <!-- <dx-toolbar-item
-        text="Title"
-        location="before" /> -->
+           <span @click="cerrar" style="float:right; cursor:pointer">x</span>
+           <img :src='require("@/assets/icons/shareIcon.png")' class="shareIcon" @click="openShareInfo" />
+        </div>
 
       <b-row>
         <b-col cols="5">
@@ -79,7 +77,9 @@ export default {
       align: PC.options_panel_align,
       theme: PC.color_theme,
       mapState: MapState,
-      titulo: ''
+      titulo: '',
+      shareUrl: '{baseUrl}/locationsWidget?locale={locale}&code={code}',
+      iFrameCode: "<iframe width='1040' height='570' src='{shareUrl}' frameborder='0' />"
     };
   },
    props: {
@@ -104,6 +104,16 @@ export default {
      
   },
   methods: {
+    openShareInfo() {
+        var routeData = this.$router.resolve({ path: '/locationsWidget', 
+          query: 
+          { 
+            locale: this.$getLocale(),
+            code: this.ubicacion.id
+          }
+        });
+        window.open(routeData.href, '_blank');
+    },
     cerrar() {
       MapState.ubicacionSelected = null;
     }
@@ -113,9 +123,13 @@ export default {
 
 <style scoped>
 
-/* .dx-popup-title.dx-toolbar .dx-toolbar-label {
-    font-size: 15px !important;
-} */
 
+.shareIcon {
+  margin-top: 2px;
+  float: right;
+  cursor: pointer;
+  width: 19px;
+  margin-right: 6px;
+}
 
 </style>
