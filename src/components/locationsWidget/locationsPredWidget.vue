@@ -15,22 +15,20 @@
           <div class="variableSection">
             <span class="variableValue">
               <div v-if="oleajeD1 != null && !isNaN(oleajeD1)">
-                {{oleajeD1}}
-                <span class="variableUnit">m</span>
+                {{oleajeD1}}<span class="variableUnit">m*</span>
               </div>
               <span v-else class>N/D</span>
             </span>
-            <img :src="oleajeImg">
+            <img :src="oleajeImgD1">
           </div>
           <div class="variableSection">
-            <span class="variableValue">
+            <span class="variableValueSm">
               <div v-if="vientoD1 != null && !isNaN(vientoD1)">
-                {{vientoD1}}
-                <span class="variableUnit">m/s</span>
+                {{vientoD1}}<span class="variableUnit">m/s</span>
               </div>
               <span v-else class>N/D</span>
             </span>
-            <img :src="vientoImg">
+            <img :src="vientoImgD1">
           </div>
         </div>
 
@@ -39,22 +37,20 @@
           <div class="variableSection">
             <span class="variableValue">
               <div v-if="oleajeD2 != null && !isNaN(oleajeD2)">
-                {{oleajeD2}}
-                <span class="variableUnit">m</span>
+                {{oleajeD2}}<span class="variableUnit">m*</span>
               </div>
               <span v-else class>N/D</span>
             </span>
-            <img :src="oleajeImg">
+            <img :src="oleajeImgD2">
           </div>
           <div class="variableSection">
-            <span class="variableValue">
+            <span class="variableValueSm">
               <div v-if="vientoD2 != null && !isNaN(vientoD2)">
-                {{vientoD2}}
-                <span class="variableUnit">m/s</span>
+                {{vientoD2}}<span class="variableUnit">m/s</span>
               </div>
               <span v-else class>N/D</span>
             </span>
-            <img :src="vientoImg">
+            <img :src="vientoImgD2">
           </div>
         </div>
         <div class="variableBGSection" style="background-color: #e8ebf1;">
@@ -62,29 +58,28 @@
           <div class="variableSection">
             <span class="variableValue">
               <div v-if="oleajeD3 != null && !isNaN(oleajeD3)">
-                {{oleajeD3}}
-                <span class="variableUnit">m</span>
+                {{oleajeD3}}<span class="variableUnit">m*</span>
               </div>
               <span v-else class>N/D</span>
             </span>
-            <img :src="oleajeImg">
+            <img :src="oleajeImgD3">
           </div>
           <div class="variableSection">
-            <span class="variableValue">
+            <span class="variableValueSm">
               <div v-if="vientoD3 != null && !isNaN(vientoD3)">
-                {{vientoD3}}
-                <span class="variableUnit">m/s</span>
+                {{vientoD3}}<span class="variableUnit">m/s</span>
               </div>
               <span v-else class>N/D</span>
             </span>
-            <img :src="vientoImg">
+            <img :src="vientoImgD3">
           </div>
         </div>
       </div>
+      <span style="float: left; font-size: 9.5px">* En aguas abiertas</span>
     </b-card>
  
    <div v-if="!loading" class="fadeIn">  
-         <div class="pleaBajaSection" style="margin-left: 35px;">
+      <div class="pleaBajaSection" style="margin-left: 35px;">
       <b-row>
         <b-col cols="2" style="padding-top: 7px">
           <div style="font-weight: bold">plea
@@ -97,12 +92,14 @@
         <b-col>
           <b-row>
             <b-col>
-              <span>{{plea1DateD1}} ({{plea1LevelD1}}m)</span>
+               <span v-if="plea1LevelD1 != null && !isNaN(plea1LevelD1)">{{plea1DateD1}} ({{plea1LevelD1}}m)</span>
+               <span v-else>{{plea1DateD1}} (nd)</span>
             </b-col>
           </b-row>
           <b-row>
             <b-col>
-              <span>{{plea2DateD1}} ({{plea2LevelD1}}m)</span>
+              <span v-if="plea2LevelD1 != null && !isNaN(plea2LevelD1)">{{plea2DateD1}} ({{plea2LevelD1}}m)</span>
+               <span v-else>{{plea2DateD1}} (nd)</span>
             </b-col>
           </b-row>
         </b-col>
@@ -119,17 +116,20 @@
         <b-col>
           <b-row>
             <b-col>
-              <span>{{baja1DateD1}} ({{baja1LevelD1}}m)</span>
+              <span v-if="baja1LevelD1 != null && !isNaN(baja1LevelD1)">{{baja1DateD1}} ({{baja1LevelD1}}m)</span>
+               <span v-else>{{baja1DateD1}} (nd)</span>
             </b-col>
           </b-row>
           <b-row>
             <b-col>
-               <span>{{baja2DateD1}} ({{baja2LevelD1}}m)</span>
+               <span v-if="baja2LevelD1 != null && !isNaN(baja2LevelD1)">{{baja2DateD1}} ({{baja2LevelD1}}m)</span>
+               <span v-else>{{baja2DateD1}} (nd)</span>
             </b-col>
           </b-row>
         </b-col>
       </b-row>
     </div>
+    
 
     <div class="pleaBajaSection" style="margin-left: 154px;">
       <b-row>
@@ -144,12 +144,14 @@
         <b-col>
           <b-row>
             <b-col>
-              <span>{{plea1DateD2}} ({{plea1LevelD2}}m)</span>
+              <span v-if="plea1LevelD2 != null && !isNaN(plea1LevelD2)">{{plea1DateD2}} ({{plea1LevelD2}}m)</span>
+               <span v-else>{{plea1DateD2}} (nd)</span>
             </b-col>
           </b-row>
           <b-row>
             <b-col>
-              <span>{{plea2DateD2}} ({{plea2LevelD2}}m)</span>
+              <span v-if="plea2LevelD2 != null && !isNaN(plea2LevelD2)">{{plea2DateD2}} ({{plea2LevelD2}}m)</span>
+               <span v-else>{{plea2DateD2}} (nd)</span>
             </b-col>
           </b-row>
         </b-col>
@@ -166,12 +168,14 @@
         <b-col>
           <b-row>
             <b-col>
-               <span>{{baja1DateD2}} ({{baja1LevelD2}}m)</span>
+                <span v-if="baja1LevelD2 != null && !isNaN(baja1LevelD2)">{{baja1DateD2}} ({{baja1LevelD2}}m)</span>
+               <span v-else>{{baja1DateD2}} (nd)</span>
             </b-col>
           </b-row>
           <b-row>
             <b-col>
-              <span>{{baja2DateD2}} ({{baja2LevelD2}}m)</span>
+                <span v-if="baja2LevelD2 != null && !isNaN(baja2LevelD2)">{{baja2DateD2}} ({{baja2LevelD2}}m)</span>
+               <span v-else>{{baja2DateD2}} (nd)</span>
             </b-col>
           </b-row>
         </b-col>
@@ -191,12 +195,14 @@
           <b-col>
           <b-row>
             <b-col>
-              <span>{{plea1DateD3}} ({{plea1LevelD3}}m)</span>
+               <span v-if="plea1LevelD3 != null && !isNaN(plea1LevelD3)">{{plea1DateD3}} ({{plea1LevelD3}}m)</span>
+               <span v-else>{{plea1DateD3}} (nd)</span>
             </b-col>
           </b-row>
           <b-row>
             <b-col>
-              <span>{{plea2DateD3}} ({{plea2LevelD3}}m)</span>
+              <span v-if="plea2LevelD3 != null && !isNaN(plea2LevelD3)">{{plea2DateD3}} ({{plea2LevelD3}}m)</span>
+              <span v-else>{{plea2DateD3}} (nd)</span>
             </b-col>
           </b-row>
         </b-col>
@@ -213,12 +219,14 @@
           <b-col>
           <b-row>
             <b-col>
-              <span>{{baja1DateD3}} ({{baja1LevelD3}}m)</span>
+               <span v-if="baja1LevelD3 != null && !isNaN(baja1LevelD3)">{{baja1DateD3}} ({{baja1LevelD3}}m)</span>
+               <span v-else>{{baja1DateD3}} (nd)</span>
             </b-col>
           </b-row>
           <b-row>
             <b-col>
-              <span>{{baja2DateD3}} ({{baja2LevelD3}}m)</span>
+              <span v-if="baja2LevelD3 != null && !isNaN(baja2LevelD3)">{{baja2DateD3}} ({{baja2LevelD3}}m)</span>
+               <span v-else>{{baja2DateD3}} (nd)</span>
             </b-col>
           </b-row>
         </b-col>
@@ -248,7 +256,6 @@ export default {
       vientoD1: null,
       vientoD2: null,
       vientoD3: null,
-      oleajeImg: null,
       plea1DateD1: null,
       plea1LevelD1: null,
       plea2DateD1: null,
@@ -273,7 +280,12 @@ export default {
       baja1LevelD3: null,
       baja2DateD3: null,
       baja2LevelD3: null,
-      vientoImg: null,
+      oleajeImgD1: null,
+      vientoImgD1: null,
+      oleajeImgD2: null,
+      vientoImgD2: null,
+      oleajeImgD3: null,
+      vientoImgD3: null,
       loading: true,
       interval: null
     };
@@ -307,7 +319,7 @@ export default {
       for (var fecha in data) {
         this['fechaD' + count] = this.printDate(fecha);
         this['oleajeD' + count] = parseFloat(data[fecha][0].mt_hm0).toFixed(1);
-        this['vientoD' + count] = parseFloat(data[fecha][0].vv_imd *  0.27777).toFixed(2);
+        this['vientoD' + count] = parseFloat(data[fecha][0].vv_imd *  0.27777).toFixed(1);
         this['plea1DateD' + count] = this.printHour(data[fecha][0].high_tide1_date)
         this['plea1LevelD' + count] = parseFloat(data[fecha][0].high_tide1_level).toFixed(2);
         this['plea2DateD' + count] = this.printHour(data[fecha][0].high_tide2_date)
@@ -316,10 +328,11 @@ export default {
         this['baja1LevelD' + count] = parseFloat(data[fecha][0].low_tide1_level).toFixed(2);
         this['baja2DateD' + count] = this.printHour(data[fecha][0].low_tide2_date)
         this['baja2LevelD' + count] = parseFloat(data[fecha][0].low_tide2_level).toFixed(2);
+        this['oleajeImgD' + count] = require("@/assets/locationsWidget/surfP_" + data[fecha][0].alert_surf + ".png");
+        this['vientoImgD' + count] = require("@/assets/locationsWidget/windP_" +  data[fecha][0].alert_wind + ".png");
         count++;
       }
-      this.oleajeImg = require("@/assets/locationsWidget/prueba.png"); //require("@/assets/locationsWidget/surfP_" + 1 + ".png");
-      this.vientoImg = require("@/assets/locationsWidget/prueba2.png");
+      
       this.loading = false;
     },
 
@@ -346,19 +359,14 @@ export default {
 
 .pleaBajaSection {
   position: absolute;
-  margin-top: -83px;
+  margin-top: -92px;
   font-size: 11px;
-}
-
-.pleaBajaSection {
-  position: absolute;
-  margin-top: -83px;
 }
 
 .variableSection {
   background-color: white;
   width: 45px;
-  border-radius: 15px;
+  border-radius: 21px;
   float: left;
   margin-right: 7px;
 }
@@ -390,28 +398,26 @@ export default {
   color: white;
   font-weight: 600;
   font-size: 11.5px;
-  margin-left: 6.5px;
-  margin-top: 45px;
+  margin-left: 7.5px;
+  margin-top: 45.5px;
 }
 
 .variableValueSm {
+  position: absolute;
   color: white;
   font-weight: 600;
-  border-radius: 5px;
-  font-size: 15px;
-  background: #6683b3;
-  padding: 4px 6px;
-  margin-left: 118px;
+  font-size: 11.5px;
+  margin-left: 5px;
+  margin-top: 45.5px;
 }
 
 .variableUnit {
   /* position: absolute; */
   color: #ffc100;
   font-weight: normal;
-  font-size: 12px;
+  font-size: 11.5px;
   font-style: italic;
-  /* margin-top: -3px;
-  margin-left: 4px; */
+  margin-left: 1.5px;
 }
 
 .variableDate {

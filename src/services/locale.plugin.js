@@ -315,6 +315,18 @@ const LocalePlugin = {
         headerPredicciones: {
             es: "Predicciones: extremos diarios",
             en: "Forecasts: daily extremes"
+        },
+        headerGraficos: {
+            es: "Gráficos",
+            en: "Graphics"
+        },
+        locationsWidgetTitle1: {
+            es: "Previsiones y estado actual del mar en",
+            en: "Forecasts and current state of the sea in"
+        },
+        locationsWidgetTitle2: {
+            es: "Todas las horas son GMT",
+            en: "All times are GMT"
         }
     },
    

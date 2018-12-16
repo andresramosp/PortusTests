@@ -200,7 +200,7 @@ export default {
 }
 
 .variableUnit {
-    position: absolute; 
+    /* position: absolute;  */
     color:#ffc100; 
     font-weight: normal;
     font-size: 14px;

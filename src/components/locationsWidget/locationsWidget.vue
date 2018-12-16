@@ -7,20 +7,25 @@
       :drag-enabled="true"
       :close-on-outside-click="false"
       :show-title="true"
-      :width="1000"
-      :height="545"
+      :width="1020"
+      :height="553"
       :shading="false"
-      class="popup"
       :title="titulo"
+      class="popup"
       @hidden="cerrar"
-    >
       
+    >
+      <!-- title-template="titleTemplate" -->
+       <!-- <div slot="titleTemplate" slot-scope="title" style="font-size: 15px; background: #606060; color: white">
+            {{titulo}} 
+        </div> -->
+
      <!-- <dx-toolbar-item
         text="Title"
         location="before" /> -->
 
       <b-row>
-        <b-col >
+        <b-col cols="5">
           <b-row>
             <b-col>
                <LocationsRTWidget :locationType='ubicacion.tipoUbicacion' :code="ubicacion.id" />
@@ -41,7 +46,7 @@
           </b-row>
         </b-col>
           <b-col>
-            <!-- Gráficas -->
+            <LocationsGraphsWidget :locationType='ubicacion.tipoUbicacion' :code="ubicacion.id" />
         </b-col>
       </b-row>
 
@@ -57,6 +62,7 @@ import ApiService from "@/services/api.service";
 import { DxPopup, DxToolbarItem } from 'devextreme-vue/popup';
 import LocationsRTWidget from "@/components/locationsWidget/locationsRTWidget.vue";
 import LocationsPredWidget from "@/components/locationsWidget/locationsPredWidget.vue";
+import LocationsGraphsWidget from "@/components/locationsWidget/locationsGraphsWidget.vue";
 
 export default {
   name: "LocationsWidget",
@@ -64,7 +70,8 @@ export default {
     DxPopup,
     DxToolbarItem,
     LocationsRTWidget,
-    LocationsPredWidget
+    LocationsPredWidget,
+    LocationsGraphsWidget
   },
   data() {
     return {
@@ -82,7 +89,11 @@ export default {
     ubicacion: function() {
       if (this.ubicacion != null) {
         // TODO: puerto / localidad de...
-        this.titulo = 'Previsiones y estado actual del mar en ' + this.ubicacion.tipoUbicacion.toLowerCase() + ' de ' + this.ubicacion.nombre;
+        this.titulo = this.$t('{locationsWidgetTitle1}')
+        // + this.ubicacion.tipoUbicacion.toLowerCase() 
+        // + ' de ' 
+        + ' ' + this.ubicacion.nombre
+        + '. ' +  this.$t('{locationsWidgetTitle2}');
       }
     }
   },
@@ -101,6 +112,10 @@ export default {
 </script>
 
 <style scoped>
+
+/* .dx-popup-title.dx-toolbar .dx-toolbar-label {
+    font-size: 15px !important;
+} */
 
 
 </style>
