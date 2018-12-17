@@ -3,7 +3,10 @@
     <b-card>
 
     <div slot="header">
-        <img :src='require("@/assets/icons/shareIcon.png")' class="shareIcon" @click="openShareInfo" />
+        <img :src='require("@/assets/icons/shareIcon.png")' class="shareIcon"  
+          @click="toggleShareInfo"
+          @mouseover="openShareInfo"
+          @mouseout="closeShareInfo" />
         {{$t('{headerPredicciones}')}}        
     </div>
 
@@ -13,7 +16,10 @@
         v-show="loading"
         width="100"
       >
-      <div v-if="!loading" class="fadeIn">
+
+      <ShareInfoPanel @shareinfo-mouseover="openShareInfo" @shareinfo-mouseout="closeShareInfo" :routeData="routeData" v-show="displayShareInfo"/>
+
+      <div v-if="!displayShareInfo && !loading" class="fadeIn">
         <img :src="require('@/assets/locationsWidget/header_pred.png')" width="360">
 
         <div class="variableBGSection" style="background-color: #bdc9dc;">
@@ -91,7 +97,7 @@
       <span style="float: left; font-size: 9.5px">* En aguas abiertas</span>
     </b-card>
  
-   <div v-if="!loading" class="fadeIn">  
+   <div v-if="!displayShareInfo && !loading" class="fadeIn">  
       <div class="pleaBajaSection" style="margin-left: 35px;">
       <b-row>
         <b-col cols="2" style="padding-top: 7px">
@@ -254,9 +260,13 @@
 <script>
 import Vue from "vue";
 import MapUtils from "@/services/map.utils";
+import ShareInfoPanel from "@/components/locationsWidget/shareInfoPanel.vue";
 
 export default {
   name: "LocationsPredWidget",
+  components: {
+    ShareInfoPanel
+  },
   data() {
     return {
       mapUtils: MapUtils,
@@ -307,8 +317,7 @@ export default {
       vientoDirImgD1: null,
       loading: true,
       interval: null,
-      shareUrl: '{baseUrl}/locationsPredWidget?locationType={locationType}&code={code}',
-      iFrameCode: "<iframe width='430' height='239' src='{shareUrl}' frameborder='0' />"
+      displayShareInfo: false
     };
   },
   props: {
@@ -317,6 +326,15 @@ export default {
   },
   computed: {},
   created() {
+
+    this.routeData = this.$router.resolve({ path: '/locationsPredWidget', 
+        query: 
+        { 
+          locationType: this.locationType,
+          code: this.code
+        }
+      });
+
     this.getData();
     this.interval = setInterval(() => {
       this.getData();
@@ -371,16 +389,25 @@ export default {
         return date.toISOString().split('T')[1].substr(0, 5) + 'h';
       },
 
-    openShareInfo() {
-      var routeData = this.$router.resolve({ path: '/locationsPredWidget', 
-        query: 
-        { 
-          locationType: this.locationType,
-          code: this.code
-        }
-      });
-      window.open(routeData.href, '_blank');
-    }
+    toggleShareInfo() {
+        this.displayShareInfo = !this.displayShareInfo;
+      },
+
+     openShareInfo() {
+        if (this.timeOutShareInfoClose)
+            clearInterval(this.timeOutShareInfoClose)
+         this.timeOutShareInfoOpen = setTimeout(() => {
+            this.displayShareInfo = true; 
+        }, 500)
+      },
+
+    closeShareInfo() {
+        if (this.timeOutShareInfoOpen)
+            clearInterval(this.timeOutShareInfoOpen)
+        this.timeOutShareInfoClose = setTimeout(() => {
+            this.displayShareInfo = false; 
+        }, 500)
+    },
 
   }
 };

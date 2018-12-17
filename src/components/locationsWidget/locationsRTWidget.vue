@@ -1,95 +1,138 @@
 <template>
-    
-    <div style="width: 420px;" >
-       
-        <b-card>
+  <div style="width: 420px;">
+    <b-card>
+      <div slot="header">
+        <img
+          :src='require("@/assets/icons/shareIcon.png")'
+          class="shareIcon"
+          @click="toggleShareInfo"
+          @mouseover="openShareInfo"
+          @mouseout="closeShareInfo"
+        >
+        {{$t('{headerTiempoReal}')}}
+      </div>
 
-            <div slot="header">
-                <img :src='require("@/assets/icons/shareIcon.png")' class="shareIcon" @click="openShareInfo" />
-                {{$t('{headerTiempoReal}')}}
-            </div>
-          
-            <img style="margin-left: 130px" :src="require('@/assets/gifs/loadingBars.gif')" v-show="loading" width="100"  />
-           <b-row v-if="!loading" class="fadeIn">
-               <b-col>
-                   <span class="variableTitle">{{ $t('{variableOleaje}') }}</span>
-                   <span class="variableValue">
-                       <div v-if="oleaje != null && !isNaN(oleaje)">
-                            {{oleaje}}<span class="variableUnit">m</span>
-                        </div>
-                        <span v-else class="">N/D</span>
-                    </span>
-                   <span class="variableDate">{{oleajeDate}}</span>
-                   <img :src='oleajeImg' />
-                   
-               </b-col>
-                <b-col>
-                    <span class="variableTitle">{{ $t('{variableNivMar}') }}</span>
-                    <span class="variableValue">
-                        <div v-if="nivMar != null && !isNaN(nivMar)">
-                            {{nivMar}}<span class="variableUnit">m</span>
-                        </div>
-                        <span v-else class="">N/D</span>
-                    </span>
-                    <span class="variableDate">{{nivMarDate}}</span>
-                    <img :src='nivMarImg' />
-               </b-col>
-                <b-col>
-                    <span class="variableTitle">{{ $t('{variableViento}') }}</span>
-                    <span class="variableValue">
-                        <div v-if="viento != null && !isNaN(viento)">
-                            {{viento}}<span class="variableUnit">m/s</span>
-                        </div>
-                        <span v-else class="">N/D</span>
-                    </span>
-                    <span class="variableDate">{{vientoDate}}</span>
-                    <img :src='vientoImg' />
-                    <img  v-if="vientoRotation != null && !isNaN(vientoRotation)" class="winDirName" :src='vientoDirImg' />
-                    <img class="winDirRotation" :style="'transform: rotate(' + vientoRotation + 'deg)'" :src='require("@/assets/locationsWidget/windDir.png")' />
-               </b-col>
-           </b-row>
-           <div v-if="showExtraData && !loading" class="fadeIn">
-            <b-row style="margin-top: 25px">
-               <b-col cols="6">
-                   <span class="variableTitleSm" >{{ $t('{variableTempAgua}') }}:</span>
-                   <span class="variableDateSm">{{tempAguaDate}}</span>
-                   <span v-if="tempAgua != null && !isNaN(tempAgua)" class="variableValueSm" >
-                      {{tempAgua}}<span >ºC</span>
-                    </span>
-                    <span v-else class="variableValueSm">N/D</span>
-               </b-col>
-               <b-col>
-                   <span class="variableTitleSm" >{{ $t('{variablePeriodoMedOleaje}') }}:</span>
-                   <span class="variableDateSm">{{oleajeDate}}</span>
-                    <span v-if="periodoMedioOleaje != null && !isNaN(periodoMedioOleaje)" class="variableValueSm" >
-                      {{periodoMedioOleaje}}<span >s</span>
-                    </span>
-                    <span v-else class="variableValueSm">N/D</span>
-               </b-col>
-           </b-row>
-             <b-row style="margin-top: 15px">
-               <b-col cols="12">
-                   <span class="variableTitleSm" >{{ $t('{variablePresionAtm}') }}:</span>
-                   <span class="variableDateSm">{{presionAtmDate}}</span>
-                     <span v-if="presionAtm != null && !isNaN(presionAtm)" class="variableValueSm" >
-                      {{presionAtm}}<span >mb</span>
-                    </span>
-                    <span v-else class="variableValueSm">N/D</span>
-               </b-col>
-           </b-row>
-           </div>
-            <img v-if="showLogo && !loading" :src="defaultLogo" class="fadeIn" style="margin-top: 25px; float: right" />
-        </b-card>
-    </div>
+      <img
+        style="margin-left: 130px"
+        :src="require('@/assets/gifs/loadingBars.gif')"
+        v-show="loading"
+        width="100"
+      >
+
+      <ShareInfoPanel 
+            @shareinfo-mouseover="openShareInfo" 
+            @shareinfo-mouseout="closeShareInfo" 
+            :routeData="routeData" 
+            v-show="displayShareInfo"
+        />
+
+      <div v-show="!displayShareInfo">
+        <b-row v-if="!loading" class="fadeIn">
+          <b-col>
+            <span class="variableTitle">{{ $t('{variableOleaje}') }}</span>
+            <span class="variableValue">
+              <div v-if="oleaje != null && !isNaN(oleaje)">
+                {{oleaje}}
+                <span class="variableUnit">m</span>
+              </div>
+              <span v-else class>N/D</span>
+            </span>
+            <span class="variableDate">{{oleajeDate}}</span>
+            <img :src="oleajeImg">
+          </b-col>
+          <b-col>
+            <span class="variableTitle">{{ $t('{variableNivMar}') }}</span>
+            <span class="variableValue">
+              <div v-if="nivMar != null && !isNaN(nivMar)">
+                {{nivMar}}
+                <span class="variableUnit">m</span>
+              </div>
+              <span v-else class>N/D</span>
+            </span>
+            <span class="variableDate">{{nivMarDate}}</span>
+            <img :src="nivMarImg">
+          </b-col>
+          <b-col>
+            <span class="variableTitle">{{ $t('{variableViento}') }}</span>
+            <span class="variableValue">
+              <div v-if="viento != null && !isNaN(viento)">
+                {{viento}}
+                <span class="variableUnit">m/s</span>
+              </div>
+              <span v-else class>N/D</span>
+            </span>
+            <span class="variableDate">{{vientoDate}}</span>
+            <img :src="vientoImg">
+            <img
+              v-if="vientoRotation != null && !isNaN(vientoRotation)"
+              class="winDirName"
+              :src="vientoDirImg"
+            >
+            <img
+              class="winDirRotation"
+              :style="'transform: rotate(' + vientoRotation + 'deg)'"
+              :src='require("@/assets/locationsWidget/windDir.png")'
+            >
+          </b-col>
+        </b-row>
+        <div v-if="showExtraData && !loading" class="fadeIn">
+          <b-row style="margin-top: 25px">
+            <b-col cols="6">
+              <span class="variableTitleSm">{{ $t('{variableTempAgua}') }}:</span>
+              <span class="variableDateSm">{{tempAguaDate}}</span>
+              <span v-if="tempAgua != null && !isNaN(tempAgua)" class="variableValueSm">
+                {{tempAgua}}
+                <span>ºC</span>
+              </span>
+              <span v-else class="variableValueSm">N/D</span>
+            </b-col>
+            <b-col>
+              <span class="variableTitleSm">{{ $t('{variablePeriodoMedOleaje}') }}:</span>
+              <span class="variableDateSm">{{oleajeDate}}</span>
+              <span
+                v-if="periodoMedioOleaje != null && !isNaN(periodoMedioOleaje)"
+                class="variableValueSm"
+              >
+                {{periodoMedioOleaje}}
+                <span>s</span>
+              </span>
+              <span v-else class="variableValueSm">N/D</span>
+            </b-col>
+          </b-row>
+          <b-row style="margin-top: 15px">
+            <b-col cols="12">
+              <span class="variableTitleSm">{{ $t('{variablePresionAtm}') }}:</span>
+              <span class="variableDateSm">{{presionAtmDate}}</span>
+              <span v-if="presionAtm != null && !isNaN(presionAtm)" class="variableValueSm">
+                {{presionAtm}}
+                <span>mb</span>
+              </span>
+              <span v-else class="variableValueSm">N/D</span>
+            </b-col>
+          </b-row>
+        </div>
+        <img
+          v-if="showLogo && !loading"
+          :src="defaultLogo"
+          class="fadeIn"
+          style="margin-top: 25px; float: right"
+        >
+      </div>
+    </b-card>
+  </div>
 </template>
 
 <script>
 
 import Vue from 'vue'
 import MapUtils from "@/services/map.utils";
+import ShareInfoPanel from "@/components/locationsWidget/shareInfoPanel.vue";
 
 export default {
   name: "LocationsRTWidget",
+  components: {
+    ShareInfoPanel
+  },
   data() {
     return {
       defaultLogo: PC.default_map_logo,
@@ -112,8 +155,8 @@ export default {
       vientoRotation: '',
       mapUtils: MapUtils,
       interval: null,
-      shareUrl: '{baseUrl}/locationsRTWidget?locationType={locationType}&code={code}',
-      iFrameCode: "<iframe width='430' height='239' src='{shareUrl}' frameborder='0' />"
+      routeData: null,
+      displayShareInfo: false
     };
   },
   props: {
@@ -130,6 +173,14 @@ export default {
       this.interval = setInterval(() => {
         this.getData();
       }, 5000);
+
+      this.routeData = this.$router.resolve({ path: '/locationsRTWidget', 
+          query: 
+          { 
+            locationType: this.locationType,
+            code: this.code
+          }
+      });
   },
   beforeDestroy() {
       clearInterval(this.interval);
@@ -167,16 +218,25 @@ export default {
         return date.toLocaleDateString() + ' - ' + date.toISOString().split('T')[1].substr(0, 5) + 'h';
       },
 
+      toggleShareInfo() {
+        this.displayShareInfo = !this.displayShareInfo;
+      },
+
       openShareInfo() {
-        var routeData = this.$router.resolve({ path: '/locationsRTWidget', 
-          query: 
-          { 
-            locationType: this.locationType,
-            code: this.code
-          }
-        });
-        window.open(routeData.href, '_blank');
-    },
+        if (this.timeOutShareInfoClose)
+            clearInterval(this.timeOutShareInfoClose)
+         this.timeOutShareInfoOpen = setTimeout(() => {
+            this.displayShareInfo = true; 
+        }, 500)
+      },
+
+      closeShareInfo() {
+        if (this.timeOutShareInfoOpen)
+            clearInterval(this.timeOutShareInfoOpen)
+        this.timeOutShareInfoClose = setTimeout(() => {
+            this.displayShareInfo = false; 
+        }, 500)
+      },
   }
 };
 </script>
