@@ -228,8 +228,8 @@ const LocalePlugin = {
         },
         // markers heaped tooltip
         markersProximosTitulo: {
-            es: "Markers muy próximos",
-            en: "Markers too close"
+            es: "Estaciones muy próximas",
+            en: "Stations too close"
         },
         markersProximosText: {
             es: "Haga zoom para verlos o seleccione para acceso a datos",

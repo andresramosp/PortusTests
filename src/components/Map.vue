@@ -5,8 +5,8 @@
     <img class="loaderGif" :src="require('@/assets/gifs/loadingBars.gif')" v-show="loading" width="100"  /> <!-- width="70" height="70" -->
     <div v-show="playingTimeLineLayer">
        <img :src="mapState.predictionScaleImg" class="predictionScale fadeIn" />
-       <img v-show='predictionWidget' class="predictionWidgetIcon fadeIn" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
-       <img v-show='staticMapsWidget && hasStaticMaps' class="staticMapsWidgetIcon fadeIn" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
+       <!-- <img v-show='predictionWidget' class="predictionWidgetIcon fadeIn" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
+       <img v-show='staticMapsWidget && hasStaticMaps' class="staticMapsWidgetIcon fadeIn" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" /> -->
     </div>
    </div>
 

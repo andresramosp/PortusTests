@@ -21,6 +21,7 @@
 </template>
 
 <script>
+
 import MapState from "@/state/map.state";
 
 export default {
@@ -66,7 +67,7 @@ export default {
       var vm = this;
 
       this.mapState.getActiveMapOptions().forEach(opt => {
-          if (opt.mapResources.length > 1 || opt.mapResources[0].groupLayersBy) {
+          if (opt.mapResources.length > 1 || MapState.getMapResource(opt.mapResources[0]).groupLayersBy) {
             opt.mapResources.forEach(resId => {
                 var layersResouce = vm.mapState.getActiveLayers().filter(l => l.mapResource.id == resId)
                 layersResouce.forEach(layer => {
@@ -89,7 +90,7 @@ export default {
     },
 
     toggleVectorial: function(mapResourceId, vectorial) {
-      MapState.removeLayer(mapResourceId);
+      MapState.removeMapResource(mapResourceId);
       var mapResource = MapState.getMapResource(mapResourceId);
       MapState.addTimeLineLayer(mapResource, vectorial);
     },
@@ -111,7 +112,9 @@ export default {
       var vm = this;
       var group;
       if (layer.mapResource.groupLayersBy)
-        group = layer.mapResource.groupLayersBy.label + ': ' + layer[layer.mapResource.groupLayersBy.field];
+        group = layer.mapResource.groupLayersBy.label + ': ' 
+        + ((layer.mapResource.groupLayersBy.field.indexOf('.') == -1) ? layer[layer.mapResource.groupLayersBy.field]
+        : layer[layer.mapResource.groupLayersBy.field.split('.')[0]][layer.mapResource.groupLayersBy.field.split('.')[1]]);
       else
         group = layer.mapResource.name;
       var option = groupList.find(opt => { return opt.name == group});

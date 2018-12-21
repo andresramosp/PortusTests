@@ -42,6 +42,7 @@ export default {
   data() {
       return {
           bancoDatos: [],
+          mapState: MapState,
           imgPropietario: null,
           hrefPropietario: null
       }
@@ -54,22 +55,28 @@ export default {
   },
   created() {
        var mi = this;
-       ApiService.post('parametros?locale=' + this.$getLocale(),
+       ApiService.post('parametros/' + this.markers[0].id + '?locale=' + this.$getLocale(),
         this.markers.map(m => m.mapOption.variableType))
        .then((params) => {
            this.bancoDatos = params.data;
+           mi.mapState.openRTDataTable(this.markers[0], this.bancoDatos.map(p => p.id));
+           //mi.getTableData(this.bancoDatos.map(p => p.id));
        });
        
        if (this.markers[0].propietario != null) {
           this.imgPropietario = BASE_URL_PORTUS + "/img/logosOrganismos/" + this.markers[0].propietario + ".png";
           this.hrefPropietario = this.markers[0].urlPropietario;
        }
+       
+  },
+  methods: {
+     
   }
 };
 
     //   asyncComputed: {
     //     async bancoDatos() {
-    //        var params = await ApiService.post('parametros?locale=' + this.$getLocale(),
+    //        var params = await ApiService.post('?locale=' + this.$getLocale(),
     //             this.markers.map(m => m.mapOption.variableType));
     //         return params.data;
     //       }

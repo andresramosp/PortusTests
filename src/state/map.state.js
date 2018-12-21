@@ -19,6 +19,8 @@ const MapState = {
     loadingThings: [],
     heapedPopup: null,
     mapLogos: [],
+    RTDataTableStation: null,
+    RTDataTableParameters: [],
 
     init(map) {
         this.map = map;
@@ -155,7 +157,6 @@ const MapState = {
                 preLayer._availableTimes = [];
                 if (preLayer._baseLayer.options.predictionScaleImg)
                     ms.predictionScaleImg = '';
-    
                     preLayer._baseLayer.options.logosImgs.forEach(url => {
                     ms.removeMapLogo(url);
                 })
@@ -190,8 +191,6 @@ const MapState = {
                 }
 
                 preLayer._baseLayer.options.logosImgs.forEach(url => {
-                    //var urlParts = url.split('/');
-                    //var file = urlParts[urlParts.length - 1];
                     ms.addMapLogo(url);
                 })
 
@@ -212,7 +211,7 @@ const MapState = {
         tileLayer.addTo(this.map);
     },
 
-    removeLayer(mapResourceId) {
+    removeMapResource(mapResourceId) {
         var ms = this;
         this.map.eachLayer(function (layer) {
             if (layer.mapResource && layer.mapResource.id == mapResourceId) {
@@ -264,7 +263,7 @@ const MapState = {
         }
         else {
             mapOption.mapResources.forEach(resId => {
-              this.removeLayer(resId);
+              this.removeMapResource(resId);
             });
         }
         // Si activamos el mapOption de manera programática, 
@@ -290,7 +289,6 @@ const MapState = {
     },
 
     removeLoading(thing) {
-        //this.loadingThings.splice(this.loadingThings.indexOf(thing), 1);
         this.loadingThings = this.loadingThings.filter(t => { return t != thing });
     },
 
@@ -312,6 +310,11 @@ const MapState = {
 
     removeMapLogo(logo) {
         this.mapLogos = this.mapLogos.filter(l => l != logo);
+    },
+
+    openRTDataTable(stationId, parameters) {
+        this.RTDataTableStation = stationId;
+        this.RTDataTableParameters = parameters;
     }
 };
 

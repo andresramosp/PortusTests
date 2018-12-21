@@ -50,7 +50,7 @@ export const MapResources = [
     mapsResourceApi: 'mapStaticResources/VHM0Atl',
     tms: true,
     vectors: true,
-    //groupLayersBy: { field: 'modelo', label: 'Modelo' },
+    groupLayersBy: { field: 'modelo', label: 'Modelo' },
   },
   {
     id: 'pred-tiles-oleaje-atl-ocaso',
@@ -60,7 +60,7 @@ export const MapResources = [
     mapsResourceApi: 'mapStaticResources/VHM0Atl',
     tms: true,
     vectors: true,
-    //groupLayersBy: { field: 'modelo', label: 'Modelo' }
+    groupLayersBy: { field: 'modelo', label: 'Modelo' }
   },
   {
     id: 'pred-tiles-oleaje-med',
@@ -98,7 +98,7 @@ export const MapResources = [
     vectors: true,
     defaultVectors: true,
     paintBounds: true,
-    //groupLayersBy: { field: 'idOperativa', label: 'Operativa' }
+    groupLayersBy: { field: 'idOperativa', label: 'Operativa' }
   },
   {
     id: 'pred-tiles-temperatura',
@@ -123,7 +123,7 @@ export const MapResources = [
     type: 'TimeLineLayer',
     name: 'Pred. Salinidad',
     resourceApi: 'mapTileResources/portus/SAL',
-    //groupLayersBy: { field: 'idDominio', label: 'Dominio' },
+    groupLayersBy: { field: 'idDominio', label: 'Dominio' },
     tms: true
   },
   {
@@ -233,8 +233,8 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true,
-    //groupLayersBy: { field: 'tipoSensor', label: 'Sensor' },
+    cached: false,
+    //groupLayersBy: { field: 'red', label: 'Red' },
     preventHeaping: true
   },
   {
@@ -343,7 +343,11 @@ export const MapResources = [
     locale: true,
     cached: false,
     preventHeaping: true,
-    //groupLayersBy: { field: 'redId', label: 'red'}
+    //groupLayersBy: { field: 'modelo', label: 'Modelo' },
+    //groupLayersBy: { field: 'urlPropietario', label: 'Propietario' },
+    groupLayersBy: { field: 'tipoSensor', label: 'Sensor' },
+    //groupLayersBy: { field: 'red.descripcion', label: 'Red' },
+    //groupLayersBy: { field: 'cadencia', label: 'Cadencia' }
   },
   {
     id: 'rt-markers-antenas-corrientes',
@@ -535,7 +539,7 @@ export const MapOptions = [
     group: 'predicciones',
     name: '{oleajeAtlanticoOption}',
     variableType: VariableType.WAVE,
-    mapResources: ['pred-tiles-oleaje-atl', 'pred-markers-wana-atl', 'pred-markers-wana-atl-verif'] // 'pred-tiles-oleaje'
+    mapResources: ['pred-tiles-oleaje-atl','pred-tiles-oleaje-atl-ocaso', 'pred-markers-wana-atl', 'pred-markers-wana-atl-verif'] // 'pred-tiles-oleaje'
   },
   {
     id: 'pred_oleaje_med',

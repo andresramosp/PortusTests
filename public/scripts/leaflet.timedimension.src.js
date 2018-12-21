@@ -1472,10 +1472,14 @@ L.TimeDimension.Player = (L.Layer || L.Class).extend({
             this.release(); // free clock
             this._waitingForBuffer = false; // reset buffer
         }).bind(this));
-        if (!this._preloadBuffer)
+        if (!this._preloadBuffer) {
             this.setTransitionTime(this.options.transitionTime || 1000);
-        else
+        }   
+        else {
             this.setTransitionTime(50);
+            //this.mapState.addLoading('buffering');
+        }
+            
         
         this._timeDimension.on('limitschanged availabletimeschanged timeload', (function(data) {
             this._timeDimension.prepareNextTimes(this._steps, this._minBufferReady, this._loop);
@@ -1493,6 +1497,7 @@ L.TimeDimension.Player = (L.Layer || L.Class).extend({
             if (maxForward && this._preloadBuffer) {
                 this._preloadBuffer = false;
                 this.setTransitionTime(this.options.transitionTime || 1000);
+                //this.mapState.removeLoading('buffering');
             }
             if (!this._loop) {
                 this.pause();
