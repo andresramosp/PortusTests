@@ -7,7 +7,7 @@
    <UbicacionesPanel />
    <RegionesPanel />
    <LocationsWidget :ubicacion="mapState.ubicacionSelected" />
-   <DataTablesPanel :marker="mapState.RTDataTableStation" :parameters="mapState.RTDataTableParameters" />
+   <DataTablesRTPanel :marker="mapState.RTDataTableStation" :parameters="mapState.RTDataTableParameters" />
    <LogosList :logos="mapState.mapLogos" :defaultLogo="defaultLogo" />
 </div>
 </template>
@@ -22,7 +22,7 @@ import StaticMapsPanel from "@/components/staticMapsPanel.vue";
 import UbicacionesPanel from "@/components/ubicacionesPanel.vue";
 import RegionesPanel from "@/components/regionesPanel.vue";
 import LocationsWidget from "@/components/locationsWidget/locationsWidget.vue";
-import DataTablesPanel from "@/components/dataTablesPanel/dataTablesPanel.vue";
+import DataTablesRTPanel from "@/components/dataTables/dataTablesRTPanel.vue";
 import LogosList from "@/components/logosList.vue";
 import { MapOptions } from '@/common/mapResourceManager';
 import { MapOptionsGroups } from '@/common/mapResourceManager';
@@ -38,7 +38,7 @@ export default {
     RegionesPanel,
     LocationsWidget,
     LogosList,
-    DataTablesPanel
+    DataTablesRTPanel
   },
   data () {
     return {

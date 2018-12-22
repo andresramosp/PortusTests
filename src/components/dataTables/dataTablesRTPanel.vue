@@ -1,6 +1,6 @@
  <template>
   <dx-popup
-    v-if="marker"
+    v-if="marker && parameters.length > 0"
     :visible="true"
     :position="popupPosition"
     :resize-enabled="true"
@@ -18,7 +18,7 @@
     <div
       slot="titleTemplate"
       slot-scope="title"
-      style="background: #606060; color: white"
+      style="background: rgb(69, 99, 205); color: white"
       class="largeTitle"
     >
       {{titulo}}
@@ -27,28 +27,45 @@
    
     </div>
 
+       <img
+        style="margin-left: 450px; margin-top: 160px;"
+        :src="require('@/assets/gifs/loadingBars.gif')"
+        v-show="loading"
+        width="100"
+      >
+
     <b-row v-show="!displayShareInfo">
-      <b-col>
-        <dx-data-grid
-          v-if="marker && rtData"
-          :data-source="rtData"
-          :allow-column-reordering="true"
-          :row-alternation-enabled="true"
-          :show-borders="true"
-          :customize-columns="customizeColumns"
-          @initialized="initialized"
-          @cellPrepared="renderCell"
-        >
+      <b-col v-if="!loading" class="fadeIn">
 
-            <dx-paging :page-size="10"/>
-            <dx-pager
-              :show-page-size-selector="false"
-              :allowed-page-sizes="[15]"
-              :show-info="true"
-              :show-navigation-buttons="true"
-            />
+          <b-tabs v-if="marker && dataSources.length > 0" class='infoPanelClass' >
 
-        </dx-data-grid>
+              <b-tab v-for="dataSource in dataSources" :key="dataSource.id" :title="dataSource.id">
+
+                <dx-data-grid
+                  :data-source="dataSource.data"
+                  :allow-column-reordering="true"
+                  :row-alternation-enabled="true"
+                  :show-borders="true"
+                  :customize-columns="customizeColumns"
+                  @initialized="initialized"
+                  @cellPrepared="renderCell"
+                >
+
+                    <dx-paging :page-size="10"/>
+                    <dx-pager
+                      :show-page-size-selector="false"
+                      :allowed-page-sizes="[15]"
+                      :show-info="true"
+                      :show-navigation-buttons="true"
+                    />
+
+                </dx-data-grid>
+
+              </b-tab>
+
+          </b-tabs>
+
+      
       </b-col>
     </b-row>
   </dx-popup>
@@ -63,7 +80,7 @@ import {DxDataGrid, DxColumn, DxPager, DxPaging } from "devextreme-vue/data-grid
 import ShareInfoPanel from "@/components/locationsWidget/shareInfoPanel.vue";
 
 export default {
-  name: "DataTablesPanel",
+  name: "DataTablesRTPanel",
   components: {
     DxPopup,
     DxToolbarItem,
@@ -82,11 +99,11 @@ export default {
       titulo: '',
       displayShareInfo: false,
       minimized: true,
-      columnsNames: null,
-      rtData: null,
-      dateColumnWidth: 130,
-      columnWidth: 200,
-      height: 370
+      columnsNames: {},
+      dataSources: [],
+      width: 1000,
+      height: 410,
+      loading: true
     };
   },
   props: {
@@ -95,15 +112,7 @@ export default {
   },
   computed: {
     popupWidth() {
-      if (this.columnsNames) {
-        var width = (Object.keys(this.columnsNames).length * this.columnWidth) + this.dateColumnWidth + 15;
-        if (width > window.innerWidth)
-          width = window.innerWidth - 50;
-        return width;
-      }
-      else {
-        return 0;
-      }
+      return this.width;
     },
     popupHeight() {
       return this.height;
@@ -120,21 +129,37 @@ export default {
     marker: function() {
       if (this.marker != null && this.parameters.length > 0) {
         this.titulo = this.marker.nombre;
-        this.getTableData();
+      }
+    },
+    parameters: function() {
+      // TODO: intentar quitar el await y lanzar todos a la vez, arreglar problema en backend de statement closed
+      this.dataSources = [];
+      this.loading = true;
+      if (this.marker != null && this.parameters.length > 0) {
+          var paramsGroups = this.parameters.map(p => p.variable).filter(function (elem, index, self) { return index == self.indexOf(elem); });
+          this.asyncForEach(paramsGroups, async pGrp => {
+            await this.getTableData(this.parameters.filter(p => p.variable == pGrp), pGrp);
+            if (this.dataSources.length == paramsGroups.length)
+              this.loading = false;
+          });
       }
     }
   },
   created() {},
   mounted() {},
   methods: {
-    getTableData() {
+    getTableData(parametrosDataSource, dataSourceId) {
       var dt = this;
-      ApiService.post(
-        "RTData/" + this.marker.id + "?locale=" + this.$getLocale(), this.parameters)
+      return ApiService.post(
+        "RTData/" + this.marker.id + "?locale=" + this.$getLocale(), parametrosDataSource.map(p => p.id))
         .then(result => {
           if (result.data.length > 0) {
-            dt.columnsNames = this.generateColumnsNames(result.data[0]);
-            dt.rtData = result.data.map((row) => this.formatRow(row) );
+             var dataSource = { 
+                id: dataSourceId,
+                data: result.data.map((row) => this.formatRow(row) )
+              };
+            dt.dataSources.push(dataSource);
+            Object.assign(this.columnsNames, this.generateColumnsNames(result.data[0]));
           }
         });
     },
@@ -149,7 +174,7 @@ export default {
       columns.forEach(col => {
         col.caption = this.columnsNames[col.dataField];
         col.cssClass = "colHeader";
-        if (col.dataField == "fecha") {
+        if (col.dataField == 'Fecha (GMT)') {
           col.width = this.dateColumnWidth;
         }
         else {
@@ -161,7 +186,7 @@ export default {
       return columns;
     },
     formatRow(row) {
-      var formattedRow = { fecha: new Date(row.fecha).toISOString().slice(0, 19).replace("T", " "),  };
+      var formattedRow = { 'Fecha (GMT)': new Date(row.fecha).toISOString().slice(0, 19).replace("T", " "),  };
       formattedRow.QCs = [];
       row.datos.forEach(dato => {
         formattedRow[dato.nombreColumna] = this.formatParamValue(dato);
@@ -182,11 +207,15 @@ export default {
         ev.cellElement.style.color = 'red';
     },
     cerrar() {
-      this.rtColumns = null;
-      this.rtData = null;
+      this.dataSources = [];
       MapState.RTDataTableStation = null;
       MapState.RTDataTableParameters = [];
       
+    },
+    async asyncForEach(array, callback) {
+      for (let index = 0; index < array.length; index++) {
+        await callback(array[index], index, array)
+      }
     },
     // toggleShareInfo() {
     //   this.displayShareInfo = !this.displayShareInfo;

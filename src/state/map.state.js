@@ -312,10 +312,14 @@ const MapState = {
         this.mapLogos = this.mapLogos.filter(l => l != logo);
     },
 
-    openRTDataTable(stationId, parameters) {
-        this.RTDataTableStation = stationId;
+    setRTDataTableStation(station) {
+        this.RTDataTableStation = station;
+    },
+
+    setRTDataTableParams(parameters) {
         this.RTDataTableParameters = parameters;
     }
+
 };
 
 export default MapState
