@@ -327,6 +327,31 @@ const LocalePlugin = {
         locationsWidgetTitle2: {
             es: "Todas las horas son GMT",
             en: "All times are GMT"
+        },
+        // Tablas Pred
+        tablePredTitle_CURRENTS: {
+            es: "Predicción de corriente, temp. y salinidad para",
+            en: "Currents, temp. and salinity forecast for"
+        },
+        tablePredTitle_WATER_TEMP: {
+            es: "Predicción de corriente, temp. y salinidad para",
+            en: "Currents, temp. and salinity forecast for"
+        },
+        tablePredTitle_SALINITY: {
+            es: "Predicción de corriente, temp. y salinidad para",
+            en: "Currents, temp. and salinity forecast for"
+        },
+        tablePredTitle_WAVE: {
+            es: "Predicción de viento y oleaje para",
+            en: "Wind and wave forecast for"
+        },
+        tablePredTitle_WIND: {
+            es: "Predicción de viento para",
+            en: "Wind forecast for"
+        },
+        tablePredTitle_SEA_LEVEL: {
+            es: "Nivel del mar para",
+            en: "Sea level for"
         }
     },
    

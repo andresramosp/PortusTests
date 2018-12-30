@@ -21,6 +21,8 @@ const MapState = {
     mapLogos: [],
     RTDataTableStation: null,
     RTDataTableParameters: [],
+    predDataTableLocation: null,
+    predDataTableVariable: null,
 
     init(map) {
         this.map = map;
@@ -312,12 +314,14 @@ const MapState = {
         this.mapLogos = this.mapLogos.filter(l => l != logo);
     },
 
-    setRTDataTableStation(station) {
+    setRTDataTable(station, parameters) {
         this.RTDataTableStation = station;
+        this.RTDataTableParameters = parameters;
     },
 
-    setRTDataTableParams(parameters) {
-        this.RTDataTableParameters = parameters;
+    setPredDataTable(location, variable) {
+        this.predDataTableLocation = location;
+        this.predDataTableVariable = variable;
     }
 
 };

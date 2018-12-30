@@ -24,7 +24,18 @@
       {{titulo}}
 
       <span @click="cerrar" style="float:right; cursor:pointer">x</span>
-   
+      <!-- <img
+        :src='require("@/assets/icons/shareIcon.png")'
+        class="shareIcon"
+        @click="openShareInfo"
+        @mouseover="openShareInfo"
+        @mouseout="closeShareInfo"
+      >
+       <img
+        :src='require("@/assets/icons/imprimir.png")'
+        class="shareIcon"
+        @click="printTable"
+      > -->
     </div>
 
        <img
@@ -37,9 +48,13 @@
     <b-row v-show="!displayShareInfo">
       <b-col v-if="!loading" class="fadeIn">
 
-          <b-tabs v-if="marker && dataSources.length > 0" class='infoPanelClass' >
+          <b-tabs v-if="marker && dataSources.length > 0"  v-model="tabIndex" class='infoPanelClass' >
 
-              <b-tab v-for="dataSource in dataSources" :key="dataSource.id" :title="dataSource.id">
+              <b-tab 
+                v-for="(dataSource, index) in dataSources" 
+                :key="dataSource.id" 
+                :title="$t('{'+ dataSource.id +'}')"
+                :ref="'tableContainer' + index">
 
                 <dx-data-grid
                   :data-source="dataSource.data"
@@ -51,7 +66,7 @@
                   @cellPrepared="renderCell"
                 >
 
-                    <dx-paging :page-size="10"/>
+                    <dx-paging :page-size="8"/>
                     <dx-pager
                       :show-page-size-selector="false"
                       :allowed-page-sizes="[15]"
@@ -77,7 +92,7 @@ import ApiService from "@/services/api.service";
 import { DxPopup, DxToolbarItem } from "devextreme-vue/popup";
 import {DxDataGrid, DxColumn, DxPager, DxPaging } from "devextreme-vue/data-grid";
 
-import ShareInfoPanel from "@/components/locationsWidget/shareInfoPanel.vue";
+import ShareInfoPanel from "@/components/shareInfoPanel.vue";
 
 export default {
   name: "DataTablesRTPanel",
@@ -101,9 +116,9 @@ export default {
       minimized: true,
       columnsNames: {},
       dataSources: [],
+      tabIndex: 0,
       width: 1000,
-      height: 410,
-      loading: true
+      height: 360
     };
   },
   props: {
@@ -111,6 +126,9 @@ export default {
     parameters: { type: Array, default: [] }
   },
   computed: {
+    loading() {
+      return !this.paramsGroups || this.dataSources.length != this.paramsGroups.length;
+    },
     popupWidth() {
       return this.width;
     },
@@ -132,16 +150,15 @@ export default {
       }
     },
     parameters: function() {
-      // TODO: intentar quitar el await y lanzar todos a la vez, arreglar problema en backend de statement closed
       this.dataSources = [];
-      this.loading = true;
       if (this.marker != null && this.parameters.length > 0) {
-          var paramsGroups = this.parameters.map(p => p.variable).filter(function (elem, index, self) { return index == self.indexOf(elem); });
-          this.asyncForEach(paramsGroups, async pGrp => {
-            await this.getTableData(this.parameters.filter(p => p.variable == pGrp), pGrp);
-            if (this.dataSources.length == paramsGroups.length)
-              this.loading = false;
+          this.paramsGroups = this.parameters.map(p => p.variable).filter(function (elem, index, self) { return index == self.indexOf(elem); });
+          this.paramsGroups.forEach(pGrp => {
+            this.getTableData(this.parameters.filter(p => p.variable == pGrp), pGrp);
           });
+          // this.asyncForEach(this.paramsGroups, async pGrp => {
+          //   await this.getTableData(this.parameters.filter(p => p.variable == pGrp), pGrp);
+          // });
       }
     }
   },
@@ -150,7 +167,7 @@ export default {
   methods: {
     getTableData(parametrosDataSource, dataSourceId) {
       var dt = this;
-      return ApiService.post(
+      ApiService.post(
         "RTData/" + this.marker.id + "?locale=" + this.$getLocale(), parametrosDataSource.map(p => p.id))
         .then(result => {
           if (result.data.length > 0) {
@@ -175,11 +192,11 @@ export default {
         col.caption = this.columnsNames[col.dataField];
         col.cssClass = "colHeader";
         if (col.dataField == 'Fecha (GMT)') {
-          col.width = this.dateColumnWidth;
+          col.width = 160;
         }
-        else {
-           col.width = this.columnWidth;
-        }
+        // else {
+        //    col.width = this.columnWidth;
+        // }
         if (col.dataField == "QCs")
           col.visible = false;
       });
@@ -203,14 +220,15 @@ export default {
       //dataGrid.component.columnOption('QCs', 'cssClass', 'colHeader');
     },
     renderCell(ev) {
-      if (ev.rowType == "data" && ev.data.QCs.indexOf(ev.column.dataField) != -1)
+      if (ev.rowType == "data" && ev.data.QCs.indexOf(ev.column.dataField) != -1) {
         ev.cellElement.style.color = 'red';
+      }
+      if (ev.column.caption.indexOf("Fecha") != -1)
+        ev.cellElement.style.textAlign = "center";
     },
     cerrar() {
       this.dataSources = [];
-      MapState.RTDataTableStation = null;
-      MapState.RTDataTableParameters = [];
-      
+      MapState.setRTDataTable(null, []);
     },
     async asyncForEach(array, callback) {
       for (let index = 0; index < array.length; index++) {
@@ -237,8 +255,13 @@ export default {
     //     }, 500)
     // },
 
-    // toggleMinimized() {
-    //   this.minimized = !this.minimized;
+    // printTable() {
+    //   //var printContents = "<style type='text/css' media='print'>  @page { size: landscape; } .dx-datagrid-headers .dx-row .colHeader { background-color: #7fb7e7f5 !important; font-size: 10px; font-weight: bold; color: #f8f9fa; padding-left: 2px } </style>"
+    //   //printContents += "<div style='margin-left: 800px;margin-bottom: 20px;'>" + this.$refs['tableContainer' + this.tabIndex][0].title + "</div>"
+    //   var printContents = this.$refs['tableContainer' + this.tabIndex][0].$el.innerHTML; 
+    //   var w = window.open();
+    //   w.document.write(printContents);
+    //   w.print();
     // }
   }
 };

@@ -126,7 +126,7 @@
 
 import Vue from 'vue'
 import MapUtils from "@/services/map.utils";
-import ShareInfoPanel from "@/components/locationsWidget/shareInfoPanel.vue";
+import ShareInfoPanel from "@/components/shareInfoPanel.vue";
 
 export default {
   name: "LocationsRTWidget",

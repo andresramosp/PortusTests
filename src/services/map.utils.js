@@ -234,6 +234,13 @@ const MapUtils = {
     return 'N';
   },
 
+  // TODO: 1. Manejar cardinalidad, con valores absolutos siempre
+  //       2. Cambiar en todo el código donde se lee nombre de markers.
+  getMarkerName(marker) {
+    return marker.nombre ? marker.nombre
+     : " Lat " + marker.latitud.toFixed(2) + " N" + ": Lon " + marker.longitud.toFixed(2) + " O";
+  },
+
   async asyncForEach(array, callback) {
     for (let index = 0; index < array.length; index++) {
       await callback(array[index], index, array)

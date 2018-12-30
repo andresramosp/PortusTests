@@ -98,7 +98,7 @@ export const MapResources = [
     vectors: true,
     defaultVectors: true,
     paintBounds: true,
-    groupLayersBy: { field: 'idOperativa', label: 'Operativa' }
+    //groupLayersBy: { field: 'idOperativa', label: 'Operativa' }
   },
   {
     id: 'pred-tiles-temperatura',
@@ -123,7 +123,7 @@ export const MapResources = [
     type: 'TimeLineLayer',
     name: 'Pred. Salinidad',
     resourceApi: 'mapTileResources/portus/SAL',
-    groupLayersBy: { field: 'idDominio', label: 'Dominio' },
+    //groupLayersBy: { field: 'idDominio', label: 'Dominio' },
     tms: true
   },
   {
@@ -183,6 +183,7 @@ export const MapResources = [
     markerClass: MarkerClass.PUNTO_MALLA,
     minZoom: 0,
     icon: 'punto-malla-atmosfera.png',
+    //groupLayersBy: { field: 'malla', label: 'Malla' }
   },
   {
     id: 'pred-markers-atmosfera-verif',
@@ -345,7 +346,7 @@ export const MapResources = [
     preventHeaping: true,
     //groupLayersBy: { field: 'modelo', label: 'Modelo' },
     //groupLayersBy: { field: 'urlPropietario', label: 'Propietario' },
-    groupLayersBy: { field: 'tipoSensor', label: 'Sensor' },
+    //groupLayersBy: { field: 'tipoSensor', label: 'Sensor' },
     //groupLayersBy: { field: 'red.descripcion', label: 'Red' },
     //groupLayersBy: { field: 'cadencia', label: 'Cadencia' }
   },

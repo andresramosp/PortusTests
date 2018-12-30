@@ -85,7 +85,7 @@ import { DxPopup, DxToolbarItem } from "devextreme-vue/popup";
 import LocationsRTWidget from "@/components/locationsWidget/locationsRTWidget.vue";
 import LocationsPredWidget from "@/components/locationsWidget/locationsPredWidget.vue";
 import LocationsGraphsWidget from "@/components/locationsWidget/locationsGraphsWidget.vue";
-import ShareInfoPanel from "@/components/locationsWidget/shareInfoPanel.vue";
+import ShareInfoPanel from "@/components/shareInfoPanel.vue";
 
 export default {
   name: "LocationsWidget",
