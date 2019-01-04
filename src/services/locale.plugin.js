@@ -209,6 +209,14 @@ const LocalePlugin = {
             es: "Fecha (GMT)",
             en: "Date (GMT)"
         },
+        tablaMareasLabel: {
+            es: "Tabla de mareas",
+            en: "Tidal table"
+        },
+        tablaMareasButton: {
+            es: "Acceso",
+            en: "Enter"
+        },
         // Banco datos histórico
         puntoSimarLabel: {
             es: "Punto SIMAR",

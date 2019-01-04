@@ -28,6 +28,17 @@
                 <input class="form-check-input" type="checkbox" />
             </b-col>
         </b-row>
+        <b-row v-if="hasMareaAstronomica()" style="margin-top: 20px">
+          <b-col cols="8" style="font-weight:600;">
+               {{ $t('{tablaMareasLabel}') }}
+          </b-col>
+          <b-col >
+            <b-button size="sm" variant="outline-primary" @click="openMareaAstronomica()">
+              {{ $t('{tablaMareasButton}') }}
+             </b-button>
+          </b-col >
+      
+        </b-row>
     </b-container>
 
 </template>
@@ -36,7 +47,7 @@
 
 import MapState from "@/state/map.state";
 import ApiService from "@/services/api.service";
-import { BASE_URL_PORTUS } from '@/common/config';
+import { BASE_URL_PORTUS, INFORMES_URL } from '@/common/config';
 import { MarkerClass } from "@/common/enums";
 import Vue from "vue";
 
@@ -105,6 +116,12 @@ export default {
              }
          }, 750);
          
+     },
+     hasMareaAstronomica() {
+         return this.markers[0].mareaAstronomica;
+     },
+     openMareaAstronomica() {
+         window.open(INFORMES_URL + "Mareas/Principal1.php?Estacion=" + this.markers[0].mareaAstronomica.id + "&Lenguaje=es", '_blank');
      }
   }
 };

@@ -62,6 +62,14 @@
       </b-row>
       <b-row >
         <b-col v-if="!loading" class="fadeIn">
+
+          <NivmarPleaBajaPredPanel 
+              ref="pleaBajaContainer" 
+              :marker="marker" 
+              :dataAux="days"
+              v-if="variable == variableType.SEA_LEVEL" 
+              style="margin-bottom: 10px" />
+
           <b-tabs v-if="marker && days.length > 0" v-model="tabIndex">
             <b-tab
               v-for="(dataSource, index) in days"
@@ -100,8 +108,8 @@ import ApiService from "@/services/api.service";
 import { VariableType } from "@/common/enums";
 import { DxPopup, DxToolbarItem } from "devextreme-vue/popup";
 import { DxDataGrid, DxColumn, DxPager, DxPaging, DxGrouping, DxGroupPanel } from "devextreme-vue/data-grid";
-
 import ShareInfoPanel from "@/components/shareInfoPanel.vue";
+import NivmarPleaBajaPredPanel from "@/components/dataTables/nivmarPleaBajaPredPanel.vue";
 
 export default {
   name: "DataTablesPredPanel",
@@ -114,7 +122,8 @@ export default {
     DxPager,
     DxPaging,
     DxGrouping,
-    DxGroupPanel
+    DxGroupPanel,
+    NivmarPleaBajaPredPanel
   },
   data() {
     return {
@@ -127,7 +136,10 @@ export default {
       columnsNames: {},
       days: [],
       tabIndex: 0,
-      repeatedVarGroup: null
+      repeatedVarGroup: null,
+      variableType: VariableType,
+      // mínimo número de datos horarios para mostrar un día en la tabla
+      minDataDay: 5
     };
   },
   props: {
@@ -140,10 +152,10 @@ export default {
       return this.days.length == 0;
     },
     popupWidth() {
-      return 1050;
+      return this.variable == VariableType.SEA_LEVEL ? 1185 : 1050;
     },
     popupHeight() {
-      return this.days.length > 0 ? ((this.days[0].data.length) * 28) + 178: 400;
+      return this.days.length > 0 ? ((this.days[0].data.length) * 28) + ( this.variable != VariableType.SEA_LEVEL ? 178 : 328 ): 400;
     },
     popupPosition() {
       return this.minimized
@@ -159,7 +171,9 @@ export default {
       if (this.marker != null) {
         this.titulo = this.$t('{tablePredTitle_' + this.variable + '}') + " " + MapUtils.getMarkerName(this.marker);
         if (this.variable) {
-          this.getTableData();
+           this.tabIndex = 0;
+           this.days = [];
+           this.getTableData();
 
            this.routeData = this.$router.resolve({
             path: "/dataTablesPredWidget",
@@ -183,27 +197,22 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    getTableData() {
-      this.days = [];
-      var dt = this;
-      ApiService.get(
-        "predData/" + this.variable + "/" + this.marker.id + "?locale=" + this.$getLocale())
-        .then(result => {
-          if (result.data.length > 0) {
-            var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            var lang = this.$getLocale() == 'es' ? 'es-ES' : 'en-US';
-            var groupDays = result.data.map(d => new Date(d.fecha)
-                            .toLocaleDateString(lang, options))
-                            .filter(function (elem, index, self) { return index == self.indexOf(elem); });
-            groupDays.forEach(day => {
-              var dayData = { 
-                id: day,
-                data: this.formatData(result.data.filter(d => new Date(d.fecha).toLocaleDateString(lang, options) == day))
-              }
-              dt.days.push(dayData);
-            })
-          }
-        });
+    async getTableData() {
+      var result = await ApiService.get("predData/" + this.variable + "/" + this.marker.id + "?locale=" + this.$getLocale());
+      if (result.data.length > 0) {
+          var groupDays = result.data.map(d => new Date(d.fecha)
+              .toISOString().split('T')[0])
+              .filter(function (elem, index, self) { return index == self.indexOf(elem); });
+          groupDays.forEach(day => {
+            var dayData = { 
+              _date: day,
+              id: new Date(day).toLocaleDateString(this.$getLocale() == 'es' ? 'es-ES' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+              data: this.formatData(result.data.filter(d => new Date(d.fecha).toISOString().split('T')[0] == day))
+            }
+            if (Object.keys(dayData.data[0]).length > this.minDataDay)
+              this.days.push(dayData);
+          })
+      }
     },
     formatData(data) {
       var result = [];
@@ -213,14 +222,13 @@ export default {
             if (!reg) {
               reg = { 
                 id: paramData.variableParametro + '-' + paramData.nombreParametro, 
-                variableParametro: paramData.variableParametro, 
+                variableParametro: paramData.variableParametro ? paramData.variableParametro.toUpperCase() : null, 
                 nombreParametro: paramData.nombreParametro 
               }
               result.push(reg);
             }
             var fecha = new Date(fechaData.fecha)
             var hora = fecha.toISOString().split('T')[1].substr(0,5)
-            // var hora = fechaData.fecha.split(' ')[1].substr(0,5);
             var decimals = paramData.valor < 999 ? (this.variable == VariableType.SEA_LEVEL ? 2 : 1) : 0;
             reg[hora] = paramData.valor ? parseFloat(paramData.valor).toFixed(decimals) : null; 
           })
@@ -312,6 +320,8 @@ export default {
       // Se le puede quitar la primera columna para ajustarlo mejor
       var printContents = "<style type='text/css' media='print'>  @page { size: landscape; } .dx-datagrid-headers .dx-row .colHeader { background-color: #7fb7e7f5 !important; font-size: 10px; font-weight: bold; color: #f8f9fa; padding-left: 2px } </style>"
       printContents += "<div style='margin-left: 800px;margin-bottom: 20px;'>" + this.$refs['tableContainer' + this.tabIndex][0].title + "</div>"
+      // if (this.$refs.pleaBajaContainer)
+      //   printContents += this.$refs.pleaBajaContainer.$el.innerHTML;
       printContents += this.$refs['tableContainer' + this.tabIndex][0].$el.innerHTML; 
       var w = window.open();
       w.document.write(printContents);
