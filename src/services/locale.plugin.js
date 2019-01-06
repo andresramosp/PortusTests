@@ -360,6 +360,10 @@ const LocalePlugin = {
         tablePredTitle_SEA_LEVEL: {
             es: "Nivel del mar para",
             en: "Sea level for"
+        },
+        linkToMareaAstro: {
+            es: "Ver predicción de marea astronómica para",
+            en: "Go to Astronomical Tide Forecast at"
         }
     },
    

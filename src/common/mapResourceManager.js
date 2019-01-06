@@ -1,6 +1,7 @@
 export default {}
 
 import { MarkerClass, VariableType, RedType } from "@/common/enums";
+import MapState from "../state/map.state";
 
 // Recursos de Tiles y Markers
 export const MapResources = [
@@ -98,7 +99,7 @@ export const MapResources = [
     vectors: true,
     defaultVectors: true,
     paintBounds: true,
-    //groupLayersBy: { field: 'idOperativa', label: 'Operativa' }
+    isRadar: true
   },
   {
     id: 'pred-tiles-temperatura',

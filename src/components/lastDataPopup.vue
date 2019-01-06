@@ -12,8 +12,8 @@
       <div class="row rowData" >
         <div class="col-md-6">{{ $t('{fechaTiempoReal}') }}</div><div class="col-md-6" style="text-align: right; font-weight: 700">{{markerModel.Date}}</div>
       </div>
-      <div v-if="markerModel.LastPosition" class="row rowData">
-        <div class="col-md-6">{{ $t('{posicionBoyaTiempoReal}') }}</div><div class="col-md-6" style="text-align: right">{{markerModel.LastPosition}}</div>
+      <div v-if="markerModel.Position" class="row rowData">
+        <div class="col-md-6">{{ $t('{posicionBoyaTiempoReal}') }}</div><div class="col-md-6" style="text-align: right">{{markerModel.Position}}</div>
       </div>
       <div style="margin-bottom: 20px;"></div>
       <div  v-for="(data, index) in markerModel.TiempoReal" :key="data.nombreParametro" class="row rowData" :class="{ 'whiteBG': index % 2 != 0, 'grayBG': index % 2 == 0 }">
@@ -44,13 +44,16 @@ export default {
   },
   props: {
     marker: { type: Object, default: null, required: false },
-    data: { type: Object, default: null, required: false }
+    data: { type: Object, default: null, required: false },
+    radar: { type: Boolean, default: false, required: false }
   },
   computed: {
     notAvailable() {
       return (
-        (1 <= this.marker.estado && this.marker.estado <= 2) ||
-        (this.marker.red.tipoRed == RedType.PROPAGACION && this.marker.estado > 0)
+        !this.radar && (
+          (1 <= this.marker.estado && this.marker.estado <= 2) ||
+          (this.marker.red.tipoRed == RedType.PROPAGACION && this.marker.estado > 0)
+        )
       );
       //return this.marker.incidencia != null;
     },
@@ -74,7 +77,7 @@ export default {
       return {
         Title: this.marker.nombre,
         Date: dateValue,
-        LastPosition: lastPositionValue,
+        Position: lastPositionValue,
         TiempoReal: tiempoReal
       };
     }

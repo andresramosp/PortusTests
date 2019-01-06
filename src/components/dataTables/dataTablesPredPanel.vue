@@ -1,3 +1,4 @@
+
  <template>
   <dx-popup
     v-if="marker && variable"
@@ -37,12 +38,15 @@
       >
     </div>
 
-    <img
-      style="margin-left: 450px; margin-top: 160px;"
-      :src="require('@/assets/gifs/loadingBars.gif')"
-      v-show="loading"
-      width="100"
-    >
+    <div class="allCenter">
+      <img 
+        style="margin-top: 160px"
+        :src="require('@/assets/gifs/loadingBars.gif')"
+        v-show="loading"
+        width="100"
+      >
+    </div>
+    
 
       <ShareInfoPanel
         @shareinfo-mouseover="openShareInfo"
@@ -95,6 +99,13 @@
            
             </b-tab>
           </b-tabs>
+          <div style="margin-top: 5px" >
+              <a v-if="mareaAstronomicaUrl" 
+                :href="mareaAstronomicaUrl" target='_blank'>
+                {{this.$t('{linkToMareaAstro}')}} {{this.mapUtils.getMarkerName(this.marker)}}
+              </a>
+          </div>
+        
         </b-col>
       </b-row>
     </div>
@@ -110,6 +121,7 @@ import { DxPopup, DxToolbarItem } from "devextreme-vue/popup";
 import { DxDataGrid, DxColumn, DxPager, DxPaging, DxGrouping, DxGroupPanel } from "devextreme-vue/data-grid";
 import ShareInfoPanel from "@/components/shareInfoPanel.vue";
 import NivmarPleaBajaPredPanel from "@/components/dataTables/nivmarPleaBajaPredPanel.vue";
+import { INFORMES_URL } from '@/common/config';
 
 export default {
   name: "DataTablesPredPanel",
@@ -131,6 +143,7 @@ export default {
       align: PC.options_panel_align,
       theme: PC.color_theme,
       mapState: MapState,
+      mapUtils: MapUtils,
       titulo: '',
       displayShareInfo: false,
       columnsNames: {},
@@ -139,7 +152,8 @@ export default {
       repeatedVarGroup: null,
       variableType: VariableType,
       // mínimo número de datos horarios para mostrar un día en la tabla
-      minDataDay: 5
+      minDataDay: 5,
+      mareaAstronomicaUrl: null
     };
   },
   props: {
@@ -185,6 +199,14 @@ export default {
               variable: this.variable
             }
           });
+
+          if (this.marker.mareaAstronomica) {
+            this.mareaAstronomicaUrl = INFORMES_URL + "Mareas/Principal1.php?Estacion=" + this.marker.mareaAstronomica.id + "&Lenguaje=es"
+          }
+          else {
+            this.mareaAstronomicaUrl = null;
+          }
+
         }
       }
     },
@@ -327,11 +349,19 @@ export default {
       w.document.write(printContents);
       w.print();
     }
+
   }
 };
 </script>
 
 <style>
+
+.allCenter {
+    text-align: center; 
+    align-items: center; 
+    justify-content: center;
+    display: flex
+  }
 
 .shareInfoCenter {
     margin-top: 150px;

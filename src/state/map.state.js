@@ -4,6 +4,8 @@ import MapUtils from "@/services/map.utils";
 import { BASE_URL_PORTUS } from '@/common/config';
 import Vue from 'vue';
 
+import LastDataPopup from "@/components/lastDataPopup.vue";
+
 const MapState = {
 
     map: null,
@@ -15,6 +17,7 @@ const MapState = {
     preloadedTimeLineLayers: [],
     preloadedMarkers: [],
     currentTimeLineLayer: null,
+    currentPlayerTime: null,
     staticMapResourceSelected: null,
     loadingThings: [],
     heapedPopup: null,
@@ -23,6 +26,8 @@ const MapState = {
     RTDataTableParameters: [],
     predDataTableLocation: null,
     predDataTableVariable: null,
+    radarPointsLayer: null,
+    currentRadar: null,
 
     init(map) {
         this.map = map;
@@ -120,9 +125,16 @@ const MapState = {
                     var rect = L.rectangle([[res.limN, res.limW], [res.limS, res.limE]], { color: 'red', fillOpacity: 0.1, weight: 1 })
                     .on('click', function (e) {
                         ms.map.flyToBounds(e.target.getBounds().pad(0.25));
-                        // rectángulo invisible a partir de cierto nivel de zoom
-                    }).addTo(this.map);
+                    })
                     rect.mapResource = mapResource;
+                    rect.addTo(this.map);
+                    portusTimeLayer.boundRectangle = rect;
+                    // rect.visible = true;
+                    // rect.minZoom = 0;
+                    // rect.maxZoom = 7;
+                    // this.preloadedMarkers.push(rect);
+                   
+                    //this.setVisibleMarkerLayers();
                 }
             }
 
@@ -144,12 +156,14 @@ const MapState = {
     },
 
     setVisibleTimeLineLayers() {
+        
         var ms = this;
         if (ms.map.timeDimensionControl) {
             ms.map.timeDimensionControl._player.stop();
             ms.map.removeControl(ms.map.timeDimensionControl);
             ms.map.timeDimensionControl = null;
         }
+
         ms.currentTimeLineLayer = null;
         this.preloadedTimeLineLayers.forEach(function (preLayer) {
             if (ms.map.hasLayer(preLayer)) {
@@ -168,6 +182,7 @@ const MapState = {
             if (MapUtils.tileLayerVisible(ms.map, preLayer._baseLayer) && preLayer.visible) {
                 ms.map.options.timeDimensionOptions.period = "PT" + preLayer._baseLayer.options.hoursStep + "H";
                 var date = new Date();
+                date = date.addDays(-3);
                 date.setUTCHours(0, 0, 0, 0);
                 var predHours = (preLayer._baseLayer.options.numDays) * 24; //preLayer.mapResource.predictionTime ? preLayer.mapResource.predictionTime : 72;
                 ms.map.options.timeDimensionOptions.timeInterval = date.toISOString() + '/PT' + predHours + 'H'; // 'PT192H/' + sv.convertYMDHToDate(preLayer._baseLayer.options.strLastate).toISOString();
@@ -188,17 +203,35 @@ const MapState = {
                 preLayer.addTo(ms.map);
                 ms.currentTimeLineLayer = preLayer;
 
-                if (preLayer._baseLayer.options.predictionScaleImg) {
+                if (preLayer._baseLayer.options.predictionScaleImg) 
                     ms.predictionScaleImg = preLayer._baseLayer.options.predictionScaleImg;
-                }
 
                 preLayer._baseLayer.options.logosImgs.forEach(url => {
                     ms.addMapLogo(url);
                 })
 
+                if (preLayer.mapResource.isRadar)
+                    ms.getRadarPoints(preLayer);
+
+                if (preLayer.boundRectangle)
+                    preLayer.boundRectangle.remove();
+
                 console.log('Added: ' + preLayer._baseLayer._url)
             }
+            else {
+                if (preLayer.mapResource.isRadar && (ms.currentRadar && ms.currentRadar.dominio == preLayer.idDominio)) {
+                        ms.map.removeLayer(ms.radarPointsLayer);
+                        ms.currentRadar = null;
+                        console.log('Removed Radar: ' + preLayer.dominio)
+                }
+                if (preLayer.boundRectangle)
+                    preLayer.boundRectangle.addTo(ms.map);
+            }
         })
+    },
+
+    setCurrentPlayerTime(date) {
+        this.currentPlayerTime = date;
     },
 
     setStaticMapResourceSelected(mapResource) {
@@ -223,7 +256,8 @@ const MapState = {
                         ms.removeMapLogo(url);
                     })
                 }
-                
+                if (layer.mapResource.isRadar)
+                    ms.currentRadar = null;
             }
         });
 
@@ -237,6 +271,8 @@ const MapState = {
             ms.predictionScaleImg = '';
             ms.currentTimeLineLayer = null;
         }
+
+        
     },
 
     
@@ -322,6 +358,99 @@ const MapState = {
     setPredDataTable(location, variable) {
         this.predDataTableLocation = location;
         this.predDataTableVariable = variable;
+    },
+
+    async getRadarPoints(layer) {
+
+        var mode = "MousePoints"; // "MousePoints", "AllPoints", "NoPoints"
+
+        if (!this.currentRadar || this.currentRadar.dominio != layer.idDominio) {
+
+            if (this.radarPointsLayer)
+                this.map.removeLayer(this.radarPointsLayer);
+
+            var requestRadar = await ApiService.get('radares/' + layer.idDominio, { locale: Vue.$getLocale() });
+            this.currentRadar = requestRadar.data;
+    
+            var requestPoints = await ApiService.get('puntosRadar/' + layer.idDominio);
+            this.radarPoints = requestPoints.data;
+    
+            var ms = this;
+            this.radarPointsLayer = L.layerGroup();
+            this.radarPointsLayer.mapResource = layer.mapResource;
+
+            this.radarPoints.forEach(rp => {
+                var lat = this.currentRadar.latitudMalla + (rp.latitud * this.currentRadar.stepLat);
+                var lon = this.currentRadar.longitudMalla + (rp.longitud * this.currentRadar.stepLon);
+                var circleMarker = L.circleMarker([lat, lon], {
+                    radius: 5,
+                    stroke: false,
+                    fillOpacity: mode == "AllPoints" ? 0.15 : 0,
+                    opacity: 0,
+                    color: '#3388ff'
+                });
+                circleMarker.nombre = ms.currentRadar.nombre;
+                circleMarker.on('click', async function (e) {
+                    
+                });
+                circleMarker.on('mouseover', function (e) {
+                    circleMarker.hovered = true;
+                    circleMarker.setStyle({ fillOpacity: 1 });
+                    circleMarker.setRadius(7);
+                    circleMarker.timeOut = setTimeout(() => {
+                        ms.getRadarLastData(ms.currentRadar, rp.latitud, rp.longitud, new Date(ms.currentPlayerTime), circleMarker);
+                    }, 250)
+                    if (ms.circleMarkerOld) {
+                        ms.circleMarkerOld.setStyle({ fillOpacity: mode == "NoPoints" ? 0 : 0.15 })
+                        ms.circleMarkerOld.setRadius(5);
+                    }
+                    ms.circleMarkerOld = circleMarker;
+                });
+                circleMarker.on('mouseout', function (e) {
+                    circleMarker.hovered = false;
+                    clearTimeout(circleMarker.timeOut);
+                    setTimeout(() => {
+                        circleMarker.setStyle({ fillOpacity: mode == "NoPoints" ? 0 : 0.15 })
+                        circleMarker.setRadius(5);
+                    }, 3000);
+                });
+                ms.radarPointsLayer.addLayer(circleMarker);
+            })
+            this.radarPointsLayer.addTo(this.map);
+            console.log('Added Radar: ' + layer.dominio)
+
+            if (mode == "MousePoints") {
+                this.map.on("mousemove", function(ev) {
+                    var mouseLatLng = L.latLng(ev.latlng.lat, ev.latlng.lng);
+                    ms.radarPointsLayer.eachLayer(function (circle) {
+                        if (!circle.hovered) {
+                            if (MapUtils.distanceInMeters(mouseLatLng, circle.getLatLng()) < 15000) {
+                                circle.setStyle({ fillOpacity: 0.5, opacity: 0 });
+                            }
+                            else {
+                                circle.setStyle({ fillOpacity: 0, opacity: 0 })
+                            }
+                        }
+                        
+                    });
+                });
+            }
+            
+        }
+    },
+
+    async getRadarLastData(radar, lat, lon, date, marker) {
+        var lastData = await ApiService
+                            .get('lastData/radar/' 
+                            + radar.id
+                            + '/' + lat 
+                            + '/' + lon + '/' 
+                            + date + '?locale=' + Vue.$getLocale());
+        lastData.data.datos.push({ nombreParametro: "Longitud", valor: marker.getLatLng().lng, factor: 1, unidad: 'º'  });
+        lastData.data.datos.push({ nombreParametro: "Latitud", valor: marker.getLatLng().lat, factor: 1, unidad: 'º'  });
+        marker.lastDataComponent  = new Vue({ ...LastDataPopup, propsData: { marker: marker, data: lastData.data, radar: true } }).$mount()
+        marker.bindPopup(marker.lastDataComponent.$el, { maxWidth: 560 });
+        marker.openPopup();
     }
 
 };

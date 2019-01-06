@@ -60,6 +60,7 @@ export default {
       );
 
       var map = L.map("map", {
+        preferCanvas: true,
         zoomSnap: 0.1,
         zoomControl: false,
         closePopupOnClick: false,

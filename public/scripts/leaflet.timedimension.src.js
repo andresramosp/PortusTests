@@ -103,7 +103,6 @@ L.TimeDimension = (L.Layer || L.Class).extend({
             // add timeout of 3 seconds if layers doesn't response
             setTimeout((function (index) {
                 if (index == this._loadingTimeIndex) {
-                    
                     this._newTimeIndexLoaded();
                 }
             }).bind(this, newIndex), this._loadingTimeout);
@@ -116,6 +115,7 @@ L.TimeDimension = (L.Layer || L.Class).extend({
             return;
         }
         var time = this._availableTimes[this._loadingTimeIndex];
+        this.mapState.setCurrentPlayerTime(time);
         
         this._currentTimeIndex = this._loadingTimeIndex;
         this.fire('timeload', {

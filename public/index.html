@@ -42,6 +42,12 @@
       return new Date(this.getTime() - (this.getTimezoneOffset() * 60000));
     }
 
+    Date.prototype.addDays = function(days) {
+      var date = new Date(this.valueOf());
+      date.setDate(date.getDate() + days);
+      return date;
+    }
+
     String.prototype.replaceAll = function (search, replacement) {
       var target = this;
       return target.replace(new RegExp(search, 'g'), replacement);

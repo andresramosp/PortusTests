@@ -32,7 +32,7 @@ export default {
   },
   created() {
       var mi = this;
-      ApiService.get('lastDataEstacion/positions/' + this.boya.id)
+      ApiService.get('lastData/positions/' + this.boya.id)
       .then((params) => {
         mi.data = params.data.map(d => 
         { 

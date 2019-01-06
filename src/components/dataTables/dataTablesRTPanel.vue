@@ -223,8 +223,12 @@ export default {
       if (ev.rowType == "data" && ev.data.QCs.indexOf(ev.column.dataField) != -1) {
         ev.cellElement.style.color = 'red';
       }
-      if (ev.column.caption.indexOf("Fecha") != -1)
+      if (ev.column.caption.indexOf("Fecha") != -1) {
         ev.cellElement.style.textAlign = "center";
+      }
+      else {
+        ev.cellElement.style.textAlign = "center";
+      }
     },
     cerrar() {
       this.dataSources = [];

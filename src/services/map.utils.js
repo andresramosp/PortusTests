@@ -14,15 +14,21 @@ const MapUtils = {
   },
 
   markerVisible(map, marker) {
-    var minZoom;
-    if (marker.mapResource.minZoom && typeof marker.mapResource.minZoom === "function") {
-      minZoom = marker.mapResource.minZoom(marker);
+    if (marker instanceof L.Marker) {
+      var minZoom;
+      if (marker.mapResource.minZoom && typeof marker.mapResource.minZoom === "function") {
+        minZoom = marker.mapResource.minZoom(marker);
+      }
+      else {
+        minZoom = marker.minZoom ? marker.minZoom : (marker.mapResource.minZoom ? marker.mapResource.minZoom : 0);
+      }
+      return map.getBounds().contains(marker.getLatLng()) // + buffer
+          && (map.getZoom() >= minZoom);
     }
     else {
-      minZoom = marker.minZoom ? marker.minZoom : (marker.mapResource.minZoom ? marker.mapResource.minZoom : 0);
+      return (!marker.minZoom || map.getZoom() >= marker.minZoom) 
+          && (!marker.maxZoom || map.getZoom() < marker.maxZoom);
     }
-    return map.getBounds().contains(marker.getLatLng()) // + buffer
-      && (map.getZoom() >= minZoom);
   },
 
   getHeapedMarkers(map, marker) {
@@ -145,7 +151,7 @@ const MapUtils = {
       case MarkerClass.ESTACION:
         marker.timeOut = setTimeout(async () => {
           var markersAtPoint = this.getMarkersById(map, marker.id);
-          var lastData = await ApiService.post('lastDataEstacion/' + marker.id + '?locale=' + Vue.$getLocale(),
+          var lastData = await ApiService.post('lastData/station/' + marker.id + '?locale=' + Vue.$getLocale(),
           markersAtPoint.map(m => { return m.mapOption.variableType }), true);
           marker.lastDataComponent  = new Vue({ ...LastDataPopup, propsData: { marker: marker, data: lastData.data } }).$mount()
           marker.bindPopup(marker.lastDataComponent.$el, {
@@ -182,8 +188,25 @@ const MapUtils = {
   },
 
   distanceInPixels(map, coord1, coord2) {
-    return map.latLngToLayerPoint(coord1)
-    .distanceTo(map.latLngToLayerPoint(coord2))
+    var distance = map.latLngToLayerPoint(coord1)
+    .distanceTo(map.latLngToLayerPoint(coord2));
+    return distance;
+  },
+
+  distanceInMeters(originLatLng, destLatLng) {
+
+    var lon1 = originLatLng.lng * Math.PI / 180,
+        lat1 = originLatLng.lat * Math.PI / 180,
+        lon2 = destLatLng.lng * Math.PI / 180,
+        lat2 = destLatLng.lat * Math.PI / 180;
+
+    var deltaLat = lat2 - lat1;
+    var deltaLon = lon2 - lon1;
+
+    var a = Math.pow(Math.sin(deltaLat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(deltaLon/2), 2);
+    var c = 2 * Math.asin(Math.sqrt(a));
+    var EARTH_RADIUS = 6371;
+    return c * EARTH_RADIUS * 1000;
   },
 
   convertYMDHToDate(str) {
