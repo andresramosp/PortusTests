@@ -104,6 +104,11 @@ export default {
     esAntena() {
         return this.markerRef.mapResource.markerClass == MarkerClass.ANTENA_RADAR;
     },
+
+    esRadar() {
+        return this.markerRef.mapResource.markerClass == MarkerClass.ESTACION
+            && this.markerRef.radar;
+    },
     
     onHidden (evt) {
        // Importante para que el v-if re-cree los subcomponentes, relanzando los create()

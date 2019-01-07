@@ -99,7 +99,8 @@ export const MapResources = [
     vectors: true,
     defaultVectors: true,
     paintBounds: true,
-    isRadar: true
+    isRadar: true,
+    showRadarPoints: false
   },
   {
     id: 'pred-tiles-temperatura',
@@ -340,6 +341,9 @@ export const MapResources = [
     minZoom: 0,
     icon: function (m) {
       return (1 <= m.estado && m.estado <= 2) ? 'estacion-corriente-na.png' : 'estacion-corriente.png'
+    },
+    filter: function (m) {
+      return !m.radar;
     },
     showAll: true,
     locale: true,

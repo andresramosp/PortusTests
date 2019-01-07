@@ -126,6 +126,7 @@ export default {
     parameters: { type: Array, default: [] }
   },
   computed: {
+
     loading() {
       return !this.paramsGroups || this.dataSources.length != this.paramsGroups.length;
     },
@@ -145,11 +146,10 @@ export default {
   },
   watch: {
     marker: function() {
-      if (this.marker != null && this.parameters.length > 0) {
-        this.titulo = this.marker.nombre;
-      }
+
     },
     parameters: function() {
+
       this.dataSources = [];
       if (this.marker != null && this.parameters.length > 0) {
           this.paramsGroups = this.parameters.map(p => p.variable).filter(function (elem, index, self) { return index == self.indexOf(elem); });
@@ -159,6 +159,10 @@ export default {
           // this.asyncForEach(this.paramsGroups, async pGrp => {
           //   await this.getTableData(this.parameters.filter(p => p.variable == pGrp), pGrp);
           // });
+          this.titulo = this.marker.nombre;
+          if (this.marker.radar) {
+            this.titulo += ". " + "Posición del punto: " +  " Lat " + parseFloat(this.marker.lat).toFixed(2) + " N" + ": Lon " + parseFloat(this.marker.lon).toFixed(2) + " O";
+          }
       }
     }
   },
@@ -167,8 +171,17 @@ export default {
   methods: {
     getTableData(parametrosDataSource, dataSourceId) {
       var dt = this;
-      ApiService.post(
-        "RTData/" + this.marker.id + "?locale=" + this.$getLocale(), parametrosDataSource.map(p => p.id))
+
+      if (!this.marker.radar) {
+        var url = "RTData/station/" + this.marker.id + "?locale=" + this.$getLocale();
+        var params = parametrosDataSource.map(p => p.id);
+      }
+      else {
+        var url = "RTData/radar/" + this.marker.id + "?locale=" + this.$getLocale();
+        var params = [this.marker.latId, this.marker.lonId];
+      }
+
+      ApiService.post(url, params)
         .then(result => {
           if (result.data.length > 0) {
              var dataSource = { 

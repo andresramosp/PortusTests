@@ -58,7 +58,7 @@ const MapState = {
 
     async addMarkerLayer(mapResource, mapOption) {
         this.addLoading('markers');
-        var result = mapResource.cachedData || await ApiService.get(mapResource.resourceApi, (mapResource.locale ? { locale: Vue.$getLocale() } : null )); // {data: [{latitud: 80, longitud: 80, id:'1', icon: 'estacion-agitacion.png', nombre:'hola' }, {latitud: 80, longitud: 82, id:'2', icon: 'estacion-agitacion.png', nombre: 'adios' }]};/
+        var result = mapResource.cachedData || await ApiService.get(mapResource.resourceApi, (mapResource.locale ? { locale: Vue.$getLocale() } : null ));
         result.data.forEach(m => {
             var iconUrl = typeof mapResource.icon === "function" ? mapResource.icon(m) : mapResource.icon;
             var customIcon = L.icon({ iconUrl: require('@/assets/markers/' + iconUrl), iconSize: mapResource.iconSize ? mapResource.iconSize : [17, 17] });
@@ -81,10 +81,12 @@ const MapState = {
             marker.mapResource = mapResource;
             marker.mapOption = mapOption;
             Object.assign(marker, m);
-            marker.visible = !marker.mapResource.unchecked &&
-                            (!marker.mapResource.groupLayersBy 
-                         || !marker.mapResource.groupLayersBy.defaultVisibles 
-                         || marker.mapResource.groupLayersBy.defaultVisibles.indexOf(marker[marker.mapResource.groupLayersBy.field]) != -1);
+            marker.visible = !marker.mapResource.unchecked;
+                        //&& (!marker.mapResource.filter || marker.mapResource.filter(m) );
+
+                        //     (!marker.mapResource.groupLayersBy 
+                        //  || !marker.mapResource.groupLayersBy.defaultVisibles 
+                        //  || marker.mapResource.groupLayersBy.defaultVisibles.indexOf(marker[marker.mapResource.groupLayersBy.field]) != -1);
             
             this.preloadedMarkers.push(marker);
         });
@@ -129,12 +131,6 @@ const MapState = {
                     rect.mapResource = mapResource;
                     rect.addTo(this.map);
                     portusTimeLayer.boundRectangle = rect;
-                    // rect.visible = true;
-                    // rect.minZoom = 0;
-                    // rect.maxZoom = 7;
-                    // this.preloadedMarkers.push(rect);
-                   
-                    //this.setVisibleMarkerLayers();
                 }
             }
 
@@ -143,10 +139,16 @@ const MapState = {
         this.removeLoading('timelines');
     },
 
+    // La visibilidad de un marker viene dada por:
+    // 1. El campo visible, establecido por el usuario mediante el checkbox del submenu de recursos (salvo unchecked por defecto)
+    // 2. La función filter establecida por el programador en mapResourceManager (p.e. las estaciones radar de las corrientes)
+    // 3. La visibilidad dentro de las coordenadas / zoom del mapa (salvo caso de showAll establecido en mapResourceManager)
     setVisibleMarkerLayers() {
         var ms = this;
         this.preloadedMarkers.forEach(function (marker) {
-            if (marker.visible && (marker.mapResource.showAll || (MapUtils.markerVisible(ms.map, marker)))) {
+            if (marker.visible 
+            && (!marker.mapResource.filter || marker.mapResource.filter(marker))
+            && (marker.mapResource.showAll || (MapUtils.markerVisible(ms.map, marker)))) {
                 marker.addTo(ms.map);
             }
             else {
@@ -220,9 +222,8 @@ const MapState = {
             }
             else {
                 if (preLayer.mapResource.isRadar && (ms.currentRadar && ms.currentRadar.dominio == preLayer.idDominio)) {
-                        ms.map.removeLayer(ms.radarPointsLayer);
-                        ms.currentRadar = null;
-                        console.log('Removed Radar: ' + preLayer.dominio)
+                    ms.removeRadarPoints()
+                    console.log('Removed Radar: ' + preLayer.idDominio)
                 }
                 if (preLayer.boundRectangle)
                     preLayer.boundRectangle.addTo(ms.map);
@@ -256,8 +257,9 @@ const MapState = {
                         ms.removeMapLogo(url);
                     })
                 }
-                if (layer.mapResource.isRadar)
-                    ms.currentRadar = null;
+                if (layer.mapResource.isRadar && (ms.currentRadar && ms.currentRadar.dominio == layer.idDominio)) {
+                    ms.removeRadarPoints();
+                }
             }
         });
 
@@ -360,83 +362,44 @@ const MapState = {
         this.predDataTableVariable = variable;
     },
 
-    async getRadarPoints(layer) {
+    // TODO: llevarse funcionalidad a MapUtils, o incluso crear un radar.service.js
 
-        var mode = "MousePoints"; // "MousePoints", "AllPoints", "NoPoints"
+    async getRadarPoints(layer) {
 
         if (!this.currentRadar || this.currentRadar.dominio != layer.idDominio) {
 
-            if (this.radarPointsLayer)
-                this.map.removeLayer(this.radarPointsLayer);
-
             var requestRadar = await ApiService.get('radares/' + layer.idDominio, { locale: Vue.$getLocale() });
             this.currentRadar = requestRadar.data;
-    
+
+            // En principio no haría falta traerse todos los puntos-radar desde BD, pues
+            // podríamos crear un marker usando las lat/lon calculadas. Lo mantengo porque igualmente
+            // hemos de traer esos puntos por si queremos mostrar la malla auxiliar, y porque así se
+            // garantiza que el cálculo coincide con un punto-radar existente en BD.
             var requestPoints = await ApiService.get('puntosRadar/' + layer.idDominio);
             this.radarPoints = requestPoints.data;
-    
+
             var ms = this;
-            this.radarPointsLayer = L.layerGroup();
-            this.radarPointsLayer.mapResource = layer.mapResource;
-
-            this.radarPoints.forEach(rp => {
-                var lat = this.currentRadar.latitudMalla + (rp.latitud * this.currentRadar.stepLat);
-                var lon = this.currentRadar.longitudMalla + (rp.longitud * this.currentRadar.stepLon);
-                var circleMarker = L.circleMarker([lat, lon], {
-                    radius: 5,
-                    stroke: false,
-                    fillOpacity: mode == "AllPoints" ? 0.15 : 0,
-                    opacity: 0,
-                    color: '#3388ff'
-                });
-                circleMarker.nombre = ms.currentRadar.nombre;
-                circleMarker.on('click', async function (e) {
-                    
-                });
-                circleMarker.on('mouseover', function (e) {
-                    circleMarker.hovered = true;
-                    circleMarker.setStyle({ fillOpacity: 1 });
-                    circleMarker.setRadius(7);
-                    circleMarker.timeOut = setTimeout(() => {
-                        ms.getRadarLastData(ms.currentRadar, rp.latitud, rp.longitud, new Date(ms.currentPlayerTime), circleMarker);
-                    }, 250)
-                    if (ms.circleMarkerOld) {
-                        ms.circleMarkerOld.setStyle({ fillOpacity: mode == "NoPoints" ? 0 : 0.15 })
-                        ms.circleMarkerOld.setRadius(5);
-                    }
-                    ms.circleMarkerOld = circleMarker;
-                });
-                circleMarker.on('mouseout', function (e) {
-                    circleMarker.hovered = false;
-                    clearTimeout(circleMarker.timeOut);
-                    setTimeout(() => {
-                        circleMarker.setStyle({ fillOpacity: mode == "NoPoints" ? 0 : 0.15 })
-                        circleMarker.setRadius(5);
-                    }, 3000);
-                });
-                ms.radarPointsLayer.addLayer(circleMarker);
-            })
-            this.radarPointsLayer.addTo(this.map);
-            console.log('Added Radar: ' + layer.dominio)
-
-            if (mode == "MousePoints") {
-                this.map.on("mousemove", function(ev) {
-                    var mouseLatLng = L.latLng(ev.latlng.lat, ev.latlng.lng);
-                    ms.radarPointsLayer.eachLayer(function (circle) {
-                        if (!circle.hovered) {
-                            if (MapUtils.distanceInMeters(mouseLatLng, circle.getLatLng()) < 15000) {
-                                circle.setStyle({ fillOpacity: 0.5, opacity: 0 });
-                            }
-                            else {
-                                circle.setStyle({ fillOpacity: 0, opacity: 0 })
-                            }
-                        }
-                        
-                    });
-                });
-            }
+    
+            this.map.on("mousemove", function(ev) {
+                var mouseLatLng = L.latLng(ev.latlng.lat, ev.latlng.lng);
+                var closestRP = ms.calculateClosestRadarPoint(mouseLatLng, ms.currentRadar)
+                if (closestRP) {
+                    ms.addRadarPointMarker(closestRP, layer);
+                }
+            });
             
+            if (layer.mapResource.showRadarPoints)
+                this.showRadarPointsLayer(this.radarPoints, layer);
         }
+    },
+
+    removeRadarPoints() {
+        if (this.radarPointsLayer)
+            this.map.removeLayer(this.radarPointsLayer);
+        if (this.radarPointMarker) 
+            this.radarPointMarker.remove();
+        this.map.off("mousemove");
+        this.currentRadar = null;
     },
 
     async getRadarLastData(radar, lat, lon, date, marker) {
@@ -448,10 +411,89 @@ const MapState = {
                             + date + '?locale=' + Vue.$getLocale());
         lastData.data.datos.push({ nombreParametro: "Longitud", valor: marker.getLatLng().lng, factor: 1, unidad: 'º'  });
         lastData.data.datos.push({ nombreParametro: "Latitud", valor: marker.getLatLng().lat, factor: 1, unidad: 'º'  });
-        marker.lastDataComponent  = new Vue({ ...LastDataPopup, propsData: { marker: marker, data: lastData.data, radar: true } }).$mount()
+        marker.lastDataComponent  = new Vue({ ...LastDataPopup, propsData: { marker: marker, data: lastData.data, radarPoint: true } }).$mount()
         marker.bindPopup(marker.lastDataComponent.$el, { maxWidth: 560 });
         marker.openPopup();
+    },
+
+    calculateClosestRadarPoint(mouseLatLng, radar) {
+        var latId = (mouseLatLng.lat - radar.latitudMalla) / radar.stepLat;
+        var lonId = (mouseLatLng.lng - radar.longitudMalla) / radar.stepLon;
+        return this.radarPoints.find(rp => rp.latitud == Math.round(latId) && rp.longitud == Math.round(lonId));
+    },
+
+    addRadarPointMarker(rp, layer) {
+        if (!this.radarPointMarker || (this.radarPointMarker.latId != rp.latitud || this.radarPointMarker.lonId != rp.longitud)) {
+            var lat = this.currentRadar.latitudMalla + (rp.latitud * this.currentRadar.stepLat);
+            var lon = this.currentRadar.longitudMalla + (rp.longitud * this.currentRadar.stepLon);
+            var circleMarker = L.circleMarker([lat, lon], {
+                radius: 7,
+                stroke: false,
+                fillOpacity: 1,
+                opacity: 0,
+                color: '#bfd0ef' //'#3388ff'
+            });
+            circleMarker.latId = rp.latitud;
+            circleMarker.lonId = rp.longitud;
+            circleMarker.nombre = this.currentRadar.nombre;
+            circleMarker.mapResource = layer.mapResource;
+    
+            // El panel de información lo abrimos como si hiciéramos click en la estación 
+            // radar (que está invisible en el mapa), pero a dicho marker le asociamos
+            // el latlon del puntoRadar, de forma que, para el banco de datos, se añada
+            // dicha información en la llamada a la Api
+            var ms = this;
+            circleMarker.on('click', async function (e) {
+                var markerRadar = ms.preloadedMarkers.find(m => m.id == ms.currentRadar.id);
+                markerRadar.latId = rp.latitud;
+                markerRadar.lonId = rp.longitud;
+                markerRadar.lat = lat;
+                markerRadar.lon = lon;
+                ms.markersSelected = [markerRadar];
+            });
+            circleMarker.on('mouseover', function (e) {
+                circleMarker.timeOut = setTimeout(() => {
+                    ms.getRadarLastData(ms.currentRadar, rp.latitud, rp.longitud, new Date(ms.currentPlayerTime), circleMarker);
+                }, 250)
+            });
+            circleMarker.on('mouseout', function (e) {
+                clearTimeout(circleMarker.timeOut);
+            });
+    
+            if (this.radarPointMarker) 
+                this.radarPointMarker.remove();
+
+            circleMarker.addTo(this.map);
+            console.log('adding');
+            this.radarPointMarker = circleMarker;
+        }
+        
+    },
+
+    showRadarPointsLayer(radarPoints, layer) {
+        if (this.radarPointsLayer)
+            this.map.removeLayer(this.radarPointsLayer);
+
+        this.radarPointsLayer = L.layerGroup();
+        this.radarPointsLayer.mapResource = layer.mapResource;
+
+        radarPoints.forEach(rp => {
+            var lat = this.currentRadar.latitudMalla + (rp.latitud * this.currentRadar.stepLat);
+            var lon = this.currentRadar.longitudMalla + (rp.longitud * this.currentRadar.stepLon);
+            var circleMarker = L.circleMarker([lat, lon], {
+                radius: 5,
+                stroke: false,
+                fillOpacity: 0.25,
+                opacity: 0,
+                color: '#3388ff'
+            });
+           
+            this.radarPointsLayer.addLayer(circleMarker);
+        })
+
+        this.radarPointsLayer.addTo(this.map);
     }
+   
 
 };
 

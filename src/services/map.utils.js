@@ -194,7 +194,6 @@ const MapUtils = {
   },
 
   distanceInMeters(originLatLng, destLatLng) {
-
     var lon1 = originLatLng.lng * Math.PI / 180,
         lat1 = originLatLng.lat * Math.PI / 180,
         lon2 = destLatLng.lng * Math.PI / 180,

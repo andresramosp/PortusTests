@@ -45,12 +45,12 @@ export default {
   props: {
     marker: { type: Object, default: null, required: false },
     data: { type: Object, default: null, required: false },
-    radar: { type: Boolean, default: false, required: false }
+    radarPoint: { type: Boolean, default: false, required: false }
   },
   computed: {
     notAvailable() {
       return (
-        !this.radar && (
+        !this.radarPoint && (
           (1 <= this.marker.estado && this.marker.estado <= 2) ||
           (this.marker.red.tipoRed == RedType.PROPAGACION && this.marker.estado > 0)
         )
