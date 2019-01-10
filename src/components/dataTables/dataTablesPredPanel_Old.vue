@@ -1,7 +1,44 @@
 
  <template>
-  <div>
-        <div class="allCenter">
+  <dx-popup
+    v-if="marker && variable"
+    :visible="true"
+    :position="popupPosition"
+    :resize-enabled="true"
+    :drag-enabled="true"
+    :close-on-outside-click="false"
+    :show-title="true"
+    :width="popupWidth"
+    :height="popupHeight"
+    :shading="false"
+    :title="titulo"
+    class="popup"
+    @hidden="cerrar"
+    title-template="titleTemplate"
+  >
+    <div
+      slot="titleTemplate"
+      slot-scope="title"
+      style="background: rgb(69, 99, 205); color: white"
+      class="largeTitle"
+    >
+      {{titulo}}
+      <span @click="cerrar" style="float:right; cursor:pointer">x</span>
+      <img
+        :src='require("@/assets/icons/shareIcon.png")'
+        class="shareIcon"
+        @click="openShareInfo"
+        @mouseover="openShareInfo"
+        @mouseout="closeShareInfo"
+      >
+       <img
+        :src='require("@/assets/icons/imprimir.png")'
+        class="shareIcon"
+        @click="printTable"
+      >
+    </div>
+
+    <div class="allCenter">
       <img 
         style="margin-top: 160px"
         :src="require('@/assets/gifs/loadingBars.gif')"
@@ -12,7 +49,6 @@
     
 
       <ShareInfoPanel
-        v-if="routeData"
         @shareinfo-mouseover="openShareInfo"
         @shareinfo-mouseout="closeShareInfo"
         :routeData="routeData"
@@ -73,7 +109,7 @@
         </b-col>
       </b-row>
     </div>
-  </div>
+  </dx-popup>
 </template>
 
 <script>
@@ -115,14 +151,15 @@ export default {
       tabIndex: 0,
       repeatedVarGroup: null,
       variableType: VariableType,
+      // mínimo número de datos horarios para mostrar un día en la tabla
       minDataDay: 5,
-      mareaAstronomicaUrl: null,
-      routeData: null
+      mareaAstronomicaUrl: null
     };
   },
   props: {
     marker: { type: Object, default: null },
-    variable: { type: String, default: null }
+    variable: { type: String, default: null },
+    minimized: { type: Boolean, default: true }
   },
   computed: {
     loading() {
@@ -144,14 +181,16 @@ export default {
   },
   // TODO: comprobar si en el mount ya están todas las props y hacer el getTableData ahí
   watch: {
-  
+    marker: function() {
+
+    },
+    variable: function() {
+      // if (this.marker != null && this.variable) {
+      //   this.getTableData();
+      // }
+    }
   },
   created() {
-    this.init();
-  },
-  mounted() {},
-  methods: {
-    init() {
       if (this.marker != null) {
         this.titulo = this.$t('{tablePredTitle_' + this.variable + '}') + " " + MapUtils.getMarkerName(this.marker);
         if (this.variable) {
@@ -179,7 +218,9 @@ export default {
 
         }
       }
-    },
+  },
+  mounted() {},
+  methods: {
     async getTableData() {
       var result = await ApiService.get("predData/" + this.variable + "/" + this.marker.id + "?locale=" + this.$getLocale());
       if (result.data.length > 0) {

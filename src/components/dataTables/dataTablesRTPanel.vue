@@ -1,44 +1,8 @@
  <template>
-  <dx-popup
-    v-if="marker && parameters.length > 0"
-    :visible="true"
-    :position="popupPosition"
-    :resize-enabled="true"
-    :drag-enabled="true"
-    :close-on-outside-click="false"
-    :show-title="true"
-    :width="popupWidth"
-    :height="popupHeight"
-    :shading="false"
-    :title="titulo"
-    class="popup"
-    @hidden="cerrar"
-    title-template="titleTemplate"
-  >
-    <div
-      slot="titleTemplate"
-      slot-scope="title"
-      style="background: rgb(69, 99, 205); color: white"
-      class="largeTitle"
-    >
-      {{titulo}}
 
-      <span @click="cerrar" style="float:right; cursor:pointer">x</span>
-      <!-- <img
-        :src='require("@/assets/icons/shareIcon.png")'
-        class="shareIcon"
-        @click="openShareInfo"
-        @mouseover="openShareInfo"
-        @mouseout="closeShareInfo"
-      >
-       <img
-        :src='require("@/assets/icons/imprimir.png")'
-        class="shareIcon"
-        @click="printTable"
-      > -->
-    </div>
+    <div>
 
-       <img
+    <img
         style="margin-left: 450px; margin-top: 160px;"
         :src="require('@/assets/gifs/loadingBars.gif')"
         v-show="loading"
@@ -79,11 +43,11 @@
               </b-tab>
 
           </b-tabs>
-
-      
       </b-col>
     </b-row>
-  </dx-popup>
+
+    </div>
+   
 </template>
 
 <script>
@@ -145,30 +109,28 @@ export default {
     }
   },
   watch: {
-    marker: function() {
-
-    },
     parameters: function() {
-
+      this.init();
+    }
+  },
+  created() {
+     this.init();
+  },
+  mounted() {},
+  methods: {
+    init() {
       this.dataSources = [];
       if (this.marker != null && this.parameters.length > 0) {
           this.paramsGroups = this.parameters.map(p => p.variable).filter(function (elem, index, self) { return index == self.indexOf(elem); });
           this.paramsGroups.forEach(pGrp => {
             this.getTableData(this.parameters.filter(p => p.variable == pGrp), pGrp);
           });
-          // this.asyncForEach(this.paramsGroups, async pGrp => {
-          //   await this.getTableData(this.parameters.filter(p => p.variable == pGrp), pGrp);
-          // });
           this.titulo = this.marker.nombre;
           if (this.marker.radar) {
             this.titulo += ". " + "Posición del punto: " +  " Lat " + parseFloat(this.marker.lat).toFixed(2) + " N" + ": Lon " + parseFloat(this.marker.lon).toFixed(2) + " O";
           }
       }
-    }
-  },
-  created() {},
-  mounted() {},
-  methods: {
+    },
     getTableData(parametrosDataSource, dataSourceId) {
       var dt = this;
 
@@ -252,34 +214,6 @@ export default {
         await callback(array[index], index, array)
       }
     },
-    // toggleShareInfo() {
-    //   this.displayShareInfo = !this.displayShareInfo;
-    // },
-
-    // openShareInfo() {
-    //     if (this.timeOutShareInfoClose)
-    //         clearInterval(this.timeOutShareInfoClose)
-    //      this.timeOutShareInfoOpen = setTimeout(() => {
-    //         this.displayShareInfo = true;
-    //     }, 500)
-    // },
-
-    // closeShareInfo() {
-    //     if (this.timeOutShareInfoOpen)
-    //         clearInterval(this.timeOutShareInfoOpen)
-    //     this.timeOutShareInfoClose = setTimeout(() => {
-    //         this.displayShareInfo = false;
-    //     }, 500)
-    // },
-
-    // printTable() {
-    //   //var printContents = "<style type='text/css' media='print'>  @page { size: landscape; } .dx-datagrid-headers .dx-row .colHeader { background-color: #7fb7e7f5 !important; font-size: 10px; font-weight: bold; color: #f8f9fa; padding-left: 2px } </style>"
-    //   //printContents += "<div style='margin-left: 800px;margin-bottom: 20px;'>" + this.$refs['tableContainer' + this.tabIndex][0].title + "</div>"
-    //   var printContents = this.$refs['tableContainer' + this.tabIndex][0].$el.innerHTML; 
-    //   var w = window.open();
-    //   w.document.write(printContents);
-    //   w.print();
-    // }
   }
 };
 </script>

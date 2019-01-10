@@ -18,14 +18,13 @@
         </b-row>
         <b-row v-for="param in bancoDatos" :key="param.id">
             <b-col style="font-weight:600;">
-                <!-- {{ '(' + param.variable + ') ' + param.nombre }} -->
                 {{ param.nombre }}
             </b-col>
             <b-col>
-                <input class="form-check-input" type="checkbox" v-model="param.active" @change="changeParam(param)" />
+                <input class="form-check-input" type="checkbox" v-model="param.tableActive" @change="changeParam(param)" />
             </b-col>
             <b-col>
-                <input class="form-check-input" type="checkbox" />
+                <input class="form-check-input" type="checkbox" v-model="param.graphicActive" @change="changeGraphParam(param)" />
             </b-col>
         </b-row>
         <b-row v-if="hasMareaAstronomica()" style="margin-top: 20px">
@@ -101,21 +100,45 @@ export default {
                  if (this.allVarsRT) {
                      this.bancoDatos.forEach(p => {
                         if (p.variable == param.variable)
-                            Vue.set(p, 'active', param.active);
+                            Vue.set(p, 'tableActive', param.tableActive);
                     })
                  }
-                 this.mapState.setRTDataTable(this.markers[0], this.bancoDatos.filter(param => param.active));
+                 this.mapState.addRTDataTable(this.markers[0], this.bancoDatos.filter(param => param.tableActive));
              }
              // En los puntos-malla, si elegimos un parámetro se marcan todos y la tabla depende de la variable
              if (this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA 
               || this.markers[0].mapResource.markerClass == MarkerClass.UBICACION) {
                  this.bancoDatos.forEach(p => {
-                     Vue.set(p, 'active', param.active);
+                     Vue.set(p, 'tableActive', param.tableActive);
                  })
-                 this.mapState.setPredDataTable(param.active ? this.markers[0] : null, param.active ? this.markers[0].mapOption.variableType: null);
+                 this.mapState.addPredDataTable(this.markers[0], this.markers[0].mapOption.variableType);
              }
          }, 750);
          
+     },
+     changeGraphParam(param) {
+        if (this.allVarsRT) {
+            this.bancoDatos.forEach(p => {
+            if (p.variable == param.variable)
+                Vue.set(p, 'graphicActive', param.graphicActive);
+            })
+            var params = this.bancoDatos.filter(param => param.graphicActive);
+            if (params.length > 0) {
+                this.mapState.addRTGraph(this.markers[0], params, "");
+            }
+            else {
+                //this.mapState.removeRTGraph(this.markers[0]);
+            }
+        }
+        else {
+            if (param.graphicActive) {
+                this.mapState.addRTGraph(this.markers[0], [param], "");
+            }
+            else{
+                //this.mapState.removeRTGraph(this.markers[0]);
+            }
+        }
+        
      },
      hasMareaAstronomica() {
          return this.markers[0].mareaAstronomica;

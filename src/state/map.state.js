@@ -1,7 +1,7 @@
 import { MapResources } from '@/common/mapResourceManager';
 import ApiService from "@/services/api.service";
 import MapUtils from "@/services/map.utils";
-import { BASE_URL_PORTUS } from '@/common/config';
+import { BASE_URL_PORTUS, BASE_URL_PORTUS_DATA } from '@/common/config';
 import Vue from 'vue';
 
 import LastDataPopup from "@/components/lastDataPopup.vue";
@@ -22,12 +22,9 @@ const MapState = {
     loadingThings: [],
     heapedPopup: null,
     mapLogos: [],
-    RTDataTableStation: null,
-    RTDataTableParameters: [],
-    predDataTableLocation: null,
-    predDataTableVariable: null,
     radarPointsLayer: null,
     currentRadar: null,
+    dataObjectsList: [],
 
     init(map) {
         this.map = map;
@@ -184,10 +181,10 @@ const MapState = {
             if (MapUtils.tileLayerVisible(ms.map, preLayer._baseLayer) && preLayer.visible) {
                 ms.map.options.timeDimensionOptions.period = "PT" + preLayer._baseLayer.options.hoursStep + "H";
                 var date = new Date();
-                date = date.addDays(-3);
                 date.setUTCHours(0, 0, 0, 0);
-                var predHours = (preLayer._baseLayer.options.numDays) * 24; //preLayer.mapResource.predictionTime ? preLayer.mapResource.predictionTime : 72;
-                ms.map.options.timeDimensionOptions.timeInterval = date.toISOString() + '/PT' + predHours + 'H'; // 'PT192H/' + sv.convertYMDHToDate(preLayer._baseLayer.options.strLastate).toISOString();
+                var predHours = (preLayer._baseLayer.options.numDays) * 24; 
+                //ms.map.options.timeDimensionOptions.timeInterval = date.toISOString() + '/PT' + predHours + 'H'; 
+                ms.map.options.timeDimensionOptions.timeInterval = 'PT' + predHours + 'H/' + MapUtils.convertYMDHToDate(preLayer._baseLayer.options.strLastate).toISOString();
                 ms.map.timeDimension.initialize(ms.map.options.timeDimensionOptions);
                 ms.map.timeDimension.setCurrentTimeIndex(0);
                 if (!ms.map.timeDimensionControl) {
@@ -352,14 +349,62 @@ const MapState = {
         this.mapLogos = this.mapLogos.filter(l => l != logo);
     },
 
-    setRTDataTable(station, parameters) {
-        this.RTDataTableStation = station;
-        this.RTDataTableParameters = parameters;
+    addRTDataTable(marker, parameters) {
+        var markerTable = this.dataObjectsList.find(d => d.type == "RTDataTable" && d.marker.id == marker.id);
+        if (markerTable){
+            markerTable.parameters = markerTable.parameters.concat(parameters);
+        }
+        else {
+            var nombre = marker.nombre;
+            if (marker.radar) {
+                nombre += ". " + "Posición del punto: " +  " Lat " + parseFloat(marker.lat).toFixed(2) + " N" + ": Lon " + parseFloat(marker.lon).toFixed(2) + " O";
+            }
+            this.dataObjectsList.unshift(
+                { 
+                    name: 'Tiempo Real para ' + nombre,
+                    type: 'RTDataTable', 
+                    marker: marker, 
+                    parameters: parameters, 
+                    id: this.dataObjectsList.length 
+                })
+        }
+        
+    },
+ 
+    addPredDataTable(location, variable) {
+        var predTable = this.dataObjectsList.find(d => d.type == "PredDataTable" && d.marker.id == location.id && d.variable == variable);
+        if (!predTable) {
+            this.dataObjectsList.unshift(
+                { 
+                    name: 'Predicción ' + Vue.$t('{' + variable + '}'),
+                    type: 'PredDataTable', 
+                    marker: location, 
+                    variable: variable,
+                    id: this.dataObjectsList.length 
+                })
+        }
     },
 
-    setPredDataTable(location, variable) {
-        this.predDataTableLocation = location;
-        this.predDataTableVariable = variable;
+    addRTGraph(station, params, dirParam, interfazMode) {
+        var url = BASE_URL_PORTUS_DATA 
+                + "rtChart?station=" + station.id 
+                + "&params=" + params.map(p => p.paramEseoo).join() 
+                + "&dirVar=" + (dirParam ? dirParam : "")
+                + "&int=" + (interfazMode ? interfazMode : 'default')
+                + "&locale=" + Vue.$getLocale();
+        this.dataObjectsList.unshift(
+            { 
+                name: 'Gráfica ' + station.nombre,
+                type: 'Graphic', 
+                url: url, 
+                station: station, 
+                id: this.dataObjectsList.length 
+            })
+        //window.open(url, '_blank');
+    },
+
+    removeDataPanel(id) {
+        this.dataObjectsList = this.dataObjectsList.filter(o => o.id != id);
     },
 
     // TODO: llevarse funcionalidad a MapUtils, o incluso crear un radar.service.js

@@ -74,11 +74,11 @@ export default {
         L.control.zoom({
           position: PC.options_panel_align == 'right' ? 'topleft' : 'topright'
         }).addTo(map);
-        // L.control.zoomBox({
-        //   modal: true,
-        //   addToZoomControl: true,
-        //   position: PC.options_panel_align == 'right' ? 'topleft' : 'topright'
-        // }).addTo(map);
+        L.control.zoomBox({
+          modal: true,
+          addToZoomControl: true,
+          position: PC.options_panel_align == 'right' ? 'topleft' : 'topright'
+        }).addTo(map);
       }
      
       var vm = this;

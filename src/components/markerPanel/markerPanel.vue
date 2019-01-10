@@ -1,5 +1,23 @@
 <template>
-<b-modal v-model="modalShow" v-if="markers && markers.length > 0" @hidden="onHidden" size="lg" :title="modalTitle">
+<!-- <b-modal v-model="modalShow" v-if="markers && markers.length > 0" @hidden="onHidden" size="lg" :title="modalTitle"> -->
+
+ <dx-popup
+    v-if="markers && markers.length > 0"
+    :visible="true"
+    position="center"
+    :resize-enabled="false"
+    :drag-enabled="true"
+    :close-on-outside-click="false"
+    :show-title="true"
+    width="700"
+    height="auto"
+    :shading="false"
+    :title="modalTitle"
+    class="popup"
+    @hidden="onHidden"
+
+  >
+
     <b-tabs class='infoPanelClass' >
         <b-tab v-if="!esAntena()" :title="$t('{accesoADatosTab}')" active>
             <BancoDatosHistoricoTab v-if="esHistorico()" :markers="markers" /> 
@@ -15,7 +33,11 @@
             <CeroRefsTab :mareografo="markerRef" /> 
         </b-tab>
       </b-tabs>
-</b-modal>
+
+ </dx-popup>
+
+   
+<!-- </b-modal> -->
 </template>
 
 <script>
@@ -27,6 +49,7 @@ import BancoDatosTab from "@/components/markerPanel/bancoDatosTab.vue"
 import BancoDatosHistoricoTab from "@/components/markerPanel/bancoDatosHistoricoTab.vue"
 import LastPositionsTab from "@/components/markerPanel/lastPositionsTab.vue"
 import CeroRefsTab from "@/components/markerPanel/ceroRefsTab.vue"
+import { DxPopup, DxToolbarItem } from "devextreme-vue/popup";
 
 export default {
   name: "MarkerPanel",
@@ -35,7 +58,9 @@ export default {
     BancoDatosTab,
     LastPositionsTab,
     BancoDatosHistoricoTab,
-    CeroRefsTab
+    CeroRefsTab,
+    DxPopup, 
+    DxToolbarItem
   },
   props: {
     markers: { type: Array, default: [], required: false }

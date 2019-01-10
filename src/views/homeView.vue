@@ -7,9 +7,8 @@
    <UbicacionesPanel />
    <RegionesPanel />
    <LocationsWidget :ubicacion="mapState.ubicacionSelected" />
-   <DataTablesRTPanel :marker="mapState.RTDataTableStation" :parameters="mapState.RTDataTableParameters" />
-   <DataTablesPredPanel :marker="mapState.predDataTableLocation" :variable="mapState.predDataTableVariable" />
    <LogosList :logos="mapState.mapLogos" :defaultLogo="defaultLogo" />
+   <DataStackPanel />
 </div>
 </template>
 
@@ -23,9 +22,10 @@ import StaticMapsPanel from "@/components/staticMapsPanel.vue";
 import UbicacionesPanel from "@/components/ubicacionesPanel.vue";
 import RegionesPanel from "@/components/regionesPanel.vue";
 import LocationsWidget from "@/components/locationsWidget/locationsWidget.vue";
-import DataTablesRTPanel from "@/components/dataTables/dataTablesRTPanel.vue";
-import DataTablesPredPanel from "@/components/dataTables/dataTablesPredPanel.vue";
+// import DataTablesRTPanel from "@/components/dataTables/dataTablesRTPanel.vue";
+// import DataTablesPredPanel from "@/components/dataTables/dataTablesPredPanel.vue";
 import LogosList from "@/components/logosList.vue";
+import DataStackPanel from "@/components/dataStackPanel.vue";
 import { MapOptions } from '@/common/mapResourceManager';
 import { MapOptionsGroups } from '@/common/mapResourceManager';
 
@@ -40,8 +40,9 @@ export default {
     RegionesPanel,
     LocationsWidget,
     LogosList,
-    DataTablesRTPanel,
-    DataTablesPredPanel
+    // DataTablesRTPanel,
+    // DataTablesPredPanel,
+    DataStackPanel
   },
   data () {
     return {
