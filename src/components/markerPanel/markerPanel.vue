@@ -4,7 +4,7 @@
  <dx-popup
     v-if="markers && markers.length > 0"
     :visible="true"
-    position="center"
+    :position="{ at: 'center', offset: '0 -80' }"
     :resize-enabled="false"
     :drag-enabled="true"
     :close-on-outside-click="false"
@@ -14,7 +14,7 @@
     :shading="false"
     :title="modalTitle"
     class="popup"
-    @hidden="onHidden"
+    @hidden="cerrar"
 
   >
 
@@ -34,6 +34,10 @@
         </b-tab>
       </b-tabs>
 
+      <div class="footer">
+         <dx-button class="footerButton" :text="$t('{cerrarButton}')" width="80" height="30" type="default" @click="cerrar" />
+      </div>
+
  </dx-popup>
 
    
@@ -50,6 +54,7 @@ import BancoDatosHistoricoTab from "@/components/markerPanel/bancoDatosHistorico
 import LastPositionsTab from "@/components/markerPanel/lastPositionsTab.vue"
 import CeroRefsTab from "@/components/markerPanel/ceroRefsTab.vue"
 import { DxPopup, DxToolbarItem } from "devextreme-vue/popup";
+import DxButton from "devextreme-vue/button";
 
 export default {
   name: "MarkerPanel",
@@ -60,7 +65,8 @@ export default {
     BancoDatosHistoricoTab,
     CeroRefsTab,
     DxPopup, 
-    DxToolbarItem
+    DxToolbarItem,
+    DxButton
   },
   props: {
     markers: { type: Array, default: [], required: false }
@@ -135,7 +141,7 @@ export default {
             && this.markerRef.radar;
     },
     
-    onHidden (evt) {
+    cerrar(evt) {
        // Importante para que el v-if re-cree los subcomponentes, relanzando los create()
        // Como alternativa, se pueden usar computed/asyncComputed para actualizar los valores 
        MapState.markersSelected = [];
@@ -145,6 +151,17 @@ export default {
 </script>
 
 <style scoped>
+
+.footer {
+  border-top: 1px solid #ddd;
+  margin-top: 20px;
+}
+
+.footerButton {
+  margin-top: 10px;
+  float: right;
+  margin-bottom: 10px;
+}
 
 .infoPanelClass {
   font-size: 12px;

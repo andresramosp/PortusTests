@@ -150,6 +150,7 @@ export default {
 
   .pleaBajaColumn {
     text-align: center; 
+    font-size: 13px;
     /* width: 20px; */
   }
 

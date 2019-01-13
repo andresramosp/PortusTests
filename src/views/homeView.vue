@@ -80,6 +80,11 @@ export default {
     visibility: visible !important;
 }
 
+.popup {
+  position: absolute !important;
+  top: 5% important;
+}
+
 @-webkit-keyframes animat_show{
     0%{opacity:0}
     100%{opacity:1}

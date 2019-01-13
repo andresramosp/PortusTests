@@ -95,49 +95,28 @@ export default {
          if (this.timeOut)
             clearTimeout(this.timeOut);
          this.timeOut = setTimeout(() => {
-             // En las estaciones podemos seleccionar parámetros individualmente.
+             // En las estaciones (Tiempo Real), si elegimos un parámetro se marcan todos los de la misma variable
              if (this.markers[0].mapResource.markerClass == MarkerClass.ESTACION) {
-                 if (this.allVarsRT) {
-                     this.bancoDatos.forEach(p => {
-                        if (p.variable == param.variable)
-                            Vue.set(p, 'tableActive', param.tableActive);
-                    })
-                 }
+                 this.bancoDatos.forEach(p => {
+                    if (p.variable == param.variable)
+                        Vue.set(p, 'tableActive', param.tableActive);
+                })
                  this.mapState.addRTDataTable(this.markers[0], this.bancoDatos.filter(param => param.tableActive));
              }
-             // En los puntos-malla, si elegimos un parámetro se marcan todos y la tabla depende de la variable
+             // En los puntos-malla (Predicción), si elegimos un parámetro se marcan todos y la tabla depende de la variable
              if (this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA 
               || this.markers[0].mapResource.markerClass == MarkerClass.UBICACION) {
                  this.bancoDatos.forEach(p => {
                      Vue.set(p, 'tableActive', param.tableActive);
                  })
-                 this.mapState.addPredDataTable(this.markers[0], this.markers[0].mapOption.variableType);
+                 this.mapState.setPredDataTable(this.markers[0], this.markers[0].mapOption.variableType, param.tableActive);
              }
          }, 750);
          
      },
      changeGraphParam(param) {
-        if (this.allVarsRT) {
-            this.bancoDatos.forEach(p => {
-            if (p.variable == param.variable)
-                Vue.set(p, 'graphicActive', param.graphicActive);
-            })
-            var params = this.bancoDatos.filter(param => param.graphicActive);
-            if (params.length > 0) {
-                this.mapState.addRTGraph(this.markers[0], params, "");
-            }
-            else {
-                //this.mapState.removeRTGraph(this.markers[0]);
-            }
-        }
-        else {
-            if (param.graphicActive) {
-                this.mapState.addRTGraph(this.markers[0], [param], "");
-            }
-            else{
-                //this.mapState.removeRTGraph(this.markers[0]);
-            }
-        }
+        // En las gráficas, podemos marcar parámetros individualmente
+        this.mapState.setRTGraphParam(this.markers[0], param, "");
         
      },
      hasMareaAstronomica() {

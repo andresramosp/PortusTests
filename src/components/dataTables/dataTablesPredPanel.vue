@@ -24,8 +24,25 @@
 
     <div v-show="!displayShareInfo">
       <b-row>
-        <b-col v-if="!loading" class="fadeIn">
+        <b-col v-if="!loading" class="fadeIn" cols="2">
           <img :src="defaultLogo" style="margin-left: 5px; margin-bottom: 15px">
+        </b-col>
+        <b-col style="font-weight: bold" cols="8">
+          {{titulo}}
+         </b-col>
+         <b-col cols="2">
+            <img
+              :src='require("@/assets/icons/shareIcon.png")'
+              class="shareIcon"
+              @click="openShareInfo"
+              @mouseover="openShareInfo"
+              @mouseout="closeShareInfo"
+            >
+            <img
+              :src='require("@/assets/icons/imprimir.png")'
+              class="shareIcon"
+              @click="printTable"
+            >
         </b-col>
       </b-row>
       <b-row >
@@ -38,8 +55,9 @@
               v-if="variable == variableType.SEA_LEVEL" 
               style="margin-bottom: 10px" />
 
-          <b-tabs v-if="marker && days.length > 0" v-model="tabIndex">
+          <b-tabs v-if="marker && days.length > 0" v-model="tabIndex" @input="onShowTab">
             <b-tab
+              
               v-for="(dataSource, index) in days"
               :key="dataSource.id"
               :title="$t('{'+ dataSource.id +'}')"
@@ -47,9 +65,11 @@
               :ref="'tableContainer' + index"
             >
             <div >
-                 <dx-data-grid
+
+              <dx-data-grid
+                 :ref="'dataGrid' + index"
                 :data-source="dataSource.data"
-                :allow-column-reordering="true"
+                :allow-column-reordering="false"
                 :row-alternation-enabled="true"
                 :show-borders="false"
                 :showColumnLines="false"
@@ -127,24 +147,13 @@ export default {
   computed: {
     loading() {
       return this.days.length == 0;
-    },
-    popupWidth() {
-      return this.variable == VariableType.SEA_LEVEL ? 1185 : 1050;
-    },
-    popupHeight() {
-      return this.days.length > 0 ? ((this.days[0].data.length) * 28) + ( this.variable != VariableType.SEA_LEVEL ? 178 : 328 ): 400;
-    },
-    popupPosition() {
-      return this.minimized
-        ? this.align == "left"
-          ? "bottom"
-          : "bottom"
-        : "center";
     }
   },
-  // TODO: comprobar si en el mount ya están todas las props y hacer el getTableData ahí
   watch: {
-  
+    marker: function () {
+      if (this.marker && this.variable)
+        this.init();
+    }
   },
   created() {
     this.init();
@@ -295,20 +304,37 @@ export default {
             clearInterval(this.timeOutShareInfoOpen)
         this.timeOutShareInfoClose = setTimeout(() => {
             this.displayShareInfo = false;
-        }, 500)
+        }, 1000)
     },
 
     printTable() {
       // Ponerle ref al logo y traerse el innerHtml, si lo piden
       // Se le puede quitar la primera columna para ajustarlo mejor
-      var printContents = "<style type='text/css' media='print'>  @page { size: landscape; } .dx-datagrid-headers .dx-row .colHeader { background-color: #7fb7e7f5 !important; font-size: 10px; font-weight: bold; color: #f8f9fa; padding-left: 2px } </style>"
-      printContents += "<div style='margin-left: 800px;margin-bottom: 20px;'>" + this.$refs['tableContainer' + this.tabIndex][0].title + "</div>"
-      // if (this.$refs.pleaBajaContainer)
-      //   printContents += this.$refs.pleaBajaContainer.$el.innerHTML;
-      printContents += this.$refs['tableContainer' + this.tabIndex][0].$el.innerHTML; 
-      var w = window.open();
-      w.document.write(printContents);
-      w.print();
+      // var printContents = "<style type='text/css' media='print'>  @page { size: landscape; } .dx-datagrid-headers .dx-row .colHeader { background-color: #7fb7e7f5 !important; font-size: 10px; font-weight: bold; color: #f8f9fa; padding-left: 2px } </style>"
+      // printContents += "<div style='margin-left: 800px;margin-bottom: 20px;'>" + this.$refs['tableContainer' + this.tabIndex][0].title + "</div>"
+      // // if (this.$refs.pleaBajaContainer)
+      // //   printContents += this.$refs.pleaBajaContainer.$el.innerHTML;
+      // printContents += this.$refs['tableContainer' + this.tabIndex][0].$el.innerHTML; 
+      // var w = window.open();
+      // w.document.write(printContents);
+      // w.print();
+
+      // TODO: abrir como widget y pasarle parametro para que imprima directamente
+      window.print();
+    },
+
+    onShowTab(tabIndex) {
+      var dataGrid = this.$refs['dataGrid' + tabIndex][0];
+      if (tabIndex > 0 && !dataGrid.shown) {
+          dataGrid.$el.style.visibility = "hidden";
+          dataGrid.$el.style.width = this.$refs['dataGrid0'][0].$el.style.width;
+          dataGrid.instance.refresh();
+          dataGrid.shown = true;
+          setTimeout(() => {
+             dataGrid.$el.style.visibility = "visible";
+          }, 100);
+         
+      }
     }
 
   }

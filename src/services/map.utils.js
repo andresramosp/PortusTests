@@ -52,6 +52,7 @@ const MapUtils = {
   markerMouseClick(map, marker) {
     var markersAtPoint = this.getMarkersById(map, marker.id);
     MapState.markersSelected = markersAtPoint;
+    //this.closeMarkerPopup(map, marker);
   },
 
   markerMouseOver(map, marker) {

@@ -352,7 +352,10 @@ const MapState = {
     addRTDataTable(marker, parameters) {
         var markerTable = this.dataObjectsList.find(d => d.type == "RTDataTable" && d.marker.id == marker.id);
         if (markerTable){
-            markerTable.parameters = markerTable.parameters.concat(parameters);
+            markerTable.parameters = parameters;
+            if (parameters.length == 0) {
+                this.dataObjectsList = this.dataObjectsList.filter(d => d.id != markerTable.id);
+            }
         }
         else {
             var nombre = marker.nombre;
@@ -365,13 +368,13 @@ const MapState = {
                     type: 'RTDataTable', 
                     marker: marker, 
                     parameters: parameters, 
-                    id: this.dataObjectsList.length 
+                    id: this.generateDataPanelId()
                 })
         }
         
     },
  
-    addPredDataTable(location, variable) {
+    setPredDataTable(location, variable, active) {
         var predTable = this.dataObjectsList.find(d => d.type == "PredDataTable" && d.marker.id == location.id && d.variable == variable);
         if (!predTable) {
             this.dataObjectsList.unshift(
@@ -380,27 +383,60 @@ const MapState = {
                     type: 'PredDataTable', 
                     marker: location, 
                     variable: variable,
-                    id: this.dataObjectsList.length 
+                    id: this.generateDataPanelId()
                 })
+        }
+        else if (!active) {
+            this.dataObjectsList = this.dataObjectsList.filter(d => d.id != predTable.id);
         }
     },
 
-    addRTGraph(station, params, dirParam, interfazMode) {
-        var url = BASE_URL_PORTUS_DATA 
+    setRTGraphParam(station, param, dirParam, interfazMode) {
+        var graphPanel = this.dataObjectsList.find(d => d.type == "Graphic" && d.marker.id == station.id && d.parameters[0].variable == param.variable);
+        if (graphPanel){
+            if (param.graphicActive) {
+                graphPanel.parameters.push(param);
+            }
+            else {
+                graphPanel.parameters = graphPanel.parameters.filter(p => p.paramEseoo != param.paramEseoo);
+            }
+            
+            if (graphPanel.parameters.length > 0) {
+                graphPanel.url =  BASE_URL_PORTUS_DATA 
                 + "rtChart?station=" + station.id 
-                + "&params=" + params.map(p => p.paramEseoo).join() 
+                + "&params=" + graphPanel.parameters.map(p => p.paramEseoo).join() 
                 + "&dirVar=" + (dirParam ? dirParam : "")
                 + "&int=" + (interfazMode ? interfazMode : 'default')
                 + "&locale=" + Vue.$getLocale();
-        this.dataObjectsList.unshift(
-            { 
-                name: 'Gráfica ' + station.nombre,
-                type: 'Graphic', 
-                url: url, 
-                station: station, 
-                id: this.dataObjectsList.length 
-            })
-        //window.open(url, '_blank');
+            }
+            else {
+                this.dataObjectsList = this.dataObjectsList.filter(d => d.id != graphPanel.id);
+            }
+        }
+        else {
+            var url = BASE_URL_PORTUS_DATA 
+                + "rtChart?station=" + station.id 
+                + "&params=" + param.paramEseoo
+                + "&dirVar=" + (dirParam ? dirParam : "")
+                + "&int=" + (interfazMode ? interfazMode : 'default')
+                + "&locale=" + Vue.$getLocale();
+            this.dataObjectsList.unshift(
+                { 
+                    name: 'Gráfica ' + station.nombre,
+                    type: 'Graphic', 
+                    parameters: [param],
+                    marker: station,
+                    url: url, 
+                    id: this.generateDataPanelId()
+                })
+        }
+        
+    },
+
+    generateDataPanelId() {
+        var id = this.dataObjectsList.length > 0 ? (Math.max.apply(null, this.dataObjectsList.map(d => d.id)) + 1) : 0;
+        console.log(id);
+        return  id;
     },
 
     removeDataPanel(id) {

@@ -117,6 +117,10 @@ const LocalePlugin = {
             en: "Historical Data"
         },
         // Info Panel
+        cerrarButton: {
+            es: "Cerrar",
+            en: "Close"
+        },
         bancoDatosGraficos: {
             es: "Gráficos",
             en: "Graphics"
