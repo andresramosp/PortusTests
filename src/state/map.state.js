@@ -349,6 +349,8 @@ const MapState = {
         this.mapLogos = this.mapLogos.filter(l => l != logo);
     },
 
+    // Mover a data.utils.js
+
     addRTDataTable(marker, parameters) {
         var markerTable = this.dataObjectsList.find(d => d.type == "RTDataTable" && d.marker.id == marker.id);
         if (markerTable){
@@ -391,8 +393,11 @@ const MapState = {
         }
     },
 
-    setRTGraphParam(station, param, dirParam, interfazMode) {
-        var graphPanel = this.dataObjectsList.find(d => d.type == "Graphic" && d.marker.id == station.id && d.parameters[0].variable == param.variable);
+    setRTGraphParam(station, param, interfazMode) {
+        var graphPanel = this.dataObjectsList.find(d => 
+            d.type == "Graphic" 
+            && d.marker.id == station.id 
+            && d.marker.mapOption.variableType == station.mapOption.variableType);
         if (graphPanel){
             if (param.graphicActive) {
                 graphPanel.parameters.push(param);
@@ -405,8 +410,10 @@ const MapState = {
                 graphPanel.url =  BASE_URL_PORTUS_DATA 
                 + "rtChart?station=" + station.id 
                 + "&params=" + graphPanel.parameters.map(p => p.paramEseoo).join() 
-                + "&dirVar=" + (dirParam ? dirParam : "")
+                + "&dirParams=" + graphPanel.parameters.filter(p => p.unidad == 'º').map(p => p.paramEseoo).join() 
                 + "&int=" + (interfazMode ? interfazMode : 'default')
+                + "&isRadar=" + (station.radar ? 'true' : 'false')
+                + (station.radar ? ("&lat=" + station.latId + "&lon=" + station.lonId) : '')
                 + "&locale=" + Vue.$getLocale();
             }
             else {
@@ -417,15 +424,67 @@ const MapState = {
             var url = BASE_URL_PORTUS_DATA 
                 + "rtChart?station=" + station.id 
                 + "&params=" + param.paramEseoo
-                + "&dirVar=" + (dirParam ? dirParam : "")
+                // + "&dirParams=" + (param.unidad == 'º' ? param.paramEseoo : "")
+                + "&int=" + (interfazMode ? interfazMode : 'default')
+                + "&isRadar=" + (station.radar ? 'true' : 'false')
+                + (station.radar ? ("&lat=" + station.latId + "&lon=" + station.lonId) : '')
+                + "&locale=" + Vue.$getLocale();
+            this.dataObjectsList.unshift(
+                { 
+                    name: 'Gráfica Tiempo Real ' + station.nombre,
+                    type: 'Graphic', 
+                    parameters: [param],
+                    marker: station,
+                    url: url, 
+                    id: this.generateDataPanelId()
+                })
+        }
+        
+    },
+
+    setPredGraphParam(modelPoint, parameters, interfazMode, isNivmar) {
+        var endPoint = isNivmar ? 'nivmarChart' : 'predChart';
+        var stationField = isNivmar ? 'mareografo' : 'codigoEstacion';
+        var graphPanel = this.dataObjectsList.find(d => 
+            d.type == "Graphic" 
+            && d.marker.id == modelPoint.id 
+            && d.marker.mapOption.variableType == modelPoint.mapOption.variableType);
+        if (graphPanel){
+            parameters.forEach(param => {
+                if (param.graphicActive) {
+                    graphPanel.parameters.push(param);
+                }
+                else {
+                    graphPanel.parameters = graphPanel.parameters.filter(p => p.paramEseoo != param.paramEseoo);
+                }
+            })
+            if (graphPanel.parameters.length > 0) {
+                graphPanel.url =  BASE_URL_PORTUS_DATA 
+                + endPoint + "?code=" + modelPoint.id 
+                + (modelPoint[stationField] && modelPoint[stationField] != -1 ? "&station=" + modelPoint[stationField] : '')
+                + "&var=" + graphPanel.parameters.map(p => p.paramEseoo).join() 
+                + (graphPanel.parameters.filter(p => p.unidad == 'º').length > 0 ? '&dirVar=' + graphPanel.parameters.filter(p => p.unidad == 'º').map(p => p.paramEseoo).join()  : "")
+                + "&int=" + (interfazMode ? interfazMode : 'default')
+                + "&locale=" + Vue.$getLocale();
+            }
+            else {
+                this.dataObjectsList = this.dataObjectsList.filter(d => d.id != graphPanel.id);
+            }
+        }
+        else {  
+            var url = BASE_URL_PORTUS_DATA 
+                + endPoint + "?code=" + modelPoint.id 
+                + (modelPoint[stationField] && modelPoint[stationField] != -1 ? "&station=" + modelPoint[stationField] : '')
+                + "&var=" + parameters.map(p => p.paramEseoo).join() 
+                + (parameters.filter(p => p.unidad == 'º').length > 0 ? '&dirVar=' + parameters.filter(p => p.unidad == 'º').map(p => p.paramEseoo).join()  : "")
                 + "&int=" + (interfazMode ? interfazMode : 'default')
                 + "&locale=" + Vue.$getLocale();
             this.dataObjectsList.unshift(
                 { 
-                    name: 'Gráfica ' + station.nombre,
+                    name: 'Gráfica Predicción ' + (modelPoint.nombre ? modelPoint.nombre : " Lat " + modelPoint.latitud.toFixed(2) + " N" + ": Lon " + modelPoint.longitud.toFixed(2) + " O"),
                     type: 'Graphic', 
-                    parameters: [param],
-                    marker: station,
+                    parameters: parameters,
+                    marker: modelPoint,
                     url: url, 
                     id: this.generateDataPanelId()
                 })

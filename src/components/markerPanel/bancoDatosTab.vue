@@ -116,8 +116,24 @@ export default {
      },
      changeGraphParam(param) {
         // En las gráficas, podemos marcar parámetros individualmente
-        this.mapState.setRTGraphParam(this.markers[0], param, "");
+        if (this.markers[0].mapResource.markerClass == MarkerClass.ESTACION) {
+            this.mapState.setRTGraphParam(this.markers[0], param);
+        }
+        if (this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA) {
+            this.checkDir180Param(param);
+            this.mapState.setPredGraphParam(this.markers[0], [param]);
+        }
+        if (this.markers[0].mapResource.markerClass == MarkerClass.UBICACION) {
+            this.checkDir180Param(param);
+            var extraParam = { paramEseoo: 'SeaSea', graphicActive: param.graphicActive, unidad: 'm' };
+            var parameters = [param, extraParam];
+            this.mapState.setPredGraphParam(this.markers[0], parameters, null, true);
+        }
         
+     },
+     checkDir180Param(param) {
+         if ((param.paramEseoo == 'WinDir' || param.paramEseoo == 'MeanDir')  && param.paramEseoo.indexOf('180') == -1)
+            param.paramEseoo += '180';
      },
      hasMareaAstronomica() {
          return this.markers[0].mareaAstronomica;
