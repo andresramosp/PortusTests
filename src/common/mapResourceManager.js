@@ -1,7 +1,6 @@
 export default {}
 
 import { MarkerClass, VariableType, RedType } from "@/common/enums";
-import MapState from "../state/map.state";
 
 // Recursos de Tiles y Markers
 export const MapResources = [
@@ -533,7 +532,7 @@ export const MapResources = [
 ];
 
 export const MapOptionsGroups = [
-  { id: 'predicciones', name: '{prediccionesGroup}', multiple: false },
+  { id: 'predicciones', name: '{prediccionesGroup}', multiple: false, exclusiveWith: ['historico'] },
   { id: 'tiempo_real', name: '{tiempoRealGroup}', multiple: true },
   { id: 'historico', name: '{historicoGroup}', multiple: true }
 ]

@@ -1,71 +1,140 @@
 <template>
-  <div style="width: 569px;">
-    <b-card :header="$t('{headerGraficos}')">
-      <!-- <img v-if="!loading" :src="require('@/assets/locationsWidget/graficasFake.png')" style="width: 550px; margin-top: -15px" class="fadeIn" /> -->
-      <div v-for="graphUrl in graphUrlList" :key="graphUrl">
-        <iframe
-          :width="iFrameWidth"
-          :height="iFrameHeight"
-          :src="graphUrl"
-        />
-      </div>
-    </b-card>
+  <div>
+
+    <ShareInfoPanel
+      @shareinfo-mouseover="openShareInfo"
+      @shareinfo-mouseout="closeShareInfo"
+      :routeData="routeData"
+      v-show="displayShareInfo"
+    />
+
+    <div v-show="!displayShareInfo" style="width: 569px;">
+      <b-card >
+         <div slot="header">
+          <img
+            :src='require("@/assets/icons/shareIcon.png")'
+            class="shareIcon"
+            @click="toggleShareInfo"
+            @mouseover="openShareInfo"
+            @mouseout="closeShareInfo"
+          >
+          {{$t('{headerGraficos}')}}
+        </div>
+        <div v-for="graphUrl in graphUrlList" :key="graphUrl">
+          <iframe width="567" frameborder="0" :src="graphUrl"/>
+        </div>
+      </b-card>
+    </div>
   </div>
 </template>
 
 <script>
 import Vue from "vue";
 import MapUtils from "@/services/map.utils";
-import { BASE_URL_PORTUS_DATA } from '@/common/config';
+import { BASE_URL_PORTUS_DATA } from "@/common/config";
+import ApiService from "@/services/api.service";
+import ShareInfoPanel from "@/components/shareInfoPanel.vue";
 
 export default {
   name: "LocationsGraphsWidget",
+  components: {
+    ShareInfoPanel
+  },
   data() {
     return {
       mapUtils: MapUtils,
-      interval: null,
+      displayShareInfo: false,
       loading: true,
-      graphUrlList: []
+      graphUrlList: [],
+      routeData: null
     };
   },
   props: {
     locationType: { type: String, default: "", required: true },
     code: { type: Number, default: "", required: true }
   },
+  watch: {
+    code: function() {
+      this.init();
+    }
+  },
   computed: {},
   created() {
-    var urlOleaje = BASE_URL_PORTUS_DATA 
-                + "predChart?code=" + this.code
-                + "&var=Tp,Hm0"
-                + "&dirVar=MeanDir180"
-                + "&int=min" 
-                + "&locale=" + this.$getLocale();
-    var urlViento = BASE_URL_PORTUS_DATA 
-                + "predChart?code=" + this.code
-                + "&var=WindSpeed"
-                + "&dirVar=WindDir180"
-                + "&int=min" 
-                + "&locale=" + this.$getLocale();
-    var urlNivmar = BASE_URL_PORTUS_DATA 
-                + "nivmarChart?code=" + this.code
-                + "&var=SeaLevel,SeaSea,Residual"
-               // + "&station=" + mareografo
-                + "&verVar=sl"
-                + "&int=min" 
-                + "&locale=" + this.$getLocale();
-   
-    this.graphUrlList = [urlOleaje, urlViento, urlNivmar];
+    this.init();
+  },
+  // beforeDestroy() {
+  //   clearInterval(this.interval);
+  // },
+  methods: {
+      init() {
+        this.createUrlGraphs();
+        this.routeData = this.$router.resolve({ path: '/locationsGraphsWidget', 
+            query: 
+            { 
+              locationType: this.locationType,
+              code: this.code
+            }
+        });
+      },
+      async createUrlGraphs() {
+        var requestModelPoint = await ApiService.get('puntosMalla/nearest/' + this.code);
+        var modelPointId = requestModelPoint.data;
+        var urlOleaje = BASE_URL_PORTUS_DATA 
+                  + "predChart?code=" + modelPointId
+                  + "&var=Tp,Hm0"
+                  + "&dirVar=MeanDir180"
+                  + "&int=min" 
+                  + "&locale=" + this.$getLocale();
+      var urlViento = BASE_URL_PORTUS_DATA 
+                  + "predChart?code=" + modelPointId
+                  + "&var=WindSpeed"
+                  + "&dirVar=WindDir180"
+                  + "&int=min" 
+                  + "&locale=" + this.$getLocale();
+      var requestStation = await ApiService.get('estaciones/nearest/' + this.code);
+      var stationId = requestStation.data;
+      var urlNivmar = BASE_URL_PORTUS_DATA 
+                  + "nivmarChart?code=" + this.code
+                  + "&var=SeaLevel,SeaSea,Residual"
+                  + (stationId ? "&station=" + stationId : "") 
+                  + "&verVar=sl"
+                  + "&int=min" 
+                  + "&locale=" + this.$getLocale();
+    
+      this.graphUrlList = [urlOleaje, urlViento, urlNivmar];
+      this.loading = false;
+    },
+    toggleShareInfo() {
+      this.displayShareInfo = !this.displayShareInfo;
+    },
 
-    this.loading = false;
-  },
-  beforeDestroy() {
-    clearInterval(this.interval);
-  },
-  methods: {}
+    openShareInfo() {
+      if (this.timeOutShareInfoClose) clearInterval(this.timeOutShareInfoClose);
+      this.timeOutShareInfoOpen = setTimeout(() => {
+        this.displayShareInfo = true;
+      }, 500);
+    },
+
+    closeShareInfo() {
+      if (this.timeOutShareInfoOpen) clearInterval(this.timeOutShareInfoOpen);
+      this.timeOutShareInfoClose = setTimeout(() => {
+        this.displayShareInfo = false;
+      }, 500);
+    }
+  }
 };
 </script>
 
 <style scoped>
+
+.shareIcon {
+  margin-top: 2px;
+  float: left;
+  cursor: pointer;
+  width: 19px;
+  margin-right: 6px;
+}
+
 .variableTitle {
   position: absolute;
   color: white;
@@ -144,12 +213,17 @@ export default {
   margin-top: 20px;
 }
 
+.card-body {
+  padding: 0px 0px 0px 0px !important;
+}
+
+
 .card-header {
   background-color: #606060;
-  font-size: 15px;
-  padding: 4px 5px 11px 5px;
+  font-size: 14px;
+  padding: 0px 5px 11px 5px;
   color: white;
   text-align: right;
-  height: 30px;
+  height: 22px;
 }
 </style>

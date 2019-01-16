@@ -38,6 +38,12 @@
               @mouseover="openShareInfo"
               @mouseout="closeShareInfo"
             >
+             <img
+              :src='require("@/assets/icons/pdfReport.png")'
+              class="shareIcon"
+              v-if="hasReport()"
+              @click="openReport"
+            >
             <img
               :src='require("@/assets/icons/imprimir.png")'
               class="shareIcon"
@@ -100,12 +106,12 @@
 import MapState from "@/state/map.state";
 import MapUtils from "@/services/map.utils";
 import ApiService from "@/services/api.service";
-import { VariableType } from "@/common/enums";
+import { VariableType, UbicacionType, MarkerClass } from "@/common/enums";
 import { DxPopup, DxToolbarItem } from "devextreme-vue/popup";
 import { DxDataGrid, DxColumn, DxPager, DxPaging, DxGrouping, DxGroupPanel } from "devextreme-vue/data-grid";
 import ShareInfoPanel from "@/components/shareInfoPanel.vue";
 import NivmarPleaBajaPredPanel from "@/components/dataTables/nivmarPleaBajaPredPanel.vue";
-import { INFORMES_URL } from '@/common/config';
+import { INFORMES_URL, BASE_URL_PORTUS_REPORTS } from '@/common/config';
 
 export default {
   name: "DataTablesPredPanel",
@@ -321,6 +327,52 @@ export default {
 
       // TODO: abrir como widget y pasarle parametro para que imprima directamente
       window.print();
+    },
+
+    hasReport() {
+      return this.marker.mapOption.variableType == VariableType.WAVE
+          || this.marker.mapOption.variableType == VariableType.SEA_LEVEL
+    },
+
+    openReport() {
+      var reportId = 1;
+      window.open(BASE_URL_PORTUS_REPORTS + "report?id=" + reportId + "&f=PDF&p=" + this.toBase64(this.marker), '_blank');
+    },
+
+    toBase64(marker) {
+      var str = this.marker.id + ";;"
+				+ this.marker.longitud + ";;"
+				+ this.marker.latitud + ";;"
+				+ (this.marker.mapOption.variableType == VariableType.WAVE ? 'WANA' : 'NIVMAR') + ";;"
+				+ this.marker.codigoEstacion + ";;" // vER SI le pasa el mareografo del marker
+				+ this.marker.id + ";;"
+				+ this.getMarkerReportType(this.marker) + ";;"
+				+ this.marker.nombre + ";;"
+				+ '' + ";;" // Region
+				+ (this.marker.mareaAstronomica ? this.marker.mareaAstronomica.id : '') + ";;"
+				+ Math.round(this.mapState.getMap().getZoom()) + ";;"
+				+ this.marker.malla + ";;"
+      return btoa(str);
+    },
+
+    getMarkerReportType(marker) {
+      switch (marker.mapResource.markerClass) {
+        case MarkerClass.UBICACION:
+            return marker.tipoUbicacion.toUpperCase();
+          break;
+        case MarkerClass.PUNTO_MALLA:
+            if (marker.mapOption.variableType == VariableType.WAVE)
+              return 'WANA_DATA';
+            else 
+              return '';
+          break;
+        case MarkerClass.PUNTO_MALLA_VERIF:
+            if (marker.mapOption.variableType == VariableType.WAVE)
+              return 'VERIFICACION_OLEAJE';
+            else 
+              return '';
+          break;
+      }
     },
 
     onShowTab(tabIndex) {

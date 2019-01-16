@@ -17,7 +17,12 @@
         width="100"
       >
 
-      <ShareInfoPanel @shareinfo-mouseover="openShareInfo" @shareinfo-mouseout="closeShareInfo" :routeData="routeData" v-show="displayShareInfo"/>
+      <ShareInfoPanel 
+            @shareinfo-mouseover="openShareInfo" 
+            @shareinfo-mouseout="closeShareInfo" 
+            :routeData="routeData" 
+            v-show="displayShareInfo"
+      />
 
       <div v-if="!displayShareInfo && !loading" class="fadeIn">
         <img :src="require('@/assets/locationsWidget/header_pred.png')" width="360">
@@ -325,9 +330,20 @@ export default {
     code: { type: Number, default: "", required: true }
   },
   computed: {},
+  watch: {
+    code() {
+      this.init();
+    }
+  },
   created() {
-
-    this.routeData = this.$router.resolve({ path: '/locationsPredWidget', 
+    this.init();
+  },
+  beforeDestroy() {
+    clearInterval(this.interval);
+  },
+  methods: {
+    init() {
+      this.routeData = this.$router.resolve({ path: '/locationsPredWidget', 
         query: 
         { 
           locationType: this.locationType,
@@ -335,15 +351,14 @@ export default {
         }
       });
 
-    this.getData();
-    this.interval = setInterval(() => {
       this.getData();
-    }, 5000);
-  },
-  beforeDestroy() {
-    clearInterval(this.interval);
-  },
-  methods: {
+
+      if (this.interval)
+        clearInterval(this.interval);
+      this.interval = setInterval(() => {
+        this.getData();
+      }, 5000);
+    },
     async getData() {
       var tipo = this.locationType == "Puerto" ? "harbor" : "city";
       var result = await Vue.axios
@@ -530,12 +545,14 @@ export default {
   margin-left: 16px;
 }
 
+
 .card-header {
   background-color: #606060;
-  font-size: 15px;
-  padding: 4px 5px 11px 5px;
+  font-size: 14px;
+  padding: 0px 5px 11px 5px;
   color: white;
   text-align: right;
-  height: 30px;
+  height: 22px;
 }
+
 </style>

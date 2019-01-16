@@ -168,24 +168,34 @@ export default {
   computed: {
    
   },
+  watch: {
+    code() {
+      this.init();
+    }
+  },
   created() {
-      this.getData();
-      this.interval = setInterval(() => {
-        this.getData();
-      }, 5000);
-
-      this.routeData = this.$router.resolve({ path: '/locationsRTWidget', 
-          query: 
-          { 
-            locationType: this.locationType,
-            code: this.code
-          }
-      });
+      this.init();
   },
   beforeDestroy() {
       clearInterval(this.interval);
   },
   methods: {
+      init() {
+        this.getData();
+        if (this.interval)
+          clearInterval(this.interval);
+        this.interval = setInterval(() => {
+          this.getData();
+        }, 5000);
+
+        this.routeData = this.$router.resolve({ path: '/locationsRTWidget', 
+            query: 
+            { 
+              locationType: this.locationType,
+              code: this.code
+            }
+        });
+      },
       async getData() {
         var tipo = this.locationType == 'Puerto' ? 'harbor' : 'city';
         var result = await Vue.axios
@@ -329,13 +339,15 @@ export default {
     margin-top: 20px;
 }
 
+
 .card-header {
-    background-color: #606060;
-    font-size: 15px;
-    padding: 4px 5px 11px 5px;
-    color: white;
-    text-align: right;
-    height: 30px;
+  background-color: #606060;
+  font-size: 14px;
+  padding: 0px 5px 11px 5px;
+  color: white;
+  text-align: right;
+  height: 22px;
 }
+
 
 </style>

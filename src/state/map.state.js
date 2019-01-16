@@ -349,7 +349,10 @@ const MapState = {
         this.mapLogos = this.mapLogos.filter(l => l != logo);
     },
 
-    // Mover a data.utils.js
+    // Mover a data.utils.js o a componente DataStackPanel. Aquí quedaría una lista de objetos que contienen solo
+    // los parametros de cada funcion, así como la lógica de añadir/quitar parametros/objetos, y el componente
+    // calcularia la url, el titulo y todo lo que se sea computado. Otra vuelta sería que la logica de añadir
+    // quitar la llevara a cabo el componente BancoDatos, y aqui solo estaria la lista de objetos como objeto global de comunicacion
 
     addRTDataTable(marker, parameters) {
         var markerTable = this.dataObjectsList.find(d => d.type == "RTDataTable" && d.marker.id == marker.id);

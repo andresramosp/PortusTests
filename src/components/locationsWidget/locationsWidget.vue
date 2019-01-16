@@ -3,7 +3,7 @@
     v-if="ubicacion"
     :visible="true"
     :position="popupPosition"
-    :resize-enabled="true"
+    :resize-enabled="false"
     :drag-enabled="true"
     :close-on-outside-click="false"
     :show-title="true"
@@ -120,7 +120,7 @@ export default {
       return this.minimized ? 453 : 1020;
     },
     popupHeight() {
-      return this.minimized ? 553 : 576;
+      return this.minimized ? 528 : 551;
     },
     popupPosition() {
       return this.minimized ? (this.align == 'left' ? 'right bottom' : 'left bottom') : 'center';
@@ -215,4 +215,6 @@ export default {
   width: 19px;
   margin-right: 6px;
 }
+
+
 </style>

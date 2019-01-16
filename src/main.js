@@ -62,6 +62,12 @@ async function StartApp() {
       component: () => import('@/views/locationsPredWidgetView.vue')
     },
     { 
+      name: 'locationsGraphsWidget', 
+      path: '/locationsGraphsWidget', 
+      props: true,
+      component: () => import('@/views/locationsGraphsWidgetView.vue')
+    },
+    { 
       name: 'dataTablesPredWidget', 
       path: '/dataTablesPredWidget', 
       props: true,
