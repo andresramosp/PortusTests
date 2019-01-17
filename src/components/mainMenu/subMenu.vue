@@ -1,22 +1,17 @@
  <template>
- <div >
+ <div v-if="floatingOptions.length > 0">
     <transition appear :appear-class="appearClass" appear-to-class="slide-menu-enter-active">
-      <div v-if="floatingOptions.length > 0" class="floatingPanel fadeIn"  :class="{ 'leftAlign': align == 'left', 'rightAlign': align == 'right', blueTheme: theme == 'blueTheme', greenTheme: theme == 'greenTheme' }">
+      <div class="floatingPanel fadeIn"  :class="{ 'leftAlign': align == 'left', 'rightAlign': align == 'right', blueTheme: theme == 'blueTheme', greenTheme: theme == 'greenTheme' }">
         <div class="form-check" v-for="floatingOption in floatingOptions" :key="floatingOptions.indexOf(floatingOption)">
            <label class="form-check-label">
              <input class="form-check-input" type="checkbox" v-model="floatingOption.active" @change="floatingOptionChanged(floatingOption)" />
                {{ $t(floatingOption.name) }}
             </label>
         </div> 
-         <div class="form-check" v-if="vectorsOption" >
-           <label class="form-check-label">
-             <input class="form-check-input" type="checkbox" v-model="vectorsOption.active" @change="floatingOptionChanged(vectorsOption)" />
-               {{ $t(vectorsOption.name) }}
-            </label>
-        </div> 
       </div>
      
    </transition>
+   
  </div>
 </template>
 
@@ -25,7 +20,10 @@
 import MapState from "@/state/map.state";
 
 export default {
-  name: "FloatingLayerOptions",
+  name: "SubMenu",
+  props: {
+    mapOptionGroup: { type: Object, default: null, required: false }
+  },
   data() {
     return {
       align: PC.options_panel_align,
@@ -40,39 +38,28 @@ export default {
         : "slide-menu-left";
     },
 
-    vectorsOption() {
-      // TODO: sacar solo el primero, o devolver lista
-      var result = null;
-      var vm = this;
-      this.mapState.getActiveMapOptions().forEach(opt => {
-         opt.mapResources.forEach(resId => {
-            var mapResource = MapState.getMapResource(resId);
-            if (mapResource.vectors) {
-              result = {
-                name: "Dirección",
-                method: vm.toggleVectorial,
-                args: resId,
-                active: mapResource.defaultVectors
-              };
-            }
-        });
-      })
-      return result;
-      
-    },
-
     floatingOptions() {
 
       var result = [];
       var vm = this;
 
-      this.mapState.getActiveMapOptions().forEach(opt => {
+      // Vamos recorriendo los mapOptions, filtrando solo aquellos que pertenecen al grupo
+      // de este submenú (this.mapOptionGroup). Consideraremos que un mapOption es desglosable
+      // en el submenú si: 1) tiene más de un mapResource o tiene cualquier número con agrupación
+      // por layers (groupLayersBy) 2) no está marcado en el mapResoureManager como 'nonToggleable'. 
+      // Dentro de ese mapOption vamos añadiendo al submenú todos los
+      // mapResoure a excepción de aquellos marcados en mapResoureManager como 'nonToggleable'
+
+      var optionsGrp = this.mapState.getActiveMapOptions().filter(opt => opt.group == this.mapOptionGroup.id && !opt.nonToggleable);
+      optionsGrp.forEach(opt => {
           if (opt.mapResources.length > 1 || MapState.getMapResource(opt.mapResources[0]).groupLayersBy) {
             opt.mapResources.forEach(resId => {
-                var layersResouce = vm.mapState.getActiveLayers().filter(l => l.mapResource.id == resId)
-                layersResouce.forEach(layer => {
-                  vm.addLayerToGroup(layer, result);
-                })
+                if (!MapState.getMapResource(resId).nonToggleable) {
+                  var layersResouce = vm.mapState.getActiveLayers().filter(l => l.mapResource.id == resId)
+                  layersResouce.forEach(layer => {
+                    vm.addLayerToGroup(layer, result);
+                  })
+                }
             });
           }
         
@@ -89,11 +76,11 @@ export default {
       floatingOption.method(floatingOption.args, floatingOption.active);
     },
 
-    toggleVectorial: function(mapResourceId, vectorial) {
-      MapState.removeMapResource(mapResourceId);
-      var mapResource = MapState.getMapResource(mapResourceId);
-      MapState.addTimeLineLayer(mapResource, vectorial);
-    },
+    // toggleVectorial: function(mapResourceId, vectorial) {
+    //   MapState.removeMapResource(mapResourceId);
+    //   var mapResource = MapState.getMapResource(mapResourceId);
+    //   MapState.addTimeLineLayer(mapResource, vectorial);
+    // },
     
     toggleVisibility: function(layers, visible) {
       layers.forEach(l => {
@@ -153,10 +140,11 @@ export default {
 }
 
 .floatingPanel {
-  position: absolute;
+  text-align: left;
+  position: relative;
   z-index: 2;
   /* right: 9px; */
-  top: 20px;
+  top: 50px;
   padding: 10px;
   border-radius: 6px;
   color: white;
@@ -164,11 +152,11 @@ export default {
 }
 
 .leftAlign {
-  left: 350px;
+  left: 15px;
 }
 
 .rightAlign {
-  right: 350px;
+  right: 15px;
 }
 
 .blueTheme {

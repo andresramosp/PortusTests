@@ -10,7 +10,8 @@ export const MapResources = [
     name: 'Pred. Nivel del Mar',
     resourceApi: 'mapTileResources/portus/RES',
     mapsResourceApi: 'mapStaticResources/RES',
-    tms: true
+    tms: true,
+    nonToggleable: true
   },
   {
     id: 'pred-markers-nivmar-puerto',
@@ -69,7 +70,8 @@ export const MapResources = [
     resourceApi: 'mapTileResources/portus/VHM0Med',
     mapsResourceApi: 'mapStaticResources/VHM0Med',
     tms: true,
-    vectors: true
+    vectors: true,
+    nonToggleable: true
   },
   {
     id: 'pred-tiles-oleaje',
@@ -77,7 +79,8 @@ export const MapResources = [
     name: 'Pred. Oleaje',
     resourceApi: 'mapTileResources/portus/VHM0',
     tms: true,
-    vectors: true
+    vectors: true,
+    nonToggleable: true
   },
   {
     id: 'pred-tiles-corriente',
@@ -87,6 +90,7 @@ export const MapResources = [
     tms: true,
     vectors: true,
     paintBounds: false,
+    nonToggleable: true
     //groupLayersBy: { field: 'idOperativa', label: 'Operativa' },
   },
   {
@@ -99,7 +103,8 @@ export const MapResources = [
     defaultVectors: true,
     paintBounds: true,
     isRadar: true,
-    showRadarPoints: false
+    showRadarPoints: false,
+    nonToggleable: true
   },
   {
     id: 'pred-tiles-temperatura',
@@ -107,7 +112,8 @@ export const MapResources = [
     name: 'Pred. Temperatura',
     resourceApi: 'mapTileResources/portus/SST',
     //groupLayersBy: { field: 'idDominio', label: 'Dominio' },
-    tms: true
+    tms: true,
+    nonToggleable: true
   },
   {
     id: 'pred-tiles-viento',
@@ -117,7 +123,8 @@ export const MapResources = [
     mapsResourceApi: 'mapStaticResources/WSPD',
     tms: true,
     vectors: true,
-    defaultVectors: true
+    defaultVectors: true,
+    //nonToggleable: true
   },
   {
     id: 'pred-tiles-salinidad',
@@ -125,7 +132,8 @@ export const MapResources = [
     name: 'Pred. Salinidad',
     resourceApi: 'mapTileResources/portus/SAL',
     //groupLayersBy: { field: 'idDominio', label: 'Dominio' },
-    tms: true
+    tms: true,
+    nonToggleable: true
   },
   {
     id: 'pred-markers-cirana',
@@ -665,7 +673,8 @@ export const MapOptions = [
     group: 'historico',
     name: '{oleajeOption}',
     variableType: VariableType.WAVE,
-    mapResources: ['hist-markers-estaciones-oleaje', 'hist-markers-modelos-oleaje']
+    mapResources: ['hist-markers-estaciones-oleaje', 'hist-markers-modelos-oleaje'],
+    //nonToggleable: true
   },
   {
     id: 'hist_nivmar',

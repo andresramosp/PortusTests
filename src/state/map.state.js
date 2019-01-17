@@ -1,7 +1,7 @@
 import { MapResources } from '@/common/mapResourceManager';
 import ApiService from "@/services/api.service";
 import MapUtils from "@/services/map.utils";
-import { BASE_URL_PORTUS, BASE_URL_PORTUS_DATA } from '@/common/config';
+import { BASE_URL_PORTUS } from '@/common/config';
 import Vue from 'vue';
 
 import LastDataPopup from "@/components/lastDataPopup.vue";
@@ -17,6 +17,7 @@ const MapState = {
     preloadedTimeLineLayers: [],
     preloadedMarkers: [],
     currentTimeLineLayer: null,
+    showingVectors: false,
     currentPlayerTime: null,
     staticMapResourceSelected: null,
     loadingThings: [],
@@ -132,6 +133,7 @@ const MapState = {
             }
 
         })
+        this.showingVectors = vectorial;
         this.setVisibleTimeLineLayers();
         this.removeLoading('timelines');
     },
@@ -295,7 +297,7 @@ const MapState = {
               if (mapResource.type == "MarkerLayer")
                 this.addMarkerLayer(mapResource, mapOption);
               if (mapResource.type == "TimeLineLayer")
-                this.addTimeLineLayer(mapResource, mapResource.defaultVectors);
+                this.addTimeLineLayer(mapResource, mapResource.defaultVectors ? true : false);
           });
         }
         else {
@@ -347,162 +349,6 @@ const MapState = {
 
     removeMapLogo(logo) {
         this.mapLogos = this.mapLogos.filter(l => l != logo);
-    },
-
-    // Mover a data.utils.js o a componente DataStackPanel. Aquí quedaría una lista de objetos que contienen solo
-    // los parametros de cada funcion, así como la lógica de añadir/quitar parametros/objetos, y el componente
-    // calcularia la url, el titulo y todo lo que se sea computado. Otra vuelta sería que la logica de añadir
-    // quitar la llevara a cabo el componente BancoDatos, y aqui solo estaria la lista de objetos como objeto global de comunicacion
-
-    addRTDataTable(marker, parameters) {
-        var markerTable = this.dataObjectsList.find(d => d.type == "RTDataTable" && d.marker.id == marker.id);
-        if (markerTable){
-            markerTable.parameters = parameters;
-            if (parameters.length == 0) {
-                this.dataObjectsList = this.dataObjectsList.filter(d => d.id != markerTable.id);
-            }
-        }
-        else {
-            var nombre = marker.nombre;
-            if (marker.radar) {
-                nombre += ". " + "Posición del punto: " +  " Lat " + parseFloat(marker.lat).toFixed(2) + " N" + ": Lon " + parseFloat(marker.lon).toFixed(2) + " O";
-            }
-            this.dataObjectsList.unshift(
-                { 
-                    name: 'Tiempo Real para ' + nombre,
-                    type: 'RTDataTable', 
-                    marker: marker, 
-                    parameters: parameters, 
-                    id: this.generateDataPanelId()
-                })
-        }
-        
-    },
- 
-    setPredDataTable(location, variable, active) {
-        var predTable = this.dataObjectsList.find(d => d.type == "PredDataTable" && d.marker.id == location.id && d.variable == variable);
-        if (!predTable) {
-            this.dataObjectsList.unshift(
-                { 
-                    name: 'Predicción ' + Vue.$t('{' + variable + '}'),
-                    type: 'PredDataTable', 
-                    marker: location, 
-                    variable: variable,
-                    id: this.generateDataPanelId()
-                })
-        }
-        else if (!active) {
-            this.dataObjectsList = this.dataObjectsList.filter(d => d.id != predTable.id);
-        }
-    },
-
-    setRTGraphParam(station, param, interfazMode) {
-        var graphPanel = this.dataObjectsList.find(d => 
-            d.type == "Graphic" 
-            && d.marker.id == station.id 
-            && d.marker.mapOption.variableType == station.mapOption.variableType);
-        if (graphPanel){
-            if (param.graphicActive) {
-                graphPanel.parameters.push(param);
-            }
-            else {
-                graphPanel.parameters = graphPanel.parameters.filter(p => p.paramEseoo != param.paramEseoo);
-            }
-            
-            if (graphPanel.parameters.length > 0) {
-                graphPanel.url =  BASE_URL_PORTUS_DATA 
-                + "rtChart?station=" + station.id 
-                + "&params=" + graphPanel.parameters.map(p => p.paramEseoo).join() 
-                + "&dirParams=" + graphPanel.parameters.filter(p => p.unidad == 'º').map(p => p.paramEseoo).join() 
-                + "&int=" + (interfazMode ? interfazMode : 'default')
-                + "&isRadar=" + (station.radar ? 'true' : 'false')
-                + (station.radar ? ("&lat=" + station.latId + "&lon=" + station.lonId) : '')
-                + "&locale=" + Vue.$getLocale();
-            }
-            else {
-                this.dataObjectsList = this.dataObjectsList.filter(d => d.id != graphPanel.id);
-            }
-        }
-        else {
-            var url = BASE_URL_PORTUS_DATA 
-                + "rtChart?station=" + station.id 
-                + "&params=" + param.paramEseoo
-                // + "&dirParams=" + (param.unidad == 'º' ? param.paramEseoo : "")
-                + "&int=" + (interfazMode ? interfazMode : 'default')
-                + "&isRadar=" + (station.radar ? 'true' : 'false')
-                + (station.radar ? ("&lat=" + station.latId + "&lon=" + station.lonId) : '')
-                + "&locale=" + Vue.$getLocale();
-            this.dataObjectsList.unshift(
-                { 
-                    name: 'Gráfica Tiempo Real ' + station.nombre,
-                    type: 'Graphic', 
-                    parameters: [param],
-                    marker: station,
-                    url: url, 
-                    id: this.generateDataPanelId()
-                })
-        }
-        
-    },
-
-    setPredGraphParam(modelPoint, parameters, interfazMode, isNivmar) {
-        var endPoint = isNivmar ? 'nivmarChart' : 'predChart';
-        var stationField = isNivmar ? 'mareografo' : 'codigoEstacion';
-        var graphPanel = this.dataObjectsList.find(d => 
-            d.type == "Graphic" 
-            && d.marker.id == modelPoint.id 
-            && d.marker.mapOption.variableType == modelPoint.mapOption.variableType);
-        if (graphPanel){
-            parameters.forEach(param => {
-                if (param.graphicActive) {
-                    graphPanel.parameters.push(param);
-                }
-                else {
-                    graphPanel.parameters = graphPanel.parameters.filter(p => p.paramEseoo != param.paramEseoo);
-                }
-            })
-            if (graphPanel.parameters.length > 0) {
-                graphPanel.url =  BASE_URL_PORTUS_DATA 
-                + endPoint + "?code=" + modelPoint.id 
-                + (modelPoint[stationField] && modelPoint[stationField] != -1 ? "&station=" + modelPoint[stationField] : '')
-                + "&var=" + graphPanel.parameters.map(p => p.paramEseoo).join() 
-                + (graphPanel.parameters.filter(p => p.unidad == 'º').length > 0 ? '&dirVar=' + graphPanel.parameters.filter(p => p.unidad == 'º').map(p => p.paramEseoo).join()  : "")
-                + "&int=" + (interfazMode ? interfazMode : 'default')
-                + "&locale=" + Vue.$getLocale();
-            }
-            else {
-                this.dataObjectsList = this.dataObjectsList.filter(d => d.id != graphPanel.id);
-            }
-        }
-        else {  
-            var url = BASE_URL_PORTUS_DATA 
-                + endPoint + "?code=" + modelPoint.id 
-                + (modelPoint[stationField] && modelPoint[stationField] != -1 ? "&station=" + modelPoint[stationField] : '')
-                + "&var=" + parameters.map(p => p.paramEseoo).join() 
-                + (parameters.filter(p => p.unidad == 'º').length > 0 ? '&dirVar=' + parameters.filter(p => p.unidad == 'º').map(p => p.paramEseoo).join()  : "")
-                + "&int=" + (interfazMode ? interfazMode : 'default')
-                + "&locale=" + Vue.$getLocale();
-            this.dataObjectsList.unshift(
-                { 
-                    name: 'Gráfica Predicción ' + (modelPoint.nombre ? modelPoint.nombre : " Lat " + modelPoint.latitud.toFixed(2) + " N" + ": Lon " + modelPoint.longitud.toFixed(2) + " O"),
-                    type: 'Graphic', 
-                    parameters: parameters,
-                    marker: modelPoint,
-                    url: url, 
-                    id: this.generateDataPanelId()
-                })
-        }
-        
-    },
-
-    generateDataPanelId() {
-        var id = this.dataObjectsList.length > 0 ? (Math.max.apply(null, this.dataObjectsList.map(d => d.id)) + 1) : 0;
-        console.log(id);
-        return  id;
-    },
-
-    removeDataPanel(id) {
-        this.dataObjectsList = this.dataObjectsList.filter(o => o.id != id);
     },
 
     // TODO: llevarse funcionalidad a MapUtils, o incluso crear un radar.service.js
@@ -643,56 +489,3 @@ const MapState = {
 export default MapState
 
 
-// setVisibleTimeLineLayers() {
-    //     var ms = this;
-    //     this.preloadedTimeLineLayers.forEach(function (preLayer) {
-    //         if (MapUtils.tileLayerVisible(ms.map, preLayer._baseLayer)) {
-    //             if (!ms.map.hasLayer(preLayer)) {
-    //                 ms.map.options.timeDimensionOptions.period = "PT" + preLayer._baseLayer.options.hoursStep + "H";
-    //                 var date = new Date();
-    //                 date.setUTCHours(0, 0, 0, 0);
-    //                 var predHours = (preLayer._baseLayer.options.numDays) * 24; //preLayer.mapResource.predictionTime ? preLayer.mapResource.predictionTime : 72;
-    //                 ms.map.options.timeDimensionOptions.timeInterval = date.toISOString() + '/PT' + predHours + 'H'; // 'PT192H/' + sv.convertYMDHToDate(preLayer._baseLayer.options.strLastate).toISOString();
-    //                 ms.map.timeDimension.initialize(ms.map.options.timeDimensionOptions);
-    //                 ms.map.timeDimension.setCurrentTimeIndex(0);
-    //                 if (ms.map.timeDimensionControl) {
-    //                     ms.map.timeDimensionControl._player.stop();
-    //                     ms.map.removeControl(ms.map.timeDimensionControl);
-    //                 }
-    //                 ms.map.timeDimensionControl = L.control.timeDimension({
-    //                     position: "bottomleft",
-    //                     playerOptions: {
-    //                         transitionTime: 500,
-    //                         loopButton: true,
-    //                         loop: true
-    //                     },
-    //                     autoPlay: true
-    //                 })
-    //                 ms.map.addControl(ms.map.timeDimensionControl);
-    //                 preLayer.addTo(ms.map);
-    //                 ms.currentTimeLineLayer = preLayer;
-
-    //                 if (preLayer._baseLayer.options.predictionScaleImg) {
-    //                     ms.predictionScaleImg = preLayer._baseLayer.options.predictionScaleImg;
-    //                 }
-
-    //                 console.log('Added: ' + preLayer._baseLayer._url)
-    //             }
-    //         }
-    //         else {
-    //             if (ms.map.hasLayer(preLayer)) {
-    //                 preLayer.remove();
-    //                 ms.currentTimeLineLayer = null;
-    //                 if (ms.map.timeDimensionControl) {
-    //                     ms.map.timeDimensionControl._player.stop();
-    //                     ms.map.removeControl(ms.map.timeDimensionControl);
-    //                 }
-
-    //                 if (preLayer._baseLayer.options.predictionScaleImg)
-    //                     ms.predictionScaleImg = '';
-
-    //                 console.log('Removed: ' + preLayer._baseLayer._url);
-    //             }
-    //         }
-    //     })
-    // },

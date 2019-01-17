@@ -45,6 +45,7 @@
 <script>
 
 import MapState from "@/state/map.state";
+import DataPanelsUtils from "@/services/dataPanels.utils";
 import ApiService from "@/services/api.service";
 import { BASE_URL_PORTUS, INFORMES_URL } from '@/common/config';
 import { MarkerClass } from "@/common/enums";
@@ -71,14 +72,18 @@ export default {
   },
   created() {
        var mi = this;
+       // En el caso de las estaciones podemos tener varios markers uno encima
+       // de otro, por lo que enviamos a la Api una lista variables (wave, wind, etc.)
        if (this.markers[0].mapResource.markerClass == MarkerClass.ESTACION) {
            ApiService.post('parametros/' + this.markers[0].id + '?locale=' + this.$getLocale(), this.markers.map(m => m.mapOption.variableType))
             .then((params) => {
                 this.bancoDatos = params.data;
             });
        }
+       // En el caso de los puntos de modelo, no hay superposicion (salvo en caso de verif, 
+       // que comparte variable), por lo que solo enviamos una variable a la Api
        else {
-           ApiService.post('parametros/?locale=' + this.$getLocale(), this.markers.map(m => m.mapOption.variableType))
+           ApiService.post('parametros/?locale=' + this.$getLocale(), [this.markers[0].mapOption.variableType])
             .then((params) => {
                 this.bancoDatos = params.data;
             });
@@ -101,15 +106,16 @@ export default {
                     if (p.variable == param.variable)
                         Vue.set(p, 'tableActive', param.tableActive);
                 })
-                 this.mapState.addRTDataTable(this.markers[0], this.bancoDatos.filter(param => param.tableActive));
+                 DataPanelsUtils.addRTDataTable(this.markers[0], this.bancoDatos.filter(param => param.tableActive));
              }
              // En los puntos-malla (Predicción), si elegimos un parámetro se marcan todos y la tabla depende de la variable
              if (this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA 
+              || this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA_VERIF
               || this.markers[0].mapResource.markerClass == MarkerClass.UBICACION) {
                  this.bancoDatos.forEach(p => {
                      Vue.set(p, 'tableActive', param.tableActive);
                  })
-                 this.mapState.setPredDataTable(this.markers[0], this.markers[0].mapOption.variableType, param.tableActive);
+                 DataPanelsUtils.setPredDataTable(this.markers[0], this.markers[0].mapOption.variableType, param.tableActive);
              }
          }, 750);
          
@@ -117,22 +123,23 @@ export default {
      changeGraphParam(param) {
         // En las gráficas, podemos marcar parámetros individualmente
         if (this.markers[0].mapResource.markerClass == MarkerClass.ESTACION) {
-            this.mapState.setRTGraphParam(this.markers[0], param);
+            DataPanelsUtils.setRTGraphParam(this.markers[0], param);
         }
-        if (this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA) {
+        if (this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA
+         || this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA_VERIF) {
             this.checkDir180Param(param);
-            this.mapState.setPredGraphParam(this.markers[0], [param]);
+            DataPanelsUtils.setPredGraphParam(this.markers[0], [param]);
         }
         if (this.markers[0].mapResource.markerClass == MarkerClass.UBICACION) {
             this.checkDir180Param(param);
             var extraParam = { paramEseoo: 'SeaSea', graphicActive: param.graphicActive, unidad: 'm' };
             var parameters = [param, extraParam];
-            this.mapState.setPredGraphParam(this.markers[0], parameters, null, true);
+            DataPanelsUtils.setPredGraphParam(this.markers[0], parameters, null, true);
         }
         
      },
      checkDir180Param(param) {
-         if ((param.paramEseoo == 'WinDir' || param.paramEseoo == 'MeanDir')  && param.paramEseoo.indexOf('180') == -1)
+         if ((param.paramEseoo == 'WindDir' || param.paramEseoo == 'MeanDir')  && param.paramEseoo.indexOf('180') == -1)
             param.paramEseoo += '180';
      },
      hasMareaAstronomica() {

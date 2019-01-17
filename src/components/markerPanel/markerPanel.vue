@@ -105,7 +105,8 @@ export default {
     markers: function() {
       if (this.markers.length > 0) {
         this.modalShow = true;
-        this.markerRef = this.markers[0]; // TODO: El de mayor index
+        // Cogemos siempre el marker de más arriba
+        this.markerRef = this.markers[this.markers.length - 1]; 
       }
     }
   },

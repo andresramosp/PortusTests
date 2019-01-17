@@ -2,21 +2,24 @@
 <div>
   
   <div class='layersPanel' :class="{ 'leftAlign': align == 'left', 'rightAlign': align == 'right' }">
-      <b-card v-for="optGrp in mapOptionsGroups" :header="$t(optGrp.name)" class="text-center panel-section" :class="theme" :key="optGrp.id">
-        <b-container>
-           <b-row >
-               <b-col v-for="mapOption in mapOptions.filter(opt => opt.group == optGrp.id)" :key="mapOption.id" cols="6" class="form-check text-left" style="padding-top: 2px;" >
-                <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" v-model="mapOption.active" :value="mapOption.active" @change="mapOptionChanged(mapOption)" />
-                  {{ $t(mapOption.name) }}
-              </label>
-            </b-col> 
-           </b-row>
-        </b-container>
-       </b-card>
+    <div v-for="optGrp in mapOptionsGroups" :key="optGrp.id">
+       <b-row style="margin-left: 0px; margin-right: 0px">
+          <b-card class="text-center panel-section" :class="theme" :header="$t(optGrp.name)" >
+          <b-container>
+            <b-row >
+                <b-col v-for="mapOption in mapOptions.filter(opt => opt.group == optGrp.id)" :key="mapOption.id" cols="6" class="form-check text-left" style="padding-top: 2px;" >
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" v-model="mapOption.active" :value="mapOption.active" @change="mapOptionChanged(mapOption)" />
+                    {{ $t(mapOption.name) }}
+                </label>
+              </b-col> 
+            </b-row>
+          </b-container>
+          </b-card>
+          <SubMenu :mapOptionGroup="optGrp" />
+       </b-row>
+    </div>
   </div>
-
-  <FloatingLayerOptions />
 
 </div>
   
@@ -25,11 +28,11 @@
 
 <script>
 import MapState from "@/state/map.state";
-import FloatingLayerOptions from "@/components/floatingLayerOptions.vue";
+import SubMenu from "@/components/mainMenu/subMenu.vue";
 export default {
-  name: "LayersPanel",
+  name: "MainMenu",
   components: {
-    FloatingLayerOptions
+    SubMenu
   },
   data() {
     return {
@@ -73,7 +76,7 @@ export default {
 .layersPanel {
   position: absolute;
   z-index: 2;
-  width: 320px;
+  /* width: 320px; */
   top: 9px;
   /* background-color: rgba(0, 123, 255, 0.5);
   padding: 10px; */
@@ -101,5 +104,7 @@ input[type="checkbox"] {
   /* background-color: rgba(0, 123, 255, 0.5);  */
   margin-top: 12px;
   border-radius: 8px;
+   width: 320px;
+  
 }
 </style>

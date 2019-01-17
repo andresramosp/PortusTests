@@ -330,12 +330,13 @@ export default {
     },
 
     hasReport() {
-      return this.marker.mapOption.variableType == VariableType.WAVE
-          || this.marker.mapOption.variableType == VariableType.SEA_LEVEL
+      return (this.marker && this.marker.mapOption) &&
+          (this.marker.mapOption.variableType == VariableType.WAVE
+          || this.marker.mapOption.variableType == VariableType.SEA_LEVEL)
     },
 
     openReport() {
-      var reportId = 1;
+      var reportId =  this.marker.mapOption.variableType == VariableType.WAVE ? 3 : 1;
       window.open(BASE_URL_PORTUS_REPORTS + "report?id=" + reportId + "&f=PDF&p=" + this.toBase64(this.marker), '_blank');
     },
 
@@ -344,8 +345,8 @@ export default {
 				+ this.marker.longitud + ";;"
 				+ this.marker.latitud + ";;"
 				+ (this.marker.mapOption.variableType == VariableType.WAVE ? 'WANA' : 'NIVMAR') + ";;"
-				+ this.marker.codigoEstacion + ";;" // vER SI le pasa el mareografo del marker
-				+ this.marker.id + ";;"
+				+ (this.marker.codigoEstacion ? this.marker.codigoEstacion : 0) + ";;" /
+				+ (this.marker.codigoModelo ? this.marker.codigoModelo : this.marker.id) + ";;"
 				+ this.getMarkerReportType(this.marker) + ";;"
 				+ this.marker.nombre + ";;"
 				+ '' + ";;" // Region

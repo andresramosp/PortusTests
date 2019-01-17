@@ -23,6 +23,7 @@
 <script>
 // import DxList from "devextreme-vue/list";
 import MapState from "@/state/map.state";
+import DataPanelsUtils from "@/services/dataPanels.utils";
 import DataTablesRTPanel from "@/components/dataTables/dataTablesRTPanel.vue";
 import DataTablesPredPanel from "@/components/dataTables/dataTablesPredPanel.vue";
 
@@ -53,7 +54,7 @@ export default {
   },
   methods: {
     cerrar(id) {
-      this.mapState.removeDataPanel(id);
+      DataPanelsUtils.removeDataPanel(id);
     }
   }
 };

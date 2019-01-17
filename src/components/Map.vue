@@ -5,6 +5,7 @@
     <img class="loaderGif" :src="require('@/assets/gifs/loadingBars.gif')" v-show="loading" width="100"  /> <!-- width="70" height="70" -->
     <div v-show="playingTimeLineLayer">
        <img :src="mapState.predictionScaleImg" class="predictionScale fadeIn" />
+       <img v-show='hasVectors' class="vectorsIcon fadeIn" @click="toggleVectors()" :src="require('@/assets/icons/vectors.png')" />
        <img v-show='predictionWidget' class="predictionWidgetIcon fadeIn" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
        <img v-show='staticMapsWidget && hasStaticMaps' class="staticMapsWidgetIcon fadeIn" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
     </div>
@@ -44,6 +45,9 @@ export default {
     },
     hasStaticMaps() {
       return this.mapState.currentTimeLineLayer && this.mapState.currentTimeLineLayer.mapResource.mapsResourceApi != null;
+    },
+    hasVectors() {
+      return this.mapState.currentTimeLineLayer && this.mapState.currentTimeLineLayer.mapResource.vectors;
     }
   },
   mounted() {
@@ -131,10 +135,16 @@ export default {
     openStaticMapsWidget: function() {
 
       var map = MapState.getMap();
-      var currentPredLayer = this.mapState.currentTimeLineLayer; //MapState.getCurrentTimeLineLayer();
+      var currentPredLayer = this.mapState.currentTimeLineLayer;
       if (currentPredLayer) {
         MapState.setStaticMapResourceSelected(currentPredLayer.mapResource);
       }
+    },
+
+    toggleVectors: function() {
+      var currentPredLayer = this.mapState.currentTimeLineLayer
+      MapState.removeMapResource(currentPredLayer.mapResource.id);
+      MapState.addTimeLineLayer(currentPredLayer.mapResource, !this.mapState.showingVectors);
     }
   }
 };
@@ -171,6 +181,19 @@ export default {
     position: absolute;
     z-index: 2;
     left: 41%;
+    /* right: 20px; */
+    bottom: 8px;
+    /* bottom: 42px; */
+    width: 35px;
+    height: 35px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.vectorsIcon {
+    position: absolute;
+    z-index: 2;
+    left: 47%;
     /* right: 20px; */
     bottom: 8px;
     /* bottom: 42px; */

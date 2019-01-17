@@ -1,7 +1,7 @@
 <template>
 <div id="app" >
    <Map :baseMap='baseMap' :mapFixed="mapFixed" />
-   <LayersPanel :mapOptionsGroups="mapState.mapOptionsGroups" :mapOptions="mapState.mapOptions" /> 
+   <MainMenu :mapOptionsGroups="mapState.mapOptionsGroups" :mapOptions="mapState.mapOptions" /> 
    <MarkerPanel :markers='mapState.markersSelected' />
    <StaticMapsPanel :mapResource='mapState.staticMapResourceSelected' />
    <UbicacionesPanel />
@@ -16,14 +16,12 @@
 
 import Map from "@/components/map.vue";
 import MapState from "@/state/map.state";
-import LayersPanel from "@/components/layersPanel.vue";
+import MainMenu from "@/components/mainMenu/mainMenu.vue";
 import MarkerPanel from "@/components/markerPanel/markerPanel.vue";
 import StaticMapsPanel from "@/components/staticMapsPanel.vue";
 import UbicacionesPanel from "@/components/ubicacionesPanel.vue";
 import RegionesPanel from "@/components/regionesPanel.vue";
 import LocationsWidget from "@/components/locationsWidget/locationsWidget.vue";
-// import DataTablesRTPanel from "@/components/dataTables/dataTablesRTPanel.vue";
-// import DataTablesPredPanel from "@/components/dataTables/dataTablesPredPanel.vue";
 import LogosList from "@/components/logosList.vue";
 import DataStackPanel from "@/components/dataStackPanel.vue";
 import { MapOptions } from '@/common/mapResourceManager';
@@ -33,15 +31,13 @@ export default {
   name: "app",
   components: {
     Map,
-    LayersPanel,
+    MainMenu,
     MarkerPanel,
     StaticMapsPanel,
     UbicacionesPanel,
     RegionesPanel,
     LocationsWidget,
     LogosList,
-    // DataTablesRTPanel,
-    // DataTablesPredPanel,
     DataStackPanel
   },
   data () {
