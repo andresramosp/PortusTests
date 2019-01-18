@@ -1,4 +1,5 @@
 import MapState from "@/state/map.state";
+import MapUtils from "@/services/map.utils";
 import Vue from 'vue';
 import { BASE_URL_PORTUS_DATA } from '@/common/config';
 
@@ -152,8 +153,22 @@ const DataPanelsUtils = {
         return  id;
     },
 
-    removeDataPanel(id) {
-        MapState.dataObjectsList = MapState.dataObjectsList.filter(o => o.id != id);
+    removeDataPanel(dataPanel) {
+        var paramActiveField = dataPanel.type == "Graphic" ? 'graphicActive' : 'tableActive';
+        MapState.bancosDatos[dataPanel.marker.id].forEach(param => {
+            // DataPanel editable por parámetros (RT y Graphs)
+            if (dataPanel.parameters) {
+                if (dataPanel.parameters.find(p => p.paramEseoo == param.paramEseoo))
+                    param[paramActiveField] = false;
+            }
+            // DataPanel editable por variable (Pred)
+            else {
+                if (dataPanel.variable == param.variable)
+                    param[paramActiveField] = false;
+            }
+            
+        })
+        MapState.dataObjectsList = MapState.dataObjectsList.filter(o => o.id != dataPanel.id);
     },
 
 }

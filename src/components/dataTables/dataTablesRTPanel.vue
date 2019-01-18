@@ -189,7 +189,7 @@ export default {
     },
     formatParamValue: function(lastDataResult) {
       var value = parseFloat(lastDataResult.valor) / lastDataResult.factor;
-      return value.toFixed(2);
+      return value.toFixed(3);
     },
     initialized(dataGrid) {
       //dataGrid.component.columnOption('QCs', 'cssClass', 'colHeader');

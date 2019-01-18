@@ -72,22 +72,18 @@ export default {
   },
   created() {
        var mi = this;
-       // En el caso de las estaciones podemos tener varios markers uno encima
-       // de otro, por lo que enviamos a la Api una lista variables (wave, wind, etc.)
-       if (this.markers[0].mapResource.markerClass == MarkerClass.ESTACION) {
-           ApiService.post('parametros/' + this.markers[0].id + '?locale=' + this.$getLocale(), this.markers.map(m => m.mapOption.variableType))
-            .then((params) => {
-                this.bancoDatos = params.data;
-            });
-       }
-       // En el caso de los puntos de modelo, no hay superposicion (salvo en caso de verif, 
-       // que comparte variable), por lo que solo enviamos una variable a la Api
-       else {
-           ApiService.post('parametros/?locale=' + this.$getLocale(), [this.markers[0].mapOption.variableType])
-            .then((params) => {
-                this.bancoDatos = params.data;
-            });
-       }
+        if (this.markers[0].mapResource.markerClass == MarkerClass.ESTACION) {
+            ApiService.post('parametros/' + this.markers[0].id + '?locale=' + this.$getLocale(), this.markers.map(m => m.mapOption.variableType))
+                .then((params) => {
+                    this.setBancoDatos(params);
+                });
+        }
+        else {
+            ApiService.post('parametros/?locale=' + this.$getLocale(), [this.markers[0].mapOption.variableType])
+                .then((params) => {
+                    this.setBancoDatos(params);
+                });
+           }
        
        if (this.markers[0].propietario != null) {
           this.imgPropietario = BASE_URL_PORTUS + "/img/logosOrganismos/" + this.markers[0].propietario + ".png";
@@ -147,6 +143,23 @@ export default {
      },
      openMareaAstronomica() {
          window.open(INFORMES_URL + "Mareas/Principal1.php?Estacion=" + this.markers[0].mareaAstronomica.id + "&Lenguaje=es", '_blank');
+     },
+
+     // La lista de parámetros-checkboxes de cada marker la guardamos en un objeto
+     // del global state (BancosDatos), para poder gestionar de forma coherente
+     // la relación entre el estado del banco de datos  y cada tabla/gráfica abierta desde él,
+     // así como mantener el estado de los checks en caso de una actualización (al añadir variables)
+
+     setBancoDatos(params) {
+         params.data.forEach(p => {
+            var previousParam = this.mapState.getBancoDatos(this.markers[0].id).find(pm => pm.paramEseoo == p.paramEseoo);
+            if (previousParam) {
+                p.tableActive = previousParam.tableActive;
+                p.graphicActive = previousParam.graphicActive;
+            }
+        })
+        this.bancoDatos = params.data;
+        this.mapState.setBancoDatos(this.markers[0].id, this.bancoDatos);
      }
   }
 };

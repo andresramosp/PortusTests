@@ -368,6 +368,14 @@ const LocalePlugin = {
         linkToMareaAstro: {
             es: "Ver predicción de marea astronómica para",
             en: "Go to Astronomical Tide Forecast at"
+        },
+        nivelMedio: {
+            es: "Nivel medio",
+            en: "Mean level"
+        },
+        ceroRedmar: {
+            es: "Cero REDMAR",
+            en: "REDMAR Datum"
         }
     },
    

@@ -26,6 +26,18 @@ const MapState = {
     radarPointsLayer: null,
     currentRadar: null,
     dataObjectsList: [],
+    bancosDatos: {},
+
+    getBancoDatos(markerId) {
+        if (!this.bancosDatos[markerId]) {
+            this.bancosDatos[markerId] = []
+        }
+        return this.bancosDatos[markerId];
+    },
+
+    setBancoDatos(markerId, bancoDatos) {
+        this.bancosDatos[markerId] = bancoDatos;
+    },
 
     init(map) {
         this.map = map;

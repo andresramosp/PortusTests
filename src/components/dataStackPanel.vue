@@ -1,13 +1,14 @@
 <template>
   <div class="list-container" >
     <draggable v-model="mapState.dataObjectsList" @start="drag=true" @end="drag=false">
-      <div v-for="(dataPanel, index) in mapState.dataObjectsList" :key="dataPanel.id">
+      <div v-for="(dataPanel) in mapState.dataObjectsList" :key="dataPanel.id">
         <b-card no-body class="mb-1">
           <b-card-header header-tag="header" class="p-1" role="tab">
             <span style="text-align: left; cursor: move" block href="#" v-b-toggle="'id' + dataPanel.id" variant="info">{{dataPanel.name}}</span>
-            <span @click="cerrar(dataPanel.id)" style="float:right; cursor: pointer">x</span>
+            <span @click="cerrar(dataPanel)" style="float:right; cursor: pointer">x</span>
           </b-card-header>
-          <b-collapse :id="'id' + dataPanel.id" :visible="index == 0" role="tabpanel">
+          <!-- :visible="index == 0" -->
+          <b-collapse :id="'id' + dataPanel.id" :visible="true"  role="tabpanel"> 
             <b-card-body>
                 <iframe v-if="dataPanel.type == 'Graphic'" :src="dataPanel.url" :width="iFrameWidth" :height="iFrameHeight" frameborder="0" />
                 <DataTablesRTPanel v-if="dataPanel.type == 'RTDataTable'" :marker="dataPanel.marker" :parameters="dataPanel.parameters"/>
@@ -53,8 +54,8 @@ export default {
     
   },
   methods: {
-    cerrar(id) {
-      DataPanelsUtils.removeDataPanel(id);
+    cerrar(dataPanel) {
+      DataPanelsUtils.removeDataPanel(dataPanel);
     }
   }
 };

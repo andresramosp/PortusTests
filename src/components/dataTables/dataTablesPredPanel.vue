@@ -134,7 +134,8 @@ export default {
       theme: PC.color_theme,
       mapState: MapState,
       mapUtils: MapUtils,
-      titulo: '',
+      //titulo: '',
+      nivelMarRef: null,
       displayShareInfo: false,
       columnsNames: {},
       days: [],
@@ -153,6 +154,17 @@ export default {
   computed: {
     loading() {
       return this.days.length == 0;
+    },
+    titulo() {
+      if (this.variable == VariableType.SEA_LEVEL) {
+          return this.$t('{tablePredTitle_' + this.variable + '}') 
+          + " " + MapUtils.getMarkerName(this.marker)
+          + ' (Ref: ' +  (this.nivelMarRef == 0 ? this.$t('{nivelMedio}') : this.$t('{ceroRedmar}')) + ')'
+      }
+      else {
+        return this.$t('{tablePredTitle_' + this.variable + '}') + " " + MapUtils.getMarkerName(this.marker);
+      }
+        
     }
   },
   watch: {
@@ -168,7 +180,7 @@ export default {
   methods: {
     init() {
       if (this.marker != null) {
-        this.titulo = this.$t('{tablePredTitle_' + this.variable + '}') + " " + MapUtils.getMarkerName(this.marker);
+        //this.titulo = this.$t('{tablePredTitle_' + this.variable + '}') + " " + MapUtils.getMarkerName(this.marker);
         if (this.variable) {
            this.tabIndex = 0;
            this.days = [];
@@ -210,6 +222,8 @@ export default {
             if (Object.keys(dayData.data[0]).length > this.minDataDay)
               this.days.push(dayData);
           })
+          if (this.variable == VariableType.SEA_LEVEL)
+            this.nivelMarRef = result.data[0].nivelRef;
       }
     },
     formatData(data) {
@@ -341,18 +355,19 @@ export default {
     },
 
     toBase64(marker) {
-      var str = this.marker.id + ";;"
-				+ this.marker.longitud + ";;"
-				+ this.marker.latitud + ";;"
-				+ (this.marker.mapOption.variableType == VariableType.WAVE ? 'WANA' : 'NIVMAR') + ";;"
-				+ (this.marker.codigoEstacion ? this.marker.codigoEstacion : 0) + ";;" /
-				+ (this.marker.codigoModelo ? this.marker.codigoModelo : this.marker.id) + ";;"
-				+ this.getMarkerReportType(this.marker) + ";;"
-				+ this.marker.nombre + ";;"
+      var stationField = marker.mapResource.markerClass == MarkerClass.UBICACION ? 'mareografo' : 'codigoEstacion';
+      var str = marker.id + ";;"
+				+ marker.longitud + ";;"
+				+ marker.latitud + ";;"
+				+ (marker.mapOption.variableType == VariableType.WAVE ? 'WANA' : 'NIVMAR') + ";;"
+				+ (marker[stationField] ? marker[stationField] : 0) + ";;" 
+				+ (marker.codigoModelo ? marker.codigoModelo : marker.id) + ";;"
+				+ this.getMarkerReportType(marker) + ";;"
+				+ marker.nombre + ";;"
 				+ '' + ";;" // Region
-				+ (this.marker.mareaAstronomica ? this.marker.mareaAstronomica.id : '') + ";;"
+				+ (marker.mareaAstronomica ? marker.mareaAstronomica.id : '') + ";;"
 				+ Math.round(this.mapState.getMap().getZoom()) + ";;"
-				+ this.marker.malla + ";;"
+				+ marker.malla + ";;"
       return btoa(str);
     },
 
