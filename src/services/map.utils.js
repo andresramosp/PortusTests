@@ -125,7 +125,7 @@ const MapUtils = {
         marker.openPopup();
         break;
       case MarkerClass.PUNTO_MALLA:
-        tooltip = "Pred. " + Vue.$t(marker.mapOption.name) + ": " + (marker.nombre ? marker.nombre : " Lat " + marker.latitud.toFixed(2) + " N" + ": Lon " + marker.longitud.toFixed(2) + " O");
+        tooltip = "Pred. " + Vue.$t(marker.mapOption.name) + ": " + this.getMarkerName(marker);
         marker.bindPopup(tooltip);
         marker.openPopup();
         break;
@@ -257,11 +257,28 @@ const MapUtils = {
     return 'N';
   },
 
-  // TODO: 1. Manejar cardinalidad, con valores absolutos siempre
-  //       2. Cambiar en todo el código donde se lee nombre de markers.
   getMarkerName(marker) {
     return marker.nombre ? marker.nombre
-     : " Lat " + marker.latitud.toFixed(2) + " N" + ": Lon " + marker.longitud.toFixed(2) + " O";
+     : this.latLonToString(marker.latitud, marker.longitud);
+  },
+
+  latLonToString(lat, lon) {
+    var N = Vue.$getLocale() == 'es' ? 'N' : 'N';
+    var S = Vue.$getLocale() == 'es' ? 'S' : 'S';
+    var E = Vue.$getLocale() == 'es' ? 'E' : 'E';
+    var O = Vue.$getLocale() == 'es' ? 'O' : 'W';
+    return 'Lat ' + Math.abs(lat).toFixed(2) + '° ' + (lat >= 0 ? N : S) + ", " 
+         + 'Lon ' + Math.abs(lon).toFixed(2) + '° ' + (lon >= 0 ? E : O);
+  },
+
+  latToString(lat) {
+    return Math.abs(lat).toFixed(2) + '° ' + (lat >= 0 ? 'N' : 'S'); 
+  },
+
+  lonToString(lon) {
+    var E = Vue.$getLocale() == 'es' ? 'E' : 'E';
+    var O = Vue.$getLocale() == 'es' ? 'O' : 'W';
+    return Math.abs(lon).toFixed(2) + '° ' + (lon >= 0 ? E : O); 
   },
 
   async asyncForEach(array, callback) {

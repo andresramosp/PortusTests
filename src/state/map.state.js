@@ -28,17 +28,6 @@ const MapState = {
     dataObjectsList: [],
     bancosDatos: {},
 
-    getBancoDatos(markerId) {
-        if (!this.bancosDatos[markerId]) {
-            this.bancosDatos[markerId] = []
-        }
-        return this.bancosDatos[markerId];
-    },
-
-    setBancoDatos(markerId, bancoDatos) {
-        this.bancosDatos[markerId] = bancoDatos;
-    },
-
     init(map) {
         this.map = map;
         this.cacheLayers();
@@ -361,6 +350,17 @@ const MapState = {
 
     removeMapLogo(logo) {
         this.mapLogos = this.mapLogos.filter(l => l != logo);
+    },
+
+    getBancoDatos(markerId) {
+        if (!this.bancosDatos[markerId]) {
+            this.bancosDatos[markerId] = []
+        }
+        return this.bancosDatos[markerId];
+    },
+
+    setBancoDatos(markerId, bancoDatos) {
+        this.bancosDatos[markerId] = bancoDatos;
     },
 
     // TODO: llevarse funcionalidad a MapUtils, o incluso crear un radar.service.js

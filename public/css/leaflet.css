@@ -274,7 +274,8 @@
 	}
 .leaflet-bar a,
 .leaflet-bar a:hover {
-	background-color: #fff;
+	/* background-color: #fff; */
+	/* background-color: rgba(0, 0, 0, 0.6); */
 	border-bottom: 1px solid #ccc;
 	width: 26px;
 	height: 26px;
@@ -282,7 +283,8 @@
 	display: block;
 	text-align: center;
 	text-decoration: none;
-	color: black;
+	color: white;
+	/* color:  black; */
 	}
 .leaflet-bar a,
 .leaflet-control-layers-toggle {
@@ -290,9 +292,9 @@
 	background-repeat: no-repeat;
 	display: block;
 	}
-.leaflet-bar a:hover {
+/* .leaflet-bar a:hover {
 	background-color: #f4f4f4;
-	}
+	} */
 .leaflet-bar a:first-child {
 	border-top-left-radius: 4px;
 	border-top-right-radius: 4px;
@@ -548,6 +550,7 @@
 .leaflet-oldie .leaflet-popup-content-wrapper,
 .leaflet-oldie .leaflet-popup-tip {
 	border: 1px solid #999;
+	
 	}
 
 

@@ -48,6 +48,7 @@
 
 import { MarkerClass } from "@/common/enums";
 import MapState from "@/state/map.state";
+import MapUtils from "@/services/map.utils";
 import InformacionTab from "@/components/markerPanel/informacionTab.vue"
 import BancoDatosTab from "@/components/markerPanel/bancoDatosTab.vue"
 import BancoDatosHistoricoTab from "@/components/markerPanel/bancoDatosHistoricoTab.vue"
@@ -84,7 +85,7 @@ export default {
             return this.$t("{tipoUbicacion"+this.markerRef.tipoUbicacion+"}") + ": " + this.markerRef.nombre;
         }
         else if (this.markerRef.mapResource.markerClass == MarkerClass.PUNTO_MALLA) {
-            return "Pred. " +  this.$t(this.markerRef.mapOption.name) + ": " + (this.markerRef.nombre ? this.markerRef.nombre : " Lat " + this.markerRef.latitud.toFixed(2) + " N" + ": Lon " + this.markerRef.longitud.toFixed(2) + " O");
+            return "Pred. " +  this.$t(this.markerRef.mapOption.name) + ": " + MapUtils.getMarkerName(this.markerRef);
         }
         else if (this.markerRef.mapResource.markerClass == MarkerClass.PUNTO_MALLA_VERIF) {
            return this.$t("{verificacionInfo}") + ": " + this.markerRef.nombre;
@@ -105,7 +106,7 @@ export default {
     markers: function() {
       if (this.markers.length > 0) {
         this.modalShow = true;
-        // Cogemos siempre el marker de más arriba
+        // Cogemos siempre el marker de más arriba 
         this.markerRef = this.markers[this.markers.length - 1]; 
       }
     }

@@ -13,7 +13,7 @@
 
     "default_map_logo": "https://portus.puertos.es/Portus_RT/portusgwt/img/logoPuertos.jpeg",
 
-    "options_panel_align": "left",
+    "options_panel_align": "right",
     "color_theme": "blueTheme"
 
 }

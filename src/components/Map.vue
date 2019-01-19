@@ -5,9 +5,19 @@
     <img class="loaderGif" :src="require('@/assets/gifs/loadingBars.gif')" v-show="loading" width="100"  /> <!-- width="70" height="70" -->
     <div v-show="playingTimeLineLayer">
        <img :src="mapState.predictionScaleImg" class="predictionScale fadeIn" />
-       <img v-show='hasVectors' class="vectorsIcon fadeIn" @click="toggleVectors()" :src="require('@/assets/icons/vectors.png')" />
+         <dx-date-box
+            class="datePicker datePicker-left fadeIn"
+            :value="Date.now()"
+            type="date"
+          />
+           <dx-date-box
+            class="datePicker datePicker-right fadeIn"
+            :value="Date.now()"
+            type="date"
+          />
+       <!-- <img v-show='hasVectors' class="vectorsIcon fadeIn" @click="toggleVectors()" :src="require('@/assets/icons/vectors.png')" />
        <img v-show='predictionWidget' class="predictionWidgetIcon fadeIn" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
-       <img v-show='staticMapsWidget && hasStaticMaps' class="staticMapsWidgetIcon fadeIn" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
+       <img v-show='staticMapsWidget && hasStaticMaps' class="staticMapsWidgetIcon fadeIn" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" /> -->
     </div>
    </div>
 
@@ -16,9 +26,13 @@
 <script>
 
 import MapState from "@/state/map.state";
+import { DxDateBox } from 'devextreme-vue';
 
 export default {
   name: "Map",
+  components: {
+    DxDateBox
+  },
   props: {
     baseMap: Object,
     zoomControl: { default: true, required: false },
@@ -78,17 +92,17 @@ export default {
         L.control.zoom({
           position: PC.options_panel_align == 'right' ? 'topleft' : 'topright'
         }).addTo(map);
-        L.control.zoomBox({
-          modal: true,
-          addToZoomControl: true,
-          position: PC.options_panel_align == 'right' ? 'topleft' : 'topright'
-        }).addTo(map);
+        // L.control.zoomBox({
+        //   modal: true,
+        //   addToZoomControl: true,
+        //   position: PC.options_panel_align == 'right' ? 'topleft' : 'topright'
+        // }).addTo(map);
       }
      
       var vm = this;
       map.on("moveend", function() {
         vm.moveEndTimeOut = setTimeout(() => {
-          MapState.setVisibleTimeLineLayers();
+          //MapState.setVisibleTimeLineLayers();
           MapState.setVisibleMarkerLayers();
         }, 750);
       });
@@ -165,16 +179,42 @@ export default {
 }
 
 .predictionScale {
-  position: absolute;
-  z-index: 2;
-  /* left: 55%; */
-  /* right: 10px; */
-  /* bottom: -3px; */
-  padding: 10px;
-  border-radius: 6px;
-  width: 27%;
-  left: 100px;
-    bottom: 45px;
+    position: absolute;
+    z-index: 2;
+    /* left: 55%; */
+    /* right: 10px; */
+    /* bottom: -3px; */
+    padding: 10px;
+    border-radius: 6px;
+    width: 25%;
+    height: 50px;
+    left: 105px;
+    bottom: 100px;
+}
+
+.datePicker {
+    position: absolute;
+    z-index: 2;
+    left: 125px;
+    bottom: 15px;
+    width: 85px;
+    font-size: 10px;
+    border: none !important;
+    border-radius: 0px !important;
+}
+
+.datePicker-left {
+  left: 115px;
+}
+
+.datePicker-right {
+  left: 360px;
+}
+
+.dx-texteditor-input {
+  padding-right: 0px !important;
+  /* background-color: rgba(0, 0, 0, 0.7); */
+  border-radius: 0px !important;
 }
 
 .predictionWidgetIcon {
