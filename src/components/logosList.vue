@@ -43,6 +43,9 @@ export default {
 .blueTheme {
   background-color: rgba(0, 123, 255, 0.6);
 }
+.darkTheme {
+  background-color: rgba(0, 0, 0, 0.7);
+}
 .grayTheme {
   background-color: #39434fbf;
 }

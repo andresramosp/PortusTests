@@ -1,5 +1,5 @@
  <template>
- <div class="ubicacionesPanel" :class="{ 'leftAlign': align == 'right', 'rightAlign': align == 'left', 'blueTheme': true }">
+ <div class="ubicacionesPanel" :class="{ 'leftAlign': align == 'right', 'rightAlign': align == 'left', 'blueTheme': theme == 'blueTheme', 'darkTheme': theme == 'darkTheme' }">
      <img :src="require('@/assets/icons/playa.png')" style="float: left; margin-right: 5px" />
      <dx-select-box  style="float: right" 
             :items="regionesList"

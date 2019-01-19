@@ -85,6 +85,10 @@ export default {
     0%{opacity:0}
     100%{opacity:1}
  }
+
+ .darkTheme {
+  background-color: rgba(0, 0, 0, 0.7);
+}
  
 </style>
 

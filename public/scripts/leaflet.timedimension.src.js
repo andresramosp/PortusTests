@@ -291,6 +291,8 @@ L.TimeDimension = (L.Layer || L.Class).extend({
             return L.TimeDimension.Util.parseTimesExpression(this.options.times);
         } else if (this.options.timeInterval) {
             var tiArray = L.TimeDimension.Util.parseTimeInterval(this.options.timeInterval);
+            this.mapState.playerDateRangeFromValue = tiArray[0];
+            this.mapState.playerDateRangeToValue = tiArray[1];
             var period = this.options.period || 'P1D';
             var validTimeRange = this.options.validTimeRange || undefined;
             return L.TimeDimension.Util.explodeTimeRange(tiArray[0], tiArray[1], period, validTimeRange);
@@ -1983,11 +1985,6 @@ L.Control.TimeDimension = L.Control.extend({
             .addListener(link, 'click', this['_button' + title.replace(/ /i, '') + 'Clicked'], this);
 
         return link;
-    },
-
-    _createDatePicker: function(title, container) {
-        var datePicker = L.DomUtil.create('input', 'timecontrol-datepicker', container);
-        return datePicker;
     },
 
     _createSliderTime: function(className, container) {

@@ -1,37 +1,22 @@
 <template>
 
-<div style="height: 100%">
-    <div id="map"></div>
-    <img class="loaderGif" :src="require('@/assets/gifs/loadingBars.gif')" v-show="loading" width="100"  /> <!-- width="70" height="70" -->
-    <div v-show="playingTimeLineLayer">
-       <img :src="mapState.predictionScaleImg" class="predictionScale fadeIn" />
-         <dx-date-box
-            class="datePicker datePicker-left fadeIn"
-            :value="Date.now()"
-            type="date"
-          />
-           <dx-date-box
-            class="datePicker datePicker-right fadeIn"
-            :value="Date.now()"
-            type="date"
-          />
-       <!-- <img v-show='hasVectors' class="vectorsIcon fadeIn" @click="toggleVectors()" :src="require('@/assets/icons/vectors.png')" />
-       <img v-show='predictionWidget' class="predictionWidgetIcon fadeIn" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
-       <img v-show='staticMapsWidget && hasStaticMaps' class="staticMapsWidgetIcon fadeIn" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" /> -->
-    </div>
-   </div>
+  <div style="height: 100%">
+      <div id="map"></div>
+      <img class="loaderGif" :src="require('@/assets/gifs/loadingBars.gif')" v-show="loading" width="100"  /> <!-- width="70" height="70" -->
+      <AnimationPlayer :predictionWidget="predictionWidget" :staticMapsWidget="staticMapsWidget" />
+  </div>
 
 </template>
 
 <script>
 
 import MapState from "@/state/map.state";
-import { DxDateBox } from 'devextreme-vue';
+import AnimationPlayer from "@/components/animationPlayer.vue"
 
 export default {
   name: "Map",
   components: {
-    DxDateBox
+    AnimationPlayer
   },
   props: {
     baseMap: Object,
@@ -53,15 +38,6 @@ export default {
   computed: {
     loading() {
       return this.mapState.loadingThings.length > 0;
-    },
-    playingTimeLineLayer() {
-      return this.mapState.currentTimeLineLayer != null;
-    },
-    hasStaticMaps() {
-      return this.mapState.currentTimeLineLayer && this.mapState.currentTimeLineLayer.mapResource.mapsResourceApi != null;
-    },
-    hasVectors() {
-      return this.mapState.currentTimeLineLayer && this.mapState.currentTimeLineLayer.mapResource.vectors;
     }
   },
   mounted() {
@@ -102,7 +78,7 @@ export default {
       var vm = this;
       map.on("moveend", function() {
         vm.moveEndTimeOut = setTimeout(() => {
-          //MapState.setVisibleTimeLineLayers();
+          MapState.setVisibleTimeLineLayers();
           MapState.setVisibleMarkerLayers();
         }, 750);
       });
@@ -126,40 +102,6 @@ export default {
         MapState.setBaseLayer(this.baseMap);
       }
     },
-
-    openPredictionWidget: function() {
-
-      var map = MapState.getMap();
-      var currentPredLayer = this.mapState.currentTimeLineLayer; 
-      if (currentPredLayer) {
-        var routeData = this.$router.resolve({ path: '/predictionWidget', 
-          query: 
-          { 
-            resourceId : currentPredLayer.mapResource.id.replace('pred-tiles-', ''), 
-            zoom: map.getZoom(), 
-            lat: map.getCenter().lat, 
-            lon: map.getCenter().lng,
-            vec: currentPredLayer._baseLayer._url.indexOf('vec') != -1
-          }
-        });
-        window.open(routeData.href, '_blank');
-      }
-    },
-
-    openStaticMapsWidget: function() {
-
-      var map = MapState.getMap();
-      var currentPredLayer = this.mapState.currentTimeLineLayer;
-      if (currentPredLayer) {
-        MapState.setStaticMapResourceSelected(currentPredLayer.mapResource);
-      }
-    },
-
-    toggleVectors: function() {
-      var currentPredLayer = this.mapState.currentTimeLineLayer
-      MapState.removeMapResource(currentPredLayer.mapResource.id);
-      MapState.addTimeLineLayer(currentPredLayer.mapResource, !this.mapState.showingVectors);
-    }
   }
 };
 </script>
@@ -178,83 +120,7 @@ export default {
   z-index: 5;
 }
 
-.predictionScale {
-    position: absolute;
-    z-index: 2;
-    /* left: 55%; */
-    /* right: 10px; */
-    /* bottom: -3px; */
-    padding: 10px;
-    border-radius: 6px;
-    width: 25%;
-    height: 50px;
-    left: 105px;
-    bottom: 100px;
-}
 
-.datePicker {
-    position: absolute;
-    z-index: 2;
-    left: 125px;
-    bottom: 15px;
-    width: 85px;
-    font-size: 10px;
-    border: none !important;
-    border-radius: 0px !important;
-}
-
-.datePicker-left {
-  left: 115px;
-}
-
-.datePicker-right {
-  left: 360px;
-}
-
-.dx-texteditor-input {
-  padding-right: 0px !important;
-  /* background-color: rgba(0, 0, 0, 0.7); */
-  border-radius: 0px !important;
-}
-
-.predictionWidgetIcon {
-    position: absolute;
-    z-index: 2;
-    left: 41%;
-    /* right: 20px; */
-    bottom: 8px;
-    /* bottom: 42px; */
-    width: 35px;
-    height: 35px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.vectorsIcon {
-    position: absolute;
-    z-index: 2;
-    left: 47%;
-    /* right: 20px; */
-    bottom: 8px;
-    /* bottom: 42px; */
-    width: 35px;
-    height: 35px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.staticMapsWidgetIcon {
-    position: absolute;
-    z-index: 2;
-    left: 44%;
-     /* right: 55px; */
-    bottom: 8px;
-    /* bottom: 45px; */
-    width: 35px;
-    height: 35px;
-    border-radius: 6px;
-    cursor: pointer;
-}
 
 .loaderGif {
     position: absolute;

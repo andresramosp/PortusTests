@@ -67,6 +67,9 @@ export default {
 .blueTheme {
   background-color: rgba(0, 123, 255, 0.6);
 }
+.darkTheme {
+  background-color: rgba(0, 0, 0, 0.7);
+}
 .grayTheme {
   background-color: #39434fbf;
 }
@@ -76,11 +79,8 @@ export default {
 .layersPanel {
   position: absolute;
   z-index: 2;
-  /* width: 320px; */
   top: 9px;
-  /* background-color: rgba(0, 123, 255, 0.5);
-  padding: 10px; */
-  border-radius: 8px;
+  border-radius: 0px;
   color: white;
   font-size: 13px;
 }
@@ -96,9 +96,10 @@ input[type="checkbox"] {
   margin-right: 5px;
 }
 .card-header {
-  background-color: #091c3259;
+  background-color:#337ab7;
   font-size: 17px;
-  padding: 7px 5px 7px 5px
+  padding: 7px 5px 7px 5px;
+  border-radius: 0px !important;
 }
 .panel-section {
   /* background-color: rgba(0, 123, 255, 0.5);  */

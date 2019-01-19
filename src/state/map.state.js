@@ -17,6 +17,9 @@ const MapState = {
     preloadedTimeLineLayers: [],
     preloadedMarkers: [],
     currentTimeLineLayer: null,
+    playerDateRangeFromValue: null,
+    playerDateRangeToValue: null,
+    maxPredictionDate: null,
     showingVectors: false,
     currentPlayerTime: null,
     staticMapResourceSelected: null,
@@ -186,8 +189,8 @@ const MapState = {
                 var date = new Date();
                 date.setUTCHours(0, 0, 0, 0);
                 var predHours = (preLayer._baseLayer.options.numDays) * 24; 
-                //ms.map.options.timeDimensionOptions.timeInterval = date.toISOString() + '/PT' + predHours + 'H'; 
-                ms.map.options.timeDimensionOptions.timeInterval = 'PT' + predHours + 'H/' + MapUtils.convertYMDHToDate(preLayer._baseLayer.options.strLastate).toISOString();
+                ms.maxPredictionDate = MapUtils.convertYMDHToDate(preLayer._baseLayer.options.strLastate);
+                ms.map.options.timeDimensionOptions.timeInterval = 'PT' + predHours + 'H/' + ms.maxPredictionDate.toISOString();
                 ms.map.timeDimension.initialize(ms.map.options.timeDimensionOptions);
                 ms.map.timeDimension.setCurrentTimeIndex(0);
                 if (!ms.map.timeDimensionControl) {
@@ -229,6 +232,22 @@ const MapState = {
                     preLayer.boundRectangle.addTo(ms.map);
             }
         })
+    },
+
+    setPlayerDateRangeValue(from, to) {
+        this.map.timeDimensionControl._player.stop();
+        this.map.removeControl(this.map.timeDimensionControl);
+        if (this.currentTimeLineLayer) {
+            this.currentTimeLineLayer._layers = {};
+            this.currentTimeLineLayer._defaultTime = 0;
+            this.currentTimeLineLayer._availableTimes = [];
+        }
+        this.playerDateRangeFromValue = from || this.playerDateRangeFromValue;
+        this.playerDateRangeToValue = to || this.playerDateRangeToValue;
+        this.map.options.timeDimensionOptions.timeInterval = this.playerDateRangeFromValue.toISOString() + '/' + this.playerDateRangeToValue.toISOString();
+        this.map.timeDimension.initialize(this.map.options.timeDimensionOptions);
+        this.map.timeDimension.setCurrentTimeIndex(0);
+        this.map.addControl(this.map.timeDimensionControl);
     },
 
     setCurrentPlayerTime(date) {

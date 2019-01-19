@@ -1,7 +1,7 @@
  <template>
  <div v-if="floatingOptions.length > 0">
     <transition appear :appear-class="appearClass" appear-to-class="slide-menu-enter-active">
-      <div class="floatingPanel fadeIn"  :class="{ 'leftAlign': align == 'left', 'rightAlign': align == 'right', blueTheme: theme == 'blueTheme', greenTheme: theme == 'greenTheme' }">
+      <div class="floatingPanel fadeIn"  :class="{ 'leftAlign': align == 'left', 'rightAlign': align == 'right', blueThemeSub: theme == 'blueTheme', darkThemeSub: theme == 'darkTheme' }">
         <div class="form-check" v-for="floatingOption in floatingOptions" :key="floatingOptions.indexOf(floatingOption)">
            <label class="form-check-label">
              <input class="form-check-input" type="checkbox" v-model="floatingOption.active" @change="floatingOptionChanged(floatingOption)" />
@@ -76,12 +76,6 @@ export default {
       floatingOption.method(floatingOption.args, floatingOption.active);
     },
 
-    // toggleVectorial: function(mapResourceId, vectorial) {
-    //   MapState.removeMapResource(mapResourceId);
-    //   var mapResource = MapState.getMapResource(mapResourceId);
-    //   MapState.addTimeLineLayer(mapResource, vectorial);
-    // },
-    
     toggleVisibility: function(layers, visible) {
       layers.forEach(l => {
         l.visible = visible;
@@ -159,15 +153,11 @@ export default {
   right: 15px;
 }
 
-.blueTheme {
-  background-color: rgba(0, 123, 255, 0.6);
+.blueThemeSub {
+  background-color: #337ab7;
+}
+.darkThemeSub {
+  background-color: #337ab7
 }
 
-.grayTheme {
-  background-color: #39434fbf;
-}
-
-.greenTheme {
-  background-color: rgba(0, 255, 0, 0.6);
-}
 </style>
