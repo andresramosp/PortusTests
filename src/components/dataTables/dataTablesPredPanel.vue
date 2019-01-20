@@ -355,7 +355,7 @@ export default {
     },
 
     toBase64(marker) {
-      var stationField = marker.mapResource.markerClass == MarkerClass.UBICACION ? 'mareografo' : 'codigoEstacion';
+      var stationField = marker.mapResource.markerClass == MarkerClass.Ubicacion ? 'mareografo' : 'codigoEstacion';
       var str = marker.id + ";;"
 				+ marker.longitud + ";;"
 				+ marker.latitud + ";;"
@@ -373,16 +373,16 @@ export default {
 
     getMarkerReportType(marker) {
       switch (marker.mapResource.markerClass) {
-        case MarkerClass.UBICACION:
+        case MarkerClass.Ubicacion:
             return marker.tipoUbicacion.toUpperCase();
           break;
-        case MarkerClass.PUNTO_MALLA:
+        case MarkerClass.PuntoMalla:
             if (marker.mapOption.variableType == VariableType.WAVE)
               return 'WANA_DATA';
             else 
               return '';
           break;
-        case MarkerClass.PUNTO_MALLA_VERIF:
+        case MarkerClass.PuntoMallaVerif:
             if (marker.mapOption.variableType == VariableType.WAVE)
               return 'VERIFICACION_OLEAJE';
             else 

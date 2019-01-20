@@ -18,7 +18,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Nivmar Puertos',
     resourceApi: 'ubicaciones/nivmar/Puerto',
-    markerClass: MarkerClass.UBICACION,
+    markerClass: MarkerClass.Ubicacion,
     minZoom: 0,
     icon: 'nivmar-puerto.png',
     cached: false
@@ -28,7 +28,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: '{nivmarLocalidadesRes}',
     resourceApi: 'ubicaciones/nivmar/Localidad',
-    markerClass: MarkerClass.UBICACION,
+    markerClass: MarkerClass.Ubicacion,
     minZoom: 7,
     icon: 'nivmar-localidad.png',
     cached: false
@@ -38,7 +38,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Nivmar Playas',
     resourceApi: 'ubicaciones/nivmar/Playa',
-    markerClass: MarkerClass.UBICACION,
+    markerClass: MarkerClass.Ubicacion,
     minZoom: 8,
     icon: 'nivmar-playa.png',
     cached: false
@@ -140,7 +140,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Puntos Modelo',
     resourceApi: 'puntosMalla/pred/Cirana',
-    markerClass: MarkerClass.PUNTO_MALLA,
+    markerClass: MarkerClass.PuntoMalla,
     minZoom: 0,
     //groupLayersBy: { field: 'malla', label: 'Malla' },
     icon: 'punto-malla-cirana.png'
@@ -150,7 +150,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Puntos Modelo',
     resourceApi: 'puntosMalla/pred/Wana/atl',
-    markerClass: MarkerClass.PUNTO_MALLA,
+    markerClass: MarkerClass.PuntoMalla,
     minZoom: 0,
     icon: 'punto-malla-wana.png'
   },
@@ -159,7 +159,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Verificación',
     resourceApi: 'puntosMalla/pred/Wana/atl?verif=true',
-    markerClass: MarkerClass.PUNTO_MALLA_VERIF,
+    markerClass: MarkerClass.PuntoMallaVerif,
     unchecked: true,
     minZoom: 0,
     icon: 'punto-malla-verif.png' 
@@ -169,7 +169,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Puntos Modelo',
     resourceApi: 'puntosMalla/pred/Wana/med',
-    markerClass: MarkerClass.PUNTO_MALLA,
+    markerClass: MarkerClass.PuntoMalla,
     //groupLayersBy: { field: 'malla', label: 'Malla' },
     minZoom: 0,
     icon: 'punto-malla-wana.png'
@@ -179,7 +179,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Verificación',
     resourceApi: 'puntosMalla/pred/Wana/med?verif=true',
-    markerClass: MarkerClass.PUNTO_MALLA_VERIF,
+    markerClass: MarkerClass.PuntoMallaVerif,
     unchecked: true,
     minZoom: 0,
     icon: 'punto-malla-verif.png'
@@ -189,7 +189,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Puntos Modelo',
     resourceApi: 'puntosMalla/pred/Atmosfera',
-    markerClass: MarkerClass.PUNTO_MALLA,
+    markerClass: MarkerClass.PuntoMalla,
     minZoom: 0,
     icon: 'punto-malla-atmosfera.png',
     //groupLayersBy: { field: 'malla', label: 'Malla' }
@@ -199,7 +199,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Verificación',
     resourceApi: 'puntosMalla/pred/Atmosfera?verif=true',
-    markerClass: MarkerClass.PUNTO_MALLA_VERIF,
+    markerClass: MarkerClass.PuntoMallaVerif,
     unchecked: true,
     minZoom: 0,
     icon: 'punto-malla-verif.png', 
@@ -215,7 +215,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'RT - Oleaje',
     resourceApi: 'estaciones/rt/WAVE',
-    markerClass: MarkerClass.ESTACION,
+    markerClass: MarkerClass.EstacionRT,
     minZoom: 0,
     icon: function (m) {
       if (m.red.tipoRed == RedType.PROPAGACION) {
@@ -236,7 +236,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'RT - Nivel del Mar',
     resourceApi: 'estaciones/rt/SEA_LEVEL',
-    markerClass: MarkerClass.ESTACION,
+    markerClass: MarkerClass.EstacionRT,
     minZoom: 0,
     icon: function (m) {
       return (1 <= m.estado && m.estado <= 2) ? 'estacion-nivmar-na.png' : 'estacion-nivmar.png'
@@ -252,7 +252,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'RT - Agitacion',
     resourceApi: 'estaciones/rt/AGITATION',
-    markerClass: MarkerClass.ESTACION,
+    markerClass: MarkerClass.EstacionRT,
     minZoom: 0,
     icon: function (m) {
        return (1 <= m.estado && m.estado <= 2) ? 'estacion-agitacion-na.png' : 'estacion-agitacion.png'
@@ -267,7 +267,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'RT - Viento',
     resourceApi: 'estaciones/rt/WIND',
-    markerClass: MarkerClass.ESTACION,
+    markerClass: MarkerClass.EstacionRT,
     minZoom: 0,
     icon: function (m) {
       return (1 <= m.estado && m.estado <= 2) ? 'estacion-viento-na.png' : 'estacion-viento.png'
@@ -282,7 +282,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'RT - Salinidad',
     resourceApi: 'estaciones/rt/SALINITY',
-    markerClass: MarkerClass.ESTACION,
+    markerClass: MarkerClass.EstacionRT,
     minZoom: 0,
     icon: function (m) {
       return (1 <= m.estado && m.estado <= 2) ? 'estacion-salinidad-na.png' : 'estacion-salinidad.png'
@@ -298,7 +298,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'RT - Presión Aire',
     resourceApi: 'estaciones/rt/AIR_PRESURE',
-    markerClass: MarkerClass.ESTACION,
+    markerClass: MarkerClass.EstacionRT,
     minZoom: 0,
     icon: function (m) {
       return (1 <= m.estado && m.estado <= 2) ? 'estacion-presionAtm-na.png' : 'estacion-presionAtm.png'
@@ -314,7 +314,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'RT - Temp. Agua',
     resourceApi: 'estaciones/rt/WATER_TEMP',
-    markerClass: MarkerClass.ESTACION,
+    markerClass: MarkerClass.EstacionRT,
     minZoom: 0,
     icon: function (m) {
       return (1 <= m.estado && m.estado <= 2) ? 'estacion-tempAgua-na.png' : 'estacion-tempAgua.png'
@@ -329,7 +329,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'RT - Temp. Aire',
     resourceApi: 'estaciones/rt/AIR_TEMP',
-    markerClass: MarkerClass.ESTACION,
+    markerClass: MarkerClass.EstacionRT,
     minZoom: 0,
     icon: function (m) {
       return (1 <= m.estado && m.estado <= 2) ? 'estacion-tempAire-na.png' : 'estacion-tempAire.png'
@@ -344,7 +344,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Estaciones',
     resourceApi: 'estaciones/rt/CURRENTS',
-    markerClass: MarkerClass.ESTACION,
+    markerClass: MarkerClass.EstacionRT,
     minZoom: 0,
     icon: function (m) {
       return (1 <= m.estado && m.estado <= 2) ? 'estacion-corriente-na.png' : 'estacion-corriente.png'
@@ -367,7 +367,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Antenas Radares',
     resourceApi: 'antenas',
-    markerClass: MarkerClass.ANTENA_RADAR,
+    markerClass: MarkerClass.AntenaRadar,
     //minZoom: 7, 
     icon: 'antena-corrientes.png',
     showAll: false,
@@ -381,7 +381,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'RT - Onda Larga',
     resourceApi: 'estaciones/rt/SEICHE',
-    markerClass: MarkerClass.ESTACION,
+    markerClass: MarkerClass.EstacionRT,
     minZoom: 0,
     icon: function (m) {
       return (1 <= m.estado && m.estado <= 2) ? 'estacion-ondaLarga-na.png' : 'estacion-ondaLarga.png'
@@ -396,7 +396,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Estaciones Oleaje',
     resourceApi: 'estaciones/hist/WAVE',
-    markerClass: MarkerClass.ESTACION_HISTORICO,
+    markerClass: MarkerClass.EstacionHist,
     minZoom: 0,
     icon: 'estacion-hist-oleaje.png',
     iconSize: [25, 25],
@@ -410,7 +410,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Estaciones Salinidad',
     resourceApi: 'estaciones/hist/SALINITY',
-    markerClass: MarkerClass.ESTACION_HISTORICO,
+    markerClass: MarkerClass.EstacionHist,
     minZoom: 0,
     icon: 'estacion-hist-salinidad.png',
     iconSize: [25, 25],
@@ -424,7 +424,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Puntos Malla Oleaje',
     resourceApi: 'puntosMalla/hist/WAVE',
-    markerClass: MarkerClass.PUNTO_MALLA_HISTORICO, 
+    markerClass: MarkerClass.PuntoMallaHist, 
     minZoom: 0,
     iconSize: [25, 25],
     icon: 'punto-malla-hist-oleaje.png', 
@@ -434,7 +434,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Estaciones Viento',
     resourceApi: 'estaciones/hist/WIND',
-    markerClass: MarkerClass.ESTACION_HISTORICO,
+    markerClass: MarkerClass.EstacionHist,
     minZoom: 0,
     icon: 'estacion-hist-viento.png',
     iconSize: [25, 25],
@@ -448,7 +448,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Puntos Malla Viento',
     resourceApi: 'puntosMalla/hist/WIND',
-    markerClass: MarkerClass.PUNTO_MALLA_HISTORICO, 
+    markerClass: MarkerClass.PuntoMallaHist, 
     minZoom: 0,
     iconSize: [25, 25],
     icon: 'punto-malla-hist-viento.png', 
@@ -458,7 +458,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Estaciones Corrientes',
     resourceApi: 'estaciones/hist/CURRENTS',
-    markerClass: MarkerClass.ESTACION_HISTORICO,
+    markerClass: MarkerClass.EstacionHist,
     minZoom: 0,
     icon: 'estacion-hist-corrientes.png',
     iconSize: [25, 25],
@@ -472,7 +472,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Estaciones Nivmar',
     resourceApi: 'estaciones/hist/SEA_LEVEL',
-    markerClass: MarkerClass.ESTACION_HISTORICO,
+    markerClass: MarkerClass.EstacionHist,
     minZoom: 0,
     icon: 'estacion-hist-nivmar.png',
     iconSize: [25, 25],
@@ -486,7 +486,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Estaciones Temp Agua',
     resourceApi: 'estaciones/hist/WATER_TEMP',
-    markerClass: MarkerClass.ESTACION_HISTORICO,
+    markerClass: MarkerClass.EstacionHist,
     minZoom: 0,
     icon: 'estacion-hist-tempAgua.png',
     iconSize: [25, 25],
@@ -500,7 +500,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Estaciones Agitacion',
     resourceApi: 'estaciones/hist/AGITATION',
-    markerClass: MarkerClass.ESTACION_HISTORICO,
+    markerClass: MarkerClass.EstacionHist,
     minZoom: 0,
     icon: 'estacion-hist-agitacion.png',
     iconSize: [25, 25],
@@ -514,7 +514,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Estaciones Pres. Aire',
     resourceApi: 'estaciones/hist/AIR_PRESURE',
-    markerClass: MarkerClass.ESTACION_HISTORICO,
+    markerClass: MarkerClass.EstacionHist,
     minZoom: 0,
     icon: 'estacion-hist-presionAtm.png',
     iconSize: [25, 25],
@@ -528,7 +528,7 @@ export const MapResources = [
     type: 'MarkerLayer',
     name: 'Estaciones Temp Aire',
     resourceApi: 'estaciones/hist/AIR_TEMP',
-    markerClass: MarkerClass.ESTACION_HISTORICO,
+    markerClass: MarkerClass.EstacionHist,
     minZoom: 0,
     icon: 'estacion-hist-tempAire.png',
     iconSize: [25, 25],

@@ -1,16 +1,24 @@
  <template>
  <div v-if="floatingOptions.length > 0">
-    <transition appear :appear-class="appearClass" appear-to-class="slide-menu-enter-active">
-      <div class="floatingPanel fadeIn"  :class="{ 'leftAlign': align == 'left', 'rightAlign': align == 'right', blueThemeSub: theme == 'blueTheme', darkThemeSub: theme == 'darkTheme' }">
-        <div class="form-check" v-for="floatingOption in floatingOptions" :key="floatingOptions.indexOf(floatingOption)">
-           <label class="form-check-label">
-             <input class="form-check-input" type="checkbox" v-model="floatingOption.active" @change="floatingOptionChanged(floatingOption)" />
-               {{ $t(floatingOption.name) }}
-            </label>
-        </div> 
-      </div>
-     
-   </transition>
+   <div class="darkThemeSub">
+      <transition appear :appear-class="appearClass" appear-to-class="slide-menu-enter-active">
+        <div class="floatingPanel fadeIn"  :class="{ 
+            'leftAlign': align == 'left', 
+            'rightAlign': align == 'right', 
+            'predicciones': mapOptionGroup.id == 'predicciones',
+            'tiempo_real': mapOptionGroup.id == 'tiempo_real',
+            'historico': mapOptionGroup.id == 'historico' 
+          }">
+          <div class="form-check" v-for="floatingOption in floatingOptions" :key="floatingOptions.indexOf(floatingOption)">
+            <label class="form-check-label">
+              <input class="form-check-input" type="checkbox" v-model="floatingOption.active" @change="floatingOptionChanged(floatingOption)" />
+                {{ $t(floatingOption.name) }}
+              </label>
+          </div> 
+        </div>
+      </transition>
+   </div>
+   
    
  </div>
 </template>
@@ -140,7 +148,7 @@ export default {
   /* right: 9px; */
   top: 50px;
   padding: 10px;
-  border-radius: 6px;
+  border-radius: 0px;
   color: white;
   font-size: 13px;
 }
@@ -153,11 +161,6 @@ export default {
   right: 15px;
 }
 
-.blueThemeSub {
-  background-color: #337ab7;
-}
-.darkThemeSub {
-  background-color: #337ab7
-}
+
 
 </style>

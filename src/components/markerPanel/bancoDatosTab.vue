@@ -72,7 +72,7 @@ export default {
   },
   created() {
        var mi = this;
-        if (this.markers[0].mapResource.markerClass == MarkerClass.ESTACION) {
+        if (this.markers[0].mapResource.markerClass == MarkerClass.EstacionRT) {
             ApiService.post('parametros/' + this.markers[0].id + '?locale=' + this.$getLocale(), this.markers.map(m => m.mapOption.variableType))
                 .then((params) => {
                     this.setBancoDatos(params);
@@ -97,7 +97,7 @@ export default {
             clearTimeout(this.timeOut);
          this.timeOut = setTimeout(() => {
              // En las estaciones (Tiempo Real), si elegimos un parámetro se marcan todos los de la misma variable
-             if (this.markers[0].mapResource.markerClass == MarkerClass.ESTACION) {
+             if (this.markers[0].mapResource.markerClass == MarkerClass.EstacionRT) {
                  this.bancoDatos.forEach(p => {
                     if (p.variable == param.variable)
                         Vue.set(p, 'tableActive', param.tableActive);
@@ -105,9 +105,9 @@ export default {
                  DataPanelsUtils.addRTDataTable(this.markers[0], this.bancoDatos.filter(param => param.tableActive));
              }
              // En los puntos-malla (Predicción), si elegimos un parámetro se marcan todos y la tabla depende de la variable
-             if (this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA 
-              || this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA_VERIF
-              || this.markers[0].mapResource.markerClass == MarkerClass.UBICACION) {
+             if (this.markers[0].mapResource.markerClass == MarkerClass.PuntoMalla 
+              || this.markers[0].mapResource.markerClass == MarkerClass.PuntoMallaVerif
+              || this.markers[0].mapResource.markerClass == MarkerClass.Ubicacion) {
                  this.bancoDatos.forEach(p => {
                      Vue.set(p, 'tableActive', param.tableActive);
                  })
@@ -118,15 +118,15 @@ export default {
      },
      changeGraphParam(param) {
         // En las gráficas, podemos marcar parámetros individualmente
-        if (this.markers[0].mapResource.markerClass == MarkerClass.ESTACION) {
+        if (this.markers[0].mapResource.markerClass == MarkerClass.EstacionRT) {
             DataPanelsUtils.setRTGraphParam(this.markers[0], param);
         }
-        if (this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA
-         || this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA_VERIF) {
+        if (this.markers[0].mapResource.markerClass == MarkerClass.PuntoMalla
+         || this.markers[0].mapResource.markerClass == MarkerClass.PuntoMallaVerif) {
             this.checkDir180Param(param);
             DataPanelsUtils.setPredGraphParam(this.markers[0], [param]);
         }
-        if (this.markers[0].mapResource.markerClass == MarkerClass.UBICACION) {
+        if (this.markers[0].mapResource.markerClass == MarkerClass.Ubicacion) {
             this.checkDir180Param(param);
             var extraParam = { paramEseoo: 'SeaSea', graphicActive: param.graphicActive, unidad: 'm' };
             var parameters = [param, extraParam];

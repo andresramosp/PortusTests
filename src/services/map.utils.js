@@ -120,36 +120,36 @@ const MapUtils = {
     var tooltip;
 
     switch (marker.mapResource.markerClass) {
-      case MarkerClass.UBICACION:
+      case MarkerClass.Ubicacion:
         marker.bindPopup(Vue.$t("{tipoUbicacion" + marker.tipoUbicacion+"}") + ": " + marker.nombre);
         marker.openPopup();
         break;
-      case MarkerClass.PUNTO_MALLA:
+      case MarkerClass.PuntoMalla:
         tooltip = "Pred. " + Vue.$t(marker.mapOption.name) + ": " + this.getMarkerName(marker);
         marker.bindPopup(tooltip);
         marker.openPopup();
         break;
-      case MarkerClass.PUNTO_MALLA_VERIF:
+      case MarkerClass.PuntoMallaVerif:
         tooltip = Vue.$t("{verificacionInfo}") + ": " + marker.nombre;
         marker.bindPopup(tooltip);
         marker.openPopup();
         break;
-      case MarkerClass.ESTACION_HISTORICO:
+      case MarkerClass.EstacionHist:
         tooltip = Vue.$t("{estacionHistTooltip}") + ": " + marker.nombre;
         marker.bindPopup(tooltip);
         marker.openPopup();
         break;
-      case MarkerClass.PUNTO_MALLA_HISTORICO:
+      case MarkerClass.PuntoMallaHist:
         tooltip = Vue.$t("{estacionHistTooltip}") + ": " + Vue.$t("{puntoSimarLabel}") + ": (" + marker.id + ")";
         marker.bindPopup(tooltip);
         marker.openPopup();
         break;
-      case MarkerClass.ANTENA_RADAR:
+      case MarkerClass.AntenaRadar:
         tooltip = marker.radar.nombre + " - " + marker.nombre;
         marker.bindPopup(tooltip);
         marker.openPopup();
         break;
-      case MarkerClass.ESTACION:
+      case MarkerClass.EstacionRT:
         marker.timeOut = setTimeout(async () => {
           var markersAtPoint = this.getMarkersById(map, marker.id);
           var lastData = await ApiService.post('lastData/station/' + marker.id + '?locale=' + Vue.$getLocale(),

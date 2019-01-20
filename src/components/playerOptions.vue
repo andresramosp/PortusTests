@@ -1,5 +1,7 @@
 <template>
   <div v-show="playingTimeLineLayer">
+    <img v-show="!isWidget" @click="toggleMinimized()" width="20" class="minimizerButton" :src="require('@/assets/icons/predictionWidget.png')" />
+    <div v-show="!mapState.playerMinimized">
        <img :src="mapState.predictionScaleImg" class="predictionScale fadeIn" />
          <dx-date-box
             class="datePicker datePicker-left fadeIn"
@@ -18,9 +20,10 @@
             :use-mask-behavior="true"
           />
        <img v-show='hasVectors' class="vectorsIcon fadeIn" @click="toggleVectors()" :src="require('@/assets/icons/vectors.png')" />
-       <img v-show='predictionWidget' class="predictionWidgetIcon fadeIn" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
-       <img v-show='staticMapsWidget && hasStaticMaps' class="staticMapsWidgetIcon fadeIn" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
+       <img v-show='!isWidget' class="predictionWidgetIcon fadeIn" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
+       <img v-show='!isWidget && hasStaticMaps' class="staticMapsWidgetIcon fadeIn" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
     </div>
+  </div>
 </template>
 
 <script>
@@ -29,7 +32,7 @@ import MapState from "@/state/map.state";
 import { DxDateBox } from 'devextreme-vue';
 
 export default {
-  name: "AnimationPlayer",
+  name: "PlayerOptions",
    components: {
     DxDateBox
   },
@@ -40,8 +43,7 @@ export default {
     };
   },
   props: {
-    predictionWidget: { default: true, required: false },
-    staticMapsWidget: { default: true, required: false },
+    isWidget: { default: false, required: false }
   },
   computed: {
       playingTimeLineLayer() {
@@ -54,7 +56,10 @@ export default {
         return this.mapState.currentTimeLineLayer && this.mapState.currentTimeLineLayer.mapResource.vectors;
       }
   },
-  mounted() {},
+  mounted() {
+  
+  },
+  // mounted() {},
   methods: {
      openPredictionWidget: function() {
       var map = MapState.getMap();
@@ -89,17 +94,33 @@ export default {
     },
 
     changeDateFromValue: function(ev) {
-      this.mapState.setPlayerDateRangeValue(ev.value, null);
+      // Nos aseguramos de que el evento procede del control, pues
+      // podría haber sido disparado por el initialize del Player
+      if (ev.event)
+        this.mapState.setPlayerDateRangeValue(ev.value, null);
     },
 
     changeDateToValue: function(ev) {
-      this.mapState.setPlayerDateRangeValue(null, ev.value);
+      if (ev.event)
+        this.mapState.setPlayerDateRangeValue(null, ev.value);
+    },
+
+    toggleMinimized() {
+      var currentValue = this.mapState.getMap().timeDimensionControl.options.minimized;
+      this.mapState.setPlayerMinimized(!currentValue);
     }
   }
 };
 </script>
 
 <style>
+
+.minimizerButton {
+  position: absolute;
+    z-index: 5;
+    left: 3px;
+    bottom: 72px;
+}
 
 .predictionScale {
     position: absolute;
@@ -111,7 +132,7 @@ export default {
     border-radius: 6px;
     width: 25%;
     height: 50px;
-    left: 105px;
+    left: 100px;
     bottom: 95px;
 }
 
@@ -119,19 +140,21 @@ export default {
     position: absolute;
     z-index: 2;
     left: 125px;
-    bottom: 15px;
-    width: 85px;
+    bottom: 22px;
+    width: 70px;
     font-size: 10px;
     border: none !important;
     border-radius: 0px !important;
 }
 
 .datePicker-left {
-  left: 115px;
+  /* left: 128px; */
+  left: 150px;
 }
 
 .datePicker-right {
-  left: 360px;
+  /* left: 380px; */
+  left: 355px;
 }
 
 .dx-texteditor-input {
@@ -145,8 +168,8 @@ export default {
     z-index: 2;
     left: 530px;
     bottom: 98px;
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
     border-radius: 6px;
     color: white;
     cursor: pointer;
@@ -157,8 +180,8 @@ export default {
     z-index: 2;
     left: 50px;
     bottom: 100px;
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
     border-radius: 6px;
     cursor: pointer;
 }
@@ -168,8 +191,8 @@ export default {
     z-index: 2;
     left: 490px;
     bottom: 100px;
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
     border-radius: 6px;
     cursor: pointer;
 }

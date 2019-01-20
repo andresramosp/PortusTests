@@ -19,6 +19,7 @@ const MapState = {
     currentTimeLineLayer: null,
     playerDateRangeFromValue: null,
     playerDateRangeToValue: null,
+    playerMinimized: false,
     maxPredictionDate: null,
     showingVectors: false,
     currentPlayerTime: null,
@@ -201,7 +202,8 @@ const MapState = {
                             loopButton: true,
                             loop: true
                         },
-                        autoPlay: true
+                        autoPlay: true,
+                        minimized: ms.playerMinimized
                     })
                     ms.map.addControl(ms.map.timeDimensionControl);
                 }
@@ -238,6 +240,7 @@ const MapState = {
         this.map.timeDimensionControl._player.stop();
         this.map.removeControl(this.map.timeDimensionControl);
         if (this.currentTimeLineLayer) {
+            this.currentTimeLineLayer.remove();
             this.currentTimeLineLayer._layers = {};
             this.currentTimeLineLayer._defaultTime = 0;
             this.currentTimeLineLayer._availableTimes = [];
@@ -247,6 +250,14 @@ const MapState = {
         this.map.options.timeDimensionOptions.timeInterval = this.playerDateRangeFromValue.toISOString() + '/' + this.playerDateRangeToValue.toISOString();
         this.map.timeDimension.initialize(this.map.options.timeDimensionOptions);
         this.map.timeDimension.setCurrentTimeIndex(0);
+        this.map.addControl(this.map.timeDimensionControl);
+        this.currentTimeLineLayer.addTo(this.map);
+    },
+
+    setPlayerMinimized(value) {
+        this.playerMinimized = value;
+        this.map.timeDimensionControl.options.minimized = value;
+        this.map.removeControl(this.map.timeDimensionControl);
         this.map.addControl(this.map.timeDimensionControl);
     },
 

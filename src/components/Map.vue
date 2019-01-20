@@ -3,7 +3,7 @@
   <div style="height: 100%">
       <div id="map"></div>
       <img class="loaderGif" :src="require('@/assets/gifs/loadingBars.gif')" v-show="loading" width="100"  /> <!-- width="70" height="70" -->
-      <AnimationPlayer :predictionWidget="predictionWidget" :staticMapsWidget="staticMapsWidget" />
+      <PlayerOptions  :isWidget="isWidget"  />
   </div>
 
 </template>
@@ -11,18 +11,17 @@
 <script>
 
 import MapState from "@/state/map.state";
-import AnimationPlayer from "@/components/animationPlayer.vue"
+import PlayerOptions from "@/components/playerOptions.vue"
 
 export default {
   name: "Map",
   components: {
-    AnimationPlayer
+    PlayerOptions
   },
   props: {
     baseMap: Object,
     zoomControl: { default: true, required: false },
-    predictionWidget: { default: true, required: false },
-    staticMapsWidget: { default: true, required: false },
+    isWidget: { default: false, required: false },
     mapFixed: false,
   },
   data() {

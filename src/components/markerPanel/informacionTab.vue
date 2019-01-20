@@ -46,9 +46,9 @@ export default {
   computed: {
     imgUrl() {
         //"https://maps.googleapis.com/maps/api/staticmap?zoom=5&size=160x140&maptype=satellite&markers=color:red%7Clabel:%7C" + this.markers[0].latitud + "," + this.markers[0].latitud + "&sensor=false&key=" + GOOGLE_API_KEY;
-        if (this.markers[0].mapResource.markerClass == MarkerClass.ESTACION 
-          || this.markers[0].mapResource.markerClass == MarkerClass.ESTACION_HISTORICO
-          || this.markers[0].mapResource.markerClass == MarkerClass.ANTENA_RADAR) {
+        if (this.markers[0].mapResource.markerClass == MarkerClass.EstacionRT 
+          || this.markers[0].mapResource.markerClass == MarkerClass.EstacionHist
+          || this.markers[0].mapResource.markerClass == MarkerClass.AntenaRadar) {
           return BASE_URL_PORTUS + "/img/imgEstaciones/" + this.markers[0].id + ".png";
         }
         else {
@@ -61,7 +61,7 @@ export default {
   },
   created() {
 
-      if (this.markers[0].mapResource.markerClass == MarkerClass.UBICACION) {
+      if (this.markers[0].mapResource.markerClass == MarkerClass.Ubicacion) {
               this.informacion = [
                 { key: this.$t("{longitudInfo}"), value: MapUtils.lonToString(this.markers[0].longitud) },
                 { key: this.$t("{latitudInfo}"), value: MapUtils.latToString(this.markers[0].latitud) },
@@ -69,8 +69,8 @@ export default {
                 { key: this.$t("{verificacionInfo}"), value: this.markers[0].mareografo } // Mirar
               ];
           }
-        else if (this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA 
-              || this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA_HISTORICO) {
+        else if (this.markers[0].mapResource.markerClass == MarkerClass.PuntoMalla 
+              || this.markers[0].mapResource.markerClass == MarkerClass.PuntoMallaHist) {
             this.informacion = [
               { key: this.$t("{longitudInfo}"), value: MapUtils.lonToString(this.markers[0].longitud) },
                 { key: this.$t("{latitudInfo}"), value: MapUtils.latToString(this.markers[0].latitud) },
@@ -80,7 +80,7 @@ export default {
               { key: this.$t("{conjuntoDatosInfo}"), value: this.markers[0].red ? this.markers[0].red.descripcion : null, bold: true, href: this.markers[0].red ? (INFORMES_URL + 'BD/informes/INT_'	+ this.markers[0].red.id + '.pdf') : null }
             ];
         }
-        else if (this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA_VERIF) {
+        else if (this.markers[0].mapResource.markerClass == MarkerClass.PuntoMallaVerif) {
            this.informacion = [
               { key: this.$t("{longitudInfo}"), value: MapUtils.lonToString(this.markers[0].longitud) },
                 { key: this.$t("{latitudInfo}"), value: MapUtils.latToString(this.markers[0].latitud) },
@@ -88,8 +88,8 @@ export default {
               { key: this.$t("{cadencyInfo}"), value: (this.markers[0].tdelta * 60) + ' min'  }
             ];
         }
-        else if (this.markers[0].mapResource.markerClass == MarkerClass.ESTACION 
-              || this.markers[0].mapResource.markerClass == MarkerClass.ESTACION_HISTORICO) {
+        else if (this.markers[0].mapResource.markerClass == MarkerClass.EstacionRT 
+              || this.markers[0].mapResource.markerClass == MarkerClass.EstacionHist) {
             this.informacion = [
                 { key: this.$t("{ubicacionEstacionInfo}"), value: this.markers[0].ubicacion },
                 { key: this.$t("{longitudInfo}"), value: MapUtils.lonToString(this.markers[0].longitud) },
@@ -111,7 +111,7 @@ export default {
           //     this.informacion.push({ key: this.$t("{conjuntoDatosInfo}"), value: red.data.descripcion, bold: true, href: INFORMES_URL + 'BD/informes/INT_'	+ red.data.id + '.pdf' })
           // })
         }
-        else if (this.markers[0].mapResource.markerClass == MarkerClass.ANTENA_RADAR) {
+        else if (this.markers[0].mapResource.markerClass == MarkerClass.AntenaRadar) {
             this.informacion = [
                 { key: this.$t("{ubicacionEstacionInfo}"), value: this.markers[0].ubicacion },
                 { key: this.$t("{longitudInfo}"), value: MapUtils.lonToString(this.markers[0].longitud) },
@@ -136,9 +136,9 @@ export default {
   },
   methods: {
     hasPeriodosFondeo() {
-      return (this.markers[0].mapResource.markerClass == MarkerClass.ESTACION_HISTORICO
+      return (this.markers[0].mapResource.markerClass == MarkerClass.EstacionHist
           && this.markers[0].red.tipoRed == "REDEXT") 
-          || (this.markers[0].mapResource.markerClass == MarkerClass.ANTENA_RADAR);
+          || (this.markers[0].mapResource.markerClass == MarkerClass.AntenaRadar);
     },
     openPeriodosFondeo() {
       window.open(BASE_URL_PORTUS + 'pdf/pfondeo/' + this.markers[0].id + '.pdf', '_blank');

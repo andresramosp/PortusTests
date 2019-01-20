@@ -121,7 +121,7 @@ export default {
   },
   methods: {
       isModelo() {
-          return this.markers[0].mapResource.markerClass == MarkerClass.PUNTO_MALLA_HISTORICO;
+          return this.markers[0].mapResource.markerClass == MarkerClass.PuntoMallaHist;
       },
       isMeteorologica() {
           return this.markers[0].meteorologica;

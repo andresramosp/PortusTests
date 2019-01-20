@@ -81,23 +81,23 @@ export default {
   },
   computed: {
     modalTitle() {
-        if (this.markerRef.mapResource.markerClass == MarkerClass.UBICACION) {
+        if (this.markerRef.mapResource.markerClass == MarkerClass.Ubicacion) {
             return this.$t("{tipoUbicacion"+this.markerRef.tipoUbicacion+"}") + ": " + this.markerRef.nombre;
         }
-        else if (this.markerRef.mapResource.markerClass == MarkerClass.PUNTO_MALLA) {
+        else if (this.markerRef.mapResource.markerClass == MarkerClass.PuntoMalla) {
             return "Pred. " +  this.$t(this.markerRef.mapOption.name) + ": " + MapUtils.getMarkerName(this.markerRef);
         }
-        else if (this.markerRef.mapResource.markerClass == MarkerClass.PUNTO_MALLA_VERIF) {
+        else if (this.markerRef.mapResource.markerClass == MarkerClass.PuntoMallaVerif) {
            return this.$t("{verificacionInfo}") + ": " + this.markerRef.nombre;
         }
-        else if (this.markerRef.mapResource.markerClass == MarkerClass.ESTACION 
-              || this.markerRef.mapResource.markerClass == MarkerClass.ESTACION_HISTORICO) {
+        else if (this.markerRef.mapResource.markerClass == MarkerClass.EstacionRT 
+              || this.markerRef.mapResource.markerClass == MarkerClass.EstacionHist) {
             return this.markerRef.nombre;
         }
-        else if (this.markerRef.mapResource.markerClass == MarkerClass.PUNTO_MALLA_HISTORICO) {
+        else if (this.markerRef.mapResource.markerClass == MarkerClass.PuntoMallaHist) {
            return this.$t("{puntoSimarLabel}") + ": (" + this.markerRef.id + ")";
         }
-        else if (this.markerRef.mapResource.markerClass == MarkerClass.ANTENA_RADAR) {
+        else if (this.markerRef.mapResource.markerClass == MarkerClass.AntenaRadar) {
            return this.markerRef.radar.nombre + " - " + this.markerRef.nombre;
         }
     }
@@ -118,28 +118,28 @@ export default {
   methods: {
 
     esHistorico() {
-        return (this.markerRef.mapResource.markerClass == MarkerClass.PUNTO_MALLA_HISTORICO
-             || this.markerRef.mapResource.markerClass == MarkerClass.ESTACION_HISTORICO)
+        return (this.markerRef.mapResource.markerClass == MarkerClass.PuntoMallaHist
+             || this.markerRef.mapResource.markerClass == MarkerClass.EstacionHist)
     },
 
     esBoya() {
-        return (this.markerRef.mapResource.markerClass == MarkerClass.ESTACION
-             || this.markerRef.mapResource.markerClass == MarkerClass.ESTACION_HISTORICO)
+        return (this.markerRef.mapResource.markerClass == MarkerClass.EstacionRT
+             || this.markerRef.mapResource.markerClass == MarkerClass.EstacionHist)
                 &&   this.markerRef.boya;
     },
 
     esMareografo() {
-        return (this.markerRef.mapResource.markerClass == MarkerClass.ESTACION
-             || this.markerRef.mapResource.markerClass == MarkerClass.ESTACION_HISTORICO)
+        return (this.markerRef.mapResource.markerClass == MarkerClass.EstacionRT
+             || this.markerRef.mapResource.markerClass == MarkerClass.EstacionHist)
                 &&   this.markerRef.mareografo;
     },
 
     esAntena() {
-        return this.markerRef.mapResource.markerClass == MarkerClass.ANTENA_RADAR;
+        return this.markerRef.mapResource.markerClass == MarkerClass.AntenaRadar;
     },
 
     esRadar() {
-        return this.markerRef.mapResource.markerClass == MarkerClass.ESTACION
+        return this.markerRef.mapResource.markerClass == MarkerClass.EstacionRT
             && this.markerRef.radar;
     },
     

@@ -1,6 +1,6 @@
 <template>
 <div id="app" >
-   <Map :baseMap='baseMap' :mapFixed="true" :predictionWidget='false' :staticMapsWidget="false" />
+   <Map :baseMap='baseMap' :mapFixed="true" :isWidget="true" />
 </div>
 </template>
 
@@ -32,6 +32,8 @@ export default {
         tms: false
       }
     );
+
+    MapState.playerMinimized = true;
 
     var resourceId = this.$route.query.resourceId;
     var predictionResource = MapState.getMapResource('pred-tiles-' + resourceId);

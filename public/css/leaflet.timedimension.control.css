@@ -27,6 +27,7 @@
      background-color: rgba(0, 0, 0, 0.7);
      border: none;
      border-radius: 0px;
+     padding-top: 10px;
 }
 .leaflet-bar-timecontrol * {
     box-sizing: border-box;
@@ -44,7 +45,7 @@
     border-radius: 4px 0 0 4px;
 }
 .leaflet-bar-timecontrol .leaflet-control-timecontrol:last-child {
-    border-radius: 0 4px 4px 0;
+    /* border-radius: 0 4px 4px 0; */
 }
 .leaflet-bar-timecontrol .leaflet-control-timecontrol:before {
     font-family: "Glyphicons Halflings";
@@ -63,6 +64,11 @@
     width: 350px;
     padding: 0 10px 0 20px;
     white-space: nowrap;
+
+    border-right: 1px solid gray;
+    /* padding-right: 15px !important; */
+    margin-left: 7px;
+    margin-bottom: 7px;
 }
 .timecontrol-datepicker {
     width: 90px;
@@ -79,26 +85,38 @@
     background-color: #ffefa4;
 } */
 .leaflet-bar-timecontrol .timecontrol-dateslider {
-    float: none;
-    margin-top: 15px;
+    float: left;
+    margin-left: 4px;
+}
+.leaflet-bar-timecontrol .timecontrol-datesliderMin {
+    float: left;
     margin-left: 4px;
 }
 .leaflet-bar-timecontrol .timecontrol-dateslider .slider {
     width: 430px;
 }
+.leaflet-bar-timecontrol .timecontrol-datesliderMin .slider {
+    width: 75px;
+}
 .leaflet-bar-timecontrol .timecontrol-speed {
     white-space: nowrap;
     cursor: auto;
+
+    border-left: 1px solid gray;
 }
 .leaflet-bar-timecontrol .timecontrol-speed .slider {
-    width: 55px;
-    display: inline-block;
+    width: 100px;
+    /* display: inline-block; */
 }
 .leaflet-bar-timecontrol .timecontrol-speed .speed {
     width: 55px;
     display: inline-block;
     float: left;
     text-align: right;
+    position: absolute;
+    margin-top: 29px;
+    margin-left: 50px;
+
 }
 .leaflet-bar-timecontrol .timecontrol-play,
 .leaflet-bar-timecontrol .timecontrol-play:hover {
@@ -259,6 +277,10 @@
     color: #094F8E;
 } */
 
+.timecontrol-backward {
+    clear: left;
+}
+
 .timecontrol-backward:before,
 .timecontrol-forward:before,
 .timecontrol-stop:before,
@@ -304,9 +326,10 @@ a.timecontrol-play.loading:before {
     animation: icon-rotation 6s infinite linear;
 }
 .timecontrol-speed:before {
-    content: "\e141";
+    /* content: "\e141"; */
     position: absolute;
     left: 7px;
+    /* content: url('/public/images/icons/reloj.png'); */
 }
 .timecontrol-stop:before {
     content: "\e074";

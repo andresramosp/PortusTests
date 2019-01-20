@@ -86,8 +86,27 @@ export default {
     100%{opacity:1}
  }
 
- .darkTheme {
+
+ /* Color principal del theme */
+
+/* .blueTheme {
+  background-color: rgba(0, 123, 255, 0.6);
+} */
+.darkTheme {
   background-color: rgba(0, 0, 0, 0.7);
+}
+.darkTheme .card-body {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.darkTheme .card-header .predicciones, .darkThemeSub .predicciones {
+  background-color: rgba(34, 37, 224, 0.7);
+}
+.darkTheme .card-header .tiempo_real, .darkThemeSub .tiempo_real {
+  background-color: rgba(110, 140, 240, 0.7);
+}
+.darkTheme .card-header .historico, .darkThemeSub .historico {
+  background-color: rgba(184, 231, 245, 0.7);
 }
  
 </style>

@@ -1791,8 +1791,13 @@ L.Control.TimeDimension = L.Control.extend({
 
         container = L.DomUtil.create('div', 'leaflet-bar leaflet-bar-horizontal leaflet-bar-timecontrol');
         if (this.options.timeSlider) {
-            this._sliderTime = this._createSliderTime(this.options.styleNS + ' timecontrol-slider timecontrol-dateslider', container);
+            var timeSliderClass = this.options.minimized ? 'timecontrol-datesliderMin' : 'timecontrol-dateslider';
+            this._sliderTime = this._createSliderTime(this.options.styleNS + ' timecontrol-slider ' + timeSliderClass, container);
         }
+         if (this.options.speedSlider && !this.options.minimized) {
+            this._sliderSpeed = this._createSliderSpeed(this.options.styleNS + ' timecontrol-slider timecontrol-speed', container);
+        }
+
         if (this.options.backwardButton) {
             this._buttonBackward = this._createButton('Backward', container);
         }
@@ -1808,19 +1813,10 @@ L.Control.TimeDimension = L.Control.extend({
         if (this.options.loopButton) {
             this._buttonLoop = this._createButton('Loop', container);
         }
-        // if (true) {
-        //     this._fromDate = this._createDatePicker('From', container);
-        // }
-        if (this.options.displayDate) {
+        if (this.options.displayDate && !this.options.minimized) {
             this._displayDate = this._createButton('Date', container);
         }
-        // if (true) {
-        //     this._fromDate = this._createDatePicker('From', container);
-        // }
-        if (this.options.speedSlider) {
-            this._sliderSpeed = this._createSliderSpeed(this.options.styleNS + ' timecontrol-slider timecontrol-speed', container);
-        }
-
+       
         this._steps = this.options.timeSteps || 1;
 
         this._timeDimension.on('timeload',  this._update, this);
