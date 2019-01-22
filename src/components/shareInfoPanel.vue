@@ -1,5 +1,5 @@
  <template>
-  <div @mouseover="$emit('shareinfo-mouseover')" @mouseout="$emit('shareinfo-mouseout')" class="shareInfo">
+  <div @mouseover="$emit('shareinfo-mouseover')" @mouseout="$emit('shareinfo-mouseout')" class="infoPanel">
     <b-row class="my-1">
       <b-col sm="2">
         <label for="urlLink">URL</label>
@@ -63,14 +63,5 @@ export default {
 </script>
 
 <style scoped>
-.shareInfo {
-    background: black;
-    color: white;
-    z-index: 5;
-    width: 100%;
-    padding: 5px;
-    font-size: 11px;
-    border-radius: 5px;
-    height: 151px;
-}
+
 </style>

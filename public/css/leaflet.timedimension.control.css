@@ -336,7 +336,9 @@ a.timecontrol-play.loading:before {
 }
 .timecontrol-forward:before {
     content: "\e075";
+    /* content: url('/public/images/icons/playerAdelante.png'); */
 }
+
 .timecontrol-backward:before {
     content: "\e071";
 }

@@ -116,6 +116,18 @@ const LocalePlugin = {
             es: "Datos Históricos",
             en: "Historical Data"
         },
+        prediccionesGroupMin: {
+            es: "Pred.",
+            en: "Forecast"
+        },
+        tiempoRealGroupMin: {
+            es: "TR",
+            en: "RT"
+        },
+        historicoGroupMin: {
+            es: "Hist.",
+            en: "Hist."
+        },
         // Info Panel
         cerrarButton: {
             es: "Cerrar",

@@ -1,24 +1,34 @@
 <template>
 <div >
   
-  <div class='layersPanel' :class="{ 'leftAlign': align == 'left', 'rightAlign': align == 'right' }">
-    <img @click="toggleMinimized()" width="27" style="position: absolute; z-index:5; left: -10px" :src="require('@/assets/icons/predictionWidget.png')" />
+  <div class='layersPanel' :class="[align == 'left' ? 'leftAlign' : 'rightAlign', theme]">
+    <img @click="toggleMinimized()" 
+         width="27" style="position: absolute; z-index: 5; left: -10px; cursor: pointer;" 
+         :src="!minimized ? require('@/assets/icons/replegar.png') : require('@/assets/icons/desplegar.png')" />
     <div v-for="optGrp in mapOptionsGroups" :key="optGrp.id">
-       <b-row style="margin-left: 0px; margin-right: 0px">
-          <b-card class="text-center panel-section" :class="[theme, minimized ? 'minimized': '']" header-tag="header" >
-          <h6 slot="header" class="mb-0" :class="optGrp.id">{{$t(optGrp.name)}}</h6>
-          <b-container>
-            <b-row >
-                <b-col v-for="mapOption in mapOptions.filter(opt => opt.group == optGrp.id)" :key="mapOption.id" cols="6" class="form-check text-left" style="padding-top: 2px;" >
-                  <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox" v-model="mapOption.active" :value="mapOption.active" @change="mapOptionChanged(mapOption)" />
-                    {{ minimized ? '' : $t(mapOption.name) }}
-                </label>
-              </b-col> 
-            </b-row>
-          </b-container>
+       <b-row :class="optGrp.id" style="margin-left: 0px; margin-right: 0px">
+          <b-card class="text-center panel-section" :class="[minimized ? 'minimized': '']" header-tag="header" >
+            <h6 slot="header" class="mb-0" :class="optGrp.id">{{ minimized ? $t(optGrp.nameMin) : $t(optGrp.name) }}</h6>
+            <b-container>
+              <b-row >
+                  <b-col v-for="mapOption in mapOptions.filter(opt => opt.group == optGrp.id)" :key="mapOption.id" cols="6" class="form-check text-left" style="padding-top: 2px;" >
+                    <label class="form-check-label" :class="[mapOption.active ? 'mapOptionChecked' : '']" :title="minimized ? $t(mapOption.name) : ''" style="float: left; cursor: pointer">
+                      <img style="float: left" width="25" 
+                            :class="[mapOption.active ? 'mapOptionChecked' : '']"
+                            :src='require("@/assets/icons/mainMenu/" + mapOption.id + ".png")' >
+                      <input class="form-check-input" style="display: none" 
+                            type="checkbox" 
+                            v-model="mapOption.active" 
+                            :value="mapOption.active" 
+                            :disabled="mapOption.loading"
+                            @change="mapOptionChanged(mapOption)" />
+                      {{ minimized ? '' : $t(mapOption.name) }}
+                  </label>
+                </b-col> 
+              </b-row>
+            </b-container>
           </b-card>
-          <SubMenu :mapOptionGroup="optGrp" />
+          <SubMenu :mapOptionGroup="optGrp" :preloadedTimeLineLayers="mapState.preloadedTimeLineLayers" :preloadedMarkers="mapState.preloadedMarkers" />
        </b-row>
     </div>
   </div>
@@ -29,8 +39,11 @@
 
 
 <script>
+
 import MapState from "@/state/map.state";
 import SubMenu from "@/components/mainMenu/subMenu.vue";
+import Vue from 'vue';
+
 export default {
   name: "MainMenu",
   components: {
@@ -55,6 +68,13 @@ export default {
   methods: {
     mapOptionChanged: function(mapOption) {
         this.mapState.setMapOption(mapOption.id, mapOption.active);
+        if (mapOption.active) {
+          Vue.set(mapOption, 'loading', true);
+          setTimeout(() => {
+            Vue.set(mapOption, 'loading', false);
+          }, 1000);
+        }
+        
     },
     toggleMinimized: function() {
       this.minimized = !this.minimized;
@@ -86,9 +106,17 @@ input[type="checkbox"] {
 }
 .form-check {
   padding-top: 5px;
+  padding-left: 10px !important;
+}
+.col-6 {
+  padding-right: 10px !important;
 }
 .form-check-input {
   margin-right: 5px;
+}
+.container {
+  /* padding-left: 5px !important; */
+  /* padding-right: 5px !important; */
 }
 .card {
   background-color: transparent;
@@ -98,6 +126,9 @@ input[type="checkbox"] {
     font-size: 17px;
   padding: 0px 0px 0px 0px;
   border-radius: 0px !important;
+}
+.card-body {
+  padding: 5px !important;
 }
 .mb-0 {
   padding-top: 7px;
@@ -112,7 +143,16 @@ input[type="checkbox"] {
 }
 
 .minimized {
-  width: 150px !important;
+  width: 75px !important;
 }
+
+
+.minimized .form-check {
+  padding-right: 0px !important;
+  padding-left: 4px !important;
+
+}
+
+
 
 </style>

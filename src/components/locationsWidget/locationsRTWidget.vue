@@ -10,6 +10,13 @@
           @mouseout="closeShareInfo"
         >
         {{$t('{headerTiempoReal}')}}
+        <img
+          :src='require("@/assets/icons/shareIcon.png")'
+          class="infoRTIcon"
+          @click="toggleRTInfo"
+          @mouseover="openRTInfo"
+          @mouseout="closeRTInfo"
+        >
       </div>
 
       <img
@@ -19,6 +26,13 @@
         width="100"
       >
 
+       <InfoRTPanel
+            @rtinfo-mouseover="openRTInfo" 
+            @rtinfo-mouseout="closeRTInfo" 
+            :code="code" 
+            v-show="displayRTInfo"
+        />
+
       <ShareInfoPanel 
             @shareinfo-mouseover="openShareInfo" 
             @shareinfo-mouseout="closeShareInfo" 
@@ -26,7 +40,7 @@
             v-show="displayShareInfo"
         />
 
-      <div v-show="!displayShareInfo">
+      <div v-show="!displayShareInfo && !displayRTInfo">
         <b-row v-if="!loading" class="fadeIn">
           <b-col>
             <span class="variableTitle">{{ $t('{variableOleaje}') }}</span>
@@ -127,11 +141,14 @@
 import Vue from 'vue'
 import MapUtils from "@/services/map.utils";
 import ShareInfoPanel from "@/components/shareInfoPanel.vue";
+import InfoRTPanel from "@/components/locationsWidget/infoRTPanel.vue";
+import { SIMO_URL } from '@/common/config';
 
 export default {
   name: "LocationsRTWidget",
   components: {
-    ShareInfoPanel
+    ShareInfoPanel,
+    InfoRTPanel
   },
   data() {
     return {
@@ -156,7 +173,8 @@ export default {
       mapUtils: MapUtils,
       interval: null,
       routeData: null,
-      displayShareInfo: false
+      displayShareInfo: false,
+      displayRTInfo: false
     };
   },
   props: {
@@ -199,7 +217,7 @@ export default {
       async getData() {
         var tipo = this.locationType == 'Puerto' ? 'harbor' : 'city';
         var result = await Vue.axios
-            .get('https://movil.puertos.es/simo/seastate/' + tipo + '/' + this.code + '/extended')
+            .get(SIMO_URL + 'seastate/' + tipo + '/' + this.code + '/extended')
             .catch((error) => {
                 throw new Error(`[RWV] ApiService ${error}`)
             });
@@ -247,6 +265,26 @@ export default {
             this.displayShareInfo = false; 
         }, 500)
       },
+
+      toggleRTInfo() {
+        this.displayRTInfo = !this.displayRTInfo;
+      },
+
+      openRTInfo() {
+        if (this.timeOutRTInfoClose)
+            clearInterval(this.timeOutRTInfoClose)
+         this.timeOutRTInfoClose = setTimeout(() => {
+            this.displayRTInfo = true; 
+        }, 500)
+      },
+
+      closeRTInfo() {
+        if (this.timeOutRTInfoClose)
+            clearInterval(this.timeOutRTInfoClose)
+        this.timeOutRTInfoClose = setTimeout(() => {
+            this.displayRTInfo = false; 
+        }, 500)
+      },
   }
 };
 </script>
@@ -259,6 +297,14 @@ export default {
   cursor: pointer;
   width: 19px;
   margin-right: 6px;
+}
+
+.infoRTIcon {
+  margin-top: 2px;
+  float: right;
+  cursor: pointer;
+  width: 19px;
+  margin-left: 5px;
 }
 
 .variableTitle {
@@ -350,4 +396,18 @@ export default {
 }
 
 
+</style>
+
+<style>
+
+.infoPanel {
+    background: black;
+    color: white;
+    z-index: 5;
+    width: 100%;
+    padding: 1px;
+    font-size: 11px;
+    border-radius: 0px;
+    height: 151px;
+}
 </style>

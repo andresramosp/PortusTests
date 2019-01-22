@@ -7,14 +7,27 @@
             'rightAlign': align == 'right', 
             'predicciones': mapOptionGroup.id == 'predicciones',
             'tiempo_real': mapOptionGroup.id == 'tiempo_real',
-            'historico': mapOptionGroup.id == 'historico' 
+            'historico': mapOptionGroup.id == 'historico',
+            'singlePanel': selectCombos.length == 0,
+            'selectPanel': selectCombos.length > 0
           }">
-          <div class="form-check" v-for="floatingOption in floatingOptions" :key="floatingOptions.indexOf(floatingOption)">
-            <label class="form-check-label">
-              <input class="form-check-input" type="checkbox" v-model="floatingOption.active" @change="floatingOptionChanged(floatingOption)" />
-                {{ $t(floatingOption.name) }}
-              </label>
-          </div> 
+          <!-- <select v-for="selectComboId in selectCombos" :key="selectComboId" v-model="selectedOption" @change="setComboLayersVisibility()">
+             <option :value="floatingOption" v-for="floatingOption in floatingOptions.filter(opt => opt.comboSelectId == selectComboId)" :key="floatingOptions.indexOf(floatingOption)">
+               {{ $t(floatingOption.name) }}
+             </option>
+          </select> -->
+          <!-- Ojo: ahora mismo solo aceptaría un combo por subMenu. Poner v-for como arriba para soportar más -->
+          <b-form-select v-if="selectCombos.length > 0" text-field="name" value-field="name" :options="floatingOptions.filter(opt => opt.comboSelectId)" @change="setComboLayersVisibility" v-model="selectedOption" class="select-layers">
+          </b-form-select>
+          <div style="padding: 7px">
+               <div class="form-check" v-for="floatingOption in floatingOptions.filter(opt => !opt.comboSelectId)" :key="floatingOptions.indexOf(floatingOption)">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" v-model="floatingOption.active" @change="checkOptionChanged(floatingOption)" />
+                      {{ $t(floatingOption.name) }}
+                  </label>
+              </div> 
+          </div>
+       
         </div>
       </transition>
    </div>
@@ -30,23 +43,51 @@ import MapState from "@/state/map.state";
 export default {
   name: "SubMenu",
   props: {
-    mapOptionGroup: { type: Object, default: null, required: false }
+    mapOptionGroup: { type: Object, default: null, required: false },
+    preloadedTimeLineLayers: { type: Array },
+    preloadedMarkers: { type: Array}
   },
   data() {
     return {
       align: PC.options_panel_align,
       theme: PC.color_theme,
-      mapState: MapState
+      mapState: MapState,
+      selectedOption: null,
+      floatingOptions: []
     };
   },
   computed: {
+    selectCombos() {
+      var combos = this.floatingOptions
+        .filter(m => m.comboSelectId)
+        .map(m => {
+          return m.comboSelectId;
+        })
+        .filter(function (value, index, self) {
+          return self.indexOf(value) === index;
+        });
+      return combos;
+    },
     appearClass() {
       return PC.options_panel_align == "right"
         ? "slide-menu-right"
         : "slide-menu-left";
     },
+   
+  },
+  watch: {
+      preloadedTimeLineLayers: function () {
+        this.getOptions();
+      },
+      preloadedMarkers: function () {
+        this.getOptions();
+      }
+    },
+  created() {},
+  mounted() {},
+  methods: {
 
-    floatingOptions() {
+    getOptions() {
 
       var result = [];
       var vm = this;
@@ -72,19 +113,26 @@ export default {
           }
         
       });
+      // Marcamos la opción pre-seleccionada del combo
+      var selectedOption = result.find(opt => opt.comboSelectId && opt.active);
+      if (selectedOption)
+        this.selectedOption = selectedOption.name;
+      this.floatingOptions = result;
 
-      return result;
-
-    }
-  },
-  created() {},
-  mounted() {},
-  methods: {
-    floatingOptionChanged: function(floatingOption) {
-      floatingOption.method(floatingOption.args, floatingOption.active);
     },
 
-    toggleVisibility: function(layers, visible) {
+    setComboLayersVisibility: function(value) {
+      this.floatingOptions.filter(opt => opt.comboSelectId).forEach(opt => {
+        this.setLayersVisibility(opt.layers, opt.name == value);
+      });
+      
+    },
+
+    checkOptionChanged: function(floatingOption) {
+      this.setLayersVisibility(floatingOption.layers, floatingOption.active);
+    },
+
+    setLayersVisibility: function(layers, visible) {
       layers.forEach(l => {
         l.visible = visible;
       })      
@@ -99,25 +147,34 @@ export default {
 
     addLayerToGroup(layer, groupList) {
       var vm = this;
-      var group;
-      if (layer.mapResource.groupLayersBy)
-        group = layer.mapResource.groupLayersBy.label + ': ' 
-        + ((layer.mapResource.groupLayersBy.field.indexOf('.') == -1) ? layer[layer.mapResource.groupLayersBy.field]
-        : layer[layer.mapResource.groupLayersBy.field.split('.')[0]][layer.mapResource.groupLayersBy.field.split('.')[1]]);
-      else
-        group = layer.mapResource.name;
-      var option = groupList.find(opt => { return opt.name == group});
+      var optionName;
+      var comboSelectId = null;
+      if (layer.mapResource.groupLayersBy) {
+        if (layer.mapResource.groupLayersBy.comboSelectId) {
+          optionName = layer[layer.mapResource.groupLayersBy.field];
+          comboSelectId =  layer.mapResource.groupLayersBy.comboSelectId;
+        }
+        else {
+           optionName = layer.mapResource.groupLayersBy.label + ': ' 
+          + ((layer.mapResource.groupLayersBy.field.indexOf('.') == -1) ? layer[layer.mapResource.groupLayersBy.field]
+          : layer[layer.mapResource.groupLayersBy.field.split('.')[0]][layer.mapResource.groupLayersBy.field.split('.')[1]]);
+        }
+      }
+      else {
+        optionName = layer.mapResource.name;
+      }
+      var option = groupList.find(opt => { return opt.name == optionName});
       if (!option) {
         option = {
-          name:  group,
-          method: vm.toggleVisibility,
-          args: [layer],
-          active: layer.visible 
+          name:  optionName,
+          layers: [layer],
+          active: layer.visible,
+          comboSelectId: comboSelectId
         }
         groupList.push(option);
       }
       else {
-        option.args.push(layer);
+        option.layers.push(layer);
       }
     }
   }
@@ -146,11 +203,22 @@ export default {
   position: relative;
   z-index: 2;
   /* right: 9px; */
-  top: 50px;
-  padding: 10px;
+  padding: 0px;
   border-radius: 0px;
   color: white;
   font-size: 13px;
+}
+
+.singlePanel {
+  top: 50px;
+}
+
+.selectPanel {
+  top: 12px;
+}
+
+select {
+  width: 100%;
 }
 
 .leftAlign {
@@ -161,6 +229,12 @@ export default {
   right: 15px;
 }
 
-
+.select-layers {
+  height: 30px !important;
+  border-radius: 0px;
+  padding-right: 5px;
+  padding-top: 2px;
+  margin-bottom: 5px;
+}
 
 </style>

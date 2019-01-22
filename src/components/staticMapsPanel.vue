@@ -111,7 +111,7 @@ export default {
       today.setHours(0, 0, 0, 0);
       var lastDay = new Date();
       lastDay.setHours(hoursInterval, 0, 0, 0);
-      while(today <= lastDay) {
+      while (today <= lastDay) {
         var date = new Date(today);
         var opt = { dayName: date.toLocaleDateString(), name: ("0" + date.getHours()).slice(-2) + ":00", value: MapUtils.convertDateToYMDH(date), active: false};
         this.datesAvailables.push(opt);

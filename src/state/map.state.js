@@ -22,6 +22,7 @@ const MapState = {
     playerMinimized: false,
     maxPredictionDate: null,
     showingVectors: false,
+    showingRadars: false,
     currentPlayerTime: null,
     staticMapResourceSelected: null,
     loadingThings: [],
@@ -60,7 +61,7 @@ const MapState = {
     },
 
     async addMarkerLayer(mapResource, mapOption) {
-        this.addLoading('markers');
+        this.addLoading(mapResource.id);
         var result = mapResource.cachedData || await ApiService.get(mapResource.resourceApi, (mapResource.locale ? { locale: Vue.$getLocale() } : null ));
         result.data.forEach(m => {
             var iconUrl = typeof mapResource.icon === "function" ? mapResource.icon(m) : mapResource.icon;
@@ -95,14 +96,28 @@ const MapState = {
         });
 
         this.setVisibleMarkerLayers();
-        this.removeLoading('markers');
+        this.removeLoading(mapResource.id);
     },
 
-    async addTimeLineLayer(mapResource, vectorial) {
-        this.addLoading('timelines');
+    setVectorial(mapResource, vectorial) {
+        var layers = this.preloadedTimeLineLayers.filter(layer => layer.mapResource.id == mapResource.id);
+        layers.forEach(l => {
+            if (vectorial)
+                l._baseLayer._url = l._baseLayer._url.replace('map', (vectorial ? l.urlVec : l.urlIso));
+            else
+                l._baseLayer._url = l._baseLayer._url.replace('vec', 'map');
+        });
+        this.showingVectors = vectorial;
+        this.setVisibleTimeLineLayers();
+
+    },
+
+    async addTimeLineLayer(mapResource, mapOption) {
+        this.addLoading(mapResource.id);
+        var vectorial = mapResource.defaultVectors ? true : false;
         var result = await ApiService.get(mapResource.resourceApi);
         result.data.forEach(res => {
-            if (this.preloadedTimeLineLayers.find(p => p.url == res.url) == null) {
+            if (true) { //(this.preloadedTimeLineLayers.find(p => p.url == res.url) == null) {
                 var tileLayer = L.tileLayer(BASE_URL_PORTUS + res.url + '{d}{h}/' + (vectorial ? res.urlVec : res.urlIso) + '//{z}/{x}/{y}.png', {
                     tms: true,
                     minZoom: res.zoomMin,
@@ -120,7 +135,9 @@ const MapState = {
                 );
                 tileLayer.mapResource = mapResource;
                 portusTimeLayer.mapResource = mapResource;
-                portusTimeLayer.visible = true; 
+                portusTimeLayer.visible = !mapResource.groupLayersBy 
+                                       || !mapResource.groupLayersBy.comboSelectId 
+                                       || res[mapResource.groupLayersBy.field] == mapResource.groupLayersBy.defaultOption; 
                 portusTimeLayer.id = res.url;
                 Object.assign(portusTimeLayer, res);
                 this.preloadedTimeLineLayers.push(portusTimeLayer);
@@ -138,9 +155,9 @@ const MapState = {
             }
 
         })
-        this.showingVectors = vectorial;
         this.setVisibleTimeLineLayers();
-        this.removeLoading('timelines');
+        this.showingVectors = vectorial;
+        this.removeLoading(mapResource.id);
     },
 
     // La visibilidad de un marker viene dada por:
@@ -295,18 +312,15 @@ const MapState = {
 
         this.preloadedTimeLineLayers = this.preloadedTimeLineLayers.filter((plt) => { return plt.mapResource.id != mapResourceId });
         this.preloadedMarkers = this.preloadedMarkers.filter((plm) => { return plm.mapResource.id != mapResourceId });
-        this.currentTimeLineLayer = null;
-
-        if (this.preloadedTimeLineLayers.length == 0 && this.map.timeDimensionControl) {
-            this.map.timeDimensionControl._player.stop();
-            this.map.removeControl(this.map.timeDimensionControl);
-            ms.predictionScaleImg = '';
-            ms.currentTimeLineLayer = null;
-        }
-
         
     },
 
+    removePlayerControl() {
+        this.map.timeDimensionControl._player.stop();
+        this.map.removeControl(this.map.timeDimensionControl);
+        this.predictionScaleImg = '';
+        this.currentTimeLineLayer = null;
+    },
     
     getActiveLayers() {
         var result = [];
@@ -328,18 +342,21 @@ const MapState = {
               if (mapResource.type == "MarkerLayer")
                 this.addMarkerLayer(mapResource, mapOption);
               if (mapResource.type == "TimeLineLayer")
-                this.addTimeLineLayer(mapResource, mapResource.defaultVectors ? true : false);
+                this.addTimeLineLayer(mapResource, mapOption);
           });
         }
         else {
             mapOption.mapResources.forEach(resId => {
               this.removeMapResource(resId);
             });
+            if (this.preloadedTimeLineLayers.length == 0 && this.map.timeDimensionControl) 
+                this.removePlayerControl();
         }
         // Si activamos el mapOption de manera programática, 
         // debemos también marcar/desmarcar el checkbox
         if (mapOption.active != active)
             Vue.set(mapOption, 'active', active);
+       
     },
 
     checkMultipleAllowed(checkedMapOption) {
@@ -419,8 +436,7 @@ const MapState = {
                 }
             });
             
-            if (layer.mapResource.showRadarPoints)
-                this.showRadarPointsLayer(this.radarPoints, layer);
+            this.addRadarPointsLayer(this.radarPoints, layer);
         }
     },
 
@@ -501,7 +517,8 @@ const MapState = {
         
     },
 
-    showRadarPointsLayer(radarPoints, layer) {
+    // De entrada se añaden invisibles
+    addRadarPointsLayer(radarPoints, layer) {
         if (this.radarPointsLayer)
             this.map.removeLayer(this.radarPointsLayer);
 
@@ -514,7 +531,7 @@ const MapState = {
             var circleMarker = L.circleMarker([lat, lon], {
                 radius: 5,
                 stroke: false,
-                fillOpacity: 0.25,
+                fillOpacity: 0,
                 opacity: 0,
                 color: '#3388ff'
             });
@@ -523,8 +540,18 @@ const MapState = {
         })
 
         this.radarPointsLayer.addTo(this.map);
-    }
+    },
+
+    setRadarPointsLayerVisibility(visible) {
+        this.radarPointsLayer.eachLayer(l => {
+            l.setStyle({ fillOpacity: visible ? 0.25 : 0 });
+        })
+        this.showingRadars = visible;
+    },
+
+    
    
+    
 
 };
 

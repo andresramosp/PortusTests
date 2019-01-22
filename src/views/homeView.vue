@@ -71,11 +71,10 @@ export default {
 #app { height: 100%;}
 
 .fadeIn {
-    -webkit-animation: animat_show 1.2s;
+    /* -webkit-animation: animat_show 1.2s;
     animation: animat_show 1.2s;
-    visibility: visible !important;
+    visibility: visible !important; */
 }
-
 .popup {
   position: absolute !important;
   top: 5% important;
@@ -86,28 +85,68 @@ export default {
     100%{opacity:1}
  }
 
+/* Mover a CSS */
 
- /* Color principal del theme */
-
-/* .blueTheme {
-  background-color: rgba(0, 123, 255, 0.6);
-} */
-.darkTheme {
-  background-color: rgba(0, 0, 0, 0.7);
-}
 .darkTheme .card-body {
   background-color: rgba(0, 0, 0, 0.7);
 }
 
 .darkTheme .card-header .predicciones, .darkThemeSub .predicciones {
-  background-color: rgba(34, 37, 224, 0.7);
+  /* background-color: rgba(34, 37, 224, 0.7); */
+  background-color: rgba(11, 90, 149, 0.7);
 }
+
 .darkTheme .card-header .tiempo_real, .darkThemeSub .tiempo_real {
-  background-color: rgba(110, 140, 240, 0.7);
+  background-color: rgba(6, 136, 192, 0.7);
 }
+
 .darkTheme .card-header .historico, .darkThemeSub .historico {
-  background-color: rgba(184, 231, 245, 0.7);
+  background-color: rgba(115, 170, 199, 0.7);
 }
+
+.darkTheme .predicciones .mapOptionChecked  img {
+  background-color: rgba(11, 90, 149, 0.7);
+}
+
+.darkTheme .predicciones .mapOptionChecked {
+    color: rgba(11, 90, 149, 1);
+    font-weight: bold;
+}
+
+.darkTheme .tiempo_real .mapOptionChecked  img {
+  background-color: rgba(6, 136, 192, 0.7);
+}
+
+.darkTheme .tiempo_real .mapOptionChecked {
+    color: rgba(6, 136, 192, 1);
+    font-weight: bold;
+}
+
+.darkTheme .historico .mapOptionChecked  img {
+  background-color: rgba(115, 170, 199, 0.7);
+}
+
+.darkTheme .historico .mapOptionChecked {
+    color: rgba(115, 170, 199, 1);
+    font-weight: bold;
+}
+
+/* .darkTheme .historico img:hover  {
+  background-color: rgba(115, 170, 199, 0.7);
+} */
+
+.darkTheme .predicciones label:hover  {
+  color: rgba(11, 90, 149, 1);
+}
+
+.darkTheme .tiempo_real label:hover  {
+  color: rgba(6, 136, 192, 0.7);
+}
+
+.darkTheme .historico label:hover  {
+  color: rgba(115, 170, 199, 0.7);
+}
+
  
 </style>
 

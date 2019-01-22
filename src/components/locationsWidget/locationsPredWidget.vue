@@ -266,6 +266,7 @@
 import Vue from "vue";
 import MapUtils from "@/services/map.utils";
 import ShareInfoPanel from "@/components/shareInfoPanel.vue";
+import { SIMO_URL } from '@/common/config';
 
 export default {
   name: "LocationsPredWidget",
@@ -363,7 +364,7 @@ export default {
       var tipo = this.locationType == "Puerto" ? "harbor" : "city";
       var result = await Vue.axios
         .get(
-          "https://movil.puertos.es/simo/seastate/" + tipo + "/" + this.code + "/daily_extended"
+          SIMO_URL + "seastate/" + tipo + "/" + this.code + "/daily_extended"
         )
         .catch(error => {
           throw new Error(`[RWV] ApiService ${error}`);

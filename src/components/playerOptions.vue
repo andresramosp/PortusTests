@@ -1,6 +1,9 @@
 <template>
   <div v-show="playingTimeLineLayer">
-    <img v-show="!isWidget" @click="toggleMinimized()" width="20" class="minimizerButton" :src="require('@/assets/icons/predictionWidget.png')" />
+    <img v-show="!isWidget" 
+         @click="toggleMinimized()" 
+         width="20" class="minimizerButton" 
+         :src="!mapState.playerMinimized ? require('@/assets/icons/replegar.png') : require('@/assets/icons/desplegar.png')" />
     <div v-show="!mapState.playerMinimized">
        <img :src="mapState.predictionScaleImg" class="predictionScale fadeIn" />
          <dx-date-box
@@ -19,9 +22,10 @@
             display-format="dd/MMM/yy"
             :use-mask-behavior="true"
           />
-       <img v-show='hasVectors' class="vectorsIcon fadeIn" @click="toggleVectors()" :src="require('@/assets/icons/vectors.png')" />
-       <img v-show='!isWidget' class="predictionWidgetIcon fadeIn" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
-       <img v-show='!isWidget && hasStaticMaps' class="staticMapsWidgetIcon fadeIn" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
+       <img v-show='hasRadars' class="playerIcon radarsIcon fadeIn" @click="toggleRadars()" :src="require('@/assets/icons/vectors.png')" />   
+       <img v-show='hasVectors' class="playerIcon vectorsIcon fadeIn" @click="toggleVectors()" :src="require('@/assets/icons/vectors.png')" />
+       <img v-show='!isWidget' class="playerIcon predictionWidgetIcon fadeIn" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
+       <img v-show='!isWidget && hasStaticMaps' class="playerIcon staticMapsWidgetIcon fadeIn" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
     </div>
   </div>
 </template>
@@ -54,6 +58,9 @@ export default {
       },
       hasVectors() {
         return this.mapState.currentTimeLineLayer && this.mapState.currentTimeLineLayer.mapResource.vectors;
+      },
+      hasRadars() {
+        return this.mapState.currentRadar;
       }
   },
   mounted() {
@@ -89,8 +96,13 @@ export default {
 
     toggleVectors: function() {
       var currentPredLayer = this.mapState.currentTimeLineLayer
-      MapState.removeMapResource(currentPredLayer.mapResource.id);
-      MapState.addTimeLineLayer(currentPredLayer.mapResource, !this.mapState.showingVectors);
+      // MapState.removeMapResource(currentPredLayer.mapResource.id);
+      // MapState.addTimeLineLayer(currentPredLayer.mapResource, !this.mapState.showingVectors);
+      MapState.setVectorial(currentPredLayer.mapResource, !this.mapState.showingVectors);
+    },
+
+    toggleRadars: function() {
+      this.mapState.setRadarPointsLayerVisibility(!this.mapState.showingRadars);
     },
 
     changeDateFromValue: function(ev) {
@@ -119,7 +131,8 @@ export default {
   position: absolute;
     z-index: 5;
     left: 3px;
-    bottom: 72px;
+    bottom: 75px;
+    cursor: pointer;
 }
 
 .predictionScale {
@@ -163,99 +176,34 @@ export default {
   border-radius: 0px !important;
 }
 
-.predictionWidgetIcon {
+.playerIcon {
   position: absolute;
-    z-index: 2;
+  z-index: 2;
+  bottom: 107px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.predictionWidgetIcon {
     left: 530px;
-    bottom: 98px;
-    width: 30px;
-    height: 30px;
-    border-radius: 6px;
-    color: white;
-    cursor: pointer;
 }
 
 .vectorsIcon {
-    position: absolute;
-    z-index: 2;
-    left: 50px;
-    bottom: 100px;
-    width: 30px;
-    height: 30px;
-    border-radius: 6px;
-    cursor: pointer;
+    left: 65px;
+}
+
+.radarsIcon {
+    left: 25px;
 }
 
 .staticMapsWidgetIcon {
-    position: absolute;
-    z-index: 2;
     left: 490px;
-    bottom: 100px;
-    width: 30px;
-    height: 30px;
-    border-radius: 6px;
-    cursor: pointer;
+  
 }
 
 
 
-@keyframes fadein {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes fadeout {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-/* Firefox < 16 */
-@-moz-keyframes fadein {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Safari, Chrome and Opera > 12.1 */
-@-webkit-keyframes fadein {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Internet Explorer */
-@-ms-keyframes fadein {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Opera < 12.1 */
-@-o-keyframes fadein {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
 
 
 </style>

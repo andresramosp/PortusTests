@@ -16,7 +16,7 @@ export const MapResources = [
   {
     id: 'pred-markers-nivmar-puerto',
     type: 'MarkerLayer',
-    name: 'Nivmar Puertos',
+    name: 'Puertos',
     resourceApi: 'ubicaciones/nivmar/Puerto',
     markerClass: MarkerClass.Ubicacion,
     minZoom: 0,
@@ -26,7 +26,7 @@ export const MapResources = [
   {
     id: 'pred-markers-nivmar-localidad',
     type: 'MarkerLayer',
-    name: '{nivmarLocalidadesRes}',
+    name: 'Localidades',
     resourceApi: 'ubicaciones/nivmar/Localidad',
     markerClass: MarkerClass.Ubicacion,
     minZoom: 7,
@@ -36,7 +36,7 @@ export const MapResources = [
   {
     id: 'pred-markers-nivmar-playa',
     type: 'MarkerLayer',
-    name: 'Nivmar Playas',
+    name: 'Playas',
     resourceApi: 'ubicaciones/nivmar/Playa',
     markerClass: MarkerClass.Ubicacion,
     minZoom: 8,
@@ -44,24 +44,24 @@ export const MapResources = [
     cached: false
   },
   {
-    id: 'pred-tiles-oleaje-atl',
+    id: 'portus-pred-tiles-oleaje-atl',
     type: 'TimeLineLayer',
     name: 'Pred. Oleaje Atl Portus',
     resourceApi: 'mapTileResources/portus/VHM0Atl',
     mapsResourceApi: 'mapStaticResources/VHM0Atl',
     tms: true,
     vectors: true,
-    groupLayersBy: { field: 'modelo', label: 'Modelo' },
+    groupLayersBy: { comboSelectId: 'modelo_oleaje', field: 'modelo', defaultOption: 'PORTUS' }
   },
   {
-    id: 'pred-tiles-oleaje-atl-ocaso',
+    id: 'ocaso-pred-tiles-oleaje-atl',
     type: 'TimeLineLayer',
     name: 'Pred. Oleaje Atl Ocaso',
     resourceApi: 'mapTileResources/ocaso/VHM0Atl',
     mapsResourceApi: 'mapStaticResources/VHM0Atl',
     tms: true,
     vectors: true,
-    groupLayersBy: { field: 'modelo', label: 'Modelo' }
+    groupLayersBy: { comboSelectId: 'modelo_oleaje', field: 'modelo', defaultOption: 'PORTUS' }
   },
   {
     id: 'pred-tiles-oleaje-med',
@@ -90,7 +90,8 @@ export const MapResources = [
     tms: true,
     vectors: true,
     paintBounds: false,
-    nonToggleable: true
+    //nonToggleable: true,
+    groupLayersBy: { comboSelectId: '123', field: 'idDominio', defaultOption: 'IBI' }
     //groupLayersBy: { field: 'idOperativa', label: 'Operativa' },
   },
   {
@@ -103,7 +104,6 @@ export const MapResources = [
     defaultVectors: true,
     paintBounds: true,
     isRadar: true,
-    showRadarPoints: false,
     nonToggleable: true
   },
   {
@@ -111,7 +111,8 @@ export const MapResources = [
     type: 'TimeLineLayer',
     name: 'Pred. Temperatura',
     resourceApi: 'mapTileResources/portus/SST',
-    //groupLayersBy: { field: 'idDominio', label: 'Dominio' },
+    //groupLayersBy: { comboSelectId: '123', field: 'idDominio', defaultOption: 'IBI' },
+    //groupLayersBy: { comboSelectId: 'Dominios', field: 'idDominio', label: 'Dominio' },
     tms: true,
     nonToggleable: true
   },
@@ -365,7 +366,7 @@ export const MapResources = [
   {
     id: 'rt-markers-antenas-corrientes',
     type: 'MarkerLayer',
-    name: 'Antenas Radares',
+    name: 'Antenas',
     resourceApi: 'antenas',
     markerClass: MarkerClass.AntenaRadar,
     //minZoom: 7, 
@@ -540,9 +541,9 @@ export const MapResources = [
 ];
 
 export const MapOptionsGroups = [
-  { id: 'predicciones', name: '{prediccionesGroup}', multiple: false, exclusiveWith: ['historico'] },
-  { id: 'tiempo_real', name: '{tiempoRealGroup}', multiple: true },
-  { id: 'historico', name: '{historicoGroup}', multiple: true }
+  { id: 'predicciones', name: '{prediccionesGroup}', nameMin: '{prediccionesGroupMin}', multiple: false, exclusiveWith: ['historico'] },
+  { id: 'tiempo_real', name: '{tiempoRealGroup}', nameMin: '{tiempoRealGroupMin}', multiple: true },
+  { id: 'historico', name: '{historicoGroup}', nameMin: '{historicoGroupMin}', multiple: true }
 ]
 
 export const MapOptions = [
@@ -552,7 +553,7 @@ export const MapOptions = [
     group: 'predicciones',
     name: '{oleajeAtlanticoOption}',
     variableType: VariableType.WAVE,
-    mapResources: ['pred-tiles-oleaje-atl','pred-tiles-oleaje-atl-ocaso', 'pred-markers-wana-atl', 'pred-markers-wana-atl-verif'] // 'pred-tiles-oleaje'
+    mapResources: ['portus-pred-tiles-oleaje-atl','ocaso-pred-tiles-oleaje-atl', 'pred-markers-wana-atl', 'pred-markers-wana-atl-verif'] // 'pred-tiles-oleaje'
   },
   {
     id: 'pred_oleaje_med',
