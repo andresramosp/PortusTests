@@ -1,5 +1,5 @@
 import MapState from "@/state/map.state";
-import MapUtils from "@/services/map.utils";
+import { MarkerClass, VariableType } from "@/common/enums";
 import Vue from 'vue';
 import { BASE_URL_PORTUS_DATA } from '@/common/config';
 
@@ -94,7 +94,6 @@ const DataPanelsUtils = {
                     id: this.generateDataPanelId()
                 })
         }
-        
     },
 
     setPredGraphParam(modelPoint, parameters, interfazMode, isNivmar) {
@@ -170,6 +169,64 @@ const DataPanelsUtils = {
         })
         MapState.dataObjectsList = MapState.dataObjectsList.filter(o => o.id != dataPanel.id);
     },
+
+    createDataListFromUserPrefs() {
+        var markersIds = Object.keys(MapState.bancosDatos);
+        markersIds.forEach(id => {
+            // Usamos try/catch para prevenir que una posible alteración del localStorage por
+            // medios externos pueda causar errores que impedirían arrancar la app.
+            try {
+                var marker = JSON.parse(localStorage.getItem('marker-' + id));
+                if (marker) {
+                    var activeTableParams = MapState.getBancoDatos(id).filter(param => param.tableActive);
+                    var activeGraphicParams = MapState.getBancoDatos(id).filter(param => param.graphicActive);
+                    if (marker.mapResource.markerClass == MarkerClass.EstacionRT) {
+                        if (activeTableParams.length > 0) 
+                            this.addRTDataTable(marker, activeTableParams);
+                        activeGraphicParams.forEach(p => {
+                            this.setRTGraphParam(marker, p);
+                        })
+                    }
+                    if (marker.mapResource.markerClass == MarkerClass.PuntoMalla
+                     || marker.mapResource.markerClass == MarkerClass.PuntoMallaVerif) {
+                        if (activeTableParams.length > 0) 
+                            this.setPredDataTable(marker, marker.mapOption.variableType, true);
+                        if (activeGraphicParams.length > 0)
+                            this.setPredGraphParam(marker, activeGraphicParams, null, false);
+                    }
+                    if (marker.mapResource.markerClass == MarkerClass.Ubicacion) {
+                           if (activeTableParams.length > 0) 
+                               this.setPredDataTable(marker, marker.mapOption.variableType, true);
+                           if (activeGraphicParams.length > 0)
+                               this.setPredGraphParam(marker, activeGraphicParams, null, true);
+                       }
+                }
+            }
+            catch(ex) {
+                console.log("localStorage error");
+            }
+        })
+    },
+
+    saveDataUserPrefs(marker) {
+        var cachedBancoDatos = JSON.parse(localStorage.getItem('banco_datos'));
+        if (!cachedBancoDatos)
+            cachedBancoDatos = {};
+        var bancoDatosMarker = MapState.getBancoDatos(marker.id).filter(param => param.tableActive || param.graphicActive);
+        if (bancoDatosMarker.length > 0) {
+            cachedBancoDatos[marker.id] = bancoDatosMarker;
+            localStorage.setItem('banco_datos', JSON.stringify(cachedBancoDatos));
+            if(!localStorage.getItem('marker-' + marker.id)) {
+                var markerProperties = ['id', 'latId', 'lonId', 'lat', 'lon', 'latitud', 'longitud', 'radar', 'nombre', 'mapResource', 'mapOption', 'markerClass', 'variableType'];
+                localStorage.setItem('marker-' + marker.id, JSON.stringify(marker, markerProperties));
+            }
+        }
+        else {
+            delete cachedBancoDatos[marker.id];
+            localStorage.setItem('banco_datos', JSON.stringify(cachedBancoDatos));
+            localStorage.removeItem('marker-' + marker.id);
+        }
+    }
 
 }
 

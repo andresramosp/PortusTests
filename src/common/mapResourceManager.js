@@ -21,6 +21,7 @@ export const MapResources = [
     markerClass: MarkerClass.Ubicacion,
     minZoom: 0,
     icon: 'nivmar-puerto.png',
+    //comboSelect: { id: 'nivmar',  defaultOption: 'Playas'  },
     cached: false
   },
   {
@@ -31,6 +32,7 @@ export const MapResources = [
     markerClass: MarkerClass.Ubicacion,
     minZoom: 7,
     icon: 'nivmar-localidad.png',
+    //comboSelect: { id: 'nivmar',  defaultOption: 'Playas'  },
     cached: false
   },
   {
@@ -41,27 +43,30 @@ export const MapResources = [
     markerClass: MarkerClass.Ubicacion,
     minZoom: 8,
     icon: 'nivmar-playa.png',
+    //comboSelect: { id: 'nivmar',  defaultOption: 'Playas'  },
     cached: false
   },
   {
-    id: 'portus-pred-tiles-oleaje-atl',
+    id: 'pred-tiles-oleaje-atl',
     type: 'TimeLineLayer',
     name: 'Pred. Oleaje Atl Portus',
     resourceApi: 'mapTileResources/portus/VHM0Atl',
     mapsResourceApi: 'mapStaticResources/VHM0Atl',
     tms: true,
     vectors: true,
-    groupLayersBy: { comboSelectId: 'modelo_oleaje', field: 'modelo', defaultOption: 'PORTUS' }
+    groupLayersBy: { field: 'modelo' },
+    comboSelect: { id: 'modelo_oleaje',  defaultOption: 'PORTUS'  }
   },
   {
-    id: 'ocaso-pred-tiles-oleaje-atl',
+    id: 'pred-tiles-oleaje-ocaso-atl',
     type: 'TimeLineLayer',
     name: 'Pred. Oleaje Atl Ocaso',
     resourceApi: 'mapTileResources/ocaso/VHM0Atl',
     mapsResourceApi: 'mapStaticResources/VHM0Atl',
     tms: true,
     vectors: true,
-    groupLayersBy: { comboSelectId: 'modelo_oleaje', field: 'modelo', defaultOption: 'PORTUS' }
+    groupLayersBy: { field: 'modelo' },
+    comboSelect: { id: 'modelo_oleaje',  defaultOption: 'PORTUS'  }
   },
   {
     id: 'pred-tiles-oleaje-med',
@@ -90,8 +95,9 @@ export const MapResources = [
     tms: true,
     vectors: true,
     paintBounds: false,
-    //nonToggleable: true,
-    groupLayersBy: { comboSelectId: '123', field: 'idDominio', defaultOption: 'IBI' }
+    nonToggleable: true,
+    //groupLayersBy: { field: 'idDominio' },
+    //comboSelect: { id: '123',  defaultOption: 'IBI'  }
     //groupLayersBy: { field: 'idOperativa', label: 'Operativa' },
   },
   {
@@ -125,7 +131,7 @@ export const MapResources = [
     tms: true,
     vectors: true,
     defaultVectors: true,
-    //nonToggleable: true
+    nonToggleable: true
   },
   {
     id: 'pred-tiles-salinidad',
@@ -192,8 +198,7 @@ export const MapResources = [
     resourceApi: 'puntosMalla/pred/Atmosfera',
     markerClass: MarkerClass.PuntoMalla,
     minZoom: 0,
-    icon: 'punto-malla-atmosfera.png',
-    //groupLayersBy: { field: 'malla', label: 'Malla' }
+    icon: 'punto-malla-atmosfera.png'
   },
   {
     id: 'pred-markers-atmosfera-verif',
@@ -203,7 +208,7 @@ export const MapResources = [
     markerClass: MarkerClass.PuntoMallaVerif,
     unchecked: true,
     minZoom: 0,
-    icon: 'punto-malla-verif.png', 
+    icon: 'punto-malla-verif.png'
   },
   {
     id: 'tile-layer-prueba',
@@ -229,7 +234,6 @@ export const MapResources = [
     showAll: true,
     locale: true,
     cached: true,
-    //groupLayersBy: { field: 'tipoSensor', label: 'Sensor', defaultVisibles: ['Direccional', 'Direccional Met-Oce'] },
     preventHeaping: true
   },
   {
@@ -323,7 +327,7 @@ export const MapResources = [
     showAll: true,
     locale: true,
     cached: true,
-    preventHeaping: true
+    preventHeaping: true,
   },
   {
     id: 'rt-markers-temperatura-aire',
@@ -553,7 +557,7 @@ export const MapOptions = [
     group: 'predicciones',
     name: '{oleajeAtlanticoOption}',
     variableType: VariableType.WAVE,
-    mapResources: ['portus-pred-tiles-oleaje-atl','ocaso-pred-tiles-oleaje-atl', 'pred-markers-wana-atl', 'pred-markers-wana-atl-verif'] // 'pred-tiles-oleaje'
+    mapResources: ['pred-tiles-oleaje-atl','pred-tiles-oleaje-ocaso-atl', 'pred-markers-wana-atl', 'pred-markers-wana-atl-verif'] // 'pred-tiles-oleaje'
   },
   {
     id: 'pred_oleaje_med',

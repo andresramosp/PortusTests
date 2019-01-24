@@ -21,7 +21,7 @@
           </b-form-select>
           <div style="padding: 7px">
                <div class="form-check" v-for="floatingOption in floatingOptions.filter(opt => !opt.comboSelectId)" :key="floatingOptions.indexOf(floatingOption)">
-                  <label class="form-check-label">
+                  <label class="form-check-label unselectable">
                     <input class="form-check-input" type="checkbox" v-model="floatingOption.active" @change="checkOptionChanged(floatingOption)" />
                       {{ $t(floatingOption.name) }}
                   </label>
@@ -149,20 +149,21 @@ export default {
       var vm = this;
       var optionName;
       var comboSelectId = null;
-      if (layer.mapResource.groupLayersBy) {
-        if (layer.mapResource.groupLayersBy.comboSelectId) {
-          optionName = layer[layer.mapResource.groupLayersBy.field];
-          comboSelectId =  layer.mapResource.groupLayersBy.comboSelectId;
-        }
-        else {
-           optionName = layer.mapResource.groupLayersBy.label + ': ' 
-          + ((layer.mapResource.groupLayersBy.field.indexOf('.') == -1) ? layer[layer.mapResource.groupLayersBy.field]
-          : layer[layer.mapResource.groupLayersBy.field.split('.')[0]][layer.mapResource.groupLayersBy.field.split('.')[1]]);
-        }
+      if (layer.mapResource.comboSelect) {
+          optionName = layer.mapResource.groupLayersBy ? layer[layer.mapResource.groupLayersBy.field] : layer.mapResource.name;
+          comboSelectId =  layer.mapResource.comboSelect.id;
       }
       else {
-        optionName = layer.mapResource.name;
+          if (layer.mapResource.groupLayersBy) {
+              optionName = layer.mapResource.groupLayersBy.label + ': ' 
+              + ((layer.mapResource.groupLayersBy.field.indexOf('.') == -1) ? layer[layer.mapResource.groupLayersBy.field]
+              : layer[layer.mapResource.groupLayersBy.field.split('.')[0]][layer.mapResource.groupLayersBy.field.split('.')[1]]);
+          }
+          else {
+            optionName = layer.mapResource.name;
+          }
       }
+      
       var option = groupList.find(opt => { return opt.name == optionName});
       if (!option) {
         option = {
@@ -207,6 +208,7 @@ export default {
   border-radius: 0px;
   color: white;
   font-size: 13px;
+  min-width: 120px;
 }
 
 .singlePanel {

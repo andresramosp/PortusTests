@@ -29,6 +29,16 @@ async function StartApp() {
 
   var config = await fetch('portus.config.json')
   config = await config.json();
+  config.user_preferences = {};
+
+  var menuMinimized = localStorage.getItem('menu_minimized');
+  if (menuMinimized)
+    config.user_preferences.menu_minimized = JSON.parse(menuMinimized);
+
+  var bancoDatos = localStorage.getItem('banco_datos');
+  if (bancoDatos)
+    config.user_preferences.banco_datos = JSON.parse(bancoDatos);
+
   window.PC = config;
 
   const routes = [

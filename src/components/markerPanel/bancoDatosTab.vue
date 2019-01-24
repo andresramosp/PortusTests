@@ -67,7 +67,16 @@ export default {
   props: {
     markers: { type: Array, default: null, required: false }
   },
-
+//   watch: {
+//       'mapState.bancosDatos': function() {
+//           this.bancoDatos = this.mapState.getBancoDatos(this.markers[0].id).filter(p => this.markers.map(m => m.mapOption.variableType).indexOf(p.variable) != -1);
+//       }
+//   },
+//   computed: {
+//       bancoDatos() {
+//           return this.mapState.getBancoDatos(this.markers[0].id).filter(p => this.markers.map(m => m.mapOption.variableType).indexOf(p.variable) != -1);
+//       }
+//   },
   mounted() {
   },
   created() {
@@ -113,6 +122,7 @@ export default {
                  })
                  DataPanelsUtils.setPredDataTable(this.markers[0], this.markers[0].mapOption.variableType, param.tableActive);
              }
+             DataPanelsUtils.saveDataUserPrefs(this.markers[0]);
          }, 750);
          
      },
@@ -132,6 +142,7 @@ export default {
             var parameters = [param, extraParam];
             DataPanelsUtils.setPredGraphParam(this.markers[0], parameters, null, true);
         }
+        DataPanelsUtils.saveDataUserPrefs(this.markers[0]);
         
      },
      checkDir180Param(param) {
@@ -151,15 +162,8 @@ export default {
      // así como mantener el estado de los checks en caso de una actualización (al añadir variables)
 
      setBancoDatos(params) {
-         params.data.forEach(p => {
-            var previousParam = this.mapState.getBancoDatos(this.markers[0].id).find(pm => pm.paramEseoo == p.paramEseoo);
-            if (previousParam) {
-                p.tableActive = previousParam.tableActive;
-                p.graphicActive = previousParam.graphicActive;
-            }
-        })
-        this.bancoDatos = params.data;
-        this.mapState.setBancoDatos(this.markers[0].id, this.bancoDatos);
+         this.mapState.addBancoDatos(this.markers[0].id, params.data);
+         this.bancoDatos = this.mapState.getBancoDatos(this.markers[0].id).filter(p => this.markers.map(m => m.mapOption.variableType).indexOf(p.variable) != -1);
      }
   }
 };

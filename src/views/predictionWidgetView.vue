@@ -37,7 +37,9 @@ export default {
 
     var resourceId = this.$route.query.resourceId;
     var predictionResource = MapState.getMapResource('pred-tiles-' + resourceId);
-    MapState.addTimeLineLayer(predictionResource, this.$route.query.vec == 'true');
+    predictionResource.defaultVectors =  this.$route.query.vec == 'true';
+    predictionResource.comboSelect = null;
+    MapState.addTimeLineLayer(predictionResource, {});
     
     var zoom = this.$route.query.zoom;
     var lat = this.$route.query.lat;

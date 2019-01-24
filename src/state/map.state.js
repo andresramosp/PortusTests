@@ -1,6 +1,7 @@
 import { MapResources } from '@/common/mapResourceManager';
 import ApiService from "@/services/api.service";
 import MapUtils from "@/services/map.utils";
+import DataPanelsUtils from "@/services/dataPanels.utils";
 import { BASE_URL_PORTUS } from '@/common/config';
 import Vue from 'vue';
 
@@ -31,11 +32,12 @@ const MapState = {
     radarPointsLayer: null,
     currentRadar: null,
     dataObjectsList: [],
-    bancosDatos: {},
+    bancosDatos: PC.user_preferences.banco_datos  != undefined ? PC.user_preferences.banco_datos : {},
 
     init(map) {
         this.map = map;
         this.cacheLayers();
+        DataPanelsUtils.createDataListFromUserPrefs();
     },
 
     cacheLayers() {
@@ -62,6 +64,7 @@ const MapState = {
 
     async addMarkerLayer(mapResource, mapOption) {
         this.addLoading(mapResource.id);
+        Vue.set(mapOption, 'loadingThings', mapOption.loadingThings ? mapOption.loadingThings + 1 : 1);
         var result = mapResource.cachedData || await ApiService.get(mapResource.resourceApi, (mapResource.locale ? { locale: Vue.$getLocale() } : null ));
         result.data.forEach(m => {
             var iconUrl = typeof mapResource.icon === "function" ? mapResource.icon(m) : mapResource.icon;
@@ -85,18 +88,17 @@ const MapState = {
             marker.mapResource = mapResource;
             marker.mapOption = mapOption;
             Object.assign(marker, m);
-            marker.visible = !marker.mapResource.unchecked;
-                        //&& (!marker.mapResource.filter || marker.mapResource.filter(m) );
-
-                        //     (!marker.mapResource.groupLayersBy 
-                        //  || !marker.mapResource.groupLayersBy.defaultVisibles 
-                        //  || marker.mapResource.groupLayersBy.defaultVisibles.indexOf(marker[marker.mapResource.groupLayersBy.field]) != -1);
+            marker.visible = !marker.mapResource.unchecked
+                              && (!mapResource.comboSelect
+                                  || (mapResource.groupLayersBy && res[mapResource.groupLayersBy.field] == mapResource.comboSelect.defaultOption)
+                                  || (mapResource.name ==  mapResource.comboSelect.defaultOption));
             
             this.preloadedMarkers.push(marker);
         });
 
         this.setVisibleMarkerLayers();
         this.removeLoading(mapResource.id);
+        Vue.set(mapOption, 'loadingThings', mapOption.loadingThings - 1);
     },
 
     setVectorial(mapResource, vectorial) {
@@ -114,6 +116,7 @@ const MapState = {
 
     async addTimeLineLayer(mapResource, mapOption) {
         this.addLoading(mapResource.id);
+        Vue.set(mapOption, 'loadingThings', mapOption.loadingThings ? mapOption.loadingThings + 1 : 1);
         var vectorial = mapResource.defaultVectors ? true : false;
         var result = await ApiService.get(mapResource.resourceApi);
         result.data.forEach(res => {
@@ -135,9 +138,9 @@ const MapState = {
                 );
                 tileLayer.mapResource = mapResource;
                 portusTimeLayer.mapResource = mapResource;
-                portusTimeLayer.visible = !mapResource.groupLayersBy 
-                                       || !mapResource.groupLayersBy.comboSelectId 
-                                       || res[mapResource.groupLayersBy.field] == mapResource.groupLayersBy.defaultOption; 
+                portusTimeLayer.visible = !mapResource.comboSelect
+                                       || (mapResource.groupLayersBy && res[mapResource.groupLayersBy.field] == mapResource.comboSelect.defaultOption)
+                                       || (mapResource.name ==  mapResource.comboSelect.defaultOption); 
                 portusTimeLayer.id = res.url;
                 Object.assign(portusTimeLayer, res);
                 this.preloadedTimeLineLayers.push(portusTimeLayer);
@@ -158,6 +161,7 @@ const MapState = {
         this.setVisibleTimeLineLayers();
         this.showingVectors = vectorial;
         this.removeLoading(mapResource.id);
+        Vue.set(mapOption, 'loadingThings', mapOption.loadingThings - 1);
     },
 
     // La visibilidad de un marker viene dada por:
@@ -408,6 +412,15 @@ const MapState = {
 
     setBancoDatos(markerId, bancoDatos) {
         this.bancosDatos[markerId] = bancoDatos;
+    },
+
+    addBancoDatos(markerId, bancoDatos) {
+        if (!this.bancosDatos[markerId]) {
+            this.bancosDatos[markerId] = []
+        }
+        var oldParamsIds = this.bancosDatos[markerId].map(p => p.id);
+        var newParams = bancoDatos.filter(p => oldParamsIds.indexOf(p.id) == -1);
+        this.bancosDatos[markerId] = this.bancosDatos[markerId].concat(newParams);
     },
 
     // TODO: llevarse funcionalidad a MapUtils, o incluso crear un radar.service.js

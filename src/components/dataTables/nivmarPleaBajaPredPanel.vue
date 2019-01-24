@@ -1,6 +1,6 @@
 <template>
   <div class="row allCenter" >
-    <div v-for="day in days" :key="day.id" class="col-md-3" >
+    <div v-for="day in days" :key="day.id" class="col-md-3" style="max-width: 18% !important;" >
         <div style="margin-bottom: 5px; font-weight: bold; font-size: 13.5px">{{ day.id }}</div>
         <b-table v-if="DBSource" striped hover :items="day.data" :fields="DBFields" :small="true" :fixed="true" :outlined="true" thead-class="hiddenHeader" >
           <template slot="indicador" slot-scope="data">
@@ -141,12 +141,6 @@ export default {
 
 <style>
 
-  .allCenter {
-    text-align: center; 
-    align-items: center; 
-    justify-content: center;
-    display: flex
-  }
 
   .pleaBajaColumn {
     text-align: center; 

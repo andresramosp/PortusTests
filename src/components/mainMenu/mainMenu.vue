@@ -1,7 +1,7 @@
 <template>
 <div >
   
-  <div class='layersPanel' :class="[align == 'left' ? 'leftAlign' : 'rightAlign', theme]">
+  <div class='layersPanel unselectable' :class="[align == 'left' ? 'leftAlign' : 'rightAlign', theme]">
     <img @click="toggleMinimized()" 
          width="27" style="position: absolute; z-index: 5; left: -10px; cursor: pointer;" 
          :src="!minimized ? require('@/assets/icons/replegar.png') : require('@/assets/icons/desplegar.png')" />
@@ -12,7 +12,7 @@
             <b-container>
               <b-row >
                   <b-col v-for="mapOption in mapOptions.filter(opt => opt.group == optGrp.id)" :key="mapOption.id" cols="6" class="form-check text-left" style="padding-top: 2px;" >
-                    <label class="form-check-label" :class="[mapOption.active ? 'mapOptionChecked' : '']" :title="minimized ? $t(mapOption.name) : ''" style="float: left; cursor: pointer">
+                    <label class="form-check-label lightable" :class="[mapOption.active ? 'mapOptionChecked' : '', mapOption.loadingThings > 0 ? 'mapOptionLoading' : '']" :title="minimized ? $t(mapOption.name) : ''" style="float: left; cursor: pointer">
                       <img style="float: left" width="25" 
                             :class="[mapOption.active ? 'mapOptionChecked' : '']"
                             :src='require("@/assets/icons/mainMenu/" + mapOption.id + ".png")' >
@@ -20,7 +20,7 @@
                             type="checkbox" 
                             v-model="mapOption.active" 
                             :value="mapOption.active" 
-                            :disabled="mapOption.loading"
+                            :disabled="mapOption.loadingThings > 0"
                             @change="mapOptionChanged(mapOption)" />
                       {{ minimized ? '' : $t(mapOption.name) }}
                   </label>
@@ -55,29 +55,41 @@ export default {
       align: PC.options_panel_align,
       theme: PC.color_theme,
       $t: this.$t,
-      minimized: false
+      minimized: PC.user_preferences.menu_minimized  != undefined ? PC.user_preferences.menu_minimized : false
     };
   },
   props: {
     mapOptions: { type: Array, default: [], required: false },
     mapOptionsGroups: { type: Array, default: [], required: false }
   },
-  computed: {
-  },
+  // watch: {
+  //   'mapState.loadingThings' : function(oldVal, newVal) {
+  //       this.mapOptions.forEach(opt => {
+  //         if (newVal.find(l => opt.mapResources.indexOf(l) != -1))
+  //            Vue.set(opt, 'loading', true);
+  //         else 
+  //            Vue.set(opt, 'loading', false);
+  //       });
+  //   }
+  // },
   mounted() {},
   methods: {
     mapOptionChanged: function(mapOption) {
         this.mapState.setMapOption(mapOption.id, mapOption.active);
-        if (mapOption.active) {
-          Vue.set(mapOption, 'loading', true);
-          setTimeout(() => {
-            Vue.set(mapOption, 'loading', false);
-          }, 1000);
-        }
+        setTimeout(() => {
+          mapOption.loadingThings = 0;
+        }, 5000);
+        // if (mapOption.active) {
+        //   Vue.set(mapOption, 'loading', true);
+        //   setTimeout(() => {
+        //     Vue.set(mapOption, 'loading', false);
+        //   }, 1000);
+        // }
         
     },
     toggleMinimized: function() {
       this.minimized = !this.minimized;
+      localStorage.setItem('menu_minimized', this.minimized);
     }
   }
 };

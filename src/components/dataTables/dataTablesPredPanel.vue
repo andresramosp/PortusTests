@@ -1,9 +1,9 @@
 
  <template>
-  <div>
-        <div class="allCenter">
+  <div style="min-height: 200px">
+    <div class="allCenter">
       <img 
-        style="margin-top: 160px"
+        style="margin-top: 80px"
         :src="require('@/assets/gifs/loadingBars.gif')"
         v-show="loading"
         width="100"
@@ -23,8 +23,8 @@
       />
 
     <div v-show="!displayShareInfo">
-      <b-row>
-        <b-col v-if="!loading" class="fadeIn" cols="2">
+      <b-row v-if="!loading">
+        <b-col  class="fadeIn" cols="2">
           <img :src="defaultLogo" style="margin-left: 5px; margin-bottom: 15px">
         </b-col>
         <b-col style="font-weight: bold" cols="8">
@@ -89,7 +89,7 @@
            
             </b-tab>
           </b-tabs>
-          <div style="margin-top: 5px" >
+          <div style="margin-top: 5px; font-size: 13px" >
               <a v-if="mareaAstronomicaUrl" 
                 :href="mareaAstronomicaUrl" target='_blank'>
                 {{this.$t('{linkToMareaAstro}')}} {{this.mapUtils.getMarkerName(this.marker)}}
@@ -410,6 +410,11 @@ export default {
 </script>
 
 <style>
+
+.nav-link {
+    padding: 5px 15px 5px 15px !important;
+    font-size: 14px !important;
+}
 
 .allCenter {
     text-align: center; 

@@ -85,6 +85,15 @@ export default {
     100%{opacity:1}
  }
 
+ .unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 /* Mover a CSS */
 
 .darkTheme .card-body {
@@ -131,20 +140,31 @@ export default {
     font-weight: bold;
 }
 
-/* .darkTheme .historico img:hover  {
-  background-color: rgba(115, 170, 199, 0.7);
-} */
 
-.darkTheme .predicciones label:hover  {
+
+.darkTheme .predicciones .lightable:hover  {
   color: rgba(11, 90, 149, 1);
 }
 
-.darkTheme .tiempo_real label:hover  {
+
+.darkTheme .predicciones .minimized .lightable img:hover  {
+  background-color: rgba(11, 90, 149, 1);
+}
+
+.darkTheme .tiempo_real .lightable:hover  {
   color: rgba(6, 136, 192, 0.7);
 }
 
-.darkTheme .historico label:hover  {
+.darkTheme .tiempo_real .minimized .lightable img:hover  {
+  background-color: rgba(6, 136, 192, 0.7);
+}
+
+.darkTheme .historico .lightable:hover  {
   color: rgba(115, 170, 199, 0.7);
+}
+
+.darkTheme .historico .minimized .lightable img:hover  {
+  background-color: rgba(115, 170, 199, 0.7);
 }
 
  

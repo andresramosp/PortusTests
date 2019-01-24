@@ -2,12 +2,13 @@
 
     <div>
 
-    <img
-        style="margin-left: 450px; margin-top: 160px;"
+     <div class="allCenter">
+      <img 
         :src="require('@/assets/gifs/loadingBars.gif')"
         v-show="loading"
         width="100"
       >
+    </div>
 
     <b-row v-show="!displayShareInfo">
       <b-col v-if="!loading" class="fadeIn">

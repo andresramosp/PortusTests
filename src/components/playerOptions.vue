@@ -143,7 +143,7 @@ export default {
     /* bottom: -3px; */
     padding: 10px;
     border-radius: 6px;
-    width: 25%;
+    width: 380px;
     height: 50px;
     left: 100px;
     bottom: 95px;

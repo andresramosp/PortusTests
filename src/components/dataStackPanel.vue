@@ -3,11 +3,10 @@
     <draggable v-model="mapState.dataObjectsList" @start="drag=true" @end="drag=false">
       <div v-for="(dataPanel) in mapState.dataObjectsList" :key="dataPanel.id">
         <b-card no-body class="mb-1">
-          <b-card-header header-tag="header" class="p-1" role="tab">
-            <span style="text-align: left; cursor: move" block href="#" v-b-toggle="'id' + dataPanel.id" variant="info">{{dataPanel.name}}</span>
+          <b-card-header style="cursor: move;" header-tag="header" class="p-1" role="tab" href="#" v-b-toggle="'id' + dataPanel.id" block>
+            <span style="text-align: left; font-size: 14px" variant="info">{{dataPanel.name}}</span>
             <span @click="cerrar(dataPanel)" style="float:right; cursor: pointer">x</span>
           </b-card-header>
-          <!-- :visible="index == 0" -->
           <b-collapse :id="'id' + dataPanel.id" :visible="true"  role="tabpanel"> 
             <b-card-body>
                 <iframe v-if="dataPanel.type == 'Graphic'" :src="dataPanel.url" :width="iFrameWidth" :height="iFrameHeight" frameborder="0" />
@@ -41,21 +40,37 @@ export default {
     return {
       iFrameWidth: window.innerWidth,
       iFrameHeight: 262,
-      list: MapState.dataObjectsList,
-      mapState: MapState
+      mapState: MapState,
+      oldDataLenth: null,
+      dataModified: false
     };
   },
   props: {},
   computed: {},
   updated() {
-    setTimeout(() => {
-      window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
-    }, 1000);
+    // Control para saber si debemos mover el scroll hacia abajo cuando cambia la lista
+    // Si el cambio se debe a la inserción de un elemento, bajamos el scroll
+    // Si el cambio se debe a una reordenación o un borrado de elementos, no lo bajamos
+     if (this.oldDataLenth == 0 || this.oldDataLenth < this.mapState.dataObjectsList.length) {
+        this.dataModified = true;
+      }
+      else {
+        this.dataModified = false;
+      }
+      this.oldDataLenth = this.mapState.dataObjectsList.length;
+
+      if (this.dataModified) {
+        setTimeout(() => {
+          window.scrollTo(0, document.body.scrollTop != undefined ? document.body.scrollTop + 370 : document.documentElement + 340);
+        }, 1000);
+      }
+      //localStorage.setItem('data_stack_panel', JSON.stringify(this.mapState.dataObjectsList));
     
   },
   methods: {
     cerrar(dataPanel) {
       DataPanelsUtils.removeDataPanel(dataPanel);
+      DataPanelsUtils.saveDataUserPrefs(dataPanel.marker);
     }
   }
 };

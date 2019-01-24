@@ -4,7 +4,7 @@
  <dx-popup
     v-if="markers && markers.length > 0"
     :visible="true"
-    :position="{ at: 'center', offset: '0 -80' }"
+    :position="{ at: 'center', offset: '0 -20' }"
     :resize-enabled="false"
     :drag-enabled="true"
     :close-on-outside-click="false"
