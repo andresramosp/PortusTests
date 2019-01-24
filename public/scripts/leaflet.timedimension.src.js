@@ -1708,7 +1708,8 @@ L.UI.Knob = L.Draggable.extend({
 
     _toValue: function(x) {
         var v = x * this._getProjectionCoef() + this.options.rangeMin;
-        //
+        if (this.tale)
+            jQuery(this.tale).css('width', Math.round(x).toString() + "px");
         return v;
     },
 
@@ -1793,6 +1794,7 @@ L.Control.TimeDimension = L.Control.extend({
         if (this.options.timeSlider) {
             var timeSliderClass = this.options.minimized ? 'timecontrol-datesliderMin' : 'timecontrol-dateslider';
             this._sliderTime = this._createSliderTime(this.options.styleNS + ' timecontrol-slider ' + timeSliderClass, container);
+            this._sliderTime.tale = L.DomUtil.create('div', this.options.styleNS + ' slider slider-tale', container);
         }
          if (this.options.speedSlider && !this.options.minimized) {
             this._sliderSpeed = this._createSliderSpeed(this.options.styleNS + ' timecontrol-slider timecontrol-speed', container);

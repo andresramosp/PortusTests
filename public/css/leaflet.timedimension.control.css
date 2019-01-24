@@ -92,6 +92,18 @@
     float: left;
     margin-left: 4px;
 }
+.slider-tale {
+    color: rgba(196, 243, 18, 1);
+    float: none !important;
+    position: absolute !important;
+    width: 50px;
+    z-index: 5;
+    border: 1px solid !important;
+    height: 0px !important;
+    margin-top: 10px;
+    margin-left: 7px;
+}
+
 .leaflet-bar-timecontrol .timecontrol-dateslider .slider {
     width: 430px;
 }
