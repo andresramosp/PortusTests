@@ -3,6 +3,7 @@ import Vue from 'vue'
 import App from './app.vue'
 
 import ApiService from '@/services/api.service'
+import UserPrefs from '@/services/userPrefs.service'
 import LocalePlugin from '@/services/locale.plugin'
 import BootstrapVue from 'bootstrap-vue'
 import 'devextreme/dist/css/dx.common.css';
@@ -29,15 +30,7 @@ async function StartApp() {
 
   var config = await fetch('portus.config.json')
   config = await config.json();
-  config.user_preferences = {};
-
-  var menuMinimized = localStorage.getItem('menu_minimized');
-  if (menuMinimized)
-    config.user_preferences.menu_minimized = JSON.parse(menuMinimized);
-
-  var bancoDatos = localStorage.getItem('banco_datos');
-  if (bancoDatos)
-    config.user_preferences.banco_datos = JSON.parse(bancoDatos);
+  config.user_preferences = UserPrefs.getUserPrefs();
 
   window.PC = config;
 

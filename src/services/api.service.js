@@ -9,9 +9,15 @@ const ApiService = {
     Vue.axios.defaults.baseURL = process.env.VUE_APP_API_URL;
   },
 
-  async get(url, params) {
+  getCancelationToken() {
+    const CancelToken = Vue.axios.CancelToken;
+    var source = CancelToken.source();
+    return source;
+  },
+
+  async get(url, params, source) {
     var result = await Vue.axios
-      .get(`${url}`, { params: params })
+      .get(`${url}`, { params: params, cancelToken: source ? source.token : null})
       .catch((error) => {
         throw new Error(`[RWV] ApiService ${error}`)
       });

@@ -62,10 +62,16 @@ const MapState = {
         });
     },
 
-    async addMarkerLayer(mapResource, mapOption) {
+    async addMarkerLayer(mapResource, mapOption) 
+    {
+        var source = null;
+        if (mapOption) {
+            var source = ApiService.getCancelationToken();
+            mapOption.sources.push(source);
+        }
+
         this.addLoading(mapResource.id);
-        Vue.set(mapOption, 'loadingThings', mapOption.loadingThings ? mapOption.loadingThings + 1 : 1);
-        var result = mapResource.cachedData || await ApiService.get(mapResource.resourceApi, (mapResource.locale ? { locale: Vue.$getLocale() } : null ));
+        var result = mapResource.cachedData || await ApiService.get(mapResource.resourceApi, (mapResource.locale ? { locale: Vue.$getLocale() } : null ), source);
         result.data.forEach(m => {
             var iconUrl = typeof mapResource.icon === "function" ? mapResource.icon(m) : mapResource.icon;
             var customIcon = L.icon({ iconUrl: require('@/assets/markers/' + iconUrl), iconSize: mapResource.iconSize ? mapResource.iconSize : [17, 17] });
@@ -98,27 +104,19 @@ const MapState = {
 
         this.setVisibleMarkerLayers();
         this.removeLoading(mapResource.id);
-        Vue.set(mapOption, 'loadingThings', mapOption.loadingThings - 1);
-    },
-
-    setVectorial(mapResource, vectorial) {
-        var layers = this.preloadedTimeLineLayers.filter(layer => layer.mapResource.id == mapResource.id);
-        layers.forEach(l => {
-            if (vectorial)
-                l._baseLayer._url = l._baseLayer._url.replace('map', (vectorial ? l.urlVec : l.urlIso));
-            else
-                l._baseLayer._url = l._baseLayer._url.replace('vec', 'map');
-        });
-        this.showingVectors = vectorial;
-        this.setVisibleTimeLineLayers();
-
     },
 
     async addTimeLineLayer(mapResource, mapOption) {
+
+        var source = null;
+        if (mapOption) {
+            var source = ApiService.getCancelationToken();
+            mapOption.sources.push(source);
+        }
+    
         this.addLoading(mapResource.id);
-        Vue.set(mapOption, 'loadingThings', mapOption.loadingThings ? mapOption.loadingThings + 1 : 1);
         var vectorial = mapResource.defaultVectors ? true : false;
-        var result = await ApiService.get(mapResource.resourceApi);
+        var result = await ApiService.get(mapResource.resourceApi, null, source);
         result.data.forEach(res => {
             if (true) { //(this.preloadedTimeLineLayers.find(p => p.url == res.url) == null) {
                 var tileLayer = L.tileLayer(BASE_URL_PORTUS + res.url + '{d}{h}/' + (vectorial ? res.urlVec : res.urlIso) + '//{z}/{x}/{y}.png', {
@@ -161,8 +159,21 @@ const MapState = {
         this.setVisibleTimeLineLayers();
         this.showingVectors = vectorial;
         this.removeLoading(mapResource.id);
-        Vue.set(mapOption, 'loadingThings', mapOption.loadingThings - 1);
     },
+
+    setVectorial(mapResource, vectorial) {
+        var layers = this.preloadedTimeLineLayers.filter(layer => layer.mapResource.id == mapResource.id);
+        layers.forEach(l => {
+            if (vectorial)
+                l._baseLayer._url = l._baseLayer._url.replace('map', (vectorial ? l.urlVec : l.urlIso));
+            else
+                l._baseLayer._url = l._baseLayer._url.replace('vec', 'map');
+        });
+        this.showingVectors = vectorial;
+        this.setVisibleTimeLineLayers();
+
+    },
+
 
     // La visibilidad de un marker viene dada por:
     // 1. El campo visible, establecido por el usuario mediante el checkbox del submenu de recursos (salvo unchecked por defecto)
@@ -303,6 +314,7 @@ const MapState = {
         this.map.eachLayer(function (layer) {
             if (layer.mapResource && layer.mapResource.id == mapResourceId) {
                 layer.remove();
+                console.log('layer removed');
                 if (layer.mapResource.type == "TimeLineLayer" && layer._baseLayer) {
                     layer._baseLayer.options.logosImgs.forEach(url => {
                         ms.removeMapLogo(url);
@@ -317,6 +329,8 @@ const MapState = {
         this.preloadedTimeLineLayers = this.preloadedTimeLineLayers.filter((plt) => { return plt.mapResource.id != mapResourceId });
         this.preloadedMarkers = this.preloadedMarkers.filter((plm) => { return plm.mapResource.id != mapResourceId });
         
+        if (this.currentTimeLineLayer && this.currentTimeLineLayer.mapResource.id == mapResourceId && this.map.timeDimensionControl) 
+            this.removePlayerControl();
     },
 
     removePlayerControl() {
@@ -340,22 +354,31 @@ const MapState = {
     setMapOption(mapOptionId, active) {
         var mapOption = this.mapOptions.find(m => m.id == mapOptionId);
         if (active) {
-          this.checkMultipleAllowed(mapOption)
-          mapOption.mapResources.forEach(resId => {
-              var mapResource = this.getMapResource(resId);
-              if (mapResource.type == "MarkerLayer")
-                this.addMarkerLayer(mapResource, mapOption);
-              if (mapResource.type == "TimeLineLayer")
-                this.addTimeLineLayer(mapResource, mapOption);
-          });
+            mapOption.sources = mapOption.sources || [];
+            this.checkMultipleAllowed(mapOption)
+            mapOption.mapResources.forEach(resId => {
+                var mapResource = this.getMapResource(resId);
+                if (mapResource.type == "MarkerLayer")
+                    this.addMarkerLayer(mapResource, mapOption);
+                if (mapResource.type == "TimeLineLayer")
+                    this.addTimeLineLayer(mapResource, mapOption);
+            });
         }
         else {
+            // Checkbox off on the fly: cancelamos requests a la Api
+            if (mapOption.sources.length > 0) {
+                mapOption.sources.forEach(s => {
+                    s.cancel('canceled');
+                });
+                mapOption.sources = [];
+                this.loadingThings = this.loadingThings.filter(l => mapOption.mapResources.indexOf(l) == -1);
+                console.log('requiest canceled')
+            }
             mapOption.mapResources.forEach(resId => {
               this.removeMapResource(resId);
             });
-            if (this.preloadedTimeLineLayers.length == 0 && this.map.timeDimensionControl) 
-                this.removePlayerControl();
         }
+
         // Si activamos el mapOption de manera programática, 
         // debemos también marcar/desmarcar el checkbox
         if (mapOption.active != active)

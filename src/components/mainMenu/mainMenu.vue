@@ -22,7 +22,7 @@
                             type="checkbox" 
                             v-model="mapOption.active" 
                             :value="mapOption.active" 
-                            :disabled="mapOption.loadingThings > 0"
+                            :disabled="false"
                             @change="mapOptionChanged(mapOption)" />
                       {{ minimized ? '' : $t(mapOption.name) }}
                   </label>
@@ -79,9 +79,9 @@ export default {
   methods: {
     mapOptionChanged: function(mapOption) {
         this.mapState.setMapOption(mapOption.id, mapOption.active);
-        setTimeout(() => {
-          mapOption.loadingThings = 0;
-        }, 10000);
+        // setTimeout(() => {
+        //   mapOption.loadingThings = 0;
+        // }, 10000);
         // if (mapOption.active) {
         //   Vue.set(mapOption, 'loading', true);
         //   setTimeout(() => {
