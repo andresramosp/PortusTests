@@ -94,7 +94,26 @@ export default {
     user-select: none;
 }
 
-/* Mover a CSS */
+/* Mover a custom-controls CSS */
+
+.dx-texteditor.dx-editor-outlined {
+  border-radius: 0px !important;
+}
+
+.dx-list-item-content {
+  padding: 0px !important;
+}
+
+.dx-popup-wrapper > .dx-overlay-content {
+  border: 0px;
+  border-radius: 0px;
+}
+
+.dx-dropdownlist-popup-wrapper .dx-popup-content {
+  padding: 0px;
+}
+
+/* Mover a themes CSS */
 
 .darkTheme .card-body {
   background-color: rgba(0, 0, 0, 0.7);

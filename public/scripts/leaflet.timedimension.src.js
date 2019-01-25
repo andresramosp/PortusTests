@@ -1798,6 +1798,7 @@ L.Control.TimeDimension = L.Control.extend({
         }
          if (this.options.speedSlider && !this.options.minimized) {
             this._sliderSpeed = this._createSliderSpeed(this.options.styleNS + ' timecontrol-slider timecontrol-speed', container);
+            this._sliderSpeed.tale = L.DomUtil.create('div', this.options.styleNS + ' slider slider-speed-tale', container);
         }
 
         if (this.options.backwardButton) {

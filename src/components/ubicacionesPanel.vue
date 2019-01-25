@@ -1,6 +1,6 @@
  <template>
  <div class="ubicacionesPanel" :class="{ 'leftAlign': align == 'right', 'rightAlign': align == 'left', 'blueTheme': theme == 'blueTheme', 'darkTheme': theme == 'darkTheme' }">
-     <img :src="require('@/assets/icons/localidad.png')" style="float: left; margin-right: 5px" />
+     <img :src="require('@/assets/icons/ubicaciones.png')" width="27" style="float: left;" />
      <dx-autocomplete style="float: right" 
             :data-source="ubicacionesList"
             :maxItemCount="200"
@@ -16,7 +16,7 @@
             width="300px" >
 
            <div slot="itemTemplate" slot-scope="item">
-              <img :src="require('@/assets/icons/' + item.tipoUbicacion.toLowerCase() + '.png')" />
+              <img width="27" :src="require('@/assets/icons/' + item.tipoUbicacion.toLowerCase() + '.png')" />
               <span style="font-size: 14px; margin-left: 5px">{{ item.nombre }}</span>
             </div>
             

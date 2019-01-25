@@ -160,6 +160,11 @@ export default {
     border-radius: 0px !important;
 }
 
+ .datePicker .dx-texteditor-input {
+  background: black;
+  color: white;
+}
+
 .datePicker-left {
   /* left: 128px; */
   left: 150px;
@@ -167,7 +172,7 @@ export default {
 
 .datePicker-right {
   /* left: 380px; */
-  left: 355px;
+  left: 361px;
 }
 
 .dx-texteditor-input {
