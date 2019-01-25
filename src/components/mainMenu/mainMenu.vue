@@ -3,8 +3,10 @@
   
   <div class='layersPanel unselectable' :class="[align == 'left' ? 'leftAlign' : 'rightAlign', theme]">
     <img @click="toggleMinimized()" 
-         width="27" style="position: absolute; z-index: 5; left: -10px; cursor: pointer;" 
-         :src="!minimized ? require('@/assets/icons/replegar.png') : require('@/assets/icons/desplegar.png')" />
+         :class="[align == 'left' ? 'leftImgMinimizer' : 'rightImgMinimizer']"
+         width="27" 
+         style="position: absolute; z-index: 5; cursor: pointer;" 
+         :src="minimizerImgSrc" />
     <div v-for="optGrp in mapOptionsGroups" :key="optGrp.id">
        <b-row :class="optGrp.id" style="margin-left: 0px; margin-right: 0px">
           <b-card class="text-center panel-section" :class="[minimized ? 'minimized': '']" header-tag="header" >
@@ -28,7 +30,10 @@
               </b-row>
             </b-container>
           </b-card>
-          <SubMenu :mapOptionGroup="optGrp" :preloadedTimeLineLayers="mapState.preloadedTimeLineLayers" :preloadedMarkers="mapState.preloadedMarkers" />
+          <SubMenu :mapOptionGroup="optGrp" 
+                :preloadedTimeLineLayers="mapState.preloadedTimeLineLayers" 
+                :preloadedMarkers="mapState.preloadedMarkers"
+                :minimized="minimized" />
        </b-row>
     </div>
   </div>
@@ -62,23 +67,21 @@ export default {
     mapOptions: { type: Array, default: [], required: false },
     mapOptionsGroups: { type: Array, default: [], required: false }
   },
-  // watch: {
-  //   'mapState.loadingThings' : function(oldVal, newVal) {
-  //       this.mapOptions.forEach(opt => {
-  //         if (newVal.find(l => opt.mapResources.indexOf(l) != -1))
-  //            Vue.set(opt, 'loading', true);
-  //         else 
-  //            Vue.set(opt, 'loading', false);
-  //       });
-  //   }
-  // },
+  computed: {
+    minimizerImgSrc() {
+      if (this.align == 'left') 
+        return !this.minimized ? require('@/assets/icons/replegar.png') : require('@/assets/icons/desplegar.png');
+      else 
+        return !this.minimized ? require('@/assets/icons/desplegar.png') : require('@/assets/icons/replegar.png')
+    }
+  },
   mounted() {},
   methods: {
     mapOptionChanged: function(mapOption) {
         this.mapState.setMapOption(mapOption.id, mapOption.active);
         setTimeout(() => {
           mapOption.loadingThings = 0;
-        }, 5000);
+        }, 10000);
         // if (mapOption.active) {
         //   Vue.set(mapOption, 'loading', true);
         //   setTimeout(() => {
@@ -96,6 +99,15 @@ export default {
 </script>
 
 <style scoped>
+
+.leftImgMinimizer {
+  left: -10px
+}
+
+.rightImgMinimizer {
+  right: -10px
+}
+
 .leftAlign {
   left: 12px;
 }
@@ -163,6 +175,10 @@ input[type="checkbox"] {
   padding-right: 0px !important;
   padding-left: 4px !important;
 
+}
+
+.mapOptionLoading {
+  /* background: #dddddd; */
 }
 
 

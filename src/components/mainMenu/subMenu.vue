@@ -1,10 +1,14 @@
  <template>
- <div v-if="floatingOptions.length > 0">
+ <div v-if="floatingOptions.length > 0" 
+      class="subMenu" 
+      :class="{ 
+        'subMenuLeft': !minimized && align == 'left',
+        'subMenuLeftMin': minimized  && align == 'left',
+        'subMenuRight': !minimized && align == 'right',
+        'subMenuRightMin': minimized  && align == 'right'}" >
    <div class="darkThemeSub">
       <transition appear :appear-class="appearClass" appear-to-class="slide-menu-enter-active">
         <div class="floatingPanel fadeIn"  :class="{ 
-            'leftAlign': align == 'left', 
-            'rightAlign': align == 'right', 
             'predicciones': mapOptionGroup.id == 'predicciones',
             'tiempo_real': mapOptionGroup.id == 'tiempo_real',
             'historico': mapOptionGroup.id == 'historico',
@@ -19,7 +23,7 @@
           <!-- Ojo: ahora mismo solo aceptaría un combo por subMenu. Poner v-for como arriba para soportar más -->
           <b-form-select v-if="selectCombos.length > 0" text-field="name" value-field="name" :options="floatingOptions.filter(opt => opt.comboSelectId)" @change="setComboLayersVisibility" v-model="selectedOption" class="select-layers">
           </b-form-select>
-          <div style="padding: 7px">
+          <div style="padding: 7px; display: inline-block">
                <div class="form-check" v-for="floatingOption in floatingOptions.filter(opt => !opt.comboSelectId)" :key="floatingOptions.indexOf(floatingOption)">
                   <label class="form-check-label unselectable">
                     <input class="form-check-input" type="checkbox" v-model="floatingOption.active" @change="checkOptionChanged(floatingOption)" />
@@ -45,7 +49,8 @@ export default {
   props: {
     mapOptionGroup: { type: Object, default: null, required: false },
     preloadedTimeLineLayers: { type: Array },
-    preloadedMarkers: { type: Array}
+    preloadedMarkers: { type: Array},
+    minimized: { type: Boolean }
   },
   data() {
     return {
@@ -199,37 +204,53 @@ export default {
   transition: all 0.5s ease;
 }
 
+.subMenu {
+  position: absolute;
+  /* left: 330px */
+}
+
+.subMenuLeft {
+ left: 330px
+}
+
+.subMenuLeftMin {
+ left: 84px
+}
+
+.subMenuRight {
+ right: 330px
+}
+
+.subMenuRightMin {
+ right: 84px
+}
+
 .floatingPanel {
   text-align: left;
-  position: relative;
+  /* position: relative; */
   z-index: 2;
   /* right: 9px; */
   padding: 0px;
   border-radius: 0px;
   color: white;
   font-size: 13px;
-  min-width: 120px;
+  width: max-content;
+  min-width: 100px;
 }
 
 .singlePanel {
-  top: 50px;
+  margin-top: 45px;
+  
 }
 
 .selectPanel {
-  top: 12px;
+   margin-top: 10px;
 }
 
 select {
-  width: 100%;
+  /* width: 100%; */
 }
 
-.leftAlign {
-  left: 15px;
-}
-
-.rightAlign {
-  right: 15px;
-}
 
 .select-layers {
   height: 30px !important;
@@ -237,6 +258,7 @@ select {
   padding-right: 5px;
   padding-top: 2px;
   margin-bottom: 5px;
+  display: block;
 }
 
 </style>
