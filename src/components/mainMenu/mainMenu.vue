@@ -10,7 +10,13 @@
     <div v-for="optGrp in mapOptionsGroups" :key="optGrp.id">
        <b-row :class="optGrp.id" style="margin-left: 0px; margin-right: 0px">
           <b-card class="text-center panel-section" :class="[minimized ? 'minimized': '']" header-tag="header" >
-            <h6 slot="header" class="mb-0" :class="optGrp.id">{{ minimized ? $t(optGrp.nameMin) : $t(optGrp.name) }}</h6>
+            <h6 slot="header" class="mb-0" :class="optGrp.id">
+              {{ minimized ? $t(optGrp.nameMin) : $t(optGrp.name) }}
+               <img :src='require("@/assets/icons/info.png")'
+                  class="infoGroup"
+                  @click="openGroupInfo(optGrp.id)"
+                >
+            </h6>
             <b-container>
               <b-row >
                   <b-col v-for="mapOption in mapOptions.filter(opt => opt.group == optGrp.id)" :key="mapOption.id" cols="6" class="form-check text-left" style="padding-top: 2px;" >
@@ -79,26 +85,27 @@ export default {
   methods: {
     mapOptionChanged: function(mapOption) {
         this.mapState.setMapOption(mapOption.id, mapOption.active);
-        // setTimeout(() => {
-        //   mapOption.loadingThings = 0;
-        // }, 10000);
-        // if (mapOption.active) {
-        //   Vue.set(mapOption, 'loading', true);
-        //   setTimeout(() => {
-        //     Vue.set(mapOption, 'loading', false);
-        //   }, 1000);
-        // }
-        
     },
     toggleMinimized: function() {
       this.minimized = !this.minimized;
       localStorage.setItem('menu_minimized', this.minimized);
+    },
+    openGroupInfo: function(groupId) {
+      this.mapState.setPortusInfoPanel(groupId);
     }
   }
 };
 </script>
 
 <style scoped>
+
+.infoGroup {
+  margin-top: 2px;
+  float: right;
+  cursor: pointer;
+  width: 18px;
+  margin-right: 5px;
+}
 
 .leftImgMinimizer {
   left: -10px

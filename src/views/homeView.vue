@@ -9,6 +9,7 @@
    <LocationsWidget :ubicacion="mapState.ubicacionSelected" />
    <LogosList :logos="mapState.mapLogos" :defaultLogo="defaultLogo" />
    <DataStackPanel />
+   <PuertosInfoPanel :sourceId="mapState.puertosInfoSourceId" />
 </div>
 </template>
 
@@ -24,6 +25,7 @@ import RegionesPanel from "@/components/regionesPanel.vue";
 import LocationsWidget from "@/components/locationsWidget/locationsWidget.vue";
 import LogosList from "@/components/logosList.vue";
 import DataStackPanel from "@/components/dataStackPanel.vue";
+import PuertosInfoPanel from "@/components/puertosInfoPanel.vue";
 import { MapOptions } from '@/common/mapResourceManager';
 import { MapOptionsGroups } from '@/common/mapResourceManager';
 
@@ -38,7 +40,8 @@ export default {
     RegionesPanel,
     LocationsWidget,
     LogosList,
-    DataStackPanel
+    DataStackPanel,
+    PuertosInfoPanel
   },
   data () {
     return {
@@ -69,6 +72,62 @@ export default {
 <style>
 
 #app { height: 100%;}
+
+@media screen and (max-height: 550px) {
+   /* .layersPanel, .leaflet-bar-timecontrol { */
+   .layersPanel {
+      -webkit-transform: scale(0.65);
+    -webkit-transform-origin: 0 0;
+    -webkit-transition:.3s;
+    transform: scale(0.65);
+    transform-origin: 0 0;
+    transition:.3s;
+   }
+/* .playerOptions {
+    -webkit-transform: scale(0.7) translate(-30%,-0%);
+    -webkit-transition:.3s;
+    transform: scale(0.7) translate(-30%,-0%);
+    transition:.3s;
+   } */
+}
+
+@media screen and (min-height: 551px) and (max-height: 630px) {
+   /* .layersPanel, .leaflet-bar-timecontrol { */
+   .layersPanel {
+     -webkit-transform: scale(0.75);
+    -webkit-transform-origin: 0 0;
+    -webkit-transition:.3s;
+    transform: scale(0.75);
+    transform-origin: 0 0;
+    transition:.3s;
+   }
+/* .playerOptions {
+    -webkit-transform: scale(0.8) translate(-20%,-0%);
+    -webkit-transition:.3s;
+    transform: scale(0.8) translate(-20%,-0%);
+    transition:.3s;
+   } */
+}
+
+@media screen and (min-height: 631px) and (max-height: 700px) {
+  /* .layersPanel, .leaflet-bar-timecontrol { */
+   .layersPanel {
+      -webkit-transform: scale(0.9);
+    -webkit-transform-origin: 0 0;
+    -webkit-transition:.3s;
+    transform: scale(0.9);
+    transform-origin: 0 0;
+    transition:.3s;
+   }
+  /* .playerOptions {
+    -webkit-transform: scale(0.9) translate(-10%,-0%);
+    -webkit-transition:.3s;
+    transform: scale(0.9) translate(-10%,-0%);
+    transition:.3s;
+   } */
+}
+
+
 
 .fadeIn {
     /* -webkit-animation: animat_show 1.2s;

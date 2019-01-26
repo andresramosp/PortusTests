@@ -33,6 +33,7 @@ const MapState = {
     currentRadar: null,
     dataObjectsList: [],
     bancosDatos: PC.user_preferences.banco_datos  != undefined ? PC.user_preferences.banco_datos : {},
+    puertosInfoSourceId: null,
 
     init(map) {
         this.map = map;
@@ -136,6 +137,7 @@ const MapState = {
                 );
                 tileLayer.mapResource = mapResource;
                 portusTimeLayer.mapResource = mapResource;
+                portusTimeLayer.mapOption = mapOption;
                 portusTimeLayer.visible = !mapResource.comboSelect
                                        || (mapResource.groupLayersBy && res[mapResource.groupLayersBy.field] == mapResource.comboSelect.defaultOption)
                                        || (mapResource.name ==  mapResource.comboSelect.defaultOption); 
@@ -366,6 +368,7 @@ const MapState = {
         }
         else {
             // Checkbox off on the fly: cancelamos requests a la Api
+            // OJO: cancela las que ya han llegado. Ver si quitar en response.
             if (mapOption.sources.length > 0) {
                 mapOption.sources.forEach(s => {
                     s.cancel('canceled');
@@ -444,6 +447,10 @@ const MapState = {
         var oldParamsIds = this.bancosDatos[markerId].map(p => p.id);
         var newParams = bancoDatos.filter(p => oldParamsIds.indexOf(p.id) == -1);
         this.bancosDatos[markerId] = this.bancosDatos[markerId].concat(newParams);
+    },
+
+    setPortusInfoPanel(sourceId) {
+        this.puertosInfoSourceId = sourceId;
     },
 
     // TODO: llevarse funcionalidad a MapUtils, o incluso crear un radar.service.js

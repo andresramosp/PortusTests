@@ -208,6 +208,9 @@ const DataPanelsUtils = {
         })
     },
 
+
+    // TODO: mover a userPrefs.service.js
+    
     saveDataUserPrefs(marker) {
         var cachedBancoDatos = JSON.parse(localStorage.getItem('banco_datos'));
         if (!cachedBancoDatos)

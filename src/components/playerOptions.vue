@@ -4,8 +4,8 @@
          @click="toggleMinimized()" 
          width="20" class="minimizerButton" 
          :src="!mapState.playerMinimized ? require('@/assets/icons/replegar.png') : require('@/assets/icons/desplegar.png')" />
-    <div v-show="!mapState.playerMinimized">
-       <img :src="mapState.predictionScaleImg" class="predictionScale fadeIn" />
+    <div v-show="!mapState.playerMinimized" >
+       <img :src="mapState.predictionScaleImg" class="predictionScale fadeIn playerOptions" />
          <dx-date-box
             class="datePicker datePicker-left fadeIn"
             :value="mapState.playerDateRangeFromValue"
@@ -22,10 +22,11 @@
             display-format="dd/MMM/yy"
             :use-mask-behavior="true"
           />
-       <img v-show='hasRadars' class="playerIcon radarsIcon fadeIn" @click="toggleRadars()" :src="require('@/assets/icons/vectors.png')" />   
-       <img v-show='hasVectors' class="playerIcon vectorsIcon fadeIn" @click="toggleVectors()" :src="require('@/assets/icons/vectors.png')" />
-       <img v-show='!isWidget' class="playerIcon predictionWidgetIcon fadeIn" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
-       <img v-show='!isWidget && hasStaticMaps' class="playerIcon staticMapsWidgetIcon fadeIn" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
+       <img v-show='hasRadars' class="playerIcon radarsIcon fadeIn playerOptions" @click="toggleRadars()" :src="require('@/assets/icons/vectors.png')" />   
+       <img v-show='hasVectors' class="playerIcon vectorsIcon fadeIn playerOptions" @click="toggleVectors()" :src="require('@/assets/icons/vectors.png')" />
+       <img v-show='!isWidget' class="playerIcon predictionWidgetIcon fadeIn playerOptions" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
+       <img v-show='!isWidget && hasStaticMaps' class="playerIcon staticMapsWidgetIcon fadeIn playerOptions" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
+       <img class="playerIcon infoPredIcon fadeIn playerOptions" @click="openPredictionInfo()" :src="require('@/assets/icons/info.png')" />   
     </div>
   </div>
 </template>
@@ -117,6 +118,11 @@ export default {
         this.mapState.setPlayerDateRangeValue(null, ev.value);
     },
 
+    openPredictionInfo() {
+      var sourceId = this.mapState.currentTimeLineLayer.mapOption.id;
+      this.mapState.setPortusInfoPanel(sourceId);
+    },
+
     toggleMinimized() {
       var currentValue = this.mapState.getMap().timeDimensionControl.options.minimized;
       this.mapState.setPlayerMinimized(!currentValue);
@@ -185,26 +191,32 @@ export default {
   position: absolute;
   z-index: 2;
   bottom: 107px;
-  width: 30px;
-  height: 30px;
+  width: 27px;
+  /* height: 30px; */
   cursor: pointer;
 }
 
 .predictionWidgetIcon {
-    left: 530px;
+    margin-left: 535px;
 }
 
 .vectorsIcon {
-    left: 65px;
+    left: 70px;
 }
 
 .radarsIcon {
-    left: 25px;
+    left: 30px;
 }
 
 .staticMapsWidgetIcon {
-    left: 490px;
+    left: 495px;
   
+}
+
+.infoPredIcon {
+    left: 596px;
+    bottom: 18px !important;
+    width: 20px;
 }
 
 

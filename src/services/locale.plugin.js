@@ -118,7 +118,7 @@ const LocalePlugin = {
         },
         prediccionesGroupMin: {
             es: "Pred.",
-            en: "Forecast"
+            en: "FC"
         },
         tiempoRealGroupMin: {
             es: "TR",

@@ -64,7 +64,6 @@ export default {
           window.scrollTo(0, document.body.scrollTop != undefined ? document.body.scrollTop + 370 : document.documentElement + 340);
         }, 1000);
       }
-      //localStorage.setItem('data_stack_panel', JSON.stringify(this.mapState.dataObjectsList));
     
   },
   methods: {

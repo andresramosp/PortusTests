@@ -75,8 +75,7 @@ export default {
   data() {
     return {
       mapState: MapState,
-      markerRef: null,
-      modalShow: false
+      markerRef: null
     };
   },
   computed: {
@@ -105,7 +104,6 @@ export default {
   watch: {
     markers: function() {
       if (this.markers.length > 0) {
-        this.modalShow = true;
         // Cogemos siempre el marker de más arriba 
         this.markerRef = this.markers[this.markers.length - 1]; 
       }

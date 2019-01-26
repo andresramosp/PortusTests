@@ -11,7 +11,7 @@
         >
         {{$t('{headerTiempoReal}')}}
         <img
-          :src='require("@/assets/icons/shareIcon.png")'
+          :src='require("@/assets/icons/info.png")'
           class="infoRTIcon"
           @click="toggleRTInfo"
           @mouseover="openRTInfo"
@@ -303,7 +303,7 @@ export default {
   margin-top: 2px;
   float: right;
   cursor: pointer;
-  width: 19px;
+  width: 18px;
   margin-left: 5px;
 }
 
