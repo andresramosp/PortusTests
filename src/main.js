@@ -31,6 +31,7 @@ async function StartApp() {
   var config = await fetch('portus.config.json')
   config = await config.json();
   config.user_preferences = UserPrefs.getUserPrefs();
+  config.mobile_device = isMobile();
 
   window.PC = config;
 

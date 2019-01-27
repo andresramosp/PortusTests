@@ -127,6 +127,28 @@ export default {
    } */
 }
 
+@media only screen and (max-device-width: 768px) and (orientation: portrait) {
+
+   .layersPanel {
+      -webkit-transform: scale(2.0);
+    -webkit-transform-origin: 0 0;
+    -webkit-transition:.3s;
+    transform: scale(2.0);
+    transform-origin: 0 0;
+    transition:.3s;
+   }
+}
+@media only screen and (max-device-width: 768px) and (orientation: landscape){
+
+   .layersPanel {
+      -webkit-transform: scale(0.6);
+    -webkit-transform-origin: 0 0;
+    -webkit-transition:.3s;
+    transform: scale(0.6);
+    transform-origin: 0 0;
+    transition:.3s;
+   }
+}
 
 
 .fadeIn {
