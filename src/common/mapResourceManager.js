@@ -544,11 +544,18 @@ export const MapResources = [
   }
 ];
 
-export const MapOptionsGroups = [
-  { id: 'predicciones', name: '{prediccionesGroup}', nameMin: '{prediccionesGroupMin}', multiple: false, exclusiveWith: ['historico'] },
-  { id: 'tiempo_real', name: '{tiempoRealGroup}', nameMin: '{tiempoRealGroupMin}', multiple: true },
-  { id: 'historico', name: '{historicoGroup}', nameMin: '{historicoGroupMin}', multiple: true }
-]
+export const MapOptionsGroups = {
+  groups: [
+    { id: 'predicciones', name: '{prediccionesGroup}', nameMin: '{prediccionesGroupMin}', multiple: false },
+    { id: 'tiempo_real', name: '{tiempoRealGroup}', nameMin: '{tiempoRealGroupMin}', multiple: true },
+    { id: 'historico', name: '{historicoGroup}', nameMin: '{historicoGroupMin}', multiple: true }
+  ],
+  agregations: [
+    ['predicciones', 'tiempo_real'],
+    // ['predicciones', 'historico'],
+    // ['tiempo_real', 'historico']
+  ]
+}
 
 export const MapOptions = [
   // Predicciones

@@ -357,7 +357,9 @@ const MapState = {
         var mapOption = this.mapOptions.find(m => m.id == mapOptionId);
         if (active) {
             mapOption.sources = mapOption.sources || [];
-            this.checkMultipleAllowed(mapOption)
+            this.checkMultipleAllowed(mapOption);
+            this.checkAgregationAllowed(mapOption);
+            this.checkJustOneAnimation(mapOption);
             mapOption.mapResources.forEach(resId => {
                 var mapResource = this.getMapResource(resId);
                 if (mapResource.type == "MarkerLayer")
@@ -390,7 +392,7 @@ const MapState = {
     },
 
     checkMultipleAllowed(checkedMapOption) {
-        var optionGroup = this.mapOptionsGroups.find(optGrp => optGrp.id == checkedMapOption.group);
+        var optionGroup = this.mapOptionsGroups.groups.find(optGrp => optGrp.id == checkedMapOption.group);
           if (!optionGroup.multiple) {
               var otherCheckedOption = this.mapOptions.find(opt => opt.id != checkedMapOption.id && opt.group == optionGroup.id && opt.active);
               if (otherCheckedOption) {
@@ -398,6 +400,42 @@ const MapState = {
                  this.setMapOption(otherCheckedOption.id, false);
               }
           }
+    },
+
+    checkAgregationAllowed(checkedMapOption) {
+        // Sacamos el grupo de esta opción y los grupos hermanos permitidos
+        var optionGroup = this.mapOptionsGroups.groups.find(optGrp => optGrp.id == checkedMapOption.group);
+        var allowedSiblingGroups = [checkedMapOption.group];
+        this.mapOptionsGroups.agregations.forEach(ag => {
+            if (ag.indexOf(optionGroup.id) != -1) {
+                allowedSiblingGroups = allowedSiblingGroups.concat(ag.filter(g => g != checkedMapOption.group));
+            }
+        })
+        // Recorremos todos los mapOptions activos y si alguno no está entre
+        // los grupos permitidos, los desactivamos
+        var otherActiveOptions = this.getActiveMapOptions().filter(opt => opt.id != checkedMapOption.id);
+        otherActiveOptions.forEach(opt => {
+            if (allowedSiblingGroups.indexOf(opt.group) == -1){
+                opt.active = false;
+                this.setMapOption(opt.id, false);
+            }
+        })
+    },
+
+    isAnimationOption(mapOption) {
+        return mapOption.mapResources.map(res => this.getMapResource(res))
+                                     .filter(mr => mr.type == 'TimeLineLayer').length > 0;
+    },
+
+    checkJustOneAnimation(checkedMapOption) {
+        if (this.isAnimationOption(checkedMapOption)) {
+            var otherActiveOptions = this.getActiveMapOptions().filter(opt => opt.id != checkedMapOption.id);
+            var otherActiveAnimationOptions = otherActiveOptions.filter(opt => this.isAnimationOption(opt));
+            otherActiveAnimationOptions.forEach(opt => {
+                opt.active = false;
+                this.setMapOption(opt.id, false);
+            })
+        }
     },
 
     addLoading(thing) {

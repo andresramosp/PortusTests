@@ -4,10 +4,10 @@
   <div class='layersPanel unselectable' :class="[align == 'left' ? 'leftAlign' : 'rightAlign', theme]">
     <img @click="toggleMinimized()" 
          :class="[align == 'left' ? 'leftImgMinimizer' : 'rightImgMinimizer']"
-         width="27" 
+         width="25" 
          style="position: absolute; z-index: 5; cursor: pointer;" 
          :src="minimizerImgSrc" />
-    <div v-for="optGrp in mapOptionsGroups" :key="optGrp.id">
+    <div v-for="optGrp in mapOptionsGroups.groups" :key="optGrp.id">
        <b-row :class="optGrp.id" style="margin-left: 0px; margin-right: 0px">
           <b-card class="text-center panel-section" :class="[minimized ? 'minimized': '']" header-tag="header" >
             <h6 slot="header" class="mb-0" :class="optGrp.id">
@@ -71,7 +71,7 @@ export default {
   },
   props: {
     mapOptions: { type: Array, default: [], required: false },
-    mapOptionsGroups: { type: Array, default: [], required: false }
+    mapOptionsGroups: { type: Object, default: null, required: false }
   },
   computed: {
     minimizerImgSrc() {

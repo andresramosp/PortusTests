@@ -2,7 +2,7 @@
   <div v-show="playingTimeLineLayer">
     <img v-show="!isWidget" 
          @click="toggleMinimized()" 
-         width="20" class="minimizerButton" 
+         width="25" :class="[!mapState.playerMinimized ? 'minimizerButton' : 'minimizerButtonMin']" 
          :src="!mapState.playerMinimized ? require('@/assets/icons/replegar.png') : require('@/assets/icons/desplegar.png')" />
     <div v-show="!mapState.playerMinimized" >
        <img :src="mapState.predictionScaleImg" class="predictionScale fadeIn playerOptions" />
@@ -22,8 +22,8 @@
             display-format="dd/MMM/yy"
             :use-mask-behavior="true"
           />
-       <img v-show='hasRadars' class="playerIcon radarsIcon fadeIn playerOptions" @click="toggleRadars()" :src="require('@/assets/icons/puntosRadar.png')" />   
-       <img v-show='hasVectors' class="playerIcon vectorsIcon fadeIn playerOptions" @click="toggleVectors()" :src="require('@/assets/icons/vectors.png')" />
+       <img v-show='hasRadars' class="playerIcon radarsIcon fadeIn playerOptions" @click="toggleRadars()" :src="mapState.showingRadars ?  require('@/assets/icons/puntosRadarActivated.png') : require('@/assets/icons/puntosRadar.png')" />   
+       <img v-show='hasVectors' class="playerIcon vectorsIcon fadeIn playerOptions" @click="toggleVectors()" :src="mapState.showingVectors ?  require('@/assets/icons/vectorsActivated.png') : require('@/assets/icons/vectors.png')" />
        <img v-show='!isWidget' class="playerIcon predictionWidgetIcon fadeIn playerOptions" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
        <img v-show='!isWidget && hasStaticMaps' class="playerIcon staticMapsWidgetIcon fadeIn playerOptions" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
        <img class="playerIcon infoPredIcon fadeIn playerOptions" @click="openPredictionInfo()" :src="require('@/assets/icons/info.png')" />   
@@ -137,21 +137,26 @@ export default {
   position: absolute;
     z-index: 5;
     left: 3px;
-    bottom: 75px;
+    bottom: 78px;
+    cursor: pointer;
+}
+
+.minimizerButtonMin {
+    position: absolute;
+    z-index: 5;
+    left: 3px;
+    bottom: 72px;
     cursor: pointer;
 }
 
 .predictionScale {
     position: absolute;
     z-index: 2;
-    /* left: 55%; */
-    /* right: 10px; */
-    /* bottom: -3px; */
     padding: 10px;
     border-radius: 6px;
-    width: 380px;
-    height: 50px;
-    left: 100px;
+    width: 320px;
+    height: 43px;
+    left: 135px;
     bottom: 95px;
 }
 
@@ -190,7 +195,7 @@ export default {
 .playerIcon {
   position: absolute;
   z-index: 2;
-  bottom: 107px;
+  bottom: 102px;
   width: 27px;
   /* height: 30px; */
   cursor: pointer;
