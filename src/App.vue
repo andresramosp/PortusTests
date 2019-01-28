@@ -10,8 +10,9 @@
   };
 </script>
 
-<style scoped>
+<style>
   #app { height: 100%;}
+  @import './assets/styles/portus.css';
 </style>
 
 

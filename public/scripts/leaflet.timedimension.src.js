@@ -1777,7 +1777,7 @@ L.Control.TimeDimension = L.Control.extend({
 
     initialize: function(options) {
         L.Control.prototype.initialize.call(this, options);
-        this._dateUTC = false;
+        this._dateUTC = true;
         this._timeDimension = this.options.timeDimension || null;
     },
 
@@ -2232,7 +2232,9 @@ L.Control.TimeDimension = L.Control.extend({
     },
 
     _getDisplayDateFormat: function(date) {
-        return this._dateUTC ? date.toISOString() : date.toLocaleString();
+        //return this._dateUTC ? date.toISOString() : date.toLocaleString();
+        var options = { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'UTC' };
+        return this._dateUTC ? date.toLocaleDateString('es-ES', options).replaceAll(',','').replaceAll('.','') : date.toLocaleString();
     },
     _getDisplaySpeed: function(fps) {
         return fps + 'fps';

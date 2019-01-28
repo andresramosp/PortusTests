@@ -224,8 +224,9 @@ const MapState = {
                 var date = new Date();
                 date.setUTCHours(0, 0, 0, 0);
                 var predHours = (preLayer._baseLayer.options.numDays) * 24; 
-                ms.maxPredictionDate = MapUtils.convertYMDHToDate(preLayer._baseLayer.options.strLastate);
-                ms.map.options.timeDimensionOptions.timeInterval = 'PT' + predHours + 'H/' + ms.maxPredictionDate.toISOString();
+                ms.maxPredictionDate = MapUtils.convertYMDHToDateStr(preLayer._baseLayer.options.strLastate);
+                ms.map.options.timeDimensionOptions.timeInterval = 'PT' + predHours + 'H/' + ms.maxPredictionDate;
+                //ms.map.options.timeDimensionOptions.timeInterval = 'PT' + predHours + 'H/' + ms.maxPredictionDate.toLocalTime().toISOString();
                 ms.map.timeDimension.initialize(ms.map.options.timeDimensionOptions);
                 ms.map.timeDimension.setCurrentTimeIndex(0);
                 if (!ms.map.timeDimensionControl) {
@@ -447,6 +448,10 @@ const MapState = {
         this.loadingThings = this.loadingThings.filter(t => { return t != thing });
     },
 
+    isLoading(thing) {
+        return this.loadingThings.find(t => t == thing) != null;
+    },
+
     setHeapedPopup(popup) {
         this.heapedPopup = popup;
         popup.openOn(this.map);
@@ -504,6 +509,7 @@ const MapState = {
             // podríamos crear un marker usando las lat/lon calculadas. Lo mantengo porque igualmente
             // hemos de traer esos puntos por si queremos mostrar la malla auxiliar, y porque así se
             // garantiza que el cálculo coincide con un punto-radar existente en BD.
+            this.addLoading('puntosRadar');
             var requestPoints = await ApiService.get('puntosRadar/' + layer.idDominio);
             this.radarPoints = requestPoints.data;
 
@@ -518,6 +524,7 @@ const MapState = {
             });
             
             this.addRadarPointsLayer(this.radarPoints, layer);
+            this.removeLoading('puntosRadar');
         }
     },
 
@@ -528,9 +535,11 @@ const MapState = {
             this.radarPointMarker.remove();
         this.map.off("mousemove");
         this.currentRadar = null;
+        this.showingRadars = false;
     },
 
     async getRadarLastData(radar, lat, lon, date, marker) {
+        this.addLoading('radarData');
         var lastData = await ApiService
                             .get('lastData/radar/' 
                             + radar.id
@@ -542,6 +551,7 @@ const MapState = {
         marker.lastDataComponent  = new Vue({ ...LastDataPopup, propsData: { marker: marker, data: lastData.data, radarPoint: true } }).$mount()
         marker.bindPopup(marker.lastDataComponent.$el, { maxWidth: 560 });
         marker.openPopup();
+        this.removeLoading('radarData');
     },
 
     calculateClosestRadarPoint(mouseLatLng, radar) {

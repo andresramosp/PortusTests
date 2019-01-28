@@ -292,7 +292,7 @@ export const MapResources = [
     icon: function (m) {
       return (1 <= m.estado && m.estado <= 2) ? 'estacion-salinidad-na.png' : 'estacion-salinidad.png'
     },
-    iconSize: [25, 25],
+    iconSize: [27, 27],
     showAll: true,
     locale: true,
     cached: true,
@@ -308,7 +308,7 @@ export const MapResources = [
     icon: function (m) {
       return (1 <= m.estado && m.estado <= 2) ? 'estacion-presionAtm-na.png' : 'estacion-presionAtm.png'
     },
-    iconSize: [25, 25],
+    iconSize: [27, 27],
     showAll: true,
     locale: true,
     cached: false,
@@ -378,7 +378,7 @@ export const MapResources = [
     showAll: false,
     locale: true,
     cached: false,
-    iconSize: [25, 25],
+    iconSize: [18, 18],
     preventHeaping: false
   },
   {
@@ -404,11 +404,12 @@ export const MapResources = [
     markerClass: MarkerClass.EstacionHist,
     minZoom: 0,
     icon: 'estacion-hist-oleaje.png',
-    iconSize: [25, 25],
+    iconSize: [24, 24],
     showAll: true,
     locale: true,
     cached: true,
-    preventHeaping: true
+    preventHeaping: true,
+    subOption: 'Estaciones'
   },
   {
     id: 'hist-markers-estaciones-salinidad',
@@ -418,11 +419,12 @@ export const MapResources = [
     markerClass: MarkerClass.EstacionHist,
     minZoom: 0,
     icon: 'estacion-hist-salinidad.png',
-    iconSize: [25, 25],
+    iconSize: [24, 24],
     showAll: true,
     locale: true,
     cached: true,
-    preventHeaping: true
+    preventHeaping: true,
+    subOption: 'Estaciones'
   },
   {
     id: 'hist-markers-modelos-oleaje',
@@ -431,8 +433,9 @@ export const MapResources = [
     resourceApi: 'puntosMalla/hist/WAVE',
     markerClass: MarkerClass.PuntoMallaHist, 
     minZoom: 0,
-    iconSize: [25, 25],
+    iconSize: [17, 17],
     icon: 'punto-malla-hist-oleaje.png', 
+    subOption: 'Puntos Modelo'
   },
   {
     id: 'hist-markers-estaciones-viento',
@@ -442,11 +445,12 @@ export const MapResources = [
     markerClass: MarkerClass.EstacionHist,
     minZoom: 0,
     icon: 'estacion-hist-viento.png',
-    iconSize: [25, 25],
+    iconSize: [24, 24],
     showAll: true,
     locale: true,
     cached: true,
-    preventHeaping: true
+    preventHeaping: true,
+    subOption: 'Estaciones'
   },
   {
     id: 'hist-markers-modelos-viento',
@@ -455,8 +459,9 @@ export const MapResources = [
     resourceApi: 'puntosMalla/hist/WIND',
     markerClass: MarkerClass.PuntoMallaHist, 
     minZoom: 0,
-    iconSize: [25, 25],
+    iconSize: [13, 13],
     icon: 'punto-malla-hist-viento.png', 
+    subOption: 'Puntos Modelo'
   },
   {
     id: 'hist-markers-estaciones-corrientes',
@@ -466,11 +471,12 @@ export const MapResources = [
     markerClass: MarkerClass.EstacionHist,
     minZoom: 0,
     icon: 'estacion-hist-corrientes.png',
-    iconSize: [25, 25],
+    iconSize: [24, 24],
     showAll: true,
     locale: true,
     cached: true,
-    preventHeaping: true
+    preventHeaping: true,
+    subOption: 'Estaciones'
   },
   {
     id: 'hist-markers-estaciones-nivmar',
@@ -480,11 +486,12 @@ export const MapResources = [
     markerClass: MarkerClass.EstacionHist,
     minZoom: 0,
     icon: 'estacion-hist-nivmar.png',
-    iconSize: [25, 25],
+    iconSize:  [24, 24],
     showAll: true,
     locale: true,
     cached: true,
-    preventHeaping: true
+    preventHeaping: true,
+    subOption: 'Estaciones'
   },
   {
     id: 'hist-markers-estaciones-temp-agua',
@@ -494,11 +501,12 @@ export const MapResources = [
     markerClass: MarkerClass.EstacionHist,
     minZoom: 0,
     icon: 'estacion-hist-tempAgua.png',
-    iconSize: [25, 25],
+    iconSize:  [24, 24],
     showAll: true,
     locale: true,
     cached: true,
-    preventHeaping: true
+    preventHeaping: true,
+    subOption: 'Estaciones'
   },
   {
     id: 'hist-markers-estaciones-agitacion',
@@ -508,11 +516,12 @@ export const MapResources = [
     markerClass: MarkerClass.EstacionHist,
     minZoom: 0,
     icon: 'estacion-hist-agitacion.png',
-    iconSize: [25, 25],
+    iconSize:  [24, 24],
     showAll: true,
     locale: true,
     cached: true,
-    preventHeaping: true
+    preventHeaping: true,
+    subOption: 'Estaciones'
   },
   {
     id: 'hist-markers-estaciones-presion-aire',
@@ -522,11 +531,12 @@ export const MapResources = [
     markerClass: MarkerClass.EstacionHist,
     minZoom: 0,
     icon: 'estacion-hist-presionAtm.png',
-    iconSize: [25, 25],
+    iconSize: [24, 24],
     showAll: true,
     locale: true,
     cached: true,
-    preventHeaping: true
+    preventHeaping: true,
+    subOption: 'Estaciones'
   },
   {
     id: 'hist-markers-estaciones-temp-aire',
@@ -536,11 +546,12 @@ export const MapResources = [
     markerClass: MarkerClass.EstacionHist,
     minZoom: 0,
     icon: 'estacion-hist-tempAire.png',
-    iconSize: [25, 25],
+    iconSize: [24, 24],
     showAll: true,
     locale: true,
     cached: true,
-    preventHeaping: true
+    preventHeaping: true,
+    subOption: 'Estaciones'
   }
 ];
 

@@ -1,6 +1,6 @@
 <template>
 
-    <b-container style="margin-top: 15px">
+    <b-container style="margin-top: 15px" >
         <b-row v-if="hrefPropietario" style="margin-bottom: 10px">
             <b-col col-md="12" offset-md="8">
                  <a :href="hrefPropietario" target='_blank'>
@@ -169,3 +169,7 @@ export default {
 };
 
 </script>
+
+<style scoped>
+
+</style>

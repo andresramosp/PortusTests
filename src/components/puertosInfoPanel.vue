@@ -46,7 +46,8 @@ export default {
         "pred_viento": { es: 'info_predves.html', en: "info_predven.html"},
         "pred_corrientes": { es: 'info_predcorriente.html', en: "info_predcorrienteen.html"},
         "pred_temperatura": { es: 'info_temperatura.html', en: "info_temperaturaen.html"},
-        "pred_salinidad": { es: 'info_salinidad.html', en: "info_salinidaden.html"}
+        "pred_salinidad": { es: 'info_salinidad.html', en: "info_salinidaden.html"},
+        "tr_corrientes": { es: 'info_predcorriente.html', en: "info_predcorrienteen.html"},
       }
     };
   },

@@ -215,8 +215,16 @@ const MapUtils = {
     var day = str.substring(6, 8);
     var hour = str.substring(8, 10);
     var date = new Date(year, month - 1, day, hour);
-    date.setUTCHours(hour, 0, 0, 0);
+    date.setHours(hour, 0, 0, 0);
     return date;
+  },
+
+  convertYMDHToDateStr(str) {
+    var year = str.substring(0, 4);
+    var month = str.substring(4, 6);
+    var day = str.substring(6, 8);
+    var hour = str.substring(8, 10);
+    return year + '-' + ("0" + month).slice(-2) + '-' + ("0" + day).slice(-2) + 'T' + ("0" + hour).slice(-2) + ':00:00.000Z';
   },
 
   convertDateToYMDH(date) {
@@ -292,32 +300,6 @@ const MapUtils = {
 export default MapUtils
 
 
-
-        // this.asyncForEach(markersAtPoint, async m => {
-        //   var lastData = await ApiService.get('lastDataEstacion/' + m.id + '/' + m.variable + '?locale=es')
-        //   this.mergeLastDataStations(data, lastData.data);
-        //   if (m.popUp)  {
-        //     var comp = new Vue({...LastDataPopup, propsData: { marker: marker, data: data }}).$mount()
-        //     var html = comp.$el.innerHTML; 
-        //     marker.bindPopup(html, {
-        //       maxWidth : 560
-        //     });
-        //     marker.openPopup();
-        //   }
-        // });
-
-  // mergeLastDataStations(orig, source) {
-  //   var fechaAct = orig['Fecha'];
-  //   var fechaNew = source['Fecha'];
-  //   if (!fechaAct || !fechaNew) {
-  //     Object.assign(orig, source);
-  //   }
-  //   else {
-  //     var fechaMayor = new Date(fechaAct) >= new Date(fechaNew) ? fechaAct : fechaNew;
-  //     source['Fecha'] = fechaMayor;
-  //     Object.assign(orig, source);
-  //   }
-  // },
 
 
 

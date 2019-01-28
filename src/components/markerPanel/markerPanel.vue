@@ -15,8 +15,19 @@
     :title="modalTitle"
     class="popup"
     @hidden="cerrar"
+    title-template="titleTemplate"
 
   >
+
+   <div
+      slot="titleTemplate"
+      slot-scope="title"
+      style="background: #606060; color: white"
+      class="popupHeader"
+    >
+      {{modalTitle}}
+
+    </div>
 
     <b-tabs class='infoPanelClass' >
         <b-tab v-if="!esAntena()" :title="$t('{accesoADatosTab}')" active>

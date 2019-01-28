@@ -61,7 +61,7 @@ export default {
         return this.mapState.currentTimeLineLayer && this.mapState.currentTimeLineLayer.mapResource.vectors;
       },
       hasRadars() {
-        return this.mapState.currentRadar;
+        return this.mapState.currentRadar && !this.mapState.isLoading('puntosRadar');
       }
   },
   mounted() {
@@ -202,19 +202,19 @@ export default {
 }
 
 .predictionWidgetIcon {
-    margin-left: 535px;
+    margin-left: 510px;
 }
 
 .vectorsIcon {
-    left: 70px;
+    left: 95px;
 }
 
 .radarsIcon {
-    left: 30px;
+    left: 55px;
 }
 
 .staticMapsWidgetIcon {
-    left: 495px;
+    left: 470px;
   
 }
 

@@ -37,7 +37,8 @@ export default {
         mi.data = params.data.map(d => 
         { 
           return { 
-            fecha: new Date(d.fecha).toISOString().slice(0, 19).replace("T", " "), 
+            // fecha: new Date(d.fecha).toISOString().slice(0, 19).replace("T", " "), 
+            fecha: d.fecha.slice(0, 19), 
             latitud: d.latitud.toFixed(4),
             longitud: d.longitud.toFixed(4),
           } 

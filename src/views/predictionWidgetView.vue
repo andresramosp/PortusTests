@@ -50,9 +50,13 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 
 #app { height: 100%;}
+
+.leaflet-bottom {
+  padding-left: 45%;
+}
  
 </style>
 

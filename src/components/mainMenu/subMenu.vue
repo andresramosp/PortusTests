@@ -106,7 +106,8 @@ export default {
 
       var optionsGrp = this.mapState.getActiveMapOptions().filter(opt => opt.group == this.mapOptionGroup.id && !opt.nonToggleable);
       optionsGrp.forEach(opt => {
-          if (opt.mapResources.length > 1 || MapState.getMapResource(opt.mapResources[0]).groupLayersBy) {
+          var theOnlyMapResource = MapState.getMapResource(opt.mapResources[0]);
+          if (opt.mapResources.length > 1 || theOnlyMapResource.subOption || theOnlyMapResource.groupLayersBy) {
             opt.mapResources.forEach(resId => {
                 if (!MapState.getMapResource(resId).nonToggleable) {
                   var layersResouce = vm.mapState.getActiveLayers().filter(l => l.mapResource.id == resId)
@@ -163,6 +164,9 @@ export default {
               optionName = layer.mapResource.groupLayersBy.label + ': ' 
               + ((layer.mapResource.groupLayersBy.field.indexOf('.') == -1) ? layer[layer.mapResource.groupLayersBy.field]
               : layer[layer.mapResource.groupLayersBy.field.split('.')[0]][layer.mapResource.groupLayersBy.field.split('.')[1]]);
+          }
+          else if (layer.mapResource.subOption) {
+              optionName = layer.mapResource.subOption;
           }
           else {
             optionName = layer.mapResource.name;

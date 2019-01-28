@@ -179,7 +179,8 @@ export default {
       return columns;
     },
     formatRow(row) {
-      var formattedRow = { 'Fecha (GMT)': new Date(row.fecha).toISOString().slice(0, 19).replace("T", " "),  };
+      // var formattedRow = { 'Fecha (GMT)': new Date(row.fecha).toISOString().slice(0, 19).replace("T", " "),  };
+      var formattedRow = { 'Fecha (GMT)': row.fecha.slice(0, 19),  };
       formattedRow.QCs = [];
       row.datos.forEach(dato => {
         formattedRow[dato.nombreColumna] = this.formatParamValue(dato);

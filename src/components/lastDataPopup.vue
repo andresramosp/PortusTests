@@ -63,9 +63,10 @@ export default {
       var lastPositionValue;
       var tiempoReal = this.data;
       if (tiempoReal.datos.length > 0) {
-        dateValue = tiempoReal.fecha;
-        dateValue = new Date(dateValue);
-        dateValue = dateValue.toISOString().slice(0, 19).replace("T", " ") + " GMT";
+        dateValue = tiempoReal.fecha ? tiempoReal.fecha.slice(0, 19) + " GMT" : "";
+        // dateValue = tiempoReal.fecha;
+        // dateValue = new Date(dateValue);
+        // dateValue = dateValue.toISOString().slice(0, 19).replace("T", " ") + " GMT";
         var lastPositions = tiempoReal.datos.filter(tr => { return tr.nombreParametro == "Latitud" || tr.nombreParametro == "Longitud";});
         if (lastPositions.length > 0) {
           var latValue = parseFloat(lastPositions.find(lp => { return lp.nombreParametro == "Latitud"; }).valor).toFixed(2);

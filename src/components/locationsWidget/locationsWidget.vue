@@ -18,8 +18,7 @@
     <div
       slot="titleTemplate"
       slot-scope="title"
-      style="background: #606060; color: white"
-      class="largeTitle"
+      class="popupHeader"
     >
       {{titulo}}
       
@@ -186,13 +185,6 @@ export default {
 
 <style scoped>
 
-.largeTitle {
-  font-size: 15px; 
-}
-
-.smallTitle {
-  font-size: 14px; 
-}
 
 .shareInfoCenter {
     margin-top: 150px;

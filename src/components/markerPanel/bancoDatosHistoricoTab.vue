@@ -13,7 +13,7 @@
                 <img :src="require('@/assets/icons/collapsible.png')" style="width: 25px; height: 25px; cursor: pointer" v-b-toggle="'collapseAnuales'" />
                 <span v-b-toggle="'collapseAnuales'" style="font-size: 16px; font-weight: bold; cursor: pointer">Informes Anuales de todos los reportes de la estación</span>
                 <b-collapse visible id="collapseAnuales" class="mt-2">
-                    <b-card style="background-color: #f8f8f8;">
+                    <b-card >
                         <b-row style="margin-top: 10px">
                             <b-col cols="3">
                                 <b-form-select v-model="informeAnualSelected" :options="informesAnualesOptions" class="mb-3">
