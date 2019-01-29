@@ -24,9 +24,10 @@
           <b-form-select v-if="selectCombos.length > 0" text-field="name" value-field="name" :options="floatingOptions.filter(opt => opt.comboSelectId)" @change="setComboLayersVisibility" v-model="selectedOption" class="select-layers">
           </b-form-select>
           <div style="padding: 7px; display: inline-block">
-               <div class="form-check" v-for="floatingOption in floatingOptions.filter(opt => !opt.comboSelectId)" :key="floatingOptions.indexOf(floatingOption)">
+               <div v-for="floatingOption in floatingOptions.filter(opt => !opt.comboSelectId)" :key="floatingOptions.indexOf(floatingOption)">
                   <label class="form-check-label unselectable">
-                    <input class="form-check-input" type="checkbox" v-model="floatingOption.active" @change="checkOptionChanged(floatingOption)" />
+                    <img style="" width="16" :src="floatingOption.active ? require('@/assets/icons/check_activo.png') : require('@/assets/icons/check_inactivo.png')" >
+                    <input class="form-check-input" style="display: none" type="checkbox" v-model="floatingOption.active" @change="checkOptionChanged(floatingOption)" />
                       {{ $t(floatingOption.name) }}
                   </label>
               </div> 
@@ -263,6 +264,7 @@ select {
   padding-top: 2px;
   margin-bottom: 5px;
   display: block;
+  box-shadow: none !important;
 }
 
 </style>

@@ -77,7 +77,7 @@ export default {
       var vm = this;
       map.on("moveend", function() {
         vm.moveEndTimeOut = setTimeout(() => {
-          MapState.setVisibleTimeLineLayers();
+          //MapState.setVisibleTimeLineLayers();
           MapState.setVisibleMarkerLayers();
         }, 750);
       });

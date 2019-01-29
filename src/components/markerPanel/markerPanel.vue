@@ -4,7 +4,7 @@
  <dx-popup
     v-if="markers && markers.length > 0"
     :visible="true"
-    :position="{ at: 'center', offset: '0 -20' }"
+    :position="{ at: 'center', offset: '0 -60' }"
     :resize-enabled="false"
     :drag-enabled="true"
     :close-on-outside-click="false"
@@ -13,7 +13,7 @@
     height="auto"
     :shading="false"
     :title="modalTitle"
-    class="popup"
+    class="markerPanel popup"
     @hidden="cerrar"
     title-template="titleTemplate"
 
@@ -22,10 +22,15 @@
    <div
       slot="titleTemplate"
       slot-scope="title"
-      style="background: #606060; color: white"
       class="popupHeader"
     >
       {{modalTitle}}
+
+       <img
+        :src='require("@/assets/icons/x.png")'
+        class="closeIcon"
+        @click="cerrar"
+      >
 
     </div>
 
@@ -163,6 +168,7 @@ export default {
 
 <style scoped>
 
+
 .footer {
   border-top: 1px solid #ddd;
   margin-top: 20px;
@@ -172,6 +178,7 @@ export default {
   margin-top: 10px;
   float: right;
   margin-bottom: 10px;
+  padding-right: 10px;
 }
 
 .infoPanelClass {

@@ -9,27 +9,96 @@
     font-family: "Portus Font" !important;
 }
 
-.dx-overlay-wrapper, .popup , .dx-popup-wrapper{
+.dx-overlay-wrapper, .dx-popup-wrapper{
     font-family: "Portus Font" !important;
 }
 
-.dx-popup-wrapper > .dx-overlay-content {
-    background: black !important;
+/* Estilos marker panel */
+
+.markerPanel div:not(.dx-popup-title) {
+    background: rgb(74, 73, 79) !important;
     color:white !important;
     border-radius: 0px !important;
 }
 
-.dx-popup-content .card {
-    background-color:gray;
+.popupHeader {
+  font-size: 15px !important;
+  background: rgb(21, 91, 140) !important;
+  color: white !important;
+  padding: 7px !important;
+}
+
+.markerPanel .dx-button-content {
+    background: transparent;
+    border: 1.5px solid;
 }
 
 
-.popupHeader {
-    font-size: 15px;
-    background: #606060; 
-    color: white
+.markerPanel .dx-state-hover .dx-button-content {
+  background: rgb(21, 91, 140) !important;
+  /* border: 1px solid; */
+}
+
+#no-bootstrap .markerPanel .nav-link {
+  color: #eff1f3;
+  border-radius: 0px;
+  /* background-color: #2a377e;
+  border-color: #dee2e6 #dee2e6 #fff; */
+}
+
+#no-bootstrap .markerPanel .nav-link:hover {
+  color: white;
+  background-color: #606060;
+  border-color:transparent;
+}
+
+#no-bootstrap .markerPanel .nav-link.active {
+    color: #eff1f3;
+    background-color: rgb(21, 91, 140);
+    border-color: transparent;
+}
+
+.markerPanel .card {
+    background-color:gray !important;
 }
   
+#no-bootstrap .dx-texteditor.dx-editor-outlined {
+  border-radius: 0px !important;
+}
+
+#no-bootstrap .dx-list-item-content {
+  padding: 0px !important;
+}
+
+#no-bootstrap .dx-popup-wrapper > .dx-overlay-content {
+  border: 0px;
+  border-radius: 0px;
+}
+
+#no-bootstrap .dx-dropdownlist-popup-wrapper .dx-popup-content {
+  padding: 0px;
+}
+
+#no-bootstrap .markerPanel .dx-popup-content {
+  padding: 0px;
+}
+
+
+.form-control .btn:focus {
+  box-shadow: none !important;
+}
+
+.accordion-inner-content {
+  background: rgb(64, 63, 69);
+}
+
+.closeIcon {
+  float: right;
+  width: 20px;
+  cursor: pointer;
+}
+
+
 
 @media screen and (max-height: 550px) {
    /* .layersPanel, .leaflet-bar-timecontrol { */
@@ -133,26 +202,8 @@
     user-select: none;
 }
 
-/* Mover a custom-controls CSS */
 
-.dx-texteditor.dx-editor-outlined {
-  border-radius: 0px !important;
-}
 
-.dx-list-item-content {
-  padding: 0px !important;
-}
-
-.dx-popup-wrapper > .dx-overlay-content {
-  border: 0px;
-  border-radius: 0px;
-}
-
-.dx-dropdownlist-popup-wrapper .dx-popup-content {
-  padding: 0px;
-}
-
-/* Mover a themes CSS */
 
 .darkTheme .card-body {
   background-color: rgba(0, 0, 0, 0.7);

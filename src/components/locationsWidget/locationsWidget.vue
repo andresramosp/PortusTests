@@ -22,7 +22,11 @@
     >
       {{titulo}}
       
-       <span @click="cerrar" style="float:right; cursor:pointer">x</span>
+        <img
+        :src='require("@/assets/icons/x.png")'
+        class="closeIcon"
+        @click="cerrar"
+      >
        <!-- <span @click="toggleMinimized" style="float:right; cursor:pointer">_</span> -->
        <img
         :src='require("@/assets/icons/minimize.png")'

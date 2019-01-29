@@ -13,7 +13,24 @@
     :title="null"
     class="popup puertosInfoPopup"
     @hidden="cerrar"
+    title-template="titleTemplate"
   >
+
+  <div
+      slot="titleTemplate"
+      slot-scope="title"
+      class="popupHeader"
+    >
+      Titulo
+
+       <img
+        :src='require("@/assets/icons/x.png")'
+        class="closeIcon"
+        @click="cerrar"
+      >
+
+    </div>
+
     <iframe class="puertosInfoContent fadeIn" :src="url" width="900" height="425" frameborder="0"/>
   </dx-popup>
 </template>

@@ -21,7 +21,7 @@
               <b-row >
                   <b-col v-for="mapOption in mapOptions.filter(opt => opt.group == optGrp.id)" :key="mapOption.id" cols="6" class="form-check text-left" style="padding-top: 2px;" >
                     <label class="form-check-label lightable" :class="[mapOption.active ? 'mapOptionChecked' : '', mapOption.loadingThings > 0 ? 'mapOptionLoading' : '']" :title="minimized ? $t(mapOption.name) : ''" style="float: left; cursor: pointer">
-                      <img style="float: left" width="25" 
+                      <img style="float: left; margin-right: 2px" width="25" 
                             :class="[mapOption.active ? 'mapOptionChecked' : '']"
                             :src='require("@/assets/icons/mainMenu/" + mapOption.id + ".png")' >
                       <input class="form-check-input" style="display: none" 
@@ -100,7 +100,7 @@ export default {
 <style scoped>
 
 .infoGroup {
-  margin-top: 2px;
+  margin-top: 1px;
   float: right;
   cursor: pointer;
   width: 18px;

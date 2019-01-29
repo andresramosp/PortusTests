@@ -8,23 +8,32 @@
                  </a>
             </b-col>
         </b-row>
-        <b-row>
-            <b-col style="text-align: left; font-weight:600;" offset="4">
+        <b-row style="margin-bottom: 10px">
+            <b-col style="text-align: left; " offset="4">
                 {{$t('{bancoDatosTablas}')}}
             </b-col>
-            <b-col style="text-align: left; font-weight:600;">
+            <b-col style="text-align: left;">
                 {{$t('{bancoDatosGraficos}')}}
             </b-col>
         </b-row>
-        <b-row v-for="param in bancoDatos" :key="param.id">
-            <b-col style="font-weight:600;">
-                {{ param.nombre }}
+        <b-row v-for="param in bancoDatos" :key="param.id" >
+            <b-col style="padding-top: 2px">
+                <img style="float: left; margin-right: 7px; margin-top: -4px;" width="25" 
+                    :title="$t('{' + param.variable + '}')"
+                    :src='require("@/assets/icons/bancoDatos/" + param.variable.toLowerCase() + ".png")'>
+                <span>{{ param.nombre }}</span>
+            </b-col>
+            <b-col >
+                <label style="margin-bottom: 0px !important;">
+                    <img style="" width="18" :src="param.tableActive ? require('@/assets/icons/check_activo.png') : require('@/assets/icons/check_inactivo.png')" >
+                    <input class="form-check-input" style="display: none" type="checkbox" v-model="param.tableActive" @change="changeParam(param)" />
+                </label>
             </b-col>
             <b-col>
-                <input class="form-check-input" type="checkbox" v-model="param.tableActive" @change="changeParam(param)" />
-            </b-col>
-            <b-col>
-                <input class="form-check-input" type="checkbox" v-model="param.graphicActive" @change="changeGraphParam(param)" />
+                <label style="margin-bottom: 0px !important;">
+                    <img style="" width="18" :src="param.graphicActive ? require('@/assets/icons/check_activo.png') : require('@/assets/icons/check_inactivo.png')" >
+                    <input class="form-check-input" style="display: none" type="checkbox" v-model="param.graphicActive" @change="changeGraphParam(param)" />
+                </label>
             </b-col>
         </b-row>
         <b-row v-if="hasMareaAstronomica()" style="margin-top: 20px">

@@ -216,7 +216,7 @@ export default {
           groupDays.forEach(day => {
             var dayData = { 
               _date: day,
-              id: new Date(day).DateString(this.$getLocale() == 'es' ? 'es-ES' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+              id: new Date(day).toLocaleDateString(this.$getLocale() == 'es' ? 'es-ES' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
               data: this.formatData(result.data.filter(d => new Date(d.fecha).toISOString().split('T')[0] == day))
             }
             if (Object.keys(dayData.data[0]).length > this.minDataDay)

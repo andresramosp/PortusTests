@@ -97,8 +97,6 @@ export default {
 
     toggleVectors: function() {
       var currentPredLayer = this.mapState.currentTimeLineLayer
-      // MapState.removeMapResource(currentPredLayer.mapResource.id);
-      // MapState.addTimeLineLayer(currentPredLayer.mapResource, !this.mapState.showingVectors);
       MapState.setVectorial(currentPredLayer.mapResource, !this.mapState.showingVectors);
     },
 

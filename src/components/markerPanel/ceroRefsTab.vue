@@ -15,26 +15,20 @@
         </b-row>
         <b-row v-if="infoCero">
            <b-col  md="auto">
-            <label class="infoCero">
+            <label class="infoCero accordion-inner-content">
               {{infoCero}}
             </label>
           </b-col>
         </b-row>
         <b-row style="margin-top: 10px">
           <b-col md="auto">
-            <b-button size="sm" variant="outline-primary" @click="openInformeNivelacion()">
-              Informe nivelación
-             </b-button>
+             <dx-button :text="'Informe nivelación'" height="30" type="default" @click="openInformeNivelacion()" />
           </b-col >
           <b-col md="auto">
-            <b-button size="sm" variant="outline-primary" @click="openEsquemaDatum()">
-              Esquema Datum
-             </b-button>
+             <dx-button :text="'Esquema Datum'" height="30" type="default" @click="openEsquemaDatum()" />
           </b-col>
           <b-col md="auto">
-            <b-button size="sm" variant="outline-primary" @click="openDefiniciones()">
-              Definiciones
-             </b-button>
+             <dx-button :text="'Definiciones'" height="30" type="default" @click="openDefiniciones()" />
           </b-col>
         </b-row>
 </b-container>
@@ -46,9 +40,13 @@
 import { MarkerClass } from "@/common/enums";
 import ApiService from "@/services/api.service";
 import { INFORMES_URL, BASE_URL_PORTUS } from '@/common/config';
+import DxButton from "devextreme-vue/button";
 
 export default {
   name: "ceroRefsTab",
+  components: {
+    DxButton
+  },
   props: {
     mareografo: { type: Object, default: null, required: false }
   },
@@ -118,11 +116,9 @@ export default {
 }
 
 .infoCero {
-  border-radius: 5px;
-  border: 1px solid;
-  padding: 10px;
-  background-color: #f8f8f8;
-  font-weight: 600;
+    border-radius: 2px;
+    padding: 10px;
+    border: 1px solid white;
 }
 
 </style>

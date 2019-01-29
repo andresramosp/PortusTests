@@ -79,8 +79,8 @@ export default {
       var customIcon = L.icon({ 
         iconUrl: require('@/assets/markers/' + ubicacion.tipoUbicacion.toLowerCase() + '.png'), 
         iconSize: [30, 30], 
-        iconAnchor: [15, 30],
-        popupAnchor:  [0, -30] 
+        iconAnchor: [0, 30],
+        popupAnchor:  [15, -30] 
         });
 
       this.marker = L.marker([ubicacion.latitud, ubicacion.longitud], { icon: customIcon });
