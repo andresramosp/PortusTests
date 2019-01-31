@@ -272,10 +272,9 @@
 	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
 	border-radius: 4px;
 	}
-.leaflet-bar a,
-.leaflet-bar a:hover {
-	/* background-color: #fff; */
-	/* background-color: rgba(0, 0, 0, 0.6); */
+.leaflet-bar a {
+	background-color: #fff;
+	background-color: rgba(0, 0, 0, 0.6);
 	border-bottom: 1px solid #ccc;
 	width: 26px;
 	height: 26px;
@@ -410,9 +409,9 @@
 .leaflet-control-attribution a {
 	text-decoration: none;
 	}
-.leaflet-control-attribution a:hover {
+/* .leaflet-control-attribution a:hover {
 	text-decoration: underline;
-	}
+	} */
 .leaflet-container .leaflet-control-attribution,
 .leaflet-container .leaflet-control-scale {
 	font-size: 11px;

@@ -13,54 +13,9 @@
     font-family: "Portus Font" !important;
 }
 
-/* Estilos marker panel */
-
-.markerPanel div:not(.dx-popup-title) {
-    background: rgb(74, 73, 79) !important;
-    color:white !important;
-    border-radius: 0px !important;
-}
-
-.popupHeader {
-  font-size: 15px !important;
-  background: rgb(21, 91, 140) !important;
-  color: white !important;
-  padding: 7px !important;
-}
-
-.markerPanel .dx-button-content {
-    background: transparent;
-    border: 1.5px solid;
-}
-
-
-.markerPanel .dx-state-hover .dx-button-content {
-  background: rgb(21, 91, 140) !important;
-  /* border: 1px solid; */
-}
-
-#no-bootstrap .markerPanel .nav-link {
-  color: #eff1f3;
-  border-radius: 0px;
-  /* background-color: #2a377e;
-  border-color: #dee2e6 #dee2e6 #fff; */
-}
-
-#no-bootstrap .markerPanel .nav-link:hover {
-  color: white;
-  background-color: #606060;
-  border-color:transparent;
-}
-
-#no-bootstrap .markerPanel .nav-link.active {
-    color: #eff1f3;
-    background-color: rgb(21, 91, 140);
-    border-color: transparent;
-}
-
-.markerPanel .card {
+/* .markerPanel .card {
     background-color:gray !important;
-}
+} */
   
 #no-bootstrap .dx-texteditor.dx-editor-outlined {
   border-radius: 0px !important;
@@ -88,8 +43,32 @@
   box-shadow: none !important;
 }
 
-.accordion-inner-content {
-  background: rgb(64, 63, 69);
+.select-layers, .custom-select {
+  box-shadow: none !important;
+}
+
+.dx-datebox-calendar .dx-dropdowneditor-icon {
+  color: white;
+}
+
+.dx-texteditor-buttons-container {
+  right: -5px !important;
+}
+
+.dx-dropdowneditor.dx-dropdowneditor-active .dx-dropdowneditor-icon, .dx-dropdowneditor-button.dx-state-active .dx-dropdowneditor-icon {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  color: white !important;
+  opacity: 1;
+}
+
+.dx-dropdowneditor.dx-state-hover .dx-dropdowneditor-icon {
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+.dx-datebox-calendar.dx-dropdowneditor-active .dx-texteditor-input {
+  background: black !important;
 }
 
 .closeIcon {
@@ -98,6 +77,18 @@
   cursor: pointer;
 }
 
+#no-bootstrap a:hover {
+  text-decoration: none !important;
+  color: white !important;
+}
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active  {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
 
 
 @media screen and (max-height: 550px) {
@@ -204,74 +195,3 @@
 
 
 
-
-.darkTheme .card-body {
-  background-color: rgba(0, 0, 0, 0.7);
-}
-
-.darkTheme .card-header .predicciones, .darkThemeSub .predicciones {
-  /* background-color: rgba(34, 37, 224, 0.7); */
-  background-color: rgba(11, 90, 149, 0.7);
-}
-
-.darkTheme .card-header .tiempo_real, .darkThemeSub .tiempo_real {
-  background-color: rgba(6, 136, 192, 0.7);
-}
-
-.darkTheme .card-header .historico, .darkThemeSub .historico {
-  background-color: rgba(115, 170, 199, 0.7);
-}
-
-.darkTheme .predicciones .mapOptionChecked  img {
-  background-color: rgba(11, 90, 149, 0.7);
-}
-
-.darkTheme .predicciones .mapOptionChecked {
-    color: rgba(11, 90, 149, 1);
-    font-weight: bold;
-}
-
-.darkTheme .tiempo_real .mapOptionChecked  img {
-  background-color: rgba(6, 136, 192, 0.7);
-}
-
-.darkTheme .tiempo_real .mapOptionChecked {
-    color: rgba(6, 136, 192, 1);
-    font-weight: bold;
-}
-
-.darkTheme .historico .mapOptionChecked  img {
-  background-color: rgba(115, 170, 199, 0.7);
-}
-
-.darkTheme .historico .mapOptionChecked {
-    color: rgba(115, 170, 199, 1);
-    font-weight: bold;
-}
-
-
-
-.darkTheme .predicciones .lightable:hover  {
-  color: rgba(11, 90, 149, 1);
-}
-
-
-.darkTheme .predicciones .minimized .lightable img:hover  {
-  background-color: rgba(11, 90, 149, 1);
-}
-
-.darkTheme .tiempo_real .lightable:hover  {
-  color: rgba(6, 136, 192, 0.7);
-}
-
-.darkTheme .tiempo_real .minimized .lightable img:hover  {
-  background-color: rgba(6, 136, 192, 0.7);
-}
-
-.darkTheme .historico .lightable:hover  {
-  color: rgba(115, 170, 199, 0.7);
-}
-
-.darkTheme .historico .minimized .lightable img:hover  {
-  background-color: rgba(115, 170, 199, 0.7);
-}

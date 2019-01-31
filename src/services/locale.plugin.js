@@ -250,6 +250,10 @@ const LocalePlugin = {
             es: "Estación inactiva en la actualidad",
             en: "Dismantled station"
         },
+        descargarButton: {
+            es: "Descargar",
+            en: "Download"
+        },
         // markers heaped tooltip
         markersProximosTitulo: {
             es: "Estaciones muy próximas",

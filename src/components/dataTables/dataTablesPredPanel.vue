@@ -131,7 +131,7 @@ export default {
     return {
       defaultLogo: PC.default_map_logo,
       align: PC.options_panel_align,
-      theme: PC.color_theme,
+      theme: "", // PC.color_theme,
       mapState: MapState,
       mapUtils: MapUtils,
       //titulo: '',

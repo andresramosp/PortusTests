@@ -40,6 +40,7 @@
     /* background-color: #fff; */
     /* background-color: rgba(0, 0, 0, 0.7); */
     border-width: 0 0 0 0;
+    background-color: transparent;
 }
 .leaflet-bar-timecontrol .leaflet-control-timecontrol:first-child {
     border-radius: 4px 0 0 4px;

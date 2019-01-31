@@ -10,10 +10,10 @@
             </b-row>
             <!-- INFORMES ANUALES -->
             <div v-if="informesAnualesOptions.length > 0" style="margin-bottom: 10px">
-                <img :src="require('@/assets/icons/collapsible.png')" style="width: 25px; height: 25px; cursor: pointer" v-b-toggle="'collapseAnuales'" />
-                <span v-b-toggle="'collapseAnuales'" style="font-size: 16px; font-weight: bold; cursor: pointer">Informes Anuales de todos los reportes de la estación</span>
+                <img :src="require('@/assets/icons/collapsible.png')" class="collapseArrow" v-b-toggle="'collapseAnuales'" />
+                <span v-b-toggle="'collapseAnuales'" style="font-size: 16px; cursor: pointer">Informes Anuales de todos los reportes de la estación</span>
                 <b-collapse visible id="collapseAnuales" class="mt-2">
-                    <b-card >
+                    <b-card id="accordionContent" >
                         <b-row style="margin-top: 10px">
                             <b-col cols="3">
                                 <b-form-select v-model="informeAnualSelected" :options="informesAnualesOptions" class="mb-3">
@@ -28,9 +28,7 @@
                                 </b-form-select>
                             </b-col>
                             <b-col>
-                                <b-button size="sm" variant="outline-primary" @click="openInformeAnual()">
-                                    Descargar
-                                </b-button>
+                                <dx-button :text="$t('{descargarButton}')" width="80" height="35" type="default" @click="openInformeAnual" />
                             </b-col>
                         </b-row>
                     </b-card>
@@ -38,26 +36,25 @@
             </div>
             <!-- INFORMES Y PRODUCTOS -->
             <div v-for="varGrp in variables" :key="varGrp" style="margin-bottom: 10px;">
-                <img :src="require('@/assets/icons/collapsible.png')" style="width: 25px; height: 25px; cursor: pointer" v-b-toggle="'collapse' + varGrp" />
-                <span v-b-toggle="'collapse' + varGrp" style="font-size: 16px; font-weight: bold; cursor: pointer">{{$t('{' + varGrp + '}')}}</span>
+                <img :src="require('@/assets/icons/collapsible.png')" width="30" class="collapseArrow" v-b-toggle="'collapse' + varGrp" />
+                <span v-b-toggle="'collapse' + varGrp" style="font-size: 16px; cursor: pointer">{{$t('{' + varGrp + '}')}}</span>
                 <b-collapse visible :id="'collapse' + varGrp" accordion="my-accordion" class="mt-2">
-                    <b-card style="background-color: #f8f8f8;">
+                    <b-card id="accordionContent">
                         <div v-if="informesVariable.filter(i => i.variable == varGrp).length > 0">
-                            <span style="font-size: 14px; font-weight: bold;">{{$t('{informesClimaticosLabel}')}}</span> 
+                            <span style="font-size: 14px;">{{$t('{informesClimaticosLabel}')}}</span> 
                             <b-row style="margin-top: 10px; margin-bottom: 10px">
                                 <b-col v-for="informeVar in informesVariable" :key="informeVar.id" v-if="informeVar.variable == varGrp" cols="3">
-                                    <b-button size="sm" variant="outline-primary" @click="openLink(informeVar.url)">
-                                        {{informeVar.nombre}}
-                                    </b-button>
+                                    <dx-button :text="informeVar.nombre" width="80" height="35" type="default" @click="openLink(informeVar.url)" />
                                 </b-col>
                             </b-row>
                         </div>
                         <div v-if="productosVariable.filter(p => p.variable == varGrp).length > 0">
-                            <span style="font-size: 14px; font-weight: bold;">{{$t('{analisisInteractivosLabel}')}}</span> 
+                            <span style="font-size: 14px;">{{$t('{analisisInteractivosLabel}')}}</span> 
                             <b-row style="margin-top: 10px; margin-left: 10px">
                                 <b-col v-for="productoVar in productosVariable" :key="productoVar.id" v-if="productoVar.variable == varGrp" cols="6">
                                     <label class="form-check-label" style="font-size: 13px" >
-                                        <input class="form-check-input" type="checkbox" v-model="productoVar.active" @change="productoOptionChanged(productoVar)" />
+                                        <img style="" width="16" :src="productoVar.active ? require('@/assets/icons/check_activo.png') : require('@/assets/icons/check_inactivo.png')" >
+                                        <input class="form-check-input" style="display: none" type="checkbox" v-model="productoVar.active" @change="productoOptionChanged(productoVar)" />
                                         {{ $t(productoVar.nombre) }}
                                     </label>
                                 </b-col>
@@ -66,7 +63,7 @@
                     </b-card>
                 </b-collapse>
             </div>
-            <div v-if="isInactiva()" style="text-align: center; font-size: 14px; color: red; font-weight: bold;">
+            <div v-if="isInactiva()" style="text-align: center; font-size: 14px; color: red !important; font-weight: bold;">
                 {{$t('{estacionHistInactivaLabel}')}}
             </div>
     </b-container>
@@ -79,9 +76,13 @@ import MapState from "@/state/map.state";
 import ApiService from "@/services/api.service";
 import { INFORMES_URL, BASE_URL_PORTUS, PUERTOS_URL } from '@/common/config';
 import { RedType, MarkerClass } from "@/common/enums";
+import DxButton from "devextreme-vue/button";
 
 export default {
   name: "BancoDatosHistoricoTab",
+  components: {
+      DxButton
+  },
   data() {
       return {
           informesVariable: [],
@@ -211,5 +212,11 @@ export default {
 
 <style scoped>
 
+.collapseArrow {
+    width: 25px; 
+    height: 25px; 
+    cursor: pointer; 
+    margin-right: 10px
+}
 
 </style>

@@ -13,6 +13,7 @@
             type="date"
             display-format="dd/MMM/yy"
           />
+
            <dx-date-box
             class="datePicker datePicker-right fadeIn"
             :value="mapState.playerDateRangeToValue"

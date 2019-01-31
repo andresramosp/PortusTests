@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       align: PC.options_panel_align,
-      theme: PC.color_theme,
+      theme: "", // PC.color_theme,
       mapState: MapState,
       ubicacionesList: null,
       defaultZoom: 6,

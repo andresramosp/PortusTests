@@ -14,14 +14,15 @@
               {{ minimized ? $t(optGrp.nameMin) : $t(optGrp.name) }}
                <img :src='require("@/assets/icons/info.png")'
                   class="infoGroup"
+                  :class="[align == 'left' ? 'infoGroupRight' : 'infoGroupLeft']"
                   @click="openGroupInfo(optGrp.id)"
                 >
             </h6>
             <b-container>
               <b-row >
-                  <b-col v-for="mapOption in mapOptions.filter(opt => opt.group == optGrp.id)" :key="mapOption.id" cols="6" class="form-check text-left" style="padding-top: 2px;" >
+                  <b-col v-for="mapOption in mapOptions.filter(opt => opt.group == optGrp.id)" :key="mapOption.id" cols="6" class="form-check text-left" style="padding-top: 3px; margin-bottom: 3px;" >
                     <label class="form-check-label lightable" :class="[mapOption.active ? 'mapOptionChecked' : '', mapOption.loadingThings > 0 ? 'mapOptionLoading' : '']" :title="minimized ? $t(mapOption.name) : ''" style="float: left; cursor: pointer">
-                      <img style="float: left; margin-right: 2px" width="25" 
+                      <img style="float: left; margin-right: 2px; margin-top: -4px" width="28" 
                             :class="[mapOption.active ? 'mapOptionChecked' : '']"
                             :src='require("@/assets/icons/mainMenu/" + mapOption.id + ".png")' >
                       <input class="form-check-input" style="display: none" 
@@ -30,7 +31,7 @@
                             :value="mapOption.active" 
                             :disabled="false"
                             @change="mapOptionChanged(mapOption)" />
-                      {{ minimized ? '' : $t(mapOption.name) }}
+                       {{ minimized ? '' : $t(mapOption.name) }}
                   </label>
                 </b-col> 
               </b-row>
@@ -64,7 +65,7 @@ export default {
     return {
       mapState: MapState,
       align: PC.options_panel_align,
-      theme: PC.color_theme,
+      theme: "", // PC.color_theme,
       $t: this.$t,
       minimized: PC.user_preferences.menu_minimized  != undefined ? PC.user_preferences.menu_minimized : false
     };
@@ -101,10 +102,18 @@ export default {
 
 .infoGroup {
   margin-top: 1px;
-  float: right;
   cursor: pointer;
   width: 18px;
+}
+
+.infoGroupRight {
+  float: right;
   margin-right: 5px;
+}
+
+.infoGroupLeft {
+  float: left;
+  margin-left: 5px;
 }
 
 .leftImgMinimizer {
@@ -180,7 +189,7 @@ input[type="checkbox"] {
 
 .minimized .form-check {
   padding-right: 0px !important;
-  padding-left: 4px !important;
+  padding-left: 2px !important;
 
 }
 

@@ -1,0 +1,269 @@
+
+/* DARKTHEME */
+
+  .darkTheme .card-body {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  
+  .darkTheme .card-header .predicciones, .darkThemeSub .predicciones {
+    background-color: rgba(11, 90, 149, 0.7);
+  }
+  
+  .darkTheme .card-header .tiempo_real, .darkThemeSub .tiempo_real {
+    background-color: rgba(6, 136, 192, 0.7);
+  }
+  
+  .darkTheme .card-header .historico, .darkThemeSub .historico {
+    background-color: rgba(115, 170, 199, 0.7);
+  }
+  
+  .darkTheme .predicciones .mapOptionChecked  img {
+    background-color: rgba(11, 90, 149, 0.7);
+  }
+  
+  .darkTheme .predicciones .mapOptionChecked {
+      color: rgba(11, 90, 149, 1);
+      font-weight: bold;
+  }
+  
+  .darkTheme .tiempo_real .mapOptionChecked  img {
+    background-color: rgba(6, 136, 192, 0.7);
+  }
+  
+  .darkTheme .tiempo_real .mapOptionChecked {
+      color: rgba(6, 136, 192, 1);
+      font-weight: bold;
+  }
+  
+  .darkTheme .historico .mapOptionChecked  img {
+    background-color: rgba(115, 170, 199, 0.7);
+  }
+  
+  .darkTheme .historico .mapOptionChecked {
+      color: rgba(115, 170, 199, 1);
+      font-weight: bold;
+  }
+  
+  
+  
+  .darkTheme .predicciones .lightable:hover  {
+    color: rgba(11, 90, 149, 1);
+  }
+  
+  
+  .darkTheme .predicciones .minimized .lightable img:hover  {
+    background-color: rgba(11, 90, 149, 1);
+  }
+  
+  .darkTheme .tiempo_real .lightable:hover  {
+    color: rgba(6, 136, 192, 0.7);
+  }
+  
+  .darkTheme .tiempo_real .minimized .lightable img:hover  {
+    background-color: rgba(6, 136, 192, 0.7);
+  }
+  
+  .darkTheme .historico .lightable:hover  {
+    color: rgba(115, 170, 199, 0.7);
+  }
+  
+  .darkTheme .historico .minimized .lightable img:hover  {
+    background-color: rgba(115, 170, 199, 0.7);
+  }
+
+  /* Estilos marker panel */
+
+.darkTheme .markerPanel div:not(.dx-popup-title):not(.dx-button-content):not(.dx-button-text) {
+    background: rgb(74, 73, 79) !important;
+    color:white !important;
+    border-radius: 0px !important;
+}
+
+.darkTheme .popupHeader {
+  font-size: 15px !important;
+  background: rgb(21, 91, 140) !important;
+  color: white !important;
+  padding: 7px !important;
+}
+
+.darkTheme .markerPanel .dx-button-content {
+    background: rgb(74, 73, 79);
+    border: 1.5px solid;
+    min-width: fit-content;
+}
+
+.darkTheme #accordionContent *:not(.dx-button-content):not(.dx-button-text) {
+  background: rgb(64, 63, 69) !important;
+  color: white;
+}
+
+.darkTheme #specialContent {
+  background-color: rgb(64, 63, 69);
+}
+
+.darkTheme #accordionContent .card-body {
+  border: 1px solid gray;
+}
+
+
+.darkTheme .markerPanel .dx-state-hover .dx-button-content {
+  background: rgb(21, 91, 140) !important;
+}
+
+/* .markerPanel .dx-state-hover .dx-button-text {
+  background: rgb(21, 91, 140) !important;
+} */
+
+.darkTheme .markerPanel .nav-link {
+  color: #eff1f3;
+  border-radius: 0px;
+  /* background-color: #2a377e;
+  border-color: #dee2e6 #dee2e6 #fff; */
+}
+
+.darkTheme .markerPanel .nav-link:hover {
+  color: white;
+  background-color: #606060;
+  border-color:transparent;
+}
+
+.darkTheme .markerPanel .nav-link.active {
+    color: #eff1f3;
+    background-color: rgb(21, 91, 140);
+    border-color: transparent;
+}
+
+  
+/* HAPPY THEME */
+
+.happyTheme .card-body {
+    background-color: rgba(121, 74, 92, 0.7);
+  }
+  
+  .happyTheme .card-header .predicciones, .happyThemeSub .predicciones {
+    background-color: rgba(233, 44, 31, 0.7);
+  }
+  
+  .happyTheme .card-header .tiempo_real, .happyThemeSub .tiempo_real {
+    background-color: rgba(150, 68, 48, 0.7);
+  }
+  
+  .happyTheme .card-header .historico, .happyThemeSub .historico {
+    background-color: rgba(248, 149, 19, 0.7);
+  }
+  
+  .happyTheme .predicciones .mapOptionChecked  img {
+    background-color: rgba(233, 44, 31, 0.7);
+  }
+  
+  .happyTheme .predicciones .mapOptionChecked {
+      color: rgba(11, 90, 149, 1);
+      font-weight: bold;
+  }
+  
+  .happyTheme .tiempo_real .mapOptionChecked  img {
+    background-color: rgba(6, 136, 192, 0.7);
+  }
+  
+  .happyTheme .tiempo_real .mapOptionChecked {
+      color: rgba(6, 136, 192, 1);
+      font-weight: bold;
+  }
+  
+  .happyTheme .historico .mapOptionChecked  img {
+    background-color: rgba(115, 170, 199, 0.7);
+  }
+  
+  .happyTheme .historico .mapOptionChecked {
+      color: rgba(115, 170, 199, 1);
+      font-weight: bold;
+  }
+  
+  
+  
+  .happyTheme .predicciones .lightable:hover  {
+    color: rgba(11, 90, 149, 1);
+  }
+  
+  
+  .happyTheme .predicciones .minimized .lightable img:hover  {
+    background-color: rgba(11, 90, 149, 1);
+  }
+  
+  .happyTheme .tiempo_real .lightable:hover  {
+    color: rgba(6, 136, 192, 0.7);
+  }
+  
+  .happyTheme .tiempo_real .minimized .lightable img:hover  {
+    background-color: rgba(6, 136, 192, 0.7);
+  }
+  
+  .happyTheme .historico .lightable:hover  {
+    color: rgba(115, 170, 199, 0.7);
+  }
+  
+  .happyTheme .historico .minimized .lightable img:hover  {
+    background-color: rgba(115, 170, 199, 0.7);
+  }
+
+  /* Estilos marker panel */
+
+.happyTheme .markerPanel div:not(.dx-popup-title):not(.dx-button-content):not(.dx-button-text) {
+    background: rgb(74, 73, 79) !important;
+    color:white !important;
+    border-radius: 0px !important;
+}
+
+.happyTheme .popupHeader {
+  font-size: 15px !important;
+  background: rgb(21, 91, 140) !important;
+  color: white !important;
+  padding: 7px !important;
+}
+
+.happyTheme .markerPanel .dx-button-content {
+    background: rgb(74, 73, 79);
+    border: 1.5px solid;
+    min-width: fit-content;
+}
+
+.happyTheme #accordionContent *:not(.dx-button-content):not(.dx-button-text) {
+  background: rgb(64, 63, 69) !important;
+  color: white;
+}
+
+.happyTheme #specialContent {
+  background-color: rgb(64, 63, 69);
+}
+
+.happyTheme #accordionContent .card-body {
+  border: 1px solid gray;
+}
+
+
+.happyTheme .markerPanel .dx-state-hover .dx-button-content {
+  background: rgb(21, 91, 140) !important;
+}
+
+/* .markerPanel .dx-state-hover .dx-button-text {
+  background: rgb(21, 91, 140) !important;
+} */
+
+.happyTheme .markerPanel .nav-link {
+  color: #eff1f3;
+  border-radius: 0px;
+  /* background-color: #2a377e;
+  border-color: #dee2e6 #dee2e6 #fff; */
+}
+
+.happyTheme .markerPanel .nav-link:hover {
+  color: white;
+  background-color: #606060;
+  border-color:transparent;
+}
+
+.happyTheme .markerPanel .nav-link.active {
+    color: #eff1f3;
+    background-color: rgb(21, 91, 140);
+    border-color: transparent;
+}

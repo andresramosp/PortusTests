@@ -15,7 +15,7 @@
         </b-row>
         <b-row v-if="infoCero">
            <b-col  md="auto">
-            <label class="infoCero accordion-inner-content">
+            <label id="specialContent" class="infoCero">
               {{infoCero}}
             </label>
           </b-col>

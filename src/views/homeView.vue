@@ -1,5 +1,5 @@
 <template>
-<div id="app" >
+<div id="app">
    <Map :baseMap='baseMap' :mapFixed="mapFixed" />
    <MainMenu :mapOptionsGroups="mapState.mapOptionsGroups" :mapOptions="mapState.mapOptions" /> 
    <MarkerPanel :markers='mapState.markersSelected' />

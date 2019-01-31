@@ -25,7 +25,7 @@ const MapState = {
     showingVectors: false,
     showingRadars: false,
     currentPlayerTime: null,
-    staticMapResourceSelected: null,
+    staticelected: null,
     loadingThings: [],
     heapedPopup: null,
     mapLogos: [],
@@ -95,11 +95,7 @@ const MapState = {
             marker.mapResource = mapResource;
             marker.mapOption = mapOption;
             Object.assign(marker, m);
-            marker.visible = !marker.mapResource.unchecked
-                              && (!mapResource.comboSelect
-                                  || (mapResource.groupLayersBy && res[mapResource.groupLayersBy.field] == mapResource.comboSelect.defaultOption)
-                                  || (mapResource.name ==  mapResource.comboSelect.defaultOption));
-            
+            marker.visible = this.initialVisibilityValue(marker);
             this.preloadedMarkers.push(marker);
         });
 
@@ -135,14 +131,12 @@ const MapState = {
                     tileLayer,
                     {}
                 );
+                Object.assign(portusTimeLayer, res);
                 tileLayer.mapResource = mapResource;
                 portusTimeLayer.mapResource = mapResource;
                 portusTimeLayer.mapOption = mapOption;
-                portusTimeLayer.visible = !mapResource.comboSelect
-                                       || (mapResource.groupLayersBy && res[mapResource.groupLayersBy.field] == mapResource.comboSelect.defaultOption)
-                                       || (mapResource.name ==  mapResource.comboSelect.defaultOption); 
+                portusTimeLayer.visible = this.initialVisibilityValue(portusTimeLayer);
                 portusTimeLayer.id = res.url;
-                Object.assign(portusTimeLayer, res);
                 this.preloadedTimeLineLayers.push(portusTimeLayer);
     
                 if (mapResource.paintBounds) {
@@ -161,6 +155,31 @@ const MapState = {
         this.setVisibleTimeLineLayers();
         this.showingVectors = vectorial;
         this.removeLoading(mapResource.id);
+    },
+
+    // Función para determinar la visibilidad inicial de un layer recién añadido, a nivel de
+    // subOption (checkboxes del subMenu). Si forma parte de un combo, estará visible si es
+    // el defaultValue establecido; si forma parte de una opción que agrupa varios mapResources
+    // (subOption), estará visible si también lo están los layers que forman esa opción, o bien
+    // si todavía no hay ninguno en el mapa. Si está unchecked por defecto, estará invisible.
+
+    initialVisibilityValue(layer) {
+
+        if (layer.mapResource.unchecked)
+            return false;
+        if (layer.mapResource.comboSelect) {
+            return (layer.mapResource.groupLayersBy && layer[layer.mapResource.groupLayersBy.field] == layer.mapResource.comboSelect.defaultOption)
+            || (layer.mapResource.name ==  layer.mapResource.comboSelect.defaultOption)
+        }
+        if (layer.mapResource.subOption) {
+            var siblingLayers = this.getActiveLayers().filter(l => l.mapResource.subOption && l.mapResource.subOption == layer.mapResource.subOption);
+            if (siblingLayers.length == 0)
+               return true;
+            else
+                return siblingLayers.filter(layer => layer.visible).length > 0;
+        }
+
+        return true;
     },
 
     setVectorial(mapResource, vectorial) {
@@ -300,8 +319,8 @@ const MapState = {
         this.currentPlayerTime = date;
     },
 
-    setStaticMapResourceSelected(mapResource) {
-        this.staticMapResourceSelected = mapResource;
+    setStaticelected(mapResource) {
+        this.staticelected = mapResource;
     },
 
     addTileLayer(mapResource) {
@@ -496,7 +515,7 @@ const MapState = {
         this.puertosInfoSourceId = sourceId;
     },
 
-    // TODO: llevarse funcionalidad a MapUtils, o incluso crear un radar.service.js
+    // TODO: llevarse funcionalidad a radar.service.js
 
     async getRadarPoints(layer) {
 

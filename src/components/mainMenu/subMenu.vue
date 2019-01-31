@@ -56,7 +56,7 @@ export default {
   data() {
     return {
       align: PC.options_panel_align,
-      theme: PC.color_theme,
+      theme: "", // PC.color_theme,
       mapState: MapState,
       selectedOption: null,
       floatingOptions: []
@@ -264,7 +264,6 @@ select {
   padding-top: 2px;
   margin-bottom: 5px;
   display: block;
-  box-shadow: none !important;
 }
 
 </style>
