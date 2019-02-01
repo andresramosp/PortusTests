@@ -82,6 +82,17 @@
   color: white !important;
 }
 
+#no-bootstrap .list-container a:hover {
+  text-decoration: none !important;
+  color: black !important;
+}
+
+#no-bootstrap .leaflet-popup a:hover {
+  text-decoration: none !important;
+  color: blue !important;
+}
+
+
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
@@ -170,10 +181,17 @@ input:-webkit-autofill:active  {
 
 
 .fadeIn {
-    /* -webkit-animation: animat_show 1.2s;
+    -webkit-animation: animat_show 1.2s;
     animation: animat_show 1.2s;
-    visibility: visible !important; */
+    visibility: visible !important;
 }
+
+.fadeInMenu {
+  -webkit-animation: animat_show 0.5s;
+  animation: animat_show 0.5s;
+  visibility: visible !important;
+}
+
 .popup {
   position: absolute !important;
   top: 5% important;

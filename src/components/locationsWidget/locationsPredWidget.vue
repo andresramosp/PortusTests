@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 420px;">
+  <div style="width: 420px;" class="simoPanel">
     <b-card>
 
     <div slot="header">
@@ -447,7 +447,7 @@ export default {
 .pleaBajaSection {
   position: absolute;
   margin-top: -92px;
-  font-size: 11px;
+  font-size: 10.5px;
 }
 
 .variableSection {
@@ -484,7 +484,7 @@ export default {
   position: absolute;
   color: white;
   font-weight: 600;
-  font-size: 11.5px;
+  font-size: 11.0px;
   margin-left: 7.5px;
   margin-top: 45.5px;
 }
@@ -493,7 +493,7 @@ export default {
   position: absolute;
   color: white;
   font-weight: 600;
-  font-size: 11.5px;
+  font-size: 11.0px;
   margin-left: 5px;
   margin-top: 45.5px;
 }
@@ -502,9 +502,10 @@ export default {
   /* position: absolute; */
   color: #ffc100;
   font-weight: normal;
-  font-size: 11.5px;
+  font-size: 11.0px;
   font-style: italic;
-  margin-left: 1.5px;
+  margin-left: 0.5px;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .variableDate {
@@ -548,7 +549,6 @@ export default {
 
 
 .card-header {
-  background-color: #606060;
   font-size: 14px;
   padding: 0px 5px 11px 5px;
   color: white;

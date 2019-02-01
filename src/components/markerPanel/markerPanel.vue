@@ -51,6 +51,9 @@
       </b-tabs>
 
       <div class="footer">
+         <a :href="hrefPropietario" target='_blank' class="footerLogo">
+            <img :src="imgPropietario"  />
+         </a>
          <dx-button class="footerButton" :text="$t('{cerrarButton}')" width="80" height="30" type="default" @click="cerrar" />
       </div>
 
@@ -62,6 +65,7 @@
 
 <script>
 
+import { BASE_URL_PORTUS } from '@/common/config';
 import { MarkerClass } from "@/common/enums";
 import MapState from "@/state/map.state";
 import MapUtils from "@/services/map.utils";
@@ -91,7 +95,9 @@ export default {
   data() {
     return {
       mapState: MapState,
-      markerRef: null
+      markerRef: null,
+      imgPropietario: null,
+      hrefPropietario: null
     };
   },
   computed: {
@@ -122,6 +128,10 @@ export default {
       if (this.markers.length > 0) {
         // Cogemos siempre el marker de más arriba 
         this.markerRef = this.markers[this.markers.length - 1]; 
+        if (this.markerRef.propietario != null) {
+          this.imgPropietario = BASE_URL_PORTUS + "/img/logosOrganismos/" + this.markerRef.propietario + ".png";
+          this.hrefPropietario = this.markerRef.urlPropietario;
+       }
       }
     }
   },
@@ -175,10 +185,17 @@ export default {
 }
 
 .footerButton {
-  margin-top: 10px;
+  margin-top: 15px;
   float: right;
   margin-bottom: 10px;
   padding-right: 10px;
+}
+
+.footerLogo {
+  margin-top: 10px;
+  float: left;
+  margin-bottom: 10px;
+  padding-left: 10px;
 }
 
 .infoPanelClass {

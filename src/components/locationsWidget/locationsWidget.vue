@@ -53,7 +53,7 @@
       class="shareInfoCenter"
     />
 
-    <b-row v-show="!displayShareInfo">
+    <b-row v-show="!displayShareInfo" class="simoPanel">
       <b-col :cols="!minimized ? 5 : 12">
         <b-row>
           <b-col>

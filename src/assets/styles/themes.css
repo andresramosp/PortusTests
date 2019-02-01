@@ -1,7 +1,7 @@
 
 /* DARKTHEME */
 
-  .darkTheme .card-body {
+  .darkTheme .layersPanel .card-body {
     background-color: rgba(0, 0, 0, 0.7);
   }
   
@@ -84,6 +84,11 @@
   background: rgb(21, 91, 140) !important;
   color: white !important;
   padding: 7px !important;
+}
+
+.darkTheme .simoPanel .card-header {
+  background: rgb(21, 91, 140);
+  color: white;
 }
 
 .darkTheme .markerPanel .dx-button-content {

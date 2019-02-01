@@ -27,7 +27,7 @@
      background-color: rgba(0, 0, 0, 0.7);
      border: none;
      border-radius: 0px;
-     padding-top: 10px;
+     padding-top: 5px;
 }
 .leaflet-bar-timecontrol * {
     box-sizing: border-box;
@@ -61,14 +61,15 @@
 .leaflet-bar-timecontrol a.timecontrol-date:hover {
     position: relative;
     min-width: 150px;
-    /* width: auto; */
-    width: 361px;
-    padding: 0 10px 0 20px;
+    width: auto;
+    /* width: 361px; */
+    /* padding: 0 10px 0 20px; */
+    padding: 0px;
     white-space: nowrap;
 
-    border-right: 1px solid gray;
+    /* border-right: 1px solid gray; */
     /* padding-right: 15px !important; */
-    margin-left: 0px;
+    margin-left: 60px;
     margin-bottom: 7px;
 }
 .timecontrol-datepicker {
@@ -120,7 +121,8 @@
 }
 
 .leaflet-bar-timecontrol .timecontrol-dateslider .slider {
-    width: 430px;
+    /* width: 430px; */
+    width: 530px;
 }
 .leaflet-bar-timecontrol .timecontrol-datesliderMin .slider {
     width: 75px;
@@ -128,11 +130,13 @@
 .leaflet-bar-timecontrol .timecontrol-speed {
     white-space: nowrap;
     cursor: auto;
-
-    border-left: 1px solid gray;
+    padding-top: 6px;
+    margin-left: 15px;
+    /* border-left: 1px solid gray; */
 }
 .leaflet-bar-timecontrol .timecontrol-speed .slider {
-    width: 100px;
+    /* width: 100px; */
+    width: 60px;
     /* display: inline-block; */
 }
 .leaflet-bar-timecontrol .timecontrol-speed .speed {
@@ -169,6 +173,7 @@
     position: relative;
     height: 0px;
     margin: 10px;
+    
     border: 0.4px solid;
     /* border: 1px solid #a5a5a5; */
     cursor: pointer;
@@ -383,7 +388,7 @@ a.timecontrol-play.loading:before {
     }
 }
 .leaflet-touch .leaflet-bar-timecontrol .leaflet-control-timecontrol{
-     height: 30px;
+     height: 25px;
     line-height: 30px;
 }
 .leaflet-touch .timecontrol-slider .slider{

@@ -15,9 +15,7 @@
         </b-row>
         <b-row v-if="hasPeriodosFondeo()" style="margin-top: 10px">
           <b-col>
-            <b-button size="sm" variant="outline-primary" @click="openPeriodosFondeo()">
-              Períodos de fondeo
-             </b-button>
+             <dx-button :text="'Períodos de fondeo'" height="30" type="default" @click="openPeriodosFondeo()" />
           </b-col>
         </b-row>
 </b-container>
@@ -31,9 +29,13 @@ import MapState from "@/state/map.state";
 import MapUtils from "@/services/map.utils";
 import ApiService from "@/services/api.service";
 import { INFORMES_URL, BASE_URL_PORTUS } from '@/common/config';
+import DxButton from "devextreme-vue/button";
 
 export default {
   name: "InformacionTab",
+  components: {
+    DxButton
+  },
   props: {
     markers: { type: Array, default: [], required: false }
   },

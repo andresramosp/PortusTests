@@ -1,38 +1,31 @@
 <template>
 
     <b-container style="margin-top: 15px" >
-        <b-row v-if="hrefPropietario" style="margin-bottom: 10px">
-            <b-col col-md="12" offset-md="8">
-                 <a :href="hrefPropietario" target='_blank'>
-                    <img :src="imgPropietario"  />
-                 </a>
-            </b-col>
-        </b-row>
         <b-row style="margin-bottom: 10px">
             <b-col style="text-align: left; " offset="4">
-                {{$t('{bancoDatosTablas}')}}
-            </b-col>
-            <b-col style="text-align: left;">
                 {{$t('{bancoDatosGraficos}')}}
             </b-col>
+            <b-col style="text-align: left;">
+                {{$t('{bancoDatosTablas}')}}
+            </b-col>
         </b-row>
-        <b-row v-for="param in bancoDatos" :key="param.id" >
+        <b-row v-for="param in bancoDatos" :key="param.id" class="fadeIn">
             <b-col style="padding-top: 2px">
                 <img style="float: left; margin-right: 7px; margin-top: -4px;" width="25" 
                     :title="$t('{' + param.variable + '}')"
                     :src='require("@/assets/icons/bancoDatos/" + param.variable.toLowerCase() + ".png")'>
                 <span>{{ param.nombre }}</span>
             </b-col>
+             <b-col>
+                <label style="margin-bottom: 0px !important;">
+                    <img style="" width="18" :src="param.graphicActive ? require('@/assets/icons/check_activo.png') : require('@/assets/icons/check_inactivo.png')" >
+                    <input class="form-check-input" style="display: none" type="checkbox" v-model="param.graphicActive" @change="changeGraphParam(param)" />
+                </label>
+            </b-col>
             <b-col >
                 <label style="margin-bottom: 0px !important;">
                     <img style="" width="18" :src="param.tableActive ? require('@/assets/icons/check_activo.png') : require('@/assets/icons/check_inactivo.png')" >
                     <input class="form-check-input" style="display: none" type="checkbox" v-model="param.tableActive" @change="changeParam(param)" />
-                </label>
-            </b-col>
-            <b-col>
-                <label style="margin-bottom: 0px !important;">
-                    <img style="" width="18" :src="param.graphicActive ? require('@/assets/icons/check_activo.png') : require('@/assets/icons/check_inactivo.png')" >
-                    <input class="form-check-input" style="display: none" type="checkbox" v-model="param.graphicActive" @change="changeGraphParam(param)" />
                 </label>
             </b-col>
         </b-row>
@@ -41,9 +34,7 @@
                {{ $t('{tablaMareasLabel}') }}
           </b-col>
           <b-col >
-            <b-button size="sm" variant="outline-primary" @click="openMareaAstronomica()">
-              {{ $t('{tablaMareasButton}') }}
-             </b-button>
+             <dx-button :text="$t('{tablaMareasButton}')" height="30" type="default" @click="openMareaAstronomica()" />
           </b-col >
       
         </b-row>
@@ -58,16 +49,18 @@ import DataPanelsUtils from "@/services/dataPanels.utils";
 import ApiService from "@/services/api.service";
 import { BASE_URL_PORTUS, INFORMES_URL } from '@/common/config';
 import { MarkerClass } from "@/common/enums";
+import DxButton from "devextreme-vue/button";
 import Vue from "vue";
 
 export default {
   name: "BancoDatosTab",
+  components: {
+      DxButton
+  },
   data() {
       return {
           bancoDatos: [],
           mapState: MapState,
-          imgPropietario: null,
-          hrefPropietario: null,
           // Determina si se marcan de una vez todos los checkboxes de 
           // la misma variable en Tiempo Real
           allVarsRT: true 
@@ -76,16 +69,6 @@ export default {
   props: {
     markers: { type: Array, default: null, required: false }
   },
-//   watch: {
-//       'mapState.bancosDatos': function() {
-//           this.bancoDatos = this.mapState.getBancoDatos(this.markers[0].id).filter(p => this.markers.map(m => m.mapOption.variableType).indexOf(p.variable) != -1);
-//       }
-//   },
-//   computed: {
-//       bancoDatos() {
-//           return this.mapState.getBancoDatos(this.markers[0].id).filter(p => this.markers.map(m => m.mapOption.variableType).indexOf(p.variable) != -1);
-//       }
-//   },
   mounted() {
   },
   created() {
@@ -102,11 +85,6 @@ export default {
                     this.setBancoDatos(params);
                 });
            }
-       
-       if (this.markers[0].propietario != null) {
-          this.imgPropietario = BASE_URL_PORTUS + "/img/logosOrganismos/" + this.markers[0].propietario + ".png";
-          this.hrefPropietario = this.markers[0].urlPropietario;
-       }
 
   },
   methods: {

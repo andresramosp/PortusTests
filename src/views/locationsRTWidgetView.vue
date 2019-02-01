@@ -1,5 +1,5 @@
 <template>
-<div v-if="code && locationType" style="text-align: center" >
+<div v-if="code && locationType" >
    <LocationsRTWidget :locationType='locationType' :code="code" />
 </div>
 </template>

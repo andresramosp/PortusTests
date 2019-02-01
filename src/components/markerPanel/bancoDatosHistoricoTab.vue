@@ -1,15 +1,8 @@
 <template>
 
     <b-container style="margin-top: 15px; max-height: 500px; overflow-y: scroll">
-            <b-row style="margin-bottom: 10px">
-                <b-col col-md="12" offset-md="8">
-                    <a :href="hrefPropietario" target='_blank'>
-                        <img :src="imgPropietario"  />
-                    </a>
-                </b-col>
-            </b-row>
             <!-- INFORMES ANUALES -->
-            <div v-if="informesAnualesOptions.length > 0" style="margin-bottom: 10px">
+            <div v-if="informesAnualesOptions.length > 0" style="margin-bottom: 10px" class="fadeIn">
                 <img :src="require('@/assets/icons/collapsible.png')" class="collapseArrow" v-b-toggle="'collapseAnuales'" />
                 <span v-b-toggle="'collapseAnuales'" style="font-size: 16px; cursor: pointer">Informes Anuales de todos los reportes de la estación</span>
                 <b-collapse visible id="collapseAnuales" class="mt-2">
@@ -35,7 +28,7 @@
                 </b-collapse>
             </div>
             <!-- INFORMES Y PRODUCTOS -->
-            <div v-for="varGrp in variables" :key="varGrp" style="margin-bottom: 10px;">
+            <div v-for="varGrp in variables" :key="varGrp" style="margin-bottom: 10px;" class="fadeIn">
                 <img :src="require('@/assets/icons/collapsible.png')" width="30" class="collapseArrow" v-b-toggle="'collapse' + varGrp" />
                 <span v-b-toggle="'collapse' + varGrp" style="font-size: 16px; cursor: pointer">{{$t('{' + varGrp + '}')}}</span>
                 <b-collapse visible :id="'collapse' + varGrp" accordion="my-accordion" class="mt-2">
@@ -91,9 +84,7 @@ export default {
           informesAnualesOptions: [],
           informeAnualSelected: null,
           anniosOptions: [],
-          annioSelected: null,
-          imgPropietario: null,
-          hrefPropietario: null
+          annioSelected: null
       }
   },
   props: {
@@ -111,14 +102,14 @@ export default {
     this.getInformes();
     this.getProductos();
 
-    if (this.markers[0].propietario != null) {
-       this.imgPropietario = BASE_URL_PORTUS + "/img/logosOrganismos/" + this.markers[0].propietario + ".png";
-       this.hrefPropietario = this.markers[0].urlPropietario;
-    }
-    else {
-       this.imgPropietario = BASE_URL_PORTUS + "/img/logosOrganismos/0.png";
-       this.hrefPropietario = PUERTOS_URL;
-     }
+    // if (this.markers[0].propietario != null) {
+    //    this.imgPropietario = BASE_URL_PORTUS + "/img/logosOrganismos/" + this.markers[0].propietario + ".png";
+    //    this.hrefPropietario = this.markers[0].urlPropietario;
+    // }
+    // else {
+    //    this.imgPropietario = BASE_URL_PORTUS + "/img/logosOrganismos/0.png";
+    //    this.hrefPropietario = PUERTOS_URL;
+    //  }
   },
   methods: {
       isModelo() {

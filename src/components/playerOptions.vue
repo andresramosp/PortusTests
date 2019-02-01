@@ -2,11 +2,11 @@
   <div v-show="playingTimeLineLayer">
     <img v-show="!isWidget" 
          @click="toggleMinimized()" 
-         width="25" :class="[!mapState.playerMinimized ? 'minimizerButton' : 'minimizerButtonMin']" 
+         width="20" :class="[!mapState.playerMinimized ? 'minimizerButton' : 'minimizerButtonMin']" 
          :src="!mapState.playerMinimized ? require('@/assets/icons/replegar.png') : require('@/assets/icons/desplegar.png')" />
     <div v-show="!mapState.playerMinimized" >
        <img :src="mapState.predictionScaleImg" class="predictionScale fadeIn playerOptions" />
-         <dx-date-box
+         <!-- <dx-date-box
             class="datePicker datePicker-left fadeIn"
             :value="mapState.playerDateRangeFromValue"
             @valueChanged="changeDateFromValue"
@@ -22,11 +22,21 @@
             type="date"
             display-format="dd/MMM/yy"
             :use-mask-behavior="true"
-          />
-       <img v-show='hasRadars' class="playerIcon radarsIcon fadeIn playerOptions" @click="toggleRadars()" :src="mapState.showingRadars ?  require('@/assets/icons/puntosRadarActivated.png') : require('@/assets/icons/puntosRadar.png')" />   
+          /> -->
+      
+       <!-- <img v-show='hasRadars' class="playerIcon radarsIcon fadeIn playerOptions" @click="toggleRadars()" :src="mapState.showingRadars ?  require('@/assets/icons/puntosRadarActivated.png') : require('@/assets/icons/puntosRadar.png')" />   
        <img v-show='hasVectors' class="playerIcon vectorsIcon fadeIn playerOptions" @click="toggleVectors()" :src="mapState.showingVectors ?  require('@/assets/icons/vectorsActivated.png') : require('@/assets/icons/vectors.png')" />
        <img v-show='!isWidget' class="playerIcon predictionWidgetIcon fadeIn playerOptions" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
-       <img v-show='!isWidget && hasStaticMaps' class="playerIcon staticMapsWidgetIcon fadeIn playerOptions" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
+       <img v-show='!isWidget && hasStaticMaps' class="playerIcon staticMapsWidgetIcon fadeIn playerOptions" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" /> -->
+       
+      <div style="position: absolute; bottom: 20px; left: 470px; z-index: 5">
+        <img v-show='true' class="playerIcon" @click="toggleRadars()" :src="mapState.showingRadars ?  require('@/assets/icons/puntosRadarActivated.png') : require('@/assets/icons/puntosRadar.png')" />   
+       <img v-show='true' class="playerIcon" @click="toggleVectors()" :src="mapState.showingVectors ?  require('@/assets/icons/vectorsActivated.png') : require('@/assets/icons/vectors.png')" />
+       <img v-show='!isWidget' class="playerIcon" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
+       <img v-show='!isWidget && hasStaticMaps' class="playerIcon" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
+      </div>
+       
+       
        <img class="playerIcon infoPredIcon fadeIn playerOptions" @click="openPredictionInfo()" :src="require('@/assets/icons/info.png')" />   
     </div>
   </div>
@@ -133,10 +143,10 @@ export default {
 <style>
 
 .minimizerButton {
-  position: absolute;
+ position: absolute;
     z-index: 5;
-    left: 3px;
-    bottom: 78px;
+    left: 1px;
+    bottom: 63px;
     cursor: pointer;
 }
 
@@ -155,8 +165,8 @@ export default {
     border-radius: 6px;
     width: 320px;
     height: 43px;
-    left: 135px;
-    bottom: 95px;
+    left: 130px;
+    bottom: 72px;
 }
 
 .datePicker {
@@ -192,12 +202,15 @@ export default {
 }
 
 .playerIcon {
-  position: absolute;
+  /* position: absolute; */
   z-index: 2;
-  bottom: 102px;
-  width: 27px;
+  /* bottom: 102px; */
+  width: 20px;
   /* height: 30px; */
   cursor: pointer;
+  float: right;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .predictionWidgetIcon {
@@ -205,15 +218,15 @@ export default {
 }
 
 .vectorsIcon {
-    left: 95px;
+    /* left: 95px; */
 }
 
 .radarsIcon {
-    left: 55px;
+    /* left: 55px; */
 }
 
 .staticMapsWidgetIcon {
-    left: 470px;
+    /* left: 470px; */
   
 }
 

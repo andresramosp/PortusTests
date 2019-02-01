@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 420px;">
+  <div style="width: 420px;" class="simoPanel">
     <b-card>
       <div slot="header">
         <img
@@ -91,7 +91,7 @@
         </b-row>
         <div v-if="showExtraData && !loading" class="fadeIn">
           <b-row style="margin-top: 25px">
-            <b-col cols="6">
+            <b-col cols="6" style="padding-right: 0px;">
               <span class="variableTitleSm">{{ $t('{variableTempAgua}') }}:</span>
               <span class="variableDateSm">{{tempAguaDate}}</span>
               <span v-if="tempAgua != null && !isNaN(tempAgua)" class="variableValueSm">
@@ -346,8 +346,9 @@ export default {
     /* position: absolute;  */
     color:#ffc100; 
     font-weight: normal;
-    font-size: 14px;
+    font-size: 13.5px;
     font-style: italic;
+    margin-left: -3px;
 }
 
 .variableDate {
@@ -387,10 +388,9 @@ export default {
 
 
 .card-header {
-  background-color: #606060;
+  /* background-color: #606060; */
   font-size: 14px;
   padding: 0px 5px 11px 5px;
-  color: white;
   text-align: right;
   height: 22px;
 }

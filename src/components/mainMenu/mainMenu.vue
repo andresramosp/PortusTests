@@ -9,7 +9,7 @@
          :src="minimizerImgSrc" />
     <div v-for="optGrp in mapOptionsGroups.groups" :key="optGrp.id">
        <b-row :class="optGrp.id" style="margin-left: 0px; margin-right: 0px">
-          <b-card class="text-center panel-section" :class="[minimized ? 'minimized': '']" header-tag="header" >
+          <b-card class="text-center panel-section" :class="[minimized ? 'minimized': '', fading ? 'fadeInMenu' : '']" @animationend="fading=false" header-tag="header" >
             <h6 slot="header" class="mb-0" :class="optGrp.id">
               {{ minimized ? $t(optGrp.nameMin) : $t(optGrp.name) }}
                <img :src='require("@/assets/icons/info.png")'
@@ -67,7 +67,8 @@ export default {
       align: PC.options_panel_align,
       theme: "", // PC.color_theme,
       $t: this.$t,
-      minimized: PC.user_preferences.menu_minimized  != undefined ? PC.user_preferences.menu_minimized : false
+      minimized: PC.user_preferences.menu_minimized  != undefined ? PC.user_preferences.menu_minimized : false,
+      fading: false
     };
   },
   props: {
@@ -90,6 +91,7 @@ export default {
     toggleMinimized: function() {
       this.minimized = !this.minimized;
       localStorage.setItem('menu_minimized', this.minimized);
+      this.fading = true;
     },
     openGroupInfo: function(groupId) {
       this.mapState.setPortusInfoPanel(groupId);

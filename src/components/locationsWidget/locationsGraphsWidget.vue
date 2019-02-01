@@ -219,10 +219,8 @@ export default {
 
 
 .card-header {
-  background-color: #606060;
   font-size: 14px;
   padding: 0px 5px 11px 5px;
-  color: white;
   text-align: right;
   height: 22px;
 }

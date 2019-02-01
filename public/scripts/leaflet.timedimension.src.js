@@ -1796,11 +1796,6 @@ L.Control.TimeDimension = L.Control.extend({
             this._sliderTime = this._createSliderTime(this.options.styleNS + ' timecontrol-slider ' + timeSliderClass, container);
             this._sliderTime.tale = L.DomUtil.create('div', this.options.styleNS + ' slider slider-tale', container);
         }
-         if (this.options.speedSlider && !this.options.minimized) {
-            this._sliderSpeed = this._createSliderSpeed(this.options.styleNS + ' timecontrol-slider timecontrol-speed', container);
-            this._sliderSpeed.tale = L.DomUtil.create('div', this.options.styleNS + ' slider slider-speed-tale', container);
-        }
-
         if (this.options.backwardButton) {
             this._buttonBackward = this._createButton('Backward', container);
         }
@@ -1812,6 +1807,10 @@ L.Control.TimeDimension = L.Control.extend({
         }
         if (this.options.forwardButton) {
             this._buttonForward = this._createButton('Forward', container);
+        }
+        if (this.options.speedSlider && !this.options.minimized) {
+            this._sliderSpeed = this._createSliderSpeed(this.options.styleNS + ' timecontrol-slider timecontrol-speed', container);
+            //this._sliderSpeed.tale = L.DomUtil.create('div', this.options.styleNS + ' slider slider-speed-tale', container);
         }
         if (this.options.loopButton) {
             this._buttonLoop = this._createButton('Loop', container);
@@ -2137,10 +2136,10 @@ L.Control.TimeDimension = L.Control.extend({
             .addListener(sliderContainer, 'click', L.DomEvent.stopPropagation)
             .addListener(sliderContainer, 'click', L.DomEvent.preventDefault);
 */
-        var speedLabel = L.DomUtil.create('span', 'speed', sliderContainer);
+        //var speedLabel = L.DomUtil.create('span', 'speed', sliderContainer);
         var sliderbar = L.DomUtil.create('div', 'slider', sliderContainer);
         var initialSpeed = Math.round(10000 / (this._player.getTransitionTime() || 1000)) / 10;
-        speedLabel.innerHTML = this._getDisplaySpeed(initialSpeed);
+        //speedLabel.innerHTML = this._getDisplaySpeed(initialSpeed);
 
         var knob = new L.UI.Knob(sliderbar, {
             step: this.options.speedStep,
@@ -2151,15 +2150,15 @@ L.Control.TimeDimension = L.Control.extend({
         knob.on('dragend', function(e) {
             var value = e.target.getValue();
             this._draggingSpeed = false;
-            speedLabel.innerHTML = this._getDisplaySpeed(value);
+            //speedLabel.innerHTML = this._getDisplaySpeed(value);
             this._sliderSpeedValueChanged(value);
         }, this);
         knob.on('drag', function(e) {
             this._draggingSpeed = true;
-            speedLabel.innerHTML = this._getDisplaySpeed(e.target.getValue());
+            //speedLabel.innerHTML = this._getDisplaySpeed(e.target.getValue());
         }, this);
          knob.on('positionchanged', function (e) {
-            speedLabel.innerHTML = this._getDisplaySpeed(e.target.getValue());
+            //speedLabel.innerHTML = this._getDisplaySpeed(e.target.getValue());
         }, this);
 
         L.DomEvent.on(sliderbar, 'click', function(e) {
@@ -2169,7 +2168,7 @@ L.Control.TimeDimension = L.Control.extend({
             var first = (e.touches && e.touches.length === 1 ? e.touches[0] : e),
                 x = L.DomEvent.getMousePosition(first, sliderbar).x;
             knob.setPosition(x);
-            speedLabel.innerHTML = this._getDisplaySpeed(knob.getValue());
+            //speedLabel.innerHTML = this._getDisplaySpeed(knob.getValue());
             this._sliderSpeedValueChanged(knob.getValue());
         }, this);
         return knob;
