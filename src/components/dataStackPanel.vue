@@ -2,10 +2,10 @@
   <div class="list-container" >
     <draggable v-model="mapState.dataObjectsList" @start="drag=true" @end="drag=false">
       <div v-for="(dataPanel) in mapState.dataObjectsList" :key="dataPanel.id">
-        <b-card no-body class="mb-1">
-          <b-card-header style="cursor: move;" header-tag="header" class="p-1" role="tab" href="#" v-b-toggle="'id' + dataPanel.id" block>
+        <b-card no-body class="">
+          <b-card-header class="dataPanelHeader" header-tag="header" role="tab" href="#" v-b-toggle="'id' + dataPanel.id" block>
             <span style="text-align: left; font-size: 14px" variant="info">{{dataPanel.name}}</span>
-            <span @click="cerrar(dataPanel)" style="float:right; cursor: pointer">x</span>
+             <img :src='require("@/assets/icons/x.png")' class="closeIcon" style="margin-top: 3px" @click="cerrar(dataPanel)">
           </b-card-header>
           <b-collapse :id="'id' + dataPanel.id" :visible="true"  role="tabpanel"> 
             <b-card-body>
@@ -21,12 +21,11 @@
 </template>
 
 <script>
-// import DxList from "devextreme-vue/list";
+
 import MapState from "@/state/map.state";
 import DataPanelsUtils from "@/services/dataPanels.utils";
 import DataTablesRTPanel from "@/components/dataTables/dataTablesRTPanel.vue";
 import DataTablesPredPanel from "@/components/dataTables/dataTablesPredPanel.vue";
-
 import draggable from "vuedraggable";
 
 export default {

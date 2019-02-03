@@ -1790,7 +1790,7 @@ L.Control.TimeDimension = L.Control.extend({
         }
         this._initPlayer();
 
-        container = L.DomUtil.create('div', 'leaflet-bar leaflet-bar-horizontal leaflet-bar-timecontrol fadeIn');
+        container = L.DomUtil.create('div', 'leaflet-bar leaflet-bar-horizontal leaflet-bar-timecontrol fadeIn_');
         if (this.options.timeSlider) {
             var timeSliderClass = this.options.minimized ? 'timecontrol-datesliderMin' : 'timecontrol-dateslider';
             this._sliderTime = this._createSliderTime(this.options.styleNS + ' timecontrol-slider ' + timeSliderClass, container);
@@ -1810,13 +1810,14 @@ L.Control.TimeDimension = L.Control.extend({
         }
         if (this.options.speedSlider && !this.options.minimized) {
             this._sliderSpeed = this._createSliderSpeed(this.options.styleNS + ' timecontrol-slider timecontrol-speed', container);
-            //this._sliderSpeed.tale = L.DomUtil.create('div', this.options.styleNS + ' slider slider-speed-tale', container);
+            this._sliderSpeed.tale = L.DomUtil.create('div', this.options.styleNS + ' slider slider-speed-tale', container);
         }
         if (this.options.loopButton) {
             this._buttonLoop = this._createButton('Loop', container);
         }
-        if (this.options.displayDate && !this.options.minimized) {
-            this._displayDate = this._createButton('Date', container);
+        if (this.options.displayDate) {
+            var title = !this.options.minimized ? 'Date' : 'DateMin';
+            this._displayDate = this._createButton(title, container);
         }
        
         this._steps = this.options.timeSteps || 1;
@@ -1980,7 +1981,12 @@ L.Control.TimeDimension = L.Control.extend({
         L.DomEvent
             .addListener(link, 'click', L.DomEvent.stopPropagation)
             .addListener(link, 'click', L.DomEvent.preventDefault)
-            .addListener(link, 'click', this['_button' + title.replace(/ /i, '') + 'Clicked'], this);
+            .addListener(link, 'click', this['_button' + title.replace(/ /i, '') + 'Clicked'], this)
+            .addListener(link, 'mouseover', this['_buttonHover'], this)
+            .addListener(link, 'mouseout', this['_buttonOut'], this);
+
+           
+        //link.addListener('dblclick', this['_button' + title.replace(/ /i, '') + 'Hover'], false);
 
         return link;
     },
@@ -2136,10 +2142,10 @@ L.Control.TimeDimension = L.Control.extend({
             .addListener(sliderContainer, 'click', L.DomEvent.stopPropagation)
             .addListener(sliderContainer, 'click', L.DomEvent.preventDefault);
 */
-        //var speedLabel = L.DomUtil.create('span', 'speed', sliderContainer);
+        var speedLabel = L.DomUtil.create('span', 'speed', sliderContainer);
         var sliderbar = L.DomUtil.create('div', 'slider', sliderContainer);
         var initialSpeed = Math.round(10000 / (this._player.getTransitionTime() || 1000)) / 10;
-        //speedLabel.innerHTML = this._getDisplaySpeed(initialSpeed);
+        speedLabel.innerHTML = this._getDisplaySpeed(initialSpeed);
 
         var knob = new L.UI.Knob(sliderbar, {
             step: this.options.speedStep,
@@ -2150,15 +2156,15 @@ L.Control.TimeDimension = L.Control.extend({
         knob.on('dragend', function(e) {
             var value = e.target.getValue();
             this._draggingSpeed = false;
-            //speedLabel.innerHTML = this._getDisplaySpeed(value);
+            speedLabel.innerHTML = this._getDisplaySpeed(value);
             this._sliderSpeedValueChanged(value);
         }, this);
         knob.on('drag', function(e) {
             this._draggingSpeed = true;
-            //speedLabel.innerHTML = this._getDisplaySpeed(e.target.getValue());
+            speedLabel.innerHTML = this._getDisplaySpeed(e.target.getValue());
         }, this);
          knob.on('positionchanged', function (e) {
-            //speedLabel.innerHTML = this._getDisplaySpeed(e.target.getValue());
+            speedLabel.innerHTML = this._getDisplaySpeed(e.target.getValue());
         }, this);
 
         L.DomEvent.on(sliderbar, 'click', function(e) {
@@ -2168,7 +2174,7 @@ L.Control.TimeDimension = L.Control.extend({
             var first = (e.touches && e.touches.length === 1 ? e.touches[0] : e),
                 x = L.DomEvent.getMousePosition(first, sliderbar).x;
             knob.setPosition(x);
-            //speedLabel.innerHTML = this._getDisplaySpeed(knob.getValue());
+            speedLabel.innerHTML = this._getDisplaySpeed(knob.getValue());
             this._sliderSpeedValueChanged(knob.getValue());
         }, this);
         return knob;
@@ -2202,7 +2208,23 @@ L.Control.TimeDimension = L.Control.extend({
     },
 
     _buttonDateClicked: function(){
-        this._toggleDateUTC();
+        //this._toggleDateUTC();
+    },
+
+    _buttonDateMinClicked: function(){
+        //this._toggleDateUTC();
+    },
+
+    _buttonHover: function(){
+        // if (this.mapState.dateRangeTimeOut)
+        //     clearTimeout(this.mapState.dateRangeTimeOut);
+        // this.mapState.playerDateRangeVisibility = true;
+    },
+
+    _buttonOut: function(){
+        // this.mapState.dateRangeTimeOut = setTimeout(() => {
+        //     this.mapState.playerDateRangeVisibility = false;    
+        // }, 750);
     },
 
     _sliderTimeValueChanged: function(newValue) {

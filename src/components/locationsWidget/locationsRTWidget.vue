@@ -292,10 +292,10 @@ export default {
 <style scoped>
 
 .shareIcon {
-  margin-top: 2px;
+  margin-top: 2.5px;
   float: left;
   cursor: pointer;
-  width: 19px;
+  width: 16px;
   margin-right: 6px;
 }
 
@@ -303,7 +303,7 @@ export default {
   margin-top: 2px;
   float: right;
   cursor: pointer;
-  width: 18px;
+  width: 17px;
   margin-left: 5px;
 }
 
@@ -390,7 +390,7 @@ export default {
 .card-header {
   /* background-color: #606060; */
   font-size: 14px;
-  padding: 0px 5px 11px 5px;
+  padding: 1px 5px 11px 5px;
   text-align: right;
   height: 22px;
 }

@@ -75,7 +75,7 @@ export default {
               || this.markers[0].mapResource.markerClass == MarkerClass.PuntoMallaHist) {
             this.informacion = [
               { key: this.$t("{longitudInfo}"), value: MapUtils.lonToString(this.markers[0].longitud) },
-                { key: this.$t("{latitudInfo}"), value: MapUtils.latToString(this.markers[0].latitud) },
+              { key: this.$t("{latitudInfo}"), value: MapUtils.latToString(this.markers[0].latitud) },
               { key: this.$t("{codigoModeloInfo}"), value: this.markers[0].id },
               { key: this.$t("{cadencyInfo}"), value: (this.markers[0].tdelta * 60) + ' min'  },
               { key: this.$t("{mallaInfo}"), value: this.markers[0].malla },
@@ -99,8 +99,8 @@ export default {
                 { key: this.$t("{cadencyInfo}"), value: this.markers[0].cadencia ? this.markers[0].cadencia + ' Min' : null  },
                 { key: this.$t("{codigoEstacionInfo}"), value: this.markers[0].id },
                 { key: this.$t("{profundidadEstacionInfo}"), value: this.markers[0].altitudProfundidad ? this.markers[0].altitudProfundidad + ' m' : null },
-                { key: this.$t("{fechaInicialFondeoInfo}"), value: this.markers[0].fechaAlta ? new Date(this.markers[0].fechaAlta).toISOString().split('T')[0] : null },
-                { key: this.$t("{fechaFinFondeoInfo}"), value: this.markers[0].fechaFin ? new Date(this.markers[0].fechaFin).toISOString().split('T')[0] : null },
+                { key: this.$t("{fechaInicialFondeoInfo}"), value: this.markers[0].fechaAlta ? new Date(this.markers[0].fechaAlta.replace('+', '')).toISOString().split('T')[0] : null },
+                { key: this.$t("{fechaFinFondeoInfo}"), value: this.markers[0].fechaFin ? new Date(this.markers[0].fechaFin.replace('+', '')).toISOString().split('T')[0] : null },
                 { key: this.$t("{tipoSensorInfo}"), value: this.markers[0].tipoSensor },
                 { key: this.$t("{modeloEstacionInfo}"), value: this.markers[0].modelo },
                 { key: this.$t("{comentariosEstacionInfo}"), value: this.markers[0].comentarios },

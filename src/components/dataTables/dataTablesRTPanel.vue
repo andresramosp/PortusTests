@@ -256,7 +256,7 @@ export default {
   margin-top: 2px;
   float: right;
   cursor: pointer;
-  width: 19px;
+  width: 23px;
   margin-right: 6px;
 }
 </style>

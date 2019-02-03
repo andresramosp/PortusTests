@@ -71,6 +71,17 @@
     background-color: rgba(115, 170, 199, 0.7);
   }
 
+  /* Colores player */
+
+  .darkTheme .leaflet-bar-timecontrol{
+    color: white;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  #no-bootstrap .darkTheme .leaflet-bar-timecontrol .leaflet-control-timecontrol a:hover{
+    color: red !important;
+  }
+
   /* Estilos marker panel */
 
 .darkTheme .markerPanel div:not(.dx-popup-title):not(.dx-button-content):not(.dx-button-text) {
@@ -136,6 +147,16 @@
     color: #eff1f3;
     background-color: rgb(21, 91, 140);
     border-color: transparent;
+}
+
+.darkTheme .dataPanelHeader {
+  height: 30px;
+  padding-top: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+  cursor: move;
+  background-color: rgb(21, 91, 140);
+  color: white;
 }
 
   

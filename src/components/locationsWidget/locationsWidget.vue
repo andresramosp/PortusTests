@@ -28,11 +28,11 @@
         @click="cerrar"
       >
        <!-- <span @click="toggleMinimized" style="float:right; cursor:pointer">_</span> -->
-       <img
+       <!-- <img
         :src='require("@/assets/icons/minimize.png")'
         class="minimizeIcon"
         @click="toggleMinimized"
-      >
+      > -->
       <img
         v-show="!minimized"
         :src='require("@/assets/icons/shareIcon.png")'
@@ -205,7 +205,7 @@ export default {
 }
 
 .shareIcon {
-  margin-top: 2px;
+  margin-top: 0px;
   float: right;
   cursor: pointer;
   width: 19px;

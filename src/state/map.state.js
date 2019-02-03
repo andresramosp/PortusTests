@@ -20,12 +20,13 @@ const MapState = {
     currentTimeLineLayer: null,
     playerDateRangeFromValue: null,
     playerDateRangeToValue: null,
+    playerDateRangeVisibility: true,
     playerMinimized: false,
     maxPredictionDate: null,
     showingVectors: false,
     showingRadars: false,
     currentPlayerTime: null,
-    staticelected: null,
+    staticMapResourceSelected: null,
     loadingThings: [],
     heapedPopup: null,
     mapLogos: [],
@@ -319,8 +320,8 @@ const MapState = {
         this.currentPlayerTime = date;
     },
 
-    setStaticelected(mapResource) {
-        this.staticelected = mapResource;
+    setStaticMapResourceSelected(mapResource) {
+        this.staticMapResourceSelected = mapResource;
     },
 
     addTileLayer(mapResource) {

@@ -56,7 +56,7 @@ const LocalePlugin = {
             en: "Waves Atlantic"
         },
         oleajeMeditOption: {
-            es: "Oleaje Medit",
+            es: "Oleaje Med.",
             en: "Waves Med."
         },
         vientoOption: {
@@ -64,7 +64,7 @@ const LocalePlugin = {
             en: "Wind"
         },
         oleajeMeditOption: {
-            es: "Oleaje Medit",
+            es: "Oleaje Med.",
             en: "Waves Med."
         },
         nivelDelMarOption: {
@@ -102,6 +102,31 @@ const LocalePlugin = {
         presionAtmOption: {
             es: "Presión Atm.",
             en: "Air Pressure"
+        },
+        // unidades de escala
+        unitWAVE: {
+            es: "Altura de ola (m)",
+            en: "Wave height (m)"
+        },
+        unitSEA_LEVEL: {
+            es: "Nivel - Marea = Residuo (m) (HAMSOM)",
+            en: "Level - Tide=Residual (m) (HAMSOM)"
+        },
+        unitWIND: {
+            es: "Vv (m/s) - Beaufort",
+            en: "Vv (m/s) - Beaufort"
+        },
+        unitWATER_TEMP: {
+            es: "Temperatura del agua C°",
+            en: "Water temperature C°n"
+        },
+        unitCURRENTS: {
+            es: "Media diaria (m/s)",
+            en: "Daily average (m/s)"
+        },
+        unitSALINITY: {
+            es: "Salinidad (psu)",
+            en: "Salinity (psu)"
         },
         // checkboxes groups
         prediccionesGroup: {
@@ -392,6 +417,23 @@ const LocalePlugin = {
         ceroRedmar: {
             es: "Cero REDMAR",
             en: "REDMAR Datum"
+        },
+        // Tooltip iconos player
+        shareIconPred: {
+            es: "Inserte esta animación en su web",
+            en: "Embed this animation into your web page"
+        },
+        staticMapsIconPred: {
+            es: "Acceso a mapas e imprimir",
+            en: "Access to forecast maps and print"
+        },
+        vectorsIconPred: {
+            es: "Ver dirección",
+            en: "Show direction"
+        },
+        radarsIconPred: {
+            es: "Ver puntos de radar",
+            en: "Show radar points"
         }
     },
    

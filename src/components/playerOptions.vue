@@ -5,39 +5,44 @@
          width="20" :class="[!mapState.playerMinimized ? 'minimizerButton' : 'minimizerButtonMin']" 
          :src="!mapState.playerMinimized ? require('@/assets/icons/replegar.png') : require('@/assets/icons/desplegar.png')" />
     <div v-show="!mapState.playerMinimized" >
-       <img :src="mapState.predictionScaleImg" class="predictionScale fadeIn playerOptions" />
-         <!-- <dx-date-box
+       <div class="shadedSquare fadeIn">
+           <span class="unidadEscala" >{{unidadEscala}}</span>
+           <img :src="mapState.predictionScaleImg" class="predictionScale playerOptions" />
+       </div>
+     
+         <dx-date-box
+            :ref="'datePickerFrom'"
             class="datePicker datePicker-left fadeIn"
             :value="mapState.playerDateRangeFromValue"
             @valueChanged="changeDateFromValue"
+            @mouseover="dateRangeMouseOver"
+            @mouseout="dateRangeMouseOut"
             type="date"
-            display-format="dd/MMM/yy"
+            display-format="dd/MMM"
+            width="20px"
           />
 
            <dx-date-box
             class="datePicker datePicker-right fadeIn"
             :value="mapState.playerDateRangeToValue"
             @valueChanged="changeDateToValue"
+            @mouseover="dateRangeMouseOver"
+            @mouseout="dateRangeMouseOut"
             :max="null"
             type="date"
-            display-format="dd/MMM/yy"
+            display-format="dd/MMM"
             :use-mask-behavior="true"
-          /> -->
-      
-       <!-- <img v-show='hasRadars' class="playerIcon radarsIcon fadeIn playerOptions" @click="toggleRadars()" :src="mapState.showingRadars ?  require('@/assets/icons/puntosRadarActivated.png') : require('@/assets/icons/puntosRadar.png')" />   
-       <img v-show='hasVectors' class="playerIcon vectorsIcon fadeIn playerOptions" @click="toggleVectors()" :src="mapState.showingVectors ?  require('@/assets/icons/vectorsActivated.png') : require('@/assets/icons/vectors.png')" />
-       <img v-show='!isWidget' class="playerIcon predictionWidgetIcon fadeIn playerOptions" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
-       <img v-show='!isWidget && hasStaticMaps' class="playerIcon staticMapsWidgetIcon fadeIn playerOptions" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" /> -->
-       
-      <div style="position: absolute; bottom: 20px; left: 470px; z-index: 5">
-        <img v-show='true' class="playerIcon" @click="toggleRadars()" :src="mapState.showingRadars ?  require('@/assets/icons/puntosRadarActivated.png') : require('@/assets/icons/puntosRadar.png')" />   
-       <img v-show='true' class="playerIcon" @click="toggleVectors()" :src="mapState.showingVectors ?  require('@/assets/icons/vectorsActivated.png') : require('@/assets/icons/vectors.png')" />
-       <img v-show='!isWidget' class="playerIcon" @click="openPredictionWidget()" :src="require('@/assets/icons/predictionWidget.png')" />
-       <img v-show='!isWidget && hasStaticMaps' class="playerIcon" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
+            width="20px"
+          />
+     
+      <div class="fadeIn" style="position: absolute; bottom: 20px; left: 427px; z-index: 5; width: 90px">
+        <img v-if='!isWidget' :title="$t('{shareIconPred}')" class="playerIcon" @click="openPredictionWidget()" :src="require('@/assets/icons/shareIcon.png')" />
+        <img v-if='!isWidget && hasStaticMaps' :title="$t('{staticMapsIconPred}')" class="playerIcon" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
+        <img v-if='hasVectors' class="playerIcon" :title="$t('{vectorsIconPred}')" @click="toggleVectors()" :src="mapState.showingVectors ?  require('@/assets/icons/vectorsActivated.png') : require('@/assets/icons/vectors.png')" />
+        <img v-if='hasRadars' class="playerIcon" :title="$t('{radarsIconPred}')" @click="toggleRadars()" :src="mapState.showingRadars ?  require('@/assets/icons/puntosRadarActivated.png') : require('@/assets/icons/puntosRadar.png')" />   
       </div>
-       
-       
-       <img class="playerIcon infoPredIcon fadeIn playerOptions" @click="openPredictionInfo()" :src="require('@/assets/icons/info.png')" />   
+       <img class="infoPredIcon fadeIn" @click="openPredictionInfo()" :src="require('@/assets/icons/info.png')" />   
+       <img class="fpsIcon fadeIn" :src="require('@/assets/icons/fps.png')" />   
     </div>
   </div>
 </template>
@@ -62,6 +67,12 @@ export default {
     isWidget: { default: false, required: false }
   },
   computed: {
+      unidadEscala() {
+        if (!this.isWidget && this.mapState.currentTimeLineLayer)
+          return this.$t('{' + 'unit' + this.mapState.currentTimeLineLayer.mapOption.variableType + '}');
+        else 
+          return null;
+      },
       playingTimeLineLayer() {
         return this.mapState.currentTimeLineLayer != null;
       },
@@ -132,10 +143,28 @@ export default {
       this.mapState.setPortusInfoPanel(sourceId);
     },
 
+    // openDateFrom() {
+    //   this.datePickerFromShow = true;
+    //   this.$refs['datePickerFrom'].instance.open();
+    // },
+
     toggleMinimized() {
       var currentValue = this.mapState.getMap().timeDimensionControl.options.minimized;
       this.mapState.setPlayerMinimized(!currentValue);
-    }
+    },
+
+    dateRangeMouseOver: function(){
+        // if (this.mapState.dateRangeTimeOut)
+        //     clearTimeout(this.mapState.dateRangeTimeOut);
+        //this.mapState.playerDateRangeVisibility = true;
+    },
+
+    dateRangeMouseOut: function(){
+        // this.mapState.dateRangeTimeOut = setTimeout(() => {
+        //     this.mapState.playerDateRangeVisibility = false;    
+        // }, 750);
+        //this.mapState.playerDateRangeVisibility = false;    
+    },
   }
 };
 </script>
@@ -151,48 +180,57 @@ export default {
 }
 
 .minimizerButtonMin {
-    position: absolute;
+  position: absolute;
     z-index: 5;
-    left: 3px;
-    bottom: 72px;
+    left: 1px;
+    bottom: 63px;
     cursor: pointer;
 }
 
-.predictionScale {
+.shadedSquare {
     position: absolute;
     z-index: 2;
-    padding: 10px;
+    padding: 7px;
     border-radius: 6px;
+    left: 100px;
+    bottom: 83px;
+    background: #ffffff57;
+    text-align: center;
+}
+
+.predictionScale {
     width: 320px;
-    height: 43px;
-    left: 130px;
-    bottom: 72px;
+    height: 25px;
+}
+
+.unidadEscala {
+    position: relative;
+    color: white;
+    display: inherit;
+    font-size: 11px;
 }
 
 .datePicker {
     position: absolute;
     z-index: 2;
     left: 125px;
-    bottom: 22px;
+    bottom: 15px;
     width: 70px;
     font-size: 10px;
     border: none !important;
     border-radius: 0px !important;
 }
 
- .datePicker .dx-texteditor-input {
-  background: black;
-  color: white;
-}
+
 
 .datePicker-left {
   /* left: 128px; */
-  left: 150px;
+  left: 246px;
 }
 
 .datePicker-right {
   /* left: 380px; */
-  left: 361px;
+  left: 364px;
 }
 
 .dx-texteditor-input {
@@ -209,8 +247,8 @@ export default {
   /* height: 30px; */
   cursor: pointer;
   float: right;
-  margin-left: 5px;
-  margin-right: 5px;
+  margin-left: 4px;
+  margin-right: 4px;
 }
 
 .predictionWidgetIcon {
@@ -231,11 +269,23 @@ export default {
 }
 
 .infoPredIcon {
-    left: 596px;
-    bottom: 18px !important;
-    width: 20px;
+    position: absolute;
+    z-index: 2;
+    /* left: 530px;
+    bottom: 15px; */
+    width: 17px;
+    left: 502px;
+    bottom: 77px;
+    cursor: pointer;
 }
 
+.fpsIcon {
+    position: absolute;
+    z-index: 2;
+    left: 112px;
+    bottom: 19px;
+    width: 15px;
+}
 
 
 

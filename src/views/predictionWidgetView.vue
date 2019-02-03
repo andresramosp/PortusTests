@@ -54,9 +54,9 @@ export default {
 
 #app { height: 100%;}
 
-/* .leaflet-bottom {
-  padding-left: 45%;
-} */
+.leaflet-bottom {
+  padding-left: 42%;
+}
  
 </style>
 

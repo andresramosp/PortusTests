@@ -178,7 +178,7 @@ export default {
   position: absolute;
   z-index: 2;
   /* right: 9px; */
-  top: 8px;
+  top: 0px;
   padding: 10px;
   border-radius: 0px;
   color: white;

@@ -32,7 +32,7 @@
          </b-col>
          <b-col cols="2">
             <img
-              :src='require("@/assets/icons/shareIcon.png")'
+              :src='require("@/assets/icons/shareIconBlack.png")'
               class="shareIcon"
               @click="openShareInfo"
               @mouseover="openShareInfo"
@@ -481,7 +481,7 @@ export default {
   margin-top: 2px;
   float: right;
   cursor: pointer;
-  width: 19px;
+  width: 23px;
   margin-right: 6px;
 }
 </style>
