@@ -409,7 +409,11 @@ export default {
 };
 </script>
 
-<style>
+<style >
+/* 
+.list-container .nav-tabs {
+    border-bottom: 0px;
+} */
 
 .nav-link {
     padding: 5px 15px 5px 15px !important;
@@ -485,3 +489,4 @@ export default {
   margin-right: 6px;
 }
 </style>
+

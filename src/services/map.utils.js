@@ -2,8 +2,9 @@ import { MarkerClass } from "@/common/enums";
 import ApiService from "@/services/api.service";
 import MapState from "@/state/map.state";
 
-import LastDataPopup from "@/components/lastDataPopup.vue";
-import HeapedMarkersPopup from "@/components/heapedMarkersPopup.vue";
+import RTDataPopup from "@/components/markerPopups/RTDataPopup.vue";
+import HeapedMarkersPopup from "@/components/markerPopups/heapedMarkersPopup.vue";
+import SimpleMarkerPopup from "@/components/markerPopups/simpleMarkerPopup.vue";
 import Vue from 'vue';
 
 const MapUtils = {
@@ -117,51 +118,23 @@ const MapUtils = {
   },
 
   async openMarkerPopup(map, marker) {
-    var tooltip;
-
-    switch (marker.mapResource.markerClass) {
-      case MarkerClass.Ubicacion:
-        marker.bindPopup(Vue.$t("{tipoUbicacion" + marker.tipoUbicacion+"}") + ": " + marker.nombre);
-        marker.openPopup();
-        break;
-      case MarkerClass.PuntoMalla:
-        tooltip = "Pred. " + Vue.$t(marker.mapOption.name) + ": " + this.getMarkerName(marker);
-        marker.bindPopup(tooltip);
-        marker.openPopup();
-        break;
-      case MarkerClass.PuntoMallaVerif:
-        tooltip = Vue.$t("{verificacionInfo}") + ": " + marker.nombre;
-        marker.bindPopup(tooltip);
-        marker.openPopup();
-        break;
-      case MarkerClass.EstacionHist:
-        tooltip = Vue.$t("{estacionHistTooltip}") + ": " + marker.nombre;
-        marker.bindPopup(tooltip);
-        marker.openPopup();
-        break;
-      case MarkerClass.PuntoMallaHist:
-        tooltip = Vue.$t("{estacionHistTooltip}") + ": " + Vue.$t("{puntoSimarLabel}") + ": (" + marker.id + ")";
-        marker.bindPopup(tooltip);
-        marker.openPopup();
-        break;
-      case MarkerClass.AntenaRadar:
-        tooltip = marker.radar.nombre + " - " + marker.nombre;
-        marker.bindPopup(tooltip);
-        marker.openPopup();
-        break;
-      case MarkerClass.EstacionRT:
+    if (marker.mapResource.markerClass == MarkerClass.EstacionRT) {
         marker.timeOut = setTimeout(async () => {
           var markersAtPoint = this.getMarkersById(map, marker.id);
           var lastData = await ApiService.post('lastData/station/' + marker.id + '?locale=' + Vue.$getLocale(),
           markersAtPoint.map(m => { return m.mapOption.variableType }), true);
-          marker.lastDataComponent  = new Vue({ ...LastDataPopup, propsData: { marker: marker, data: lastData.data } }).$mount()
+          marker.lastDataComponent  = new Vue({ ...RTDataPopup, propsData: { marker: marker, data: lastData.data } }).$mount()
           marker.bindPopup(marker.lastDataComponent.$el, {
-            maxWidth: 560
+            maxWidth: 560,
+            offset: [0, 0]
           });
           marker.openPopup();
         }, 250);
-
-        break;
+    }
+    else {
+      new Vue({ ...SimpleMarkerPopup, 
+        propsData: {  marker: marker } 
+      }).$mount()
     }
 
   },

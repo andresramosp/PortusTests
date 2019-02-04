@@ -37,10 +37,7 @@
               </b-row>
             </b-container>
           </b-card>
-          <SubMenu :mapOptionGroup="optGrp" 
-                :preloadedTimeLineLayers="mapState.preloadedTimeLineLayers" 
-                :preloadedMarkers="mapState.preloadedMarkers"
-                :minimized="minimized" />
+          <SubMenu :mapOptionGroup="optGrp" :minimized="minimized" />
        </b-row>
     </div>
   </div>

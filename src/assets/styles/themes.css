@@ -44,15 +44,13 @@
       font-weight: bold;
   }
   
-  
-  
   .darkTheme .predicciones .lightable:hover  {
-    color: rgba(11, 90, 149, 1);
+    color: rgba(11, 90, 149, 0.7);
   }
   
   
   .darkTheme .predicciones .minimized .lightable img:hover  {
-    background-color: rgba(11, 90, 149, 1);
+    background-color: rgba(11, 90, 149, 0.4);
   }
   
   .darkTheme .tiempo_real .lightable:hover  {
@@ -60,7 +58,7 @@
   }
   
   .darkTheme .tiempo_real .minimized .lightable img:hover  {
-    background-color: rgba(6, 136, 192, 0.7);
+    background-color: rgba(6, 136, 192, 0.4);
   }
   
   .darkTheme .historico .lightable:hover  {
@@ -68,10 +66,17 @@
   }
   
   .darkTheme .historico .minimized .lightable img:hover  {
-    background-color: rgba(115, 170, 199, 0.7);
+    background-color: rgba(115, 170, 199, 0.4);
   }
 
-  /* Colores player */
+  .darkTheme .card-header.tiempo_real {
+    background-color: rgba(6, 136, 192, 0.7);
+    color: white;
+  }
+
+  .darkTheme .alertText {
+    color: rgb(26, 153, 196);
+  }
 
   .darkTheme .leaflet-bar-timecontrol{
     color: white;
@@ -82,10 +87,15 @@
     color: red !important;
   }
 
-  /* Estilos marker panel */
+.simoPanel .card-body {
+  background: white !important;
+}
 
-.darkTheme .markerPanel div:not(.dx-popup-title):not(.dx-button-content):not(.dx-button-text) {
-    background: rgb(74, 73, 79) !important;
+.darkTheme .markerPanel div:not(.dx-popup-title):not(.dx-button-content):not(.dx-button-text),
+.darkTheme .leaflet-popup-content .card-body,
+.darkTheme .whiteBG,
+.darkTheme .leaflet-popup-tip {
+    background: rgb(74, 73, 79);
     color:white !important;
     border-radius: 0px !important;
 }
@@ -108,13 +118,12 @@
     min-width: fit-content;
 }
 
-.darkTheme #accordionContent *:not(.dx-button-content):not(.dx-button-text) {
+.darkTheme #accordionContent *:not(.dx-button-content):not(.dx-button-text),
+.darkTheme #specialContent,
+.darkTheme .grayBG
+{
   background: rgb(64, 63, 69) !important;
   color: white;
-}
-
-.darkTheme #specialContent {
-  background-color: rgb(64, 63, 69);
 }
 
 .darkTheme #accordionContent .card-body {
@@ -126,9 +135,6 @@
   background: rgb(21, 91, 140) !important;
 }
 
-/* .markerPanel .dx-state-hover .dx-button-text {
-  background: rgb(21, 91, 140) !important;
-} */
 
 .darkTheme .markerPanel .nav-link {
   color: #eff1f3;

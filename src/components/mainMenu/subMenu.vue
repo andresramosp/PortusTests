@@ -1,5 +1,5 @@
  <template>
- <div v-if="floatingOptions.length > 0" 
+ <div v-if="subMenuOptions.length > 0" 
       class="subMenu" 
       :class="{ 
         'subMenuLeft': !minimized && align == 'left',
@@ -15,16 +15,11 @@
             'singlePanel': selectCombos.length == 0,
             'selectPanel': selectCombos.length > 0
           }">
-          <!-- <select v-for="selectComboId in selectCombos" :key="selectComboId" v-model="selectedOption" @change="setComboLayersVisibility()">
-             <option :value="floatingOption" v-for="floatingOption in floatingOptions.filter(opt => opt.comboSelectId == selectComboId)" :key="floatingOptions.indexOf(floatingOption)">
-               {{ $t(floatingOption.name) }}
-             </option>
-          </select> -->
-          <!-- Ojo: ahora mismo solo aceptaría un combo por subMenu. Poner v-for como arriba para soportar más -->
-          <b-form-select v-if="selectCombos.length > 0" text-field="name" value-field="name" :options="floatingOptions.filter(opt => opt.comboSelectId)" @change="setComboLayersVisibility" v-model="selectedOption" class="select-layers">
+          <!-- Ojo: ahora mismo solo aceptaría un combo por subMenu. Poner v-for si se quiere soportar más -->
+          <b-form-select v-if="selectCombos.length > 0" text-field="name" value-field="name" :options="subMenuOptions.filter(opt => opt.comboSelectId)" @change="setComboLayersVisibility" v-model="selectedOption" class="select-layers">
           </b-form-select>
           <div style="padding: 7px; display: inline-block">
-               <div v-for="floatingOption in floatingOptions.filter(opt => !opt.comboSelectId)" :key="floatingOptions.indexOf(floatingOption)">
+               <div v-for="floatingOption in subMenuOptions.filter(opt => !opt.comboSelectId)" :key="subMenuOptions.indexOf(floatingOption)">
                   <label class="form-check-label unselectable">
                     <img style="" width="16" :src="floatingOption.active ? require('@/assets/icons/check_activo.png') : require('@/assets/icons/check_inactivo.png')" >
                     <input class="form-check-input" style="display: none" type="checkbox" v-model="floatingOption.active" @change="checkOptionChanged(floatingOption)" />
@@ -49,8 +44,6 @@ export default {
   name: "SubMenu",
   props: {
     mapOptionGroup: { type: Object, default: null, required: false },
-    preloadedTimeLineLayers: { type: Array },
-    preloadedMarkers: { type: Array},
     minimized: { type: Boolean }
   },
   data() {
@@ -59,12 +52,12 @@ export default {
       theme: "", // PC.color_theme,
       mapState: MapState,
       selectedOption: null,
-      floatingOptions: []
+      subMenuOptions: []
     };
   },
   computed: {
     selectCombos() {
-      var combos = this.floatingOptions
+      var combos = this.subMenuOptions
         .filter(m => m.comboSelectId)
         .map(m => {
           return m.comboSelectId;
@@ -82,11 +75,16 @@ export default {
    
   },
   watch: {
-      preloadedTimeLineLayers: function () {
+      'mapState.preloadedTimeLineLayers': function () {
         this.getOptions();
       },
-      preloadedMarkers: function () {
+      'mapState.preloadedMarkers': function () {
         this.getOptions();
+      },
+      // Aunque las opciones de cada subMenu son locales al componente, guardamos 
+      // una referencia en el MapState para que éste pueda consultar las opciones activas.
+      subMenuOptions: function() {
+        this.mapState.subMenusTracker[this.mapOptionGroup.id] = this.subMenuOptions;
       }
     },
   created() {},
@@ -124,12 +122,12 @@ export default {
       var selectedOption = result.find(opt => opt.comboSelectId && opt.active);
       if (selectedOption)
         this.selectedOption = selectedOption.name;
-      this.floatingOptions = result;
+      this.subMenuOptions = result;
 
     },
 
     setComboLayersVisibility: function(value) {
-      this.floatingOptions.filter(opt => opt.comboSelectId).forEach(opt => {
+      this.subMenuOptions.filter(opt => opt.comboSelectId).forEach(opt => {
         this.setLayersVisibility(opt.layers, opt.name == value);
       });
       
@@ -154,23 +152,27 @@ export default {
 
     addLayerToGroup(layer, groupList) {
       var vm = this;
-      var optionName;
+      var optionName, type;
       var comboSelectId = null;
       if (layer.mapResource.comboSelect) {
           optionName = layer.mapResource.groupLayersBy ? layer[layer.mapResource.groupLayersBy.field] : layer.mapResource.name;
           comboSelectId =  layer.mapResource.comboSelect.id;
+          type = "comboSelectOption";
       }
       else {
           if (layer.mapResource.groupLayersBy) {
               optionName = layer.mapResource.groupLayersBy.label + ': ' 
               + ((layer.mapResource.groupLayersBy.field.indexOf('.') == -1) ? layer[layer.mapResource.groupLayersBy.field]
               : layer[layer.mapResource.groupLayersBy.field.split('.')[0]][layer.mapResource.groupLayersBy.field.split('.')[1]]);
+              type = "groupedOption"
           }
           else if (layer.mapResource.subOption) {
               optionName = layer.mapResource.subOption;
+              type = "subOption";
           }
           else {
             optionName = layer.mapResource.name;
+            type = "singleOption";
           }
       }
       
@@ -180,6 +182,7 @@ export default {
           name:  optionName,
           layers: [layer],
           active: layer.visible,
+          type: type,
           comboSelectId: comboSelectId
         }
         groupList.push(option);

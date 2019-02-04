@@ -1,33 +1,52 @@
 <template>
-  <div>
-    <div class="row rowData">
-      <div class="col-md-5" style="font-weight: 700; font-size: 13px">{{markerModel.Title}}</div><div class="col-md-7" style="text-align: right; color: blue">{{ $t('{mensajeMasInformacion}') }}</div>
-    </div>
-  <div v-if="notAvailable">
+  <b-card header-tag="header">
+      <b-card-header class="tiempo_real" header-tag="header">
+            {{markerModel.Title}}
+       </b-card-header>
+    <b-container>
       <div class="row rowData">
-        <div class="col-md-12">{{ marker.incidencia }}</div>
+        <div class="col-md-5" style="font-weight: 700; font-size: 13px"></div>
+        <div
+          class="col-md-7 alertText"
+          style="text-align: right;"
+        >{{ $t('{mensajeMasInformacion}') }}</div>
       </div>
-    </div>
-    <div v-else-if="markerModel.TiempoReal.length > 0" style="width:450px">
-      <div class="row rowData" >
-        <div class="col-md-6">{{ $t('{fechaTiempoReal}') }}</div><div class="col-md-6" style="text-align: right; font-weight: 700">{{markerModel.Date}}</div>
+      <div v-if="notAvailable">
+        <div class="row rowData">
+          <div class="col-md-12">{{ marker.incidencia }}</div>
+        </div>
       </div>
-      <div v-if="markerModel.Position" class="row rowData">
-        <div class="col-md-6">{{ $t('{posicionBoyaTiempoReal}') }}</div><div class="col-md-6" style="text-align: right">{{markerModel.Position}}</div>
+      <div v-else-if="markerModel.TiempoReal.length > 0" style="width:450px">
+        <div class="row rowData">
+          <div class="col-md-6">{{ $t('{fechaTiempoReal}') }}</div>
+          <div class="col-md-6" style="text-align: right; font-weight: 700">{{markerModel.Date}}</div>
+        </div>
+        <div v-if="markerModel.Position" class="row rowData">
+          <div class="col-md-6">{{ $t('{posicionBoyaTiempoReal}') }}</div>
+          <div class="col-md-6" style="text-align: right">{{markerModel.Position}}</div>
+        </div>
+        <div style="margin-bottom: 20px;"></div>
+        <div
+          v-for="(data, index) in markerModel.TiempoReal"
+          :key="data.nombreParametro"
+          class="row rowData rowDataTable"
+          :class="{ 'whiteBG': index % 2 != 0, 'grayBG': index % 2 == 0 }"
+        >
+          <div class="col-md-6">{{data.nombreParametro}}</div>
+          <div
+            class="col-md-6"
+            style="text-align: right"
+            :class="{ 'paramQC': data.paramQC }"
+          >{{formatParamValue(data)}}</div>
+        </div>
       </div>
-      <div style="margin-bottom: 20px;"></div>
-      <div  v-for="(data, index) in markerModel.TiempoReal" :key="data.nombreParametro" class="row rowData" :class="{ 'whiteBG': index % 2 != 0, 'grayBG': index % 2 == 0 }">
-        <div class="col-md-6">{{data.nombreParametro}}</div>
-        <div class="col-md-6" style="text-align: right" :class="{ 'paramQC': data.paramQC }">{{formatParamValue(data)}}</div>
+      <div v-else>
+        <div class="row rowData">
+          <div class="col-md-12">{{ $t('{sinDatosRecientes}') }}</div>
+        </div>
       </div>
-    </div>
-    <div v-else>
-      <div class="row rowData">
-        <div class="col-md-12">{{ $t('{sinDatosRecientes}') }}</div>
-      </div>
-    </div>
-  </div>
-
+    </b-container>
+  </b-card>
 </template>
 
 
@@ -38,7 +57,7 @@ import MapUtils from "@/services/map.utils";
 import { RedType } from "@/common/enums";
 
 export default {
-  name: "LastDataPopup",
+  name: "RTDataPopup",
   data() {
     return {
     };
@@ -95,17 +114,40 @@ export default {
 </script>
 
 <style scoped>
+
+.card {
+  background-color: transparent;
+  border: none;
+}
+
+.card-body {
+  padding: 0px;
+}
+
 .rowData {
   width: 450px;
 }
 
-.whiteBG {
-  background-color: white;
+.rowDataTable {
+  padding-top: 1.5px;
+  padding-bottom: 1.5px;
 }
 
-.grayBG {
-  background-color: #f8f8f8;
+.leaflet-popup-content-wrapper {
+  padding: 0px;
 }
+
+.container {
+    padding-bottom: 15px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 5px;
+  }
+
+.row {
+    margin-left: 5px;
+    margin-right: 5px;
+ }
 
 .paramQC {
   color: red;

@@ -386,6 +386,10 @@ export default {
     margin-top: 20px;
 }
 
+.card {
+  border: 0px;
+}
+
 
 .card-header {
   /* background-color: #606060; */

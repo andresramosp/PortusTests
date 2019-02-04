@@ -61,6 +61,7 @@
     font-weight: bold;
     margin-left: -10px;
     margin-bottom: 7px;
+    font-size: 14px;
 
 }
 .leaflet-bar-timecontrol a.timecontrol-date,
@@ -71,6 +72,7 @@
     padding: 0px;
     white-space: nowrap;
     font-weight: normal;
+    font-size: 12px;
     margin-left: 35px;
     margin-bottom: 7px;
     /* color: rgba(196, 243, 18, 1) !important; */
@@ -314,7 +316,34 @@
 
 .timecontrol-backward {
     clear: left;
+    margin-top: -1px;
     margin-left: 4px;
+    font-size: 13.5px;
+    color: lightgray !important;
+}
+
+.timecontrol-backward:hover {
+    color: white;
+}
+
+.timecontrol-forward {
+    margin-top: -1px;
+    font-size: 13.5px;
+    color: lightgray !important;
+}
+
+.timecontrol-forward:hover {
+    color: white;
+}
+
+.timecontrol-play {
+    margin-top: -1px;
+    font-size: 13.5px;
+    color: lightgray !important;
+}
+
+.timecontrol-play:hover {
+    color: white;
 }
 
 .timecontrol-backward:before,

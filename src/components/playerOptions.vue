@@ -28,7 +28,7 @@
             @valueChanged="changeDateToValue"
             @mouseover="dateRangeMouseOver"
             @mouseout="dateRangeMouseOut"
-            :max="null"
+            :max="mapState.maxPredictionDate"
             type="date"
             display-format="dd/MMM"
             :use-mask-behavior="true"
@@ -194,7 +194,7 @@ export default {
     border-radius: 6px;
     left: 100px;
     bottom: 83px;
-    background: #ffffff57;
+    background: rgba(255, 255, 255, 0.35);
     text-align: center;
 }
 
@@ -205,7 +205,7 @@ export default {
 
 .unidadEscala {
     position: relative;
-    color: white;
+    color: black;
     display: inherit;
     font-size: 11px;
 }

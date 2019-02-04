@@ -9,7 +9,7 @@
                 {{$t('{bancoDatosTablas}')}}
             </b-col>
         </b-row>
-        <b-row v-for="param in bancoDatos" :key="param.id" class="fadeIn">
+        <b-row v-for="param in bancoDatos" :key="param.id" >
             <b-col style="padding-top: 2px">
                 <img style="float: left; margin-right: 7px; margin-top: -4px;" width="25" 
                     :title="$t('{' + param.variable + '}')"

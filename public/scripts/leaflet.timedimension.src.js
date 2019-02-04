@@ -1479,7 +1479,6 @@ L.TimeDimension.Player = (L.Layer || L.Class).extend({
         }   
         else {
             this.setTransitionTime(50);
-            //this.mapState.addLoading('buffering');
         }
             
         
@@ -1490,7 +1489,8 @@ L.TimeDimension.Player = (L.Layer || L.Class).extend({
 
 
     _tick: function() {
-        //console.log('tick');
+        if (this._preloadBuffer)
+            jQuery('#sliderTimeElement').removeClass('knob');
         var maxIndex = this._getMaxIndex();
         var maxForward = (this._timeDimension.getCurrentTimeIndex() >= maxIndex) && (this._steps > 0);
         var maxBackward = (this._timeDimension.getCurrentTimeIndex() == 0) && (this._steps < 0);
@@ -1499,7 +1499,7 @@ L.TimeDimension.Player = (L.Layer || L.Class).extend({
             if (maxForward && this._preloadBuffer) {
                 this._preloadBuffer = false;
                 this.setTransitionTime(this.options.transitionTime || 1000);
-                //this.mapState.removeLoading('buffering');
+                jQuery('#sliderTimeElement').addClass('knob');
             }
             if (!this._loop) {
                 this.pause();
@@ -1794,6 +1794,7 @@ L.Control.TimeDimension = L.Control.extend({
         if (this.options.timeSlider) {
             var timeSliderClass = this.options.minimized ? 'timecontrol-datesliderMin' : 'timecontrol-dateslider';
             this._sliderTime = this._createSliderTime(this.options.styleNS + ' timecontrol-slider ' + timeSliderClass, container);
+            this._sliderTime._element.id = "sliderTimeElement";
             this._sliderTime.tale = L.DomUtil.create('div', this.options.styleNS + ' slider slider-tale', container);
         }
         if (this.options.backwardButton) {
@@ -1976,7 +1977,7 @@ L.Control.TimeDimension = L.Control.extend({
     _createButton: function(title, container) {
         var link = L.DomUtil.create('a', this.options.styleNS + ' timecontrol-' + title.toLowerCase(), container);
         link.href = '#';
-        link.title = title;
+        //link.title = title;
 
         L.DomEvent
             .addListener(link, 'click', L.DomEvent.stopPropagation)

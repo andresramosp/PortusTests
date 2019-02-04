@@ -5,13 +5,14 @@ import DataPanelsUtils from "@/services/dataPanels.utils";
 import { BASE_URL_PORTUS } from '@/common/config';
 import Vue from 'vue';
 
-import LastDataPopup from "@/components/lastDataPopup.vue";
+import RTDataPopup from "@/components/markerPopups/RTDataPopup.vue";
 
 const MapState = {
 
     map: null,
     mapOptionsGroups: [],
     mapOptions: [],
+    subMenusTracker: {},
     markersSelected: null,
     ubicacionSelected: null,
     predictionScaleImg: null,
@@ -173,13 +174,13 @@ const MapState = {
             || (layer.mapResource.name ==  layer.mapResource.comboSelect.defaultOption)
         }
         if (layer.mapResource.subOption) {
-            var siblingLayers = this.getActiveLayers().filter(l => l.mapResource.subOption && l.mapResource.subOption == layer.mapResource.subOption);
-            if (siblingLayers.length == 0)
-               return true;
-            else
-                return siblingLayers.filter(layer => layer.visible).length > 0;
+            if (this.subMenusTracker[layer.mapOption.group]){
+                var existingSubOption = this.subMenusTracker[layer.mapOption.group].find(opt => opt.type == "subOption" && opt.name == layer.mapResource.subOption);
+                if (existingSubOption) {
+                    return existingSubOption.active;
+                }
+            }
         }
-
         return true;
     },
 
@@ -337,7 +338,6 @@ const MapState = {
         this.map.eachLayer(function (layer) {
             if (layer.mapResource && layer.mapResource.id == mapResourceId) {
                 layer.remove();
-                console.log('layer removed');
                 if (layer.mapResource.type == "TimeLineLayer" && layer._baseLayer) {
                     layer._baseLayer.options.logosImgs.forEach(url => {
                         ms.removeMapLogo(url);
@@ -398,7 +398,6 @@ const MapState = {
                 });
                 mapOption.sources = [];
                 this.loadingThings = this.loadingThings.filter(l => mapOption.mapResources.indexOf(l) == -1);
-                console.log('requiest canceled')
             }
             mapOption.mapResources.forEach(resId => {
               this.removeMapResource(resId);
@@ -568,7 +567,7 @@ const MapState = {
                             + date + '?locale=' + Vue.$getLocale());
         lastData.data.datos.push({ nombreParametro: "Longitud", valor: marker.getLatLng().lng, factor: 1, unidad: 'º'  });
         lastData.data.datos.push({ nombreParametro: "Latitud", valor: marker.getLatLng().lat, factor: 1, unidad: 'º'  });
-        marker.lastDataComponent  = new Vue({ ...LastDataPopup, propsData: { marker: marker, data: lastData.data, radarPoint: true } }).$mount()
+        marker.lastDataComponent  = new Vue({ ...RTDataPopup, propsData: { marker: marker, data: lastData.data, radarPoint: true } }).$mount()
         marker.bindPopup(marker.lastDataComponent.$el, { maxWidth: 560 });
         marker.openPopup();
         this.removeLoading('radarData');
@@ -622,7 +621,6 @@ const MapState = {
                 this.radarPointMarker.remove();
 
             circleMarker.addTo(this.map);
-            console.log('adding');
             this.radarPointMarker = circleMarker;
         }
         
@@ -659,11 +657,7 @@ const MapState = {
         })
         this.showingRadars = visible;
     },
-
     
-   
-    
-
 };
 
 export default MapState

@@ -107,6 +107,27 @@
   border-radius: 0px !important;
 }
 
+.leaflet-popup-content .card-header {
+  /* padding: 0px 0px 0px 0px; */
+  border-radius: 0px !important;
+  font-size: 14px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 20px;
+}
+
+.leaflet-popup-content {
+  width: max-content !important;
+}
+
+.leaflet-popup-content .card-body {
+  font-size: 12px;
+}
+
+.list-container .nav-tabs {
+  border-bottom: 0px;
+}
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus, 

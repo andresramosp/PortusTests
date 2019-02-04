@@ -285,7 +285,7 @@ const LocalePlugin = {
             en: "Stations too close"
         },
         markersProximosText: {
-            es: "Haga zoom para verlos o seleccione para acceso a datos",
+            es: "Haga zoom para verlas o seleccione para acceso a datos",
             en: "Zoom to inspect or click to access to data"
         },
         // real time data tooltip
