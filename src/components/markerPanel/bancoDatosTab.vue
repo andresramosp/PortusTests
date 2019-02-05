@@ -69,6 +69,17 @@ export default {
   props: {
     markers: { type: Array, default: null, required: false }
   },
+  computed: {
+      contentLoaded() {
+          return this.bancoDatos.length > 0;
+      }
+  },
+  watch: {
+      contentLoaded() {
+          if (this.contentLoaded)
+            this.$emit('content-loaded');
+      }
+  },
   mounted() {
   },
   created() {

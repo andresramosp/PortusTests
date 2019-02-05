@@ -1,14 +1,13 @@
 <template>
   <b-card header-tag="header">
     <b-card-header class="tiempo_real" header-tag="header">
-            {{ $t('{markersProximosTitulo}') }}
+        {{ $t('{markersProximosTitulo}') }}
+        <img :src='require("@/assets/icons/x.png")' class="closeIcon" @click="cerrar">
     </b-card-header>
     <b-container>
-
       <div class="row">
-        <div
-          class="col-md-12 alertText"
-        >{{ $t('{markersProximosText}') }}
+        <div class="col-md-12 alertText" style="text-align: right">
+          {{ $t('{markersProximosText}') }}
         </div>
       </div>
       <br>
@@ -39,13 +38,15 @@ export default {
     markers: { type: Array, default: null, required: false }
   },
   mounted() {
-
     var popup = L.popup({ maxWidth: 500 })
     .setLatLng(this.markerHovered.getLatLng())
     .setContent(this.$el);
-
     MapState.setHeapedPopup(popup);
-    
+  },
+  methods: {
+    cerrar() {
+      MapState.closeHeapedPopup();
+    }
   }
 };
 </script>

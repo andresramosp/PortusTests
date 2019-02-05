@@ -84,11 +84,22 @@ export default {
           informesAnualesOptions: [],
           informeAnualSelected: null,
           anniosOptions: [],
-          annioSelected: null
+          annioSelected: null,
       }
   },
   props: {
     markers: { type: Array, default: null, required: false }
+  },
+  computed: {
+      contentLoaded() {
+          return this.productosVariable.length > 0;
+      }
+  },
+  watch: {
+      contentLoaded() {
+          if (this.contentLoaded)
+            this.$emit('content-loaded');
+      }
   },
   mounted() {
   },

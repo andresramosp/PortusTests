@@ -351,6 +351,9 @@ const MapState = {
 
         this.preloadedTimeLineLayers = this.preloadedTimeLineLayers.filter((plt) => { return plt.mapResource.id != mapResourceId });
         this.preloadedMarkers = this.preloadedMarkers.filter((plm) => { return plm.mapResource.id != mapResourceId });
+
+        if (this.preloadedMarkers.length == 0)
+            this.closeHeapedPopup();
         
         if (this.currentTimeLineLayer && this.currentTimeLineLayer.mapResource.id == mapResourceId && this.map.timeDimensionControl) 
             this.removePlayerControl();

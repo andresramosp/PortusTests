@@ -8,7 +8,7 @@
       v-show="displayShareInfo"
     />
 
-    <div v-show="!displayShareInfo" style="width: 569px;">
+    <div v-show="!displayShareInfo" style="width: 569px;" class="simoPanel">
       <b-card >
          <div slot="header">
           <img
@@ -128,7 +128,7 @@ export default {
 <style scoped>
 
 .shareIcon {
-    margin-top: 2.5px;
+    margin-top: 1.5px;
     float: left;
     cursor: pointer;
     width: 16px;
@@ -219,9 +219,12 @@ export default {
 
 
 .card-header {
+  /* background-color: #606060; */
   font-size: 14px;
-  padding: 1px 5px 11px 5px;
+  padding-top: 3px;
+  padding-right: 5px;
+  padding-left: 5px;
+  height: 25px;
   text-align: right;
-  height: 22px;
 }
 </style>

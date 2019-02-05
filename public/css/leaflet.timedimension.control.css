@@ -107,10 +107,10 @@
     /* width: 50px; */
     z-index: 5;
     border: 1px solid !important;
-    height: 0px !important;
-    margin-top: 9.5px;
+    height: 2px !important;
+    margin-top: 10px;
     margin-left: 13px;
-    background-color: rgba(196, 243, 18, 1);
+    background-color: rgba(196, 243, 18, 1) !important;
 }
 .slider-speed-tale {
     color: rgba(196, 243, 18, 1);
@@ -119,10 +119,10 @@
     /* width: 50px; */
     z-index: 5;
     border: 1px solid !important;
-    height: 0px !important;
-    margin-top: 39px;
+    height: 2px !important;
+    margin-top: 40px;
     margin-left: 129px;
-    background-color: rgba(196, 243, 18, 1);
+    background-color: rgba(196, 243, 18, 1) !important;
 }
 
 .leaflet-bar-timecontrol .timecontrol-dateslider .slider {
@@ -177,9 +177,9 @@
     border: 1px solid #a5a5a5;
     cursor: pointer; */
     position: relative;
-    height: 0px;
+    height: 2px;
     margin: 10px;
-    
+    background: white;
     border: 0.4px solid;
     /* border: 1px solid #a5a5a5; */
     cursor: pointer;
@@ -205,7 +205,7 @@
     background-color: #ddd;
     /* border-radius: 2px; */
     border: 1px solid #a5a5a5;
-    margin-top: -8px;
+    margin-top: -7px;
     margin-left: -8px;
     cursor: ew-resize;
     cursor: -webkit-grab;

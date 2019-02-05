@@ -99,8 +99,7 @@ export default {
             propsData: { 
               locationType: ubicacion.tipoUbicacion,
               code: ubicacion.id, 
-              showExtraData: false,
-              showLogo: true
+              asTooltip: true
             } }).$mount()
           marker.bindPopup(marker.locationsRTComponent.$el, {
             maxWidth: 560

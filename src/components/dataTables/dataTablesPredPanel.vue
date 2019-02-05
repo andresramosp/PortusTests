@@ -415,7 +415,7 @@ export default {
     border-bottom: 0px;
 } */
 
-.nav-link {
+.list-container .nav-link {
     padding: 5px 15px 5px 15px !important;
     font-size: 14px !important;
 }

@@ -2,8 +2,8 @@
   <b-card header-tag="header">
     <b-container>
       <div class="row">
-        <span class="alertText" style="font-weight: bold">
-          {{ toolTipText.split(':')[0] }}:&nbsp;
+        <span class="alertText">
+          {{ toolTipText.split(':')[0] }}:&nbsp;&nbsp;
         </span>
         <span>
           {{ toolTipText.split(':')[1] }} 
@@ -86,7 +86,7 @@ export default {
 }
 
 .container {
-    padding-bottom: 15px;
+    padding-bottom: 10px;
     padding-left: 3px;
     padding-right: 3px;
     padding-top: 8px;

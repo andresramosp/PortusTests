@@ -1,5 +1,7 @@
 <template>
-  <b-table striped hover :items="data" :fields="fields" :small="true" ></b-table>
+  <b-container style="margin-top: 15px">
+    <b-table striped hover dark :items="data" :fields="fields" :small="true" :bordered="false" :outlined="false" ></b-table>
+  </b-container>
 </template>
 
 <script>

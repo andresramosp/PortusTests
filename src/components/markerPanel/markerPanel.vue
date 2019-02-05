@@ -4,7 +4,7 @@
  <dx-popup
     v-if="markers && markers.length > 0"
     :visible="true"
-    :position="{ at: 'center', offset: '0 -60' }"
+    :position="position"
     :resize-enabled="false"
     :drag-enabled="true"
     :close-on-outside-click="false"
@@ -34,10 +34,10 @@
 
     </div>
 
-    <b-tabs class='infoPanelClass' >
+    <b-tabs  @input="centerPosition">
         <b-tab v-if="!esAntena()" :title="$t('{accesoADatosTab}')" active>
-            <BancoDatosHistoricoTab v-if="esHistorico()" :markers="markers" /> 
-            <BancoDatosTab v-else :markers="mapState.markersSelected" /> 
+            <BancoDatosHistoricoTab v-if="esHistorico()" :markers="markers" @content-loaded="centerPosition"  /> 
+            <BancoDatosTab v-else :markers="mapState.markersSelected" @content-loaded="centerPosition" /> 
         </b-tab>
         <b-tab :title="$t('{informacionTab}')">
             <InformacionTab :markers="mapState.markersSelected" />
@@ -97,7 +97,8 @@ export default {
       mapState: MapState,
       markerRef: null,
       imgPropietario: null,
-      hrefPropietario: null
+      hrefPropietario: null,
+      position: { at: 'center', offset: '0 -60' }
     };
   },
   computed: {
@@ -171,6 +172,10 @@ export default {
        // Importante para que el v-if re-cree los subcomponentes, relanzando los create()
        // Como alternativa, se pueden usar computed/asyncComputed para actualizar los valores 
        MapState.markersSelected = [];
+    },
+
+    centerPosition() {
+      this.position = { my: 'center', at: 'center', of: window };
     }
   }
 };
@@ -180,7 +185,7 @@ export default {
 
 
 .footer {
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #dee2e624;
   margin-top: 20px;
 }
 
@@ -198,7 +203,4 @@ export default {
   padding-left: 10px;
 }
 
-.infoPanelClass {
-  font-size: 12px;
-}
 </style>

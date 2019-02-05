@@ -90,17 +90,14 @@
 
 #no-bootstrap a:hover {
   text-decoration: none !important;
-  color: white !important;
 }
 
 #no-bootstrap .list-container a:hover {
   text-decoration: none !important;
-  color: black !important;
 }
 
 #no-bootstrap .leaflet-popup a:hover {
   text-decoration: none !important;
-  color: blue !important;
 }
 
 #no-bootstrap .card-header{
@@ -111,9 +108,10 @@
   /* padding: 0px 0px 0px 0px; */
   border-radius: 0px !important;
   font-size: 14px;
-  padding-top: 5px;
+  padding-top: 6px;
   padding-bottom: 5px;
-  padding-left: 20px;
+  padding-left: 18px;
+  padding-right: 5px;
 }
 
 .leaflet-popup-content {
@@ -126,6 +124,21 @@
 
 .list-container .nav-tabs {
   border-bottom: 0px;
+}
+
+#no-bootstrap .nav-tabs .nav-link {
+  /* border: 0px; */
+  border-top-left-radius: 0px;
+  font-size: 14px;
+  border-top-right-radius: 0px;
+}
+
+#no-bootstrap .markerPanel .nav.nav-tabs {
+  border-bottom: 1px solid #dee2e624 !important;
+}
+
+#no-bootstrap .dx-popup-title {
+  border-bottom: 1px solid #dee2e624;
 }
 
 input:-webkit-autofill,
@@ -200,8 +213,8 @@ input:-webkit-autofill:active  {
 
 
 .fadeIn {
-    -webkit-animation: animat_show 1.2s;
-    animation: animat_show 1.2s;
+    -webkit-animation: animat_show 0.8s;
+    animation: animat_show 0.8s;
     visibility: visible !important;
 }
 

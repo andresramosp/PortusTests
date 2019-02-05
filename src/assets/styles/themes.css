@@ -75,7 +75,7 @@
   }
 
   .darkTheme .alertText {
-    color: rgb(26, 153, 196);
+    color: rgba(6, 136, 192);
   }
 
   .darkTheme .leaflet-bar-timecontrol{
@@ -83,9 +83,9 @@
     background-color: rgba(0, 0, 0, 0.8);
   }
 
-  #no-bootstrap .darkTheme .leaflet-bar-timecontrol .leaflet-control-timecontrol a:hover{
+  /* #no-bootstrap .darkTheme .leaflet-bar-timecontrol .leaflet-control-timecontrol a:hover{
     color: red !important;
-  }
+  } */
 
 .simoPanel .card-body {
   background: white !important;
@@ -94,6 +94,8 @@
 .darkTheme .markerPanel div:not(.dx-popup-title):not(.dx-button-content):not(.dx-button-text),
 .darkTheme .leaflet-popup-content .card-body,
 .darkTheme .whiteBG,
+.darkTheme .table-dark,
+.darkTheme .shareInfoPanel,
 .darkTheme .leaflet-popup-tip {
     background: rgb(74, 73, 79);
     color:white !important;
@@ -120,6 +122,7 @@
 
 .darkTheme #accordionContent *:not(.dx-button-content):not(.dx-button-text),
 .darkTheme #specialContent,
+.darkTheme .table-dark.table-striped tbody tr:nth-of-type(odd),
 .darkTheme .grayBG
 {
   background: rgb(64, 63, 69) !important;
@@ -165,137 +168,19 @@
   color: white;
 }
 
-  
-/* HAPPY THEME */
-
-.happyTheme .card-body {
-    background-color: rgba(121, 74, 92, 0.7);
-  }
-  
-  .happyTheme .card-header .predicciones, .happyThemeSub .predicciones {
-    background-color: rgba(233, 44, 31, 0.7);
-  }
-  
-  .happyTheme .card-header .tiempo_real, .happyThemeSub .tiempo_real {
-    background-color: rgba(150, 68, 48, 0.7);
-  }
-  
-  .happyTheme .card-header .historico, .happyThemeSub .historico {
-    background-color: rgba(248, 149, 19, 0.7);
-  }
-  
-  .happyTheme .predicciones .mapOptionChecked  img {
-    background-color: rgba(233, 44, 31, 0.7);
-  }
-  
-  .happyTheme .predicciones .mapOptionChecked {
-      color: rgba(11, 90, 149, 1);
-      font-weight: bold;
-  }
-  
-  .happyTheme .tiempo_real .mapOptionChecked  img {
-    background-color: rgba(6, 136, 192, 0.7);
-  }
-  
-  .happyTheme .tiempo_real .mapOptionChecked {
-      color: rgba(6, 136, 192, 1);
-      font-weight: bold;
-  }
-  
-  .happyTheme .historico .mapOptionChecked  img {
-    background-color: rgba(115, 170, 199, 0.7);
-  }
-  
-  .happyTheme .historico .mapOptionChecked {
-      color: rgba(115, 170, 199, 1);
-      font-weight: bold;
-  }
-  
-  
-  
-  .happyTheme .predicciones .lightable:hover  {
-    color: rgba(11, 90, 149, 1);
-  }
-  
-  
-  .happyTheme .predicciones .minimized .lightable img:hover  {
-    background-color: rgba(11, 90, 149, 1);
-  }
-  
-  .happyTheme .tiempo_real .lightable:hover  {
-    color: rgba(6, 136, 192, 0.7);
-  }
-  
-  .happyTheme .tiempo_real .minimized .lightable img:hover  {
-    background-color: rgba(6, 136, 192, 0.7);
-  }
-  
-  .happyTheme .historico .lightable:hover  {
-    color: rgba(115, 170, 199, 0.7);
-  }
-  
-  .happyTheme .historico .minimized .lightable img:hover  {
-    background-color: rgba(115, 170, 199, 0.7);
-  }
-
-  /* Estilos marker panel */
-
-.happyTheme .markerPanel div:not(.dx-popup-title):not(.dx-button-content):not(.dx-button-text) {
-    background: rgb(74, 73, 79) !important;
-    color:white !important;
-    border-radius: 0px !important;
-}
-
-.happyTheme .popupHeader {
-  font-size: 15px !important;
-  background: rgb(21, 91, 140) !important;
+.darkTheme a:hover {
   color: white !important;
-  padding: 7px !important;
 }
 
-.happyTheme .markerPanel .dx-button-content {
-    background: rgb(74, 73, 79);
-    border: 1.5px solid;
-    min-width: fit-content;
+.darkTheme .list-container a:hover {
+  color: black !important;
 }
 
-.happyTheme #accordionContent *:not(.dx-button-content):not(.dx-button-text) {
-  background: rgb(64, 63, 69) !important;
-  color: white;
+.darkTheme .leaflet-popup a:hover {
+  color: rgb(21, 91, 140) !important;
 }
 
-.happyTheme #specialContent {
-  background-color: rgb(64, 63, 69);
+.darkTheme .table-dark th, .table-dark td, .table-dark thead th {
+  border-color: transparent;
 }
-
-.happyTheme #accordionContent .card-body {
-  border: 1px solid gray;
-}
-
-
-.happyTheme .markerPanel .dx-state-hover .dx-button-content {
-  background: rgb(21, 91, 140) !important;
-}
-
-/* .markerPanel .dx-state-hover .dx-button-text {
-  background: rgb(21, 91, 140) !important;
-} */
-
-.happyTheme .markerPanel .nav-link {
-  color: #eff1f3;
-  border-radius: 0px;
-  /* background-color: #2a377e;
-  border-color: #dee2e6 #dee2e6 #fff; */
-}
-
-.happyTheme .markerPanel .nav-link:hover {
-  color: white;
-  background-color: #606060;
-  border-color:transparent;
-}
-
-.happyTheme .markerPanel .nav-link.active {
-    color: #eff1f3;
-    background-color: rgb(21, 91, 140);
-    border-color: transparent;
-}
+  

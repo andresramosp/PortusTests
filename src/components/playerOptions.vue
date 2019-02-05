@@ -36,14 +36,32 @@
           />
      
       <div class="fadeIn" style="position: absolute; bottom: 20px; left: 427px; z-index: 5; width: 90px">
-        <img v-if='!isWidget' :title="$t('{shareIconPred}')" class="playerIcon" @click="openPredictionWidget()" :src="require('@/assets/icons/shareIcon.png')" />
+        <img v-if='!isWidget' 
+                  :title="$t('{shareIconPred}')" 
+                  class="playerIcon"  
+                  @click="toggleShareInfo"
+                  @mouseover="openShareInfo"
+                  @mouseout="closeShareInfo"
+                  :src="require('@/assets/icons/shareIcon.png')" />
         <img v-if='!isWidget && hasStaticMaps' :title="$t('{staticMapsIconPred}')" class="playerIcon" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
         <img v-if='hasVectors' class="playerIcon" :title="$t('{vectorsIconPred}')" @click="toggleVectors()" :src="mapState.showingVectors ?  require('@/assets/icons/vectorsActivated.png') : require('@/assets/icons/vectors.png')" />
         <img v-if='hasRadars' class="playerIcon" :title="$t('{radarsIconPred}')" @click="toggleRadars()" :src="mapState.showingRadars ?  require('@/assets/icons/puntosRadarActivated.png') : require('@/assets/icons/puntosRadar.png')" />   
       </div>
        <img class="infoPredIcon fadeIn" @click="openPredictionInfo()" :src="require('@/assets/icons/info.png')" />   
        <img class="fpsIcon fadeIn" :src="require('@/assets/icons/fps.png')" />   
+
+        <ShareInfoPanel 
+            v-if="predictionRouteData"
+            class="fadeIn"
+            style="position: absolute; width: 480px; bottom: 50px; left: 260px"
+            @shareinfo-mouseover="openShareInfo" 
+            @shareinfo-mouseout="closeShareInfo" 
+            :routeData="predictionRouteData" 
+            v-show="displayShareInfo"
+        />
+
     </div>
+
   </div>
 </template>
 
@@ -51,22 +69,29 @@
 
 import MapState from "@/state/map.state";
 import { DxDateBox } from 'devextreme-vue';
+import ShareInfoPanel from "@/components/shareInfoPanel.vue";
 
 export default {
   name: "PlayerOptions",
    components: {
-    DxDateBox
+    DxDateBox,
+    ShareInfoPanel
   },
   data() {
     return {
       align: PC.options_panel_align,
-      mapState: MapState
+      mapState: MapState,
+      displayShareInfo: false,
+      predictionRouteData: null
     };
   },
   props: {
     isWidget: { default: false, required: false }
   },
   computed: {
+      // predictionRouteData() {
+     
+      // },
       unidadEscala() {
         if (!this.isWidget && this.mapState.currentTimeLineLayer)
           return this.$t('{' + 'unit' + this.mapState.currentTimeLineLayer.mapOption.variableType + '}');
@@ -89,26 +114,8 @@ export default {
   mounted() {
   
   },
-  // mounted() {},
   methods: {
-     openPredictionWidget: function() {
-      var map = MapState.getMap();
-      var currentPredLayer = this.mapState.currentTimeLineLayer; 
-      if (currentPredLayer) {
-        var routeData = this.$router.resolve({ path: '/predictionWidget', 
-          query: 
-          { 
-            resourceId : currentPredLayer.mapResource.id.replace('pred-tiles-', ''), 
-            zoom: map.getZoom(), 
-            lat: map.getCenter().lat, 
-            lon: map.getCenter().lng,
-            vec: currentPredLayer._baseLayer._url.indexOf('vec') != -1
-          }
-        });
-        window.open(routeData.href, '_blank');
-      }
-    },
-
+    
     openStaticMapsWidget: function() {
       var map = MapState.getMap();
       var currentPredLayer = this.mapState.currentTimeLineLayer;
@@ -165,6 +172,39 @@ export default {
         // }, 750);
         //this.mapState.playerDateRangeVisibility = false;    
     },
+
+      toggleShareInfo() {
+        this.displayShareInfo = !this.displayShareInfo;
+      },
+
+      openShareInfo() {   
+        if (this.mapState.currentTimeLineLayer) {
+            this.predictionRouteData = this.$router.resolve({ path: '/predictionWidget', 
+              query: 
+              { 
+                resourceId : this.mapState.currentTimeLineLayer.mapResource.id.replace('pred-tiles-', ''), 
+                zoom: this.mapState.getMap().getZoom(), 
+                lat: this.mapState.getMap().getCenter().lat, 
+                lon: this.mapState.getMap().getCenter().lng,
+                vec: this.mapState.currentTimeLineLayer._baseLayer._url.indexOf('vec') != -1
+              }
+            });
+            if (this.timeOutShareInfoClose)
+                clearInterval(this.timeOutShareInfoClose)
+            this.timeOutShareInfoOpen = setTimeout(() => {
+                this.displayShareInfo = true; 
+            }, 500)
+        }
+      
+      },
+
+      closeShareInfo() {
+        if (this.timeOutShareInfoOpen)
+            clearInterval(this.timeOutShareInfoOpen)
+        this.timeOutShareInfoClose = setTimeout(() => {
+            this.displayShareInfo = false; 
+        }, 500)
+      },
   }
 };
 </script>

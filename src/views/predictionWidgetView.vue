@@ -1,6 +1,7 @@
 <template>
 <div id="app" >
    <Map :baseMap='baseMap' :mapFixed="true" :isWidget="true" />
+   <LogosList :logos="mapState.mapLogos" :defaultLogo="defaultLogo" />
 </div>
 </template>
 
@@ -8,16 +9,19 @@
 
 import Map from "@/components/map.vue";
 import MapState from "@/state/map.state";
+import LogosList from "@/components/logosList.vue";
 
 export default {
   name: "PredictionWidgetView",
   components: {
-    Map
+    Map,
+    LogosList
   },
   data () {
     return {
       mapState: MapState,
-      baseMap: null
+      baseMap: null,
+      defaultLogo: PC.default_map_logo
     }    
   },
   created() {

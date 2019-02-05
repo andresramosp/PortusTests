@@ -1,6 +1,6 @@
 <template>
 
- <b-container style="margin-top: 15px">
+ <b-container class="infoPanelClass" style="margin-top: 15px">
         <b-row>
             <b-col cols="8" >
                 <b-row v-for="data in informacion" :key="data.key" v-if="data.value != null && data.value != undefined">
@@ -106,12 +106,6 @@ export default {
                 { key: this.$t("{comentariosEstacionInfo}"), value: this.markers[0].comentarios },
                 { key: this.$t("{conjuntoDatosInfo}"), value: this.markers[0].red.descripcion, bold: true, href: INFORMES_URL + 'BD/informes/INT_'	+ this.markers[0].red.id + '.pdf' }
               ];
-
-          // var mi = this;
-          // ApiService.get('redes/' + this.markers[0].redId + '?locale=' + this.$getLocale())
-          // .then((red) => {
-          //     this.informacion.push({ key: this.$t("{conjuntoDatosInfo}"), value: red.data.descripcion, bold: true, href: INFORMES_URL + 'BD/informes/INT_'	+ red.data.id + '.pdf' })
-          // })
         }
         else if (this.markers[0].mapResource.markerClass == MarkerClass.AntenaRadar) {
             this.informacion = [

@@ -1,16 +1,20 @@
 <template>
   <div style="width: 420px;" class="simoPanel">
-    <b-card>
-      <div slot="header">
+    <b-card :class="[!asTooltip ? '' : 'noBorders']">
+      <div slot="header" :class="[!asTooltip ? 'titleRight' : 'titleLeft']">
         <img
+          v-show="!asTooltip"
           :src='require("@/assets/icons/shareIcon.png")'
           class="shareIcon"
           @click="toggleShareInfo"
           @mouseover="openShareInfo"
           @mouseout="closeShareInfo"
         >
+        
         {{$t('{headerTiempoReal}')}}
+        
         <img
+          v-show="!asTooltip"
           :src='require("@/assets/icons/info.png")'
           class="infoRTIcon"
           @click="toggleRTInfo"
@@ -89,7 +93,7 @@
             >
           </b-col>
         </b-row>
-        <div v-if="showExtraData && !loading" class="fadeIn">
+        <div v-if="!asTooltip && !loading" class="fadeIn">
           <b-row style="margin-top: 25px">
             <b-col cols="6" style="padding-right: 0px;">
               <span class="variableTitleSm">{{ $t('{variableTempAgua}') }}:</span>
@@ -126,7 +130,7 @@
           </b-row>
         </div>
         <img
-          v-if="showLogo && !loading"
+          v-if="asTooltip && !loading"
           :src="defaultLogo"
           class="fadeIn"
           style="margin-top: 25px; float: right"
@@ -180,8 +184,7 @@ export default {
   props: {
     locationType: { type: String, default:'', required: true },
     code: { type: Number, default: '', required: true },
-    showExtraData: { type: Boolean, default: true },
-    showLogo: { type: Boolean, default: false }
+    asTooltip: { type: Boolean, default: false }
   },
   computed: {
    
@@ -292,7 +295,7 @@ export default {
 <style scoped>
 
 .shareIcon {
-  margin-top: 2.5px;
+  margin-top: 1.5px;
   float: left;
   cursor: pointer;
   width: 16px;
@@ -300,7 +303,7 @@ export default {
 }
 
 .infoRTIcon {
-  margin-top: 2px;
+  margin-top: 1px;
   float: right;
   cursor: pointer;
   width: 17px;
@@ -386,7 +389,7 @@ export default {
     margin-top: 20px;
 }
 
-.card {
+.noBorders {
   border: 0px;
 }
 
@@ -394,9 +397,19 @@ export default {
 .card-header {
   /* background-color: #606060; */
   font-size: 14px;
-  padding: 1px 5px 11px 5px;
+  padding-top: 3px;
+  padding-right: 5px;
+  padding-left: 5px;
+  height: 25px;
+}
+
+.titleRight {
   text-align: right;
-  height: 22px;
+}
+
+.titleLeft {
+  text-align: left;
+  padding-left: 3px;
 }
 
 
