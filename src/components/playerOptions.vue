@@ -39,7 +39,7 @@
         <img v-if='!isWidget' 
                   :title="$t('{shareIconPred}')" 
                   class="playerIcon"  
-                  @click="toggleShareInfo"
+                  @click="openShareInfo"
                   @mouseover="openShareInfo"
                   @mouseout="closeShareInfo"
                   :src="require('@/assets/icons/shareIcon.png')" />
@@ -89,9 +89,6 @@ export default {
     isWidget: { default: false, required: false }
   },
   computed: {
-      // predictionRouteData() {
-     
-      // },
       unidadEscala() {
         if (!this.isWidget && this.mapState.currentTimeLineLayer)
           return this.$t('{' + 'unit' + this.mapState.currentTimeLineLayer.mapOption.variableType + '}');
@@ -172,10 +169,6 @@ export default {
         // }, 750);
         //this.mapState.playerDateRangeVisibility = false;    
     },
-
-      toggleShareInfo() {
-        this.displayShareInfo = !this.displayShareInfo;
-      },
 
       openShareInfo() {   
         if (this.mapState.currentTimeLineLayer) {

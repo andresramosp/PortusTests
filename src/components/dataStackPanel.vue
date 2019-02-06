@@ -9,7 +9,7 @@
           </b-card-header>
           <b-collapse :id="'id' + dataPanel.id" :visible="true"  role="tabpanel"> 
             <b-card-body>
-                <iframe v-if="dataPanel.type == 'Graphic'" :src="dataPanel.url" :width="iFrameWidth" :height="iFrameHeight" frameborder="0" />
+                <iframe v-if="dataPanel.type == 'Graphic' || dataPanel.type == 'GraphicHist'" :src="dataPanel.url" :width="iFrameWidth" :height="dataPanel.height" frameborder="0" />
                 <DataTablesRTPanel v-if="dataPanel.type == 'RTDataTable'" :marker="dataPanel.marker" :parameters="dataPanel.parameters"/>
                 <DataTablesPredPanel v-if="dataPanel.type == 'PredDataTable'" :marker="dataPanel.marker" :variable="dataPanel.variable"/>
             </b-card-body>
@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       iFrameWidth: window.innerWidth,
-      iFrameHeight: 262,
+      // iFrameHeight: 262,
       mapState: MapState,
       oldDataLenth: null,
       dataModified: false

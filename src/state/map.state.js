@@ -35,6 +35,7 @@ const MapState = {
     currentRadar: null,
     dataObjectsList: [],
     bancosDatos: PC.user_preferences.banco_datos  != undefined ? PC.user_preferences.banco_datos : {},
+    bancosDatosHist: {},
     puertosInfoSourceId: null,
 
     init(map) {
@@ -393,7 +394,7 @@ const MapState = {
             });
         }
         else {
-            // Checkbox off on the fly: cancelamos requests a la Api
+            // Checkbox desclicado durante carga: cancelamos requests a la Api
             // OJO: cancela las que ya han llegado. Ver si quitar en response.
             if (mapOption.sources.length > 0) {
                 mapOption.sources.forEach(s => {
@@ -494,29 +495,32 @@ const MapState = {
         this.mapLogos = this.mapLogos.filter(l => l != logo);
     },
 
-    getBancoDatos(markerId) {
-        if (!this.bancosDatos[markerId]) {
-            this.bancosDatos[markerId] = []
+    getBancoDatos(markerId, historical) {
+        var bancoDatos = historical ? this.bancosDatosHist : this.bancosDatos;
+        if (!bancoDatos[markerId]) {
+            bancoDatos[markerId] = []
         }
-        return this.bancosDatos[markerId];
+        return bancoDatos[markerId];
     },
 
-    setBancoDatos(markerId, bancoDatos) {
-        this.bancosDatos[markerId] = bancoDatos;
-    },
-
-    addBancoDatos(markerId, bancoDatos) {
-        if (!this.bancosDatos[markerId]) {
-            this.bancosDatos[markerId] = []
+    // Cuando actualizamos el banco de datos de un marker, solo
+    // añadimos los parámetros nuevos, para conservar el estado
+    // (marcado/desmarcado), de los ya existentes.
+    // El banco de datos histórico se refiere a los productos.
+    addBancoDatos(markerId, bancoDatosNew, historical) {
+        var bancoDatos = historical ? this.bancosDatosHist : this.bancosDatos;
+        if (!bancoDatos[markerId]) {
+            bancoDatos[markerId] = []
         }
-        var oldParamsIds = this.bancosDatos[markerId].map(p => p.id);
-        var newParams = bancoDatos.filter(p => oldParamsIds.indexOf(p.id) == -1);
-        this.bancosDatos[markerId] = this.bancosDatos[markerId].concat(newParams);
+        var oldParamsIds = bancoDatos[markerId].map(p => p.id);
+        var newParams = bancoDatosNew.filter(p => oldParamsIds.indexOf(p.id) == -1);
+        bancoDatos[markerId] = bancoDatos[markerId].concat(newParams);
     },
 
     setPortusInfoPanel(sourceId) {
         this.puertosInfoSourceId = sourceId;
     },
+    
 
     // TODO: llevarse funcionalidad a radar.service.js
 

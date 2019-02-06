@@ -1,7 +1,12 @@
 import MapState from "@/state/map.state";
-import { MarkerClass, VariableType } from "@/common/enums";
+import MapUtils from "@/services/map.utils";
+import { MarkerClass } from "@/common/enums";
 import Vue from 'vue';
-import { BASE_URL_PORTUS_DATA } from '@/common/config';
+import { BASE_URL_PORTUS_DATA, INFORMES_URL } from '@/common/config';
+
+
+const GraphicHeight =  262;
+const GraphicHistHeight = 380;
 
 const DataPanelsUtils = {
 
@@ -14,13 +19,9 @@ const DataPanelsUtils = {
             }
         }
         else {
-            var nombre = marker.nombre;
-            if (marker.radar) {
-                nombre += ". " + "Posición del punto: " +  " Lat " + parseFloat(marker.lat).toFixed(2) + " N" + ": Lon " + parseFloat(marker.lon).toFixed(2) + " O";
-            }
             MapState.dataObjectsList.unshift(
                 { 
-                    name: 'Tiempo Real para ' + nombre,
+                    name: 'Tiempo Real: ' + MapUtils.getMarkerName(marker) + " " + (marker.radar ? ("(" + MapUtils.latLonToString(marker.latitud, marker.longitud) + ")") : ""),
                     type: 'RTDataTable', 
                     marker: marker, 
                     parameters: parameters, 
@@ -35,7 +36,7 @@ const DataPanelsUtils = {
         if (!predTable) {
             MapState.dataObjectsList.unshift(
                 { 
-                    name: 'Predicción ' + Vue.$t('{' + variable + '}'),
+                    name: 'Predicción ' + Vue.$t('{' + variable + '}') + ": " +  MapUtils.getMarkerName(location),
                     type: 'PredDataTable', 
                     marker: location, 
                     variable: variable,
@@ -86,11 +87,12 @@ const DataPanelsUtils = {
                 + "&locale=" + Vue.$getLocale();
             MapState.dataObjectsList.unshift(
                 { 
-                    name: 'Gráfica Tiempo Real ' + station.nombre,
+                    name: 'Gráfica Tiempo Real: ' + station.nombre,
                     type: 'Graphic', 
                     parameters: [param],
                     marker: station,
                     url: url, 
+                    height: GraphicHeight,
                     id: this.generateDataPanelId()
                 })
         }
@@ -135,15 +137,35 @@ const DataPanelsUtils = {
                 + "&locale=" + Vue.$getLocale();
             MapState.dataObjectsList.unshift(
                 { 
-                    name: 'Gráfica Predicción ' + (modelPoint.nombre ? modelPoint.nombre : " Lat " + modelPoint.latitud.toFixed(2) + " N" + ": Lon " + modelPoint.longitud.toFixed(2) + " O"),
+                    name: 'Gráfica Predicción: ' + MapUtils.getMarkerName(modelPoint), //(modelPoint.nombre ? modelPoint.nombre : " Lat " + modelPoint.latitud.toFixed(2) + " N" + ": Lon " + modelPoint.longitud.toFixed(2) + " O"),
                     type: 'Graphic', 
                     parameters: parameters,
                     marker: modelPoint,
                     url: url, 
+                    height: GraphicHeight,
                     id: this.generateDataPanelId()
                 })
         }
         
+    },
+
+    setExternalGraph(marker, producto, active) {
+        var extGraph = MapState.dataObjectsList.find(d => d.type == "GraphicHist" && d.marker.id == marker.id && d.producto.id == producto.id);
+        if (!extGraph) {
+            MapState.dataObjectsList.unshift(
+                { 
+                    marker: marker,
+                    name: producto.nombre + ": " +  MapUtils.getMarkerName(marker),
+                    producto: producto,
+                    type: 'GraphicHist', 
+                    url: INFORMES_URL + producto.url,
+                    height: GraphicHistHeight,
+                    id: this.generateDataPanelId()
+                })
+        }
+        else if (!active) {
+            MapState.dataObjectsList = MapState.dataObjectsList.filter(d => d.id != extGraph.id);
+        }
     },
 
     generateDataPanelId() {
@@ -153,17 +175,32 @@ const DataPanelsUtils = {
     },
 
     removeDataPanel(dataPanel) {
-        var paramActiveField = dataPanel.type == "Graphic" ? 'graphicActive' : 'tableActive';
-        MapState.bancosDatos[dataPanel.marker.id].forEach(param => {
-            // DataPanel editable por parámetros (RT y Graphs)
-            if (dataPanel.parameters) {
-                if (dataPanel.parameters.find(p => p.paramEseoo == param.paramEseoo))
+        var paramActiveField, bancoDatos;
+        if (dataPanel.type == "GraphicHist") {
+            paramActiveField = 'active';
+            bancoDatos = MapState.bancosDatosHist;
+        }
+        else {
+            paramActiveField = dataPanel.type == "Graphic" ? 'graphicActive' : 'tableActive';
+            bancoDatos = MapState.bancosDatos;
+        }
+        bancoDatos[dataPanel.marker.id].forEach(param => {
+            // Datapanel Hist, añadidos por producto
+            if (dataPanel.type == "GraphicHist") {
+                if (param.id == dataPanel.producto.id)
                     param[paramActiveField] = false;
             }
-            // DataPanel editable por variable (Pred)
             else {
-                if (dataPanel.variable == param.variable)
-                    param[paramActiveField] = false;
+                 // DataPanel editable por parámetros (RT y Graphs)
+                if (dataPanel.parameters) {
+                    if (dataPanel.parameters.find(p => p.paramEseoo == param.paramEseoo))
+                        param[paramActiveField] = false;
+                }
+                // DataPanel añadido por variable (Pred)
+                else {
+                    if (dataPanel.variable == param.variable)
+                        param[paramActiveField] = false;
+                }
             }
             
         })

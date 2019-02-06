@@ -67,6 +67,7 @@
 
 import MapState from "@/state/map.state";
 import ApiService from "@/services/api.service";
+import DataPanelsUtils from "@/services/dataPanels.utils";
 import { INFORMES_URL, BASE_URL_PORTUS, PUERTOS_URL } from '@/common/config';
 import { RedType, MarkerClass } from "@/common/enums";
 import DxButton from "devextreme-vue/button";
@@ -78,6 +79,7 @@ export default {
   },
   data() {
       return {
+          mapState: MapState,
           informesVariable: [],
           productosVariable: [],
           variables: [],
@@ -147,9 +149,7 @@ export default {
           this.openLink(url);
       },
       productoOptionChanged(productoOption) {
-         var estacion = this.markers[0];
-         var url = INFORMES_URL + productoOption.url;
-         this.openLink(url);
+         DataPanelsUtils.setExternalGraph(this.markers[0], productoOption, productoOption.active);
       },
       getInformes() {
           var subruta = this.isModelo() ? 'modelo' : 'estacion';
@@ -162,7 +162,7 @@ export default {
           var subruta = this.isModelo() ? 'modelo' : 'estacion';
           ApiService.post('productosHist/'+ subruta + '/' + this.markers[0].id + '?locale=' + this.$getLocale(), this.variables)
           .then((params) => {
-            this.productosVariable = params.data;
+            this.setBancoDatos(params);
           })
          
       },
@@ -206,7 +206,17 @@ export default {
             this.anniosOptions.push(i);
         };
         this.annioSelected = this.anniosOptions[this.anniosOptions.length - 1];
-      }
+      },
+
+     // La lista de parámetros-checkboxes de cada marker la guardamos en un objeto
+     // del global state (BancosDatos), para poder gestionar de forma coherente
+     // la relación entre el estado del banco de datos  y cada tabla/gráfica abierta desde él,
+     // así como mantener el estado de los checks en caso de una actualización (al añadir variables)
+
+     setBancoDatos(params) {
+         this.mapState.addBancoDatos(this.markers[0].id, params.data, true);
+         this.productosVariable = this.mapState.getBancoDatos(this.markers[0].id, true).filter(p => this.markers.map(m => m.mapOption.variableType).indexOf(p.variable) != -1);
+     }
   }
 };
 
