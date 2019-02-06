@@ -3,9 +3,9 @@
     <b-container style="margin-top: 15px; max-height: 500px; overflow-y: scroll">
             <!-- INFORMES ANUALES -->
             <div v-if="informesAnualesOptions.length > 0" style="margin-bottom: 10px" class="fadeIn">
-                <img :src="require('@/assets/icons/collapsible.png')" class="collapseArrow" v-b-toggle="'collapseAnuales'" />
+                <img :src="require('@/assets/icons/collapsible_blue.png')" :class="[informesCollapseModel ? 'invertedArrow': '']" class="collapseArrow" v-b-toggle="'collapseAnuales'" />
                 <span v-b-toggle="'collapseAnuales'" style="font-size: 16px; cursor: pointer">Informes Anuales de todos los reportes de la estación</span>
-                <b-collapse visible id="collapseAnuales" class="mt-2">
+                <b-collapse visible id="collapseAnuales" class="mt-2" v-model="informesCollapseModel">
                     <b-card id="accordionContent" >
                         <b-row style="margin-top: 10px">
                             <b-col cols="3">
@@ -28,23 +28,23 @@
                 </b-collapse>
             </div>
             <!-- INFORMES Y PRODUCTOS -->
-            <div v-for="varGrp in variables" :key="varGrp" style="margin-bottom: 10px;" class="fadeIn">
-                <img :src="require('@/assets/icons/collapsible.png')" width="30" class="collapseArrow" v-b-toggle="'collapse' + varGrp" />
-                <span v-b-toggle="'collapse' + varGrp" style="font-size: 16px; cursor: pointer">{{$t('{' + varGrp + '}')}}</span>
-                <b-collapse visible :id="'collapse' + varGrp" accordion="my-accordion" class="mt-2">
+            <div v-for="variable in variables" :key="variable.varGrp" style="margin-bottom: 10px;" class="fadeIn">
+                <img :src="require('@/assets/icons/collapsible_blue.png')" width="30" :class="[variable.collapseModel ? 'invertedArrow': '']" class="collapseArrow" v-b-toggle="'collapse' + variable.varGrp" />
+                <span v-b-toggle="'collapse' + variable.varGrp" style="font-size: 16px; cursor: pointer">{{$t('{' + variable.varGrp + '}')}}</span>
+                <b-collapse visible :id="'collapse' + variable.varGrp" accordion="my-accordion" class="mt-2" v-model="variable.collapseModel">
                     <b-card id="accordionContent">
-                        <div v-if="informesVariable.filter(i => i.variable == varGrp).length > 0">
+                        <div v-if="informesVariable.filter(i => i.variable == variable.varGrp).length > 0">
                             <span style="font-size: 14px;">{{$t('{informesClimaticosLabel}')}}</span> 
                             <b-row style="margin-top: 10px; margin-bottom: 10px">
-                                <b-col v-for="informeVar in informesVariable" :key="informeVar.id" v-if="informeVar.variable == varGrp" cols="3">
+                                <b-col v-for="informeVar in informesVariable" :key="informeVar.id" v-if="informeVar.variable == variable.varGrp" cols="3">
                                     <dx-button :text="informeVar.nombre" width="80" height="35" type="default" @click="openLink(informeVar.url)" />
                                 </b-col>
                             </b-row>
                         </div>
-                        <div v-if="productosVariable.filter(p => p.variable == varGrp).length > 0">
+                        <div v-if="productosVariable.filter(p => p.variable == variable.varGrp).length > 0">
                             <span style="font-size: 14px;">{{$t('{analisisInteractivosLabel}')}}</span> 
                             <b-row style="margin-top: 10px; margin-left: 10px">
-                                <b-col v-for="productoVar in productosVariable" :key="productoVar.id" v-if="productoVar.variable == varGrp" cols="6">
+                                <b-col v-for="productoVar in productosVariable" :key="productoVar.id" v-if="productoVar.variable == variable.varGrp" cols="6">
                                     <label class="form-check-label" style="font-size: 13px" >
                                         <img style="" width="16" :src="productoVar.active ? require('@/assets/icons/check_activo.png') : require('@/assets/icons/check_inactivo.png')" >
                                         <input class="form-check-input" style="display: none" type="checkbox" v-model="productoVar.active" @change="productoOptionChanged(productoVar)" />
@@ -87,6 +87,8 @@ export default {
           informeAnualSelected: null,
           anniosOptions: [],
           annioSelected: null,
+          informesCollapseModel: true
+          
       }
   },
   props: {
@@ -107,7 +109,8 @@ export default {
   },
   created() {
 
-    this.variables = this.markers.map(m => m.mapOption.variableType);
+    this.variables = this.markers.map(m => { return { varGrp: m.mapOption.variableType, collapseModel: false } });
+    this.variables[0].collapseModel = true;
       
     if (!this.isMeteorologica() && !this.isModelo()) {
         this.getInformesAnuales();
@@ -135,7 +138,16 @@ export default {
           return this.markers[0].estado == 3;
       },
       openLink(url) {
-          window.open(url, '_blank');
+          window.open(url,'targetWindow',
+                                     'toolbar=no,'
+                                   + 'location=no,'
+                                   + 'status=no'
+                                   + 'menubar=no'
+                                   + 'scrollbars=yes'
+                                   + 'resizable=yes'
+                                   + 'width=650'
+                                   + 'height=800');
+          
       },
       openInformeAnual() {
           var estacion = this.markers[0];
@@ -152,15 +164,17 @@ export default {
          DataPanelsUtils.setExternalGraph(this.markers[0], productoOption, productoOption.active);
       },
       getInformes() {
+          var variables = this.markers.map(m => m.mapOption.variableType)
           var subruta = this.isModelo() ? 'modelo' : 'estacion';
-          ApiService.post('informesHist/'+ subruta + '/' + this.markers[0].id + '?locale=' + this.$getLocale(), this.variables)
+          ApiService.post('informesHist/'+ subruta + '/' + this.markers[0].id + '?locale=' + this.$getLocale(), variables)
           .then((params) => {
             this.informesVariable = params.data;
           })
       },
       getProductos() {
+          var variables = this.markers.map(m => m.mapOption.variableType)
           var subruta = this.isModelo() ? 'modelo' : 'estacion';
-          ApiService.post('productosHist/'+ subruta + '/' + this.markers[0].id + '?locale=' + this.$getLocale(), this.variables)
+          ApiService.post('productosHist/'+ subruta + '/' + this.markers[0].id + '?locale=' + this.$getLocale(), variables)
           .then((params) => {
             this.setBancoDatos(params);
           })
@@ -223,6 +237,10 @@ export default {
 </script>
 
 <style scoped>
+
+.invertedArrow {
+    transform: rotate(180deg);
+}
 
 .collapseArrow {
     width: 25px; 

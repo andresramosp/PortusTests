@@ -93,14 +93,25 @@ export default {
 
   },
   methods: {
+    openLink(url) {
+        window.open(url,'targetWindow',
+                                     'toolbar=no,'
+                                   + 'location=no,'
+                                   + 'status=no'
+                                   + 'menubar=no'
+                                   + 'scrollbars=yes'
+                                   + 'resizable=yes'
+                                   + 'width=650'
+                                   + 'height=800');
+    },
     openInformeNivelacion() {
-      window.open(BASE_URL_PORTUS + 'pdf/nivelacion/' + this.mareografo.id + '.pdf', '_blank');
+      this.openLink(BASE_URL_PORTUS + 'pdf/nivelacion/' + this.mareografo.id + '.pdf');
     },
     openEsquemaDatum() {
-      window.open(BASE_URL_PORTUS + 'pdf/datums/' + this.mareografo.id + '.pdf', '_blank');
+      this.openLink(BASE_URL_PORTUS + 'pdf/datums/' + this.mareografo.id + '.pdf');
     },
     openDefiniciones() {
-      window.open(BASE_URL_PORTUS + 'pdf/referencias/Descripcion_Referencia_NivelDelMar_es.pdf', '_blank');
+      this.openLink(BASE_URL_PORTUS + 'pdf/referencias/Descripcion_Referencia_NivelDelMar_es.pdf');
     }
   }
 };

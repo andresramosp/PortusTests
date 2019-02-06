@@ -3,11 +3,12 @@
     <draggable v-model="mapState.dataObjectsList" @start="drag=true" @end="drag=false">
       <div v-for="(dataPanel) in mapState.dataObjectsList" :key="dataPanel.id">
         <b-card no-body class="">
-          <b-card-header class="dataPanelHeader" header-tag="header" role="tab" href="#" v-b-toggle="'id' + dataPanel.id" block>
+          <b-card-header class="dataPanelHeader" header-tag="header" role="tab" href="#"  block>
             <span style="text-align: left; font-size: 14px" variant="info">{{dataPanel.name}}</span>
-             <img :src='require("@/assets/icons/x.png")' class="closeIcon" style="margin-top: 3px" @click="cerrar(dataPanel)">
+            <img :src='require("@/assets/icons/x.png")' class="closeIcon" style="margin-top: 3px" @click="cerrar(dataPanel)">
+            <img :src="require('@/assets/icons/collapsible_white.png')" width="30" :class="[!dataPanel.open ? 'invertedArrow': '']" class="collapseArrow" v-b-toggle="'id' + dataPanel.id" />
           </b-card-header>
-          <b-collapse :id="'id' + dataPanel.id" :visible="true"  role="tabpanel"> 
+          <b-collapse :id="'id' + dataPanel.id" v-model="dataPanel.open" role="tabpanel"> 
             <b-card-body>
                 <iframe v-if="dataPanel.type == 'Graphic' || dataPanel.type == 'GraphicHist'" :src="dataPanel.url" :width="iFrameWidth" :height="dataPanel.height" frameborder="0" />
                 <DataTablesRTPanel v-if="dataPanel.type == 'RTDataTable'" :marker="dataPanel.marker" :parameters="dataPanel.parameters"/>
@@ -82,4 +83,16 @@ export default {
     width: 100%;
     background-color: lightgray;
   }
+
+  .invertedArrow {
+    transform: rotate(180deg);
+  }
+
+.collapseArrow {
+    width: 23px; 
+    height: 25px; 
+    cursor: pointer; 
+    margin-right: 10px;
+    float: right;
+}
 </style>

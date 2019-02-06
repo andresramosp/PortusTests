@@ -258,6 +258,10 @@ const LocalePlugin = {
             es: "Acceso",
             en: "Enter"
         },
+        allParams: {
+            es: "Todas",
+            en: "All"
+        },
         // Banco datos histórico
         puntoSimarLabel: {
             es: "Punto SIMAR",

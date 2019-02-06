@@ -131,13 +131,24 @@ export default {
 
   },
   methods: {
+     openLink(url) {
+        window.open(url,'targetWindow',
+                                     'toolbar=no,'
+                                   + 'location=no,'
+                                   + 'status=no'
+                                   + 'menubar=no'
+                                   + 'scrollbars=yes'
+                                   + 'resizable=yes'
+                                   + 'width=650'
+                                   + 'height=800');
+    },
     hasPeriodosFondeo() {
       return (this.markers[0].mapResource.markerClass == MarkerClass.EstacionHist
           && this.markers[0].red.tipoRed == "REDEXT") 
           || (this.markers[0].mapResource.markerClass == MarkerClass.AntenaRadar);
     },
     openPeriodosFondeo() {
-      window.open(BASE_URL_PORTUS + 'pdf/pfondeo/' + this.markers[0].id + '.pdf', '_blank');
+      this.openLink(BASE_URL_PORTUS + 'pdf/pfondeo/' + this.markers[0].id + '.pdf');
     }
   }
 };

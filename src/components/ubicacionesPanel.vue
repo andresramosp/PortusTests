@@ -13,7 +13,7 @@
             @itemClick="abrirUbicacion"
             @valueChanged="checkEmptyValue"
             :show-clear-button="true"
-            width="300px" >
+            width="270px" >
 
            <div slot="itemTemplate" slot-scope="item">
               <img width="27" :src="require('@/assets/icons/' + item.tipoUbicacion.toLowerCase() + '.png')" />
@@ -185,11 +185,12 @@ export default {
 }
 
 .leftAlign {
-  left: 50px;
+  /* left: 50px; */
+  left: 200px;
 }
 
 .rightAlign {
-  right: 50px;
+  right: 200px;
 }
 
 .blueTheme {

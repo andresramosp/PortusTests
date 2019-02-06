@@ -25,7 +25,8 @@ const DataPanelsUtils = {
                     type: 'RTDataTable', 
                     marker: marker, 
                     parameters: parameters, 
-                    id: this.generateDataPanelId()
+                    id: this.generateDataPanelId(),
+                    open: true
                 })
         }
         
@@ -40,7 +41,8 @@ const DataPanelsUtils = {
                     type: 'PredDataTable', 
                     marker: location, 
                     variable: variable,
-                    id: this.generateDataPanelId()
+                    id: this.generateDataPanelId(),
+                    open: true
                 })
         }
         else if (!active) {
@@ -93,7 +95,8 @@ const DataPanelsUtils = {
                     marker: station,
                     url: url, 
                     height: GraphicHeight,
-                    id: this.generateDataPanelId()
+                    id: this.generateDataPanelId(),
+                    open: true
                 })
         }
     },
@@ -143,7 +146,8 @@ const DataPanelsUtils = {
                     marker: modelPoint,
                     url: url, 
                     height: GraphicHeight,
-                    id: this.generateDataPanelId()
+                    id: this.generateDataPanelId(),
+                    open: true
                 })
         }
         
@@ -160,7 +164,8 @@ const DataPanelsUtils = {
                     type: 'GraphicHist', 
                     url: INFORMES_URL + producto.url,
                     height: GraphicHistHeight,
-                    id: this.generateDataPanelId()
+                    id: this.generateDataPanelId(),
+                    open: true
                 })
         }
         else if (!active) {

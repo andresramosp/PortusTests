@@ -29,6 +29,17 @@
                 </label>
             </b-col>
         </b-row>
+        <b-row v-if="bancoDatos.length > 1">
+            <b-col cols="4" style="padding-left: 47px">
+                {{ $t('{allParams}') }}
+            </b-col>
+            <b-col>
+                <label style="margin-bottom: 0px !important;">
+                    <img style="" width="18" :src="allGraphsActive ? require('@/assets/icons/check_activo.png') : require('@/assets/icons/check_inactivo.png')" >
+                    <input class="form-check-input" style="display: none" type="checkbox" v-model="allGraphsActive" @change="changeAllGraphsParam(allGraphsActive)" />
+                </label>
+            </b-col>
+        </b-row>
         <b-row v-if="hasMareaAstronomica()" style="margin-top: 20px">
           <b-col cols="8" style="font-weight:600;">
                {{ $t('{tablaMareasLabel}') }}
@@ -63,7 +74,8 @@ export default {
           mapState: MapState,
           // Determina si se marcan de una vez todos los checkboxes de 
           // la misma variable en Tiempo Real
-          allVarsRT: true 
+          allVarsRT: true,
+          allGraphsActive: false
       }
   },
   props: {
@@ -99,6 +111,14 @@ export default {
 
   },
   methods: {
+      changeAllGraphsParam(value) {
+          this.bancoDatos.forEach(param => {
+              if (param.graphicActive != value) {
+                  Vue.set(param, 'graphicActive', value);
+                  this.changeGraphParam(param);
+              }
+          })
+      },
      changeParam(param) {
          if (this.timeOut)
             clearTimeout(this.timeOut);
@@ -109,7 +129,9 @@ export default {
                     if (p.variable == param.variable)
                         Vue.set(p, 'tableActive', param.tableActive);
                 })
-                 DataPanelsUtils.addRTDataTable(this.markers[0], this.bancoDatos.filter(param => param.tableActive));
+                // Ojo: manejamos el global, no el local
+                var bancoDatosState = this.mapState.getBancoDatos(this.markers[0].id)
+                DataPanelsUtils.addRTDataTable(this.markers[0], bancoDatosState.filter(param => param.tableActive));
              }
              // En los puntos-malla (Predicción), si elegimos un parámetro se marcan todos y la tabla depende de la variable
              if (this.markers[0].mapResource.markerClass == MarkerClass.PuntoMalla 
@@ -141,6 +163,9 @@ export default {
             DataPanelsUtils.setPredGraphParam(this.markers[0], parameters, null, true);
         }
         DataPanelsUtils.saveDataUserPrefs(this.markers[0]);
+
+        if (this.bancoDatos.filter(param => param.graphicActive == true).length == 0)
+            this.allGraphsActive = false;
         
      },
      checkDir180Param(param) {
@@ -151,7 +176,17 @@ export default {
          return this.markers[0].mareaAstronomica;
      },
      openMareaAstronomica() {
-         window.open(INFORMES_URL + "Mareas/Principal1.php?Estacion=" + this.markers[0].mareaAstronomica.id + "&Lenguaje=es", '_blank');
+        window.open(INFORMES_URL + "Mareas/Principal1.php?Estacion=" 
+                                + this.markers[0].mareaAstronomica.id 
+                                + "&Lenguaje=es",'targetWindow',
+                                          'toolbar=no,'
+                                        + 'location=no,'
+                                        + 'status=no'
+                                        + 'menubar=no'
+                                        + 'scrollbars=yes'
+                                        + 'resizable=yes'
+                                        + 'width=650'
+                                        + 'height=800');
      },
 
      // La lista de parámetros-checkboxes de cada marker la guardamos en un objeto
@@ -162,6 +197,8 @@ export default {
      setBancoDatos(params) {
          this.mapState.addBancoDatos(this.markers[0].id, params.data);
          this.bancoDatos = this.mapState.getBancoDatos(this.markers[0].id).filter(p => this.markers.map(m => m.mapOption.variableType).indexOf(p.variable) != -1);
+         if (this.bancoDatos.filter(param => !param.graphicActive || param.graphicActive == false).length == 0)
+            this.allGraphsActive = true;
      }
   }
 };

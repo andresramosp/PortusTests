@@ -94,11 +94,12 @@ export default {
 }
 
 .leftAlign {
-  left: 415px;
+  /* left: 415px; */
+  left: 530px;
 }
 
 .rightAlign {
-  right: 415px;
+  right: 530px;
 }
 
 .blueTheme {
