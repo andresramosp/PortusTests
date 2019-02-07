@@ -57,14 +57,12 @@ import ApiService from "@/services/api.service";
 import { DxPopup, DxToolbarItem } from "devextreme-vue/popup";
 import {DxDataGrid, DxColumn, DxPager, DxPaging } from "devextreme-vue/data-grid";
 
-import ShareInfoPanel from "@/components/shareInfoPanel.vue";
 
 export default {
   name: "DataTablesRTPanel",
   components: {
     DxPopup,
     DxToolbarItem,
-    ShareInfoPanel,
     DxDataGrid,
     DxColumn,
     DxPager,

@@ -2,14 +2,19 @@
   <div style="width: 420px;" class="simoPanel">
     <b-card :class="[!asTooltip ? '' : 'noBorders']">
       <div slot="header" :class="[!asTooltip ? 'titleRight' : 'titleLeft']">
-        <img
+      
+       <ShareInfoPanel
           v-show="!asTooltip"
-          :src='require("@/assets/icons/shareIcon.png")'
-          class="shareIcon"
-          @click="toggleShareInfo"
-          @mouseover="openShareInfo"
-          @mouseout="closeShareInfo"
-        >
+          v-if="routeData"
+          :routeData="routeData"
+          style="float: left"
+          position="bottomRight"
+          :imgWidth="16"
+          panelWidth="390px"
+          iconColor="white"
+          @opening="showingShareInfo = true"
+          @closing="showingShareInfo = false"
+        />
         
         {{$t('{headerTiempoReal}')}}
         
@@ -37,14 +42,7 @@
             v-show="displayRTInfo"
         />
 
-      <ShareInfoPanel 
-            @shareinfo-mouseover="openShareInfo" 
-            @shareinfo-mouseout="closeShareInfo" 
-            :routeData="routeData" 
-            v-show="displayShareInfo"
-        />
-
-      <div v-show="!displayShareInfo && !displayRTInfo">
+      <div v-show="!displayShareInfo && !displayRTInfo" :class="[showingShareInfo ? 'blur' : '']">
         <b-row v-if="!loading" class="fadeIn">
           <b-col>
             <span class="variableTitle">{{ $t('{variableOleaje}') }}</span>
@@ -178,7 +176,8 @@ export default {
       interval: null,
       routeData: null,
       displayShareInfo: false,
-      displayRTInfo: false
+      displayRTInfo: false,
+      showingShareInfo: false
     };
   },
   props: {
@@ -249,26 +248,6 @@ export default {
         return date.toLocaleDateString() + ' - ' + date.toISOString().split('T')[1].substr(0, 5) + 'h';
       },
 
-      toggleShareInfo() {
-        this.displayShareInfo = !this.displayShareInfo;
-      },
-
-      openShareInfo() {
-        if (this.timeOutShareInfoClose)
-            clearInterval(this.timeOutShareInfoClose)
-         this.timeOutShareInfoOpen = setTimeout(() => {
-            this.displayShareInfo = true; 
-        }, 500)
-      },
-
-      closeShareInfo() {
-        if (this.timeOutShareInfoOpen)
-            clearInterval(this.timeOutShareInfoOpen)
-        this.timeOutShareInfoClose = setTimeout(() => {
-            this.displayShareInfo = false; 
-        }, 500)
-      },
-
       toggleRTInfo() {
         this.displayRTInfo = !this.displayRTInfo;
       },
@@ -319,7 +298,7 @@ export default {
 
 .variableTitleSm {
     font-size: 12px;
-    color: #111;
+    /* color: #111; */
     position: absolute;
     font-weight: bold;
     margin-top: -3px;
@@ -355,7 +334,7 @@ export default {
 }
 
 .variableDate {
-    color: #767676;
+    /* color: #767676; */
     font-weight: normal;
     font-size: 9px;
     font-family: Arial;
@@ -365,7 +344,7 @@ export default {
 }
 
 .variableDateSm {
-    color: #767676;
+    /* color: #767676; */
     font-weight: normal;
     font-size: 9px;
     font-family: Arial;

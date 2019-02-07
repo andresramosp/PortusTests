@@ -36,13 +36,22 @@
           />
      
       <div class="fadeIn" style="position: absolute; bottom: 20px; left: 427px; z-index: 5; width: 90px">
-        <img v-if='!isWidget' 
+        <!-- <img v-if='!isWidget' 
                   :title="$t('{shareIconPred}')" 
                   class="playerIcon"  
                   @click="openShareInfo"
                   @mouseover="openShareInfo"
                   @mouseout="closeShareInfo"
-                  :src="require('@/assets/icons/shareIcon.png')" />
+                  :src="require('@/assets/icons/shareIcon.png')" /> -->
+        <ShareInfoPanel 
+            v-if="!isWidget"
+            class="sharePanelIcon"
+            @opening="getPredictionRouteData"
+            :routeData="predictionRouteData" 
+            iconColor="white"
+            position="topCenter"
+            :imgWidth="20"
+        />
         <img v-if='!isWidget && hasStaticMaps' :title="$t('{staticMapsIconPred}')" class="playerIcon" @click="openStaticMapsWidget()" :src="require('@/assets/icons/staticMapsWidget.png')" />
         <img v-if='hasVectors' class="playerIcon" :title="$t('{vectorsIconPred}')" @click="toggleVectors()" :src="mapState.showingVectors ?  require('@/assets/icons/vectorsActivated.png') : require('@/assets/icons/vectors.png')" />
         <img v-if='hasRadars' class="playerIcon" :title="$t('{radarsIconPred}')" @click="toggleRadars()" :src="mapState.showingRadars ?  require('@/assets/icons/puntosRadarActivated.png') : require('@/assets/icons/puntosRadar.png')" />   
@@ -50,15 +59,7 @@
        <img class="infoPredIcon fadeIn" @click="openPredictionInfo()" :src="require('@/assets/icons/info.png')" />   
        <img class="fpsIcon fadeIn" :src="require('@/assets/icons/fps.png')" />   
 
-        <ShareInfoPanel 
-            v-if="predictionRouteData"
-            class="fadeIn"
-            style="position: absolute; width: 480px; bottom: 50px; left: 260px"
-            @shareinfo-mouseover="openShareInfo" 
-            @shareinfo-mouseout="closeShareInfo" 
-            :routeData="predictionRouteData" 
-            v-show="displayShareInfo"
-        />
+       
 
     </div>
 
@@ -170,7 +171,7 @@ export default {
         //this.mapState.playerDateRangeVisibility = false;    
     },
 
-      openShareInfo() {   
+      getPredictionRouteData() {   
         if (this.mapState.currentTimeLineLayer) {
             this.predictionRouteData = this.$router.resolve({ path: '/predictionWidget', 
               query: 
@@ -182,22 +183,22 @@ export default {
                 vec: this.mapState.currentTimeLineLayer._baseLayer._url.indexOf('vec') != -1
               }
             });
-            if (this.timeOutShareInfoClose)
-                clearInterval(this.timeOutShareInfoClose)
-            this.timeOutShareInfoOpen = setTimeout(() => {
-                this.displayShareInfo = true; 
-            }, 500)
+            // if (this.timeOutShareInfoClose)
+            //     clearInterval(this.timeOutShareInfoClose)
+            // this.timeOutShareInfoOpen = setTimeout(() => {
+            //     this.displayShareInfo = true; 
+            // }, 500)
         }
       
       },
 
-      closeShareInfo() {
-        if (this.timeOutShareInfoOpen)
-            clearInterval(this.timeOutShareInfoOpen)
-        this.timeOutShareInfoClose = setTimeout(() => {
-            this.displayShareInfo = false; 
-        }, 500)
-      },
+      // closeShareInfo() {
+      //   if (this.timeOutShareInfoOpen)
+      //       clearInterval(this.timeOutShareInfoOpen)
+      //   this.timeOutShareInfoClose = setTimeout(() => {
+      //       this.displayShareInfo = false; 
+      //   }, 500)
+      // },
   }
 };
 </script>
@@ -273,20 +274,22 @@ export default {
 }
 
 .playerIcon {
-  /* position: absolute; */
   z-index: 2;
-  /* bottom: 102px; */
   width: 20px;
-  /* height: 30px; */
   cursor: pointer;
+  float: right;
+  margin-left: 4px;
+  margin-right: 4px;
+  margin-top: 4px;
+}
+
+.sharePanelIcon {
+  z-index: 2;
   float: right;
   margin-left: 4px;
   margin-right: 4px;
 }
 
-.predictionWidgetIcon {
-    margin-left: 510px;
-}
 
 .vectorsIcon {
     /* left: 95px; */

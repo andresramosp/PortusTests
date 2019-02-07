@@ -21,9 +21,10 @@
             <b-container>
               <b-row >
                   <b-col v-for="mapOption in mapOptions.filter(opt => opt.group == optGrp.id)" :key="mapOption.id" cols="6" class="form-check text-left" style="padding-top: 3px; margin-bottom: 3px;" >
-                    <label class="form-check-label lightable" :class="[mapOption.active ? 'mapOptionChecked' : '', mapOption.loadingThings > 0 ? 'mapOptionLoading' : '']" :title="minimized ? $t(mapOption.name) : ''" style="float: left; cursor: pointer">
+                    <label class="form-check-label lightable" :class="[mapOption.active ? 'mapOptionChecked' : '']" :title="minimized ? $t(mapOption.name) : ''" style="float: left; cursor: pointer">
                       <img style="float: left; margin-right: 2px; margin-top: -4px" width="28" 
                             :class="[mapOption.active ? 'mapOptionChecked' : '']"
+                            class="fadeIn"
                             :src='require("@/assets/icons/mainMenu/" + mapOption.id + ".png")' >
                       <input class="form-check-input" style="display: none" 
                             type="checkbox" 
@@ -192,9 +193,6 @@ input[type="checkbox"] {
 
 }
 
-.mapOptionLoading {
-  /* background: #dddddd; */
-}
 
 
 

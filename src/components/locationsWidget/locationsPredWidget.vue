@@ -3,11 +3,21 @@
     <b-card>
 
     <div slot="header">
-        <img :src='require("@/assets/icons/shareIcon.png")' class="shareIcon"  
-          @click="toggleShareInfo"
-          @mouseover="openShareInfo"
-          @mouseout="closeShareInfo" />
+
+       <ShareInfoPanel
+          v-if="routeData"
+          :routeData="routeData"
+          style="float: left"
+          position="bottomRight"
+          :imgWidth="16"
+          panelWidth="390px"
+          iconColor="white"
+          @opening="showingShareInfo = true"
+          @closing="showingShareInfo = false"
+        />
+
         {{$t('{headerPredicciones}')}}        
+
     </div>
 
       <img
@@ -17,14 +27,7 @@
         width="100"
       >
 
-      <ShareInfoPanel 
-            @shareinfo-mouseover="openShareInfo" 
-            @shareinfo-mouseout="closeShareInfo" 
-            :routeData="routeData" 
-            v-show="displayShareInfo"
-      />
-
-      <div v-if="!displayShareInfo && !loading" class="fadeIn">
+      <div v-if="!displayShareInfo && !loading" class="fadeIn" :class="[showingShareInfo ? 'blur' : '']">
         <img :src="require('@/assets/locationsWidget/header_pred.png')" width="360">
 
         <div class="variableBGSection" style="background-color: #bdc9dc;">
@@ -323,7 +326,8 @@ export default {
       vientoDirImgD1: null,
       loading: true,
       interval: null,
-      displayShareInfo: false
+      displayShareInfo: false,
+      showingShareInfo: false
     };
   },
   props: {
@@ -403,27 +407,7 @@ export default {
     printHour(dateInSecs) {
         var date = new Date(dateInSecs * 1000);
         return date.toISOString().split('T')[1].substr(0, 5) + 'h';
-      },
-
-    toggleShareInfo() {
-        this.displayShareInfo = !this.displayShareInfo;
-      },
-
-     openShareInfo() {
-        if (this.timeOutShareInfoClose)
-            clearInterval(this.timeOutShareInfoClose)
-         this.timeOutShareInfoOpen = setTimeout(() => {
-            this.displayShareInfo = true; 
-        }, 500)
-      },
-
-    closeShareInfo() {
-        if (this.timeOutShareInfoOpen)
-            clearInterval(this.timeOutShareInfoOpen)
-        this.timeOutShareInfoClose = setTimeout(() => {
-            this.displayShareInfo = false; 
-        }, 500)
-    },
+      }
 
   }
 };

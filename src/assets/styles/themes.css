@@ -19,6 +19,11 @@
   
   .darkTheme .predicciones .mapOptionChecked  img {
     background-color: rgba(11, 90, 149, 0.7);
+    -webkit-transition: background-color 190ms linear;
+    -moz-transition: background-color 190ms linear;
+    -o-transition: background-color 190ms linear;
+    -ms-transition: background-color 190ms linear;
+    transition: background-color 190ms linear;
   }
   
   .darkTheme .predicciones .mapOptionChecked {
@@ -28,6 +33,11 @@
   
   .darkTheme .tiempo_real .mapOptionChecked  img {
     background-color: rgba(6, 136, 192, 0.7);
+    -webkit-transition: background-color 190ms linear;
+    -moz-transition: background-color 190ms linear;
+    -o-transition: background-color 190ms linear;
+    -ms-transition: background-color 190ms linear;
+    transition: background-color 190ms linear;
   }
   
   .darkTheme .tiempo_real .mapOptionChecked {
@@ -37,6 +47,11 @@
   
   .darkTheme .historico .mapOptionChecked  img {
     background-color: rgba(115, 170, 199, 0.7);
+    -webkit-transition: background-color 190ms linear;
+    -moz-transition: background-color 190ms linear;
+    -o-transition: background-color 190ms linear;
+    -ms-transition: background-color 190ms linear;
+    transition: background-color 190ms linear;
   }
   
   .darkTheme .historico .mapOptionChecked {
@@ -74,10 +89,6 @@
     color: white;
   }
 
-  .darkTheme .alertText {
-    color: rgba(6, 136, 192);
-  }
-
   .darkTheme .leaflet-bar-timecontrol{
     color: white;
     background-color: rgba(0, 0, 0, 0.8);
@@ -87,9 +98,9 @@
     color: red !important;
   } */
 
-.simoPanel .card-body {
+/* .simoPanel .card-body {
   background: white !important;
-}
+} */
 
 .darkTheme .markerPanel div:not(.dx-popup-title):not(.dx-button-content):not(.dx-button-text),
 .darkTheme .leaflet-popup-content .card-body,
@@ -168,17 +179,23 @@
   color: white;
 }
 
-.darkTheme a:hover {
+.darkTheme .alertText,
+.darkTheme .markerPanel a:hover,
+.darkTheme .leaflet-popup a:hover {
+  color: #00c8f9 !important;
+}
+
+.darkTheme .leaflet-control-container a:hover {
   color: white !important;
 }
 
 .darkTheme .list-container a:hover {
   color: black !important;
 }
-
+/* 
 .darkTheme .leaflet-popup a:hover {
   color: rgb(21, 91, 140) !important;
-}
+} */
 
 .darkTheme .table-dark th, .table-dark td, .table-dark thead th {
   border-color: transparent;

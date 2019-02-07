@@ -20,40 +20,39 @@
       slot-scope="title"
       class="popupHeader"
     >
-      {{titulo}}
+        {{titulo}}
       
         <img
         :src='require("@/assets/icons/x.png")'
         class="closeIcon"
         @click="cerrar"
       >
-       <!-- <span @click="toggleMinimized" style="float:right; cursor:pointer">_</span> -->
+   
+       <ShareInfoPanel
+          v-if="routeData"
+          :routeData="routeData"
+          style="float: right; margin-right: 6px; margin-top: -1px"
+          position="bottomLeft"
+          :imgWidth="20"
+          panelWidth="790px"
+          :offsetX="0"
+          iconColor="white"
+          @opening="showingShareInfo = true"
+          @closing="showingShareInfo = false"
+          :iFrameWidth="1040"
+          :iFrameHeight="570"
+        />
+
+    <!-- <span @click="toggleMinimized" style="float:right; cursor:pointer">_</span> -->
        <!-- <img
         :src='require("@/assets/icons/minimize.png")'
         class="minimizeIcon"
         @click="toggleMinimized"
       > -->
-      <img
-        v-show="!minimized"
-        :src='require("@/assets/icons/shareIcon.png")'
-        class="shareIcon"
-        @click="openShareInfo"
-        @mouseover="openShareInfo"
-        @mouseout="closeShareInfo"
-      >
+
     </div>
 
-    <ShareInfoPanel
-      @shareinfo-mouseover="openShareInfo"
-      @shareinfo-mouseout="closeShareInfo"
-      :routeData="routeData"
-      :iFrameWidth="1040"
-      :iFrameHeight="570"
-      v-show="displayShareInfo"
-      class="shareInfoCenter"
-    />
-
-    <b-row v-show="!displayShareInfo" class="simoPanel">
+    <b-row v-show="!displayShareInfo" class="simoPanel" :class="[showingShareInfo ? 'blur' : '']">
       <b-col :cols="!minimized ? 5 : 12">
         <b-row>
           <b-col>
@@ -109,7 +108,8 @@ export default {
       titulo: "",
       displayShareInfo: false,
       routeData: null,
-      minimized: false
+      minimized: false,
+      showingShareInfo: false
       // popupWidth: 1020,
       // popupHeight: 553,
       // popupPosition: 'center'
@@ -160,25 +160,6 @@ export default {
       if (this.minimized)
         this.toggleMinimized();
     },
-    toggleShareInfo() {
-      this.displayShareInfo = !this.displayShareInfo;
-    },
-
-    openShareInfo() {
-        if (this.timeOutShareInfoClose)
-            clearInterval(this.timeOutShareInfoClose)
-         this.timeOutShareInfoOpen = setTimeout(() => {
-            this.displayShareInfo = true; 
-        }, 500)
-    },
-
-    closeShareInfo() {
-        if (this.timeOutShareInfoOpen)
-            clearInterval(this.timeOutShareInfoOpen)
-        this.timeOutShareInfoClose = setTimeout(() => {
-            this.displayShareInfo = false; 
-        }, 500)
-    },
 
     toggleMinimized() {
       this.minimized = !this.minimized;
@@ -201,14 +182,6 @@ export default {
   float: right;
   cursor: pointer;
   width: 17px;
-  margin-right: 6px;
-}
-
-.shareIcon {
-  margin-top: 0px;
-  float: right;
-  cursor: pointer;
-  width: 19px;
   margin-right: 6px;
 }
 

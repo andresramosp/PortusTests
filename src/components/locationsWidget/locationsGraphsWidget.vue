@@ -1,26 +1,23 @@
 <template>
   <div>
 
-    <ShareInfoPanel
-      @shareinfo-mouseover="openShareInfo"
-      @shareinfo-mouseout="closeShareInfo"
-      :routeData="routeData"
-      v-show="displayShareInfo"
-    />
-
-    <div v-show="!displayShareInfo" style="width: 569px;" class="simoPanel">
+    <div v-show="!displayShareInfo" style="width: 569px;" class="">
       <b-card >
          <div slot="header">
-          <img
-            :src='require("@/assets/icons/shareIcon.png")'
-            class="shareIcon"
-            @click="toggleShareInfo"
-            @mouseover="openShareInfo"
-            @mouseout="closeShareInfo"
-          >
+           <ShareInfoPanel
+              v-if="routeData"
+              :routeData="routeData"
+              style="float: left"
+              position="bottomRight"
+              :imgWidth="16"
+              panelWidth="530px"
+              iconColor="white"
+              @opening="showingShareInfo = true"
+              @closing="showingShareInfo = false"
+            />
           {{$t('{headerGraficos}')}}
         </div>
-        <div v-for="graphUrl in graphUrlList" :key="graphUrl">
+        <div :class="[showingShareInfo ? 'blur' : '']" v-for="graphUrl in graphUrlList" :key="graphUrl">
           <iframe width="567" frameborder="0" :src="graphUrl"/>
         </div>
       </b-card>
@@ -46,7 +43,8 @@ export default {
       displayShareInfo: false,
       loading: true,
       graphUrlList: [],
-      routeData: null
+      routeData: null,
+      showingShareInfo: false
     };
   },
   props: {
@@ -103,23 +101,6 @@ export default {
     
       this.graphUrlList = [urlOleaje, urlViento, urlNivmar];
       this.loading = false;
-    },
-    toggleShareInfo() {
-      this.displayShareInfo = !this.displayShareInfo;
-    },
-
-    openShareInfo() {
-      if (this.timeOutShareInfoClose) clearInterval(this.timeOutShareInfoClose);
-      this.timeOutShareInfoOpen = setTimeout(() => {
-        this.displayShareInfo = true;
-      }, 500);
-    },
-
-    closeShareInfo() {
-      if (this.timeOutShareInfoOpen) clearInterval(this.timeOutShareInfoOpen);
-      this.timeOutShareInfoClose = setTimeout(() => {
-        this.displayShareInfo = false;
-      }, 500);
     }
   }
 };
@@ -132,6 +113,11 @@ export default {
     float: left;
     cursor: pointer;
     width: 16px;
+    margin-right: 6px;
+}
+
+.sharePanelIcon {
+    float: left;
     margin-right: 6px;
 }
 

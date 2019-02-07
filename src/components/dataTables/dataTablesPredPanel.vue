@@ -9,35 +9,28 @@
         width="100"
       >
     </div>
-    
 
-      <ShareInfoPanel
-        v-if="routeData"
-        @shareinfo-mouseover="openShareInfo"
-        @shareinfo-mouseout="closeShareInfo"
-        :routeData="routeData"
-        :iFrameWidth="1040"
-        :iFrameHeight="570"
-        v-show="displayShareInfo"
-        class=""
-      />
-
-    <div v-show="!displayShareInfo">
+    <div >
       <b-row v-if="!loading">
         <b-col  class="fadeIn" cols="2">
           <img :src="defaultLogo" style="margin-left: 5px; margin-bottom: 15px">
         </b-col>
-        <b-col style="font-weight: bold" cols="8">
+        <b-col cols="8">
           {{titulo}}
          </b-col>
          <b-col cols="2">
-            <img
-              :src='require("@/assets/icons/shareIconBlack.png")'
-              class="shareIcon"
-              @click="openShareInfo"
-              @mouseover="openShareInfo"
-              @mouseout="closeShareInfo"
-            >
+      
+            <ShareInfoPanel
+              v-if="routeData"
+              :routeData="routeData"
+              :iFrameWidth="1040"
+              :iFrameHeight="570"
+              class="sharePanel"
+              position="bottomLeft"
+              :imgWidth="23"
+              @opening="showingShareInfo = true"
+              @closing="showingShareInfo = false"
+            />
              <img
               :src='require("@/assets/icons/pdfReport.png")'
               class="shareIcon"
@@ -51,7 +44,7 @@
             >
         </b-col>
       </b-row>
-      <b-row >
+      <b-row :class="[showingShareInfo ? '' : '']">
         <b-col v-if="!loading" class="fadeIn">
 
           <NivmarPleaBajaPredPanel 
@@ -144,7 +137,8 @@ export default {
       variableType: VariableType,
       minDataDay: 5,
       mareaAstronomicaUrl: null,
-      routeData: null
+      routeData: null,
+      showingShareInfo: false
     };
   },
   props: {
@@ -307,26 +301,7 @@ export default {
         return ['bg-light']
       }
     },
-    toggleShareInfo() {
-      this.displayShareInfo = !this.displayShareInfo;
-    },
-
-    openShareInfo() {
-        if (this.timeOutShareInfoClose)
-            clearInterval(this.timeOutShareInfoClose)
-         this.timeOutShareInfoOpen = setTimeout(() => {
-            this.displayShareInfo = true;
-        }, 500)
-    },
-
-    closeShareInfo() {
-        if (this.timeOutShareInfoOpen)
-            clearInterval(this.timeOutShareInfoOpen)
-        this.timeOutShareInfoClose = setTimeout(() => {
-            this.displayShareInfo = false;
-        }, 1000)
-    },
-
+  
     printTable() {
       // Ponerle ref al logo y traerse el innerHtml, si lo piden
       // Se le puede quitar la primera columna para ajustarlo mejor
@@ -410,10 +385,7 @@ export default {
 </script>
 
 <style >
-/* 
-.list-container .nav-tabs {
-    border-bottom: 0px;
-} */
+
 
 .list-container .nav-link {
     padding: 5px 15px 5px 15px !important;
@@ -445,7 +417,7 @@ export default {
 .dx-datagrid-headers .dx-row .colHeader {
     background-color: #7fb7e7f5 !important;
     font-size: 10px;
-    font-weight: bold;
+    /* font-weight: bold; */
     color: #f8f9fa;
     padding-left: 2px;
     text-align: center !important;
@@ -481,12 +453,20 @@ export default {
   margin-right: 6px;
 }
 
-.shareIcon {
-  margin-top: 2px;
+.sharePanel {
   float: right;
-  cursor: pointer;
-  width: 23px;
   margin-right: 6px;
 }
+
+.shareIcon {
+
+  margin-right: 6px;
+  cursor: pointer;
+  width: 23px;
+  float: right;
+  margin-top: 2px;
+
+}
+
 </style>
 
