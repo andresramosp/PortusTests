@@ -33,11 +33,7 @@ export default {
 
 <style>
 
-.fadeIn {
-    -webkit-animation: animat_show 1.2s;
-    animation: animat_show 1.2s;
-    visibility: visible !important;
-}
+
  
 </style>
 

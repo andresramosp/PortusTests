@@ -1,6 +1,6 @@
  <template>
 
-    <div>
+    <div id="tableRT">
 
      <div class="allCenter">
       <img 
@@ -218,13 +218,11 @@ export default {
 };
 </script>
 
+
+
 <style >
 
-.dx-datagrid-headers .dx-row .colHeader {
-    background-color: #7fb7e7f5 !important;
-    font-size: 13.5px;
-    color: #f8f9fa;
-}
+
 
 
 .largeTitle {

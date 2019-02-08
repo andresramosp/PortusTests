@@ -1,6 +1,6 @@
 
  <template>
-  <div style="min-height: 200px">
+  <div style="min-height: 200px" id="tablePred" class="printable">
     <div class="allCenter">
       <img 
         style="margin-top: 80px"
@@ -162,6 +162,10 @@ export default {
     }
   },
   watch: {
+    loading: function() {
+      if (!this.loading)
+        this.$emit('loaded');
+    },
     marker: function () {
       if (this.marker && this.variable)
         this.init();
@@ -218,6 +222,7 @@ export default {
           })
           if (this.variable == VariableType.SEA_LEVEL)
             this.nivelMarRef = result.data[0].nivelRef;
+
       }
     },
     formatData(data) {
@@ -314,8 +319,10 @@ export default {
       // w.document.write(printContents);
       // w.print();
 
-      // TODO: abrir como widget y pasarle parametro para que imprima directamente
-      window.print();
+      var printWindow = window.open(this.routeData.href + '&forPrint=true', "_blank");
+      // printWindow.document.close(); 
+      // printWindow.focus();
+      // printWindow.print(); 
     },
 
     hasReport() {
@@ -384,6 +391,8 @@ export default {
 };
 </script>
 
+
+
 <style >
 
 
@@ -412,15 +421,6 @@ export default {
 
 .bg-selectedTab {
     background-color: #7fb7e7f5 !important;
-}
-
-.dx-datagrid-headers .dx-row .colHeader {
-    background-color: #7fb7e7f5 !important;
-    font-size: 10px;
-    /* font-weight: bold; */
-    color: #f8f9fa;
-    padding-left: 2px;
-    text-align: center !important;
 }
 
 .dx-datagrid-rowsview {

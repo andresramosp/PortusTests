@@ -11,7 +11,7 @@
     :height="popupHeight"
     :shading="false"
     :title="titulo"
-    class="popup"
+    class="popup printable"
     @hidden="cerrar"
     title-template="titleTemplate"
   >
@@ -21,21 +21,28 @@
       class="popupHeader"
     >
         {{titulo}}
-      
+
         <img
         :src='require("@/assets/icons/x.png")'
         class="closeIcon"
         @click="cerrar"
       >
+
+      
+        <img
+          :src='require("@/assets/icons/imprimirWhite.png")'
+          class="printIcon"
+          style="margin-right: 6px"
+          @click="imprimir"
+        >
    
        <ShareInfoPanel
           v-if="routeData"
           :routeData="routeData"
           style="float: right; margin-right: 6px; margin-top: -1px"
-          position="bottomLeft"
           :imgWidth="20"
           panelWidth="790px"
-          :offsetX="0"
+          :customPosition="{ left: -850, top: 200 }"
           iconColor="white"
           @opening="showingShareInfo = true"
           @closing="showingShareInfo = false"
@@ -116,7 +123,8 @@ export default {
     };
   },
   props: {
-    ubicacion: { type: Object, default: null }
+    ubicacion: { type: Object, default: null },
+    popupPosition: { type: String, default: 'center '}
   },
   computed: {
     popupWidth() {
@@ -125,9 +133,9 @@ export default {
     popupHeight() {
       return this.minimized ? 528 : 551;
     },
-    popupPosition() {
-      return this.minimized ? (this.align == 'left' ? 'right bottom' : 'left bottom') : 'center';
-    }
+    // popupPosition() {
+    //   return this.minimized ? (this.align == 'left' ? 'right bottom' : 'left bottom') : 'center';
+    // }
   },
   watch: {
     ubicacion: function() {
@@ -160,7 +168,9 @@ export default {
       if (this.minimized)
         this.toggleMinimized();
     },
-
+    imprimir() {
+      window.open(this.routeData.href + '&forPrint=true', "_blank");
+    },
     toggleMinimized() {
       this.minimized = !this.minimized;
     }

@@ -208,13 +208,16 @@ export default {
           this.getData();
         }, 5000);
 
-        this.routeData = this.$router.resolve({ path: '/locationsRTWidget', 
-            query: 
-            { 
-              locationType: this.locationType,
-              code: this.code
-            }
-        });
+        if (!this.asTooltip) {
+          this.routeData = this.$router.resolve({ path: '/locationsRTWidget', 
+              query: 
+              { 
+                locationType: this.locationType,
+                code: this.code
+              }
+          });
+        }
+        
       },
       async getData() {
         var tipo = this.locationType == 'Puerto' ? 'harbor' : 'city';
@@ -372,6 +375,12 @@ export default {
   border: 0px;
 }
 
+.card-body {
+  padding-top: 10px;
+  padding-left: 1.25rem;
+  padding-bottom: 1.25rem;
+  padding-right: 1.25rem;
+}
 
 .card-header {
   /* background-color: #606060; */

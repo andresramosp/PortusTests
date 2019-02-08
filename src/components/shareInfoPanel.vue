@@ -10,7 +10,7 @@
   
     >
 
-    <div v-show="displayShareInfo" :style="'width:' + panelWidth" :class="position" @mouseover="openShareInfo" @mouseout="closeShareInfo" class="shareInfoPanel fadeIn">
+    <div v-show="displayShareInfo" :style="customStyle" :class="[customPosition ? '' : position]" @mouseover="openShareInfo" @mouseout="closeShareInfo" class="shareInfoPanel fadeInMenu">
        <label class="alertText" style="float: left: display: inline; margin-right:3px" for="urlLink">URL</label>
       <img :src='require("@/assets/icons/openLink.png")' width="11" class="shareImg" @click="openLink">
       <b-form-input id="specialContent" 
@@ -47,7 +47,7 @@ export default {
     position: { type: String },
     imgWidth: { type: Number },
     panelWidth: { type: String, default: '480px' },
-    offsetX: { type: Number }
+    customPosition: { type: Object }
   },
   computed: {
     iFrameCode() {
@@ -56,6 +56,14 @@ export default {
         this.widgetUrl +
         "' frameborder='0' />"
       );
+    },
+    customStyle() {
+      var style = "";
+      if (this.panelWidth)
+        style += 'width:' + this.panelWidth + ';'
+      if (this.customPosition)
+        style += 'margin-left:' + this.customPosition.left + 'px;' + 'top:' + this.customPosition.top + 'px;'
+      return style;
     }
   },
   watch: {
