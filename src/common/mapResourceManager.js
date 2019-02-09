@@ -233,7 +233,7 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true,
+    //cached: true,
     preventHeaping: true
   },
   {
@@ -279,7 +279,7 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true,
+    //cached: true,
     preventHeaping: true
   },
   {
@@ -295,7 +295,7 @@ export const MapResources = [
     iconSize: [27, 27],
     showAll: true,
     locale: true,
-    cached: true,
+    //cached: true,
     preventHeaping: true
   },
   {
@@ -326,7 +326,7 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true,
+    //cached: true,
     preventHeaping: true,
   },
   {
@@ -341,7 +341,7 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true,
+    //cached: true,
     preventHeaping: true
   },
   {
@@ -393,7 +393,7 @@ export const MapResources = [
     },
     showAll: true,
     locale: true,
-    cached: true,
+    //cached: true,
     preventHeaping: true
   },
   {
@@ -407,7 +407,7 @@ export const MapResources = [
     iconSize: [24, 24],
     showAll: true,
     locale: true,
-    cached: true,
+    //cached: true,
     preventHeaping: true,
     subOption: 'Estaciones'
   },
@@ -422,7 +422,7 @@ export const MapResources = [
     iconSize: [24, 24],
     showAll: true,
     locale: true,
-    cached: true,
+    //cached: true,
     preventHeaping: true,
     subOption: 'Estaciones'
   },
@@ -448,7 +448,7 @@ export const MapResources = [
     iconSize: [24, 24],
     showAll: true,
     locale: true,
-    cached: true,
+    //cached: true,
     preventHeaping: true,
     subOption: 'Estaciones'
   },
@@ -474,7 +474,7 @@ export const MapResources = [
     iconSize: [24, 24],
     showAll: true,
     locale: true,
-    cached: true,
+    //cached: true,
     preventHeaping: true,
     subOption: 'Estaciones'
   },
@@ -489,7 +489,7 @@ export const MapResources = [
     iconSize:  [24, 24],
     showAll: true,
     locale: true,
-    cached: true,
+    //cached: true,
     preventHeaping: true,
     subOption: 'Estaciones'
   },
@@ -504,7 +504,7 @@ export const MapResources = [
     iconSize:  [24, 24],
     showAll: true,
     locale: true,
-    cached: true,
+    //cached: true,
     preventHeaping: true,
     subOption: 'Estaciones'
   },
@@ -519,7 +519,7 @@ export const MapResources = [
     iconSize:  [24, 24],
     showAll: true,
     locale: true,
-    cached: true,
+    //cached: true,
     preventHeaping: true,
     subOption: 'Estaciones'
   },
@@ -534,7 +534,7 @@ export const MapResources = [
     iconSize: [24, 24],
     showAll: true,
     locale: true,
-    cached: true,
+    //cached: true,
     preventHeaping: true,
     subOption: 'Estaciones'
   },
@@ -549,7 +549,7 @@ export const MapResources = [
     iconSize: [24, 24],
     showAll: true,
     locale: true,
-    cached: true,
+    //cached: true,
     preventHeaping: true,
     subOption: 'Estaciones'
   }

@@ -139,9 +139,9 @@ const MapState = {
                 portusTimeLayer.mapResource = mapResource;
                 portusTimeLayer.mapOption = mapOption;
                 portusTimeLayer.visible = this.initialVisibilityValue(portusTimeLayer);
+                //portusTimeLayer.hasVectors = res.urlVec == 'vec';
                 portusTimeLayer.id = res.url;
                 this.preloadedTimeLineLayers.push(portusTimeLayer);
-    
                 if (mapResource.paintBounds) {
                     var ms = this;
                     var rect = L.rectangle([[res.limN, res.limW], [res.limS, res.limE]], { color: 'red', fillOpacity: 0.1, weight: 1 })
@@ -314,6 +314,7 @@ const MapState = {
     setPlayerMinimized(value) {
         this.playerMinimized = value;
         this.map.timeDimensionControl.options.minimized = value;
+        this.map.timeDimensionControl.options.autoPlay = this.map.timeDimensionControl._player.isPlaying();
         this.map.removeControl(this.map.timeDimensionControl);
         this.map.addControl(this.map.timeDimensionControl);
     },

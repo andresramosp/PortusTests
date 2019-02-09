@@ -34,7 +34,7 @@
 
     </div>
 
-    <b-tabs  @input="centerPosition">
+    <b-tabs >
         <b-tab v-if="!esAntena()" :title="$t('{accesoADatosTab}')" active>
             <BancoDatosHistoricoTab v-if="esHistorico()" :markers="markers" @content-loaded="centerPosition"  /> 
             <BancoDatosTab v-else :markers="mapState.markersSelected" @content-loaded="centerPosition" /> 

@@ -11,7 +11,8 @@
     </div>
 
     <div >
-      <b-row v-if="!loading">
+      <span v-if="errorMsg" >{{errorMsg}}</span>
+      <b-row v-if="!loading && !errorMsg">
         <b-col  class="fadeIn" cols="2">
           <img :src="defaultLogo" style="margin-left: 5px; margin-bottom: 15px">
         </b-col>
@@ -138,7 +139,8 @@ export default {
       minDataDay: 5,
       mareaAstronomicaUrl: null,
       routeData: null,
-      showingShareInfo: false
+      showingShareInfo: false,
+      errorMsg: null
     };
   },
   props: {
@@ -147,7 +149,7 @@ export default {
   },
   computed: {
     loading() {
-      return this.days.length == 0;
+      return this.days.length == 0 && !this.errorMsg;
     },
     titulo() {
       if (this.variable == VariableType.SEA_LEVEL) {
@@ -178,7 +180,6 @@ export default {
   methods: {
     init() {
       if (this.marker != null) {
-        //this.titulo = this.$t('{tablePredTitle_' + this.variable + '}') + " " + MapUtils.getMarkerName(this.marker);
         if (this.variable) {
            this.tabIndex = 0;
            this.days = [];
@@ -206,24 +207,36 @@ export default {
       }
     },
     async getTableData() {
-      var result = await ApiService.get("predData/" + this.variable + "/" + this.marker.id + "?locale=" + this.$getLocale());
-      if (result.data.length > 0) {
-          var groupDays = result.data.map(d => new Date(d.fecha)
-              .toISOString().split('T')[0])
-              .filter(function (elem, index, self) { return index == self.indexOf(elem); });
-          groupDays.forEach(day => {
-            var dayData = { 
-              _date: day,
-              id: new Date(day).toLocaleDateString(this.$getLocale() == 'es' ? 'es-ES' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
-              data: this.formatData(result.data.filter(d => new Date(d.fecha).toISOString().split('T')[0] == day))
-            }
-            if (Object.keys(dayData.data[0]).length > this.minDataDay)
-              this.days.push(dayData);
-          })
-          if (this.variable == VariableType.SEA_LEVEL)
-            this.nivelMarRef = result.data[0].nivelRef;
-
+      try {
+         var result = await ApiService.get("predData/" 
+                                      + this.variable
+                                      + "/" + this.marker.id 
+                                      + "?locale=" + this.$getLocale())
+      
+        if (result.data.length > 0) {
+            var groupDays = result.data.map(d => new Date(d.fecha)
+                .toISOString().split('T')[0])
+                .filter(function (elem, index, self) { return index == self.indexOf(elem); });
+            groupDays.forEach(day => {
+              var dayData = { 
+                _date: day,
+                id: new Date(day).toLocaleDateString(this.$getLocale() == 'es' ? 'es-ES' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+                data: this.formatData(result.data.filter(d => new Date(d.fecha).toISOString().split('T')[0] == day))
+              }
+              if (Object.keys(dayData.data[0]).length > this.minDataDay)
+                this.days.push(dayData);
+            })
+            if (this.variable == VariableType.SEA_LEVEL)
+              this.nivelMarRef = result.data[0].nivelRef;
+        }
+        else {
+          this.errorMsg = "Error. No hay datos que mostrar.";
+        }
       }
+      catch(error) {
+        this.errorMsg = error.message;
+      }
+     
     },
     formatData(data) {
       var result = [];

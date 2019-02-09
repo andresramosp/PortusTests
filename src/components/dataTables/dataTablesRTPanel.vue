@@ -11,7 +11,8 @@
     </div>
 
     <b-row v-show="!displayShareInfo">
-      <b-col v-if="!loading" class="fadeIn">
+      <span v-if="errorMsg" >{{errorMsg}}</span>
+      <b-col v-if="!loading && !errorMsg" class="fadeIn">
 
           <b-tabs v-if="marker && dataSources.length > 0"  v-model="tabIndex" class='infoPanelClass' >
 
@@ -81,7 +82,8 @@ export default {
       dataSources: [],
       tabIndex: 0,
       width: 1000,
-      height: 360
+      height: 360,
+      errorMsg: null
     };
   },
   props: {
@@ -91,7 +93,7 @@ export default {
   computed: {
 
     loading() {
-      return !this.paramsGroups || this.dataSources.length != this.paramsGroups.length;
+      return (!this.paramsGroups || this.dataSources.length != this.paramsGroups.length) && !this.errorMsg;
     },
     popupWidth() {
       return this.width;
@@ -130,7 +132,7 @@ export default {
           }
       }
     },
-    getTableData(parametrosDataSource, dataSourceId) {
+    async getTableData(parametrosDataSource, dataSourceId) {
       var dt = this;
 
       if (!this.marker.radar) {
@@ -141,18 +143,25 @@ export default {
         var url = "RTData/radar/" + this.marker.id + "?locale=" + this.$getLocale();
         var params = [this.marker.latId, this.marker.lonId];
       }
-
-      ApiService.post(url, params)
-        .then(result => {
-          if (result.data.length > 0) {
-             var dataSource = { 
-                id: dataSourceId,
-                data: result.data.map((row) => this.formatRow(row) )
-              };
-            dt.dataSources.push(dataSource);
-            Object.assign(this.columnsNames, this.generateColumnsNames(result.data[0]));
-          }
-        });
+      
+      try {
+        var result = await ApiService.post(url, params)
+        if (result.data.length > 0) {
+            var dataSource = { 
+              id: dataSourceId,
+              data: result.data.map((row) => this.formatRow(row) )
+            };
+          dt.dataSources.push(dataSource);
+          Object.assign(this.columnsNames, this.generateColumnsNames(result.data[0]));
+        }
+        else {
+          this.errorMsg = "Error. No hay datos que mostrar.";
+        }
+      }
+      catch(error) {
+        this.errorMsg = error.message;
+      }
+      
     },
     generateColumnsNames(row) {
       var result = {};

@@ -11,7 +11,11 @@ const GraphicHistHeight = 380;
 const DataPanelsUtils = {
 
     addRTDataTable(marker, parameters) {
-        var markerTable = MapState.dataObjectsList.find(d => d.type == "RTDataTable" && d.marker.id == marker.id);
+        var markerTable;
+        if (marker.radar)
+            markerTable =  MapState.dataObjectsList.find(d => d.type == "RTDataTable" && d.marker.id == marker.id && d.latId == marker.latId && d.lonId == marker.lonId);
+        else 
+            markerTable = MapState.dataObjectsList.find(d => d.type == "RTDataTable" && d.marker.id == marker.id);
         if (markerTable){
             markerTable.parameters = parameters;
             if (parameters.length == 0) {
@@ -21,9 +25,11 @@ const DataPanelsUtils = {
         else {
             MapState.dataObjectsList.unshift(
                 { 
-                    name: 'Tiempo Real: ' + MapUtils.getMarkerName(marker) + " " + (marker.radar ? ("(" + MapUtils.latLonToString(marker.latitud, marker.longitud) + ")") : ""),
+                    name: 'Tiempo Real: ' + MapUtils.getMarkerName(marker) + " " + (marker.radar ? ("(" + MapUtils.latLonToString(marker.latId, marker.lonId) + ")") : ""),
                     type: 'RTDataTable', 
                     marker: marker, 
+                    latId: marker.radar ? marker.latId : null,
+                    lonId: marker.radar ? marker.lonId : null,
                     parameters: parameters, 
                     id: this.generateDataPanelId(),
                     open: true
@@ -51,11 +57,21 @@ const DataPanelsUtils = {
     },
 
     setRTGraphParam(station, param, interfazMode) {
-        var graphPanel = MapState.dataObjectsList.find(d => 
-            d.type == "Graphic" 
-            && d.marker.id == station.id 
-            && d.parameters[0].variable == param.variable);
-            //&& d.marker.mapOption.variableType == station.mapOption.variableType);
+        var graphPanel;
+        if (station.radar) {
+            graphPanel = MapState.dataObjectsList.find(d => 
+                d.type == "Graphic" 
+                && d.marker.id == station.id 
+                && d.latId == station.latId
+                && d.lonId == station.lonId
+                && d.parameters[0].variable == param.variable);
+        }
+        else {
+            graphPanel = MapState.dataObjectsList.find(d => 
+                d.type == "Graphic" 
+                && d.marker.id == station.id 
+                && d.parameters[0].variable == param.variable);
+        }
         if (graphPanel){
             if (param.graphicActive) {
                 graphPanel.parameters.push(param);
@@ -93,6 +109,8 @@ const DataPanelsUtils = {
                     type: 'Graphic', 
                     parameters: [param],
                     marker: station,
+                    latId: station.radar ? station.latId : null,
+                    lonId: station.radar ? station.lonId : null,
                     url: url, 
                     height: GraphicHeight,
                     id: this.generateDataPanelId(),
@@ -189,7 +207,8 @@ const DataPanelsUtils = {
             paramActiveField = dataPanel.type == "Graphic" ? 'graphicActive' : 'tableActive';
             bancoDatos = MapState.bancosDatos;
         }
-        bancoDatos[dataPanel.marker.id].forEach(param => {
+        var markerId = dataPanel.marker.id + (dataPanel.marker.radar ? ('/' + dataPanel.latId + '-' + dataPanel.lonId) : '');
+        bancoDatos[markerId].forEach(param => {
             // Datapanel Hist, añadidos por producto
             if (dataPanel.type == "GraphicHist") {
                 if (param.id == dataPanel.producto.id)
@@ -254,22 +273,27 @@ const DataPanelsUtils = {
     // TODO: mover a userPrefs.service.js
     
     saveDataUserPrefs(marker) {
-        var cachedBancoDatos = JSON.parse(localStorage.getItem('banco_datos'));
-        if (!cachedBancoDatos)
-            cachedBancoDatos = {};
-        var bancoDatosMarker = MapState.getBancoDatos(marker.id).filter(param => param.tableActive || param.graphicActive);
-        if (bancoDatosMarker.length > 0) {
-            cachedBancoDatos[marker.id] = bancoDatosMarker;
-            localStorage.setItem('banco_datos', JSON.stringify(cachedBancoDatos));
-            if(!localStorage.getItem('marker-' + marker.id)) {
-                var markerProperties = ['id', 'latId', 'lonId', 'lat', 'lon', 'latitud', 'longitud', 'radar', 'nombre', 'mapResource', 'mapOption', 'markerClass', 'variableType'];
-                localStorage.setItem('marker-' + marker.id, JSON.stringify(marker, markerProperties));
+
+        // No cacheamos nada relativo a puntos radar (como en Portus antiguo)
+        if (!(marker.mapResource.markerClass == MarkerClass.EstacionRT && marker.radar)) {
+            var cachedBancoDatos = JSON.parse(localStorage.getItem('banco_datos'));
+            if (!cachedBancoDatos)
+                cachedBancoDatos = {};
+            var markerId = marker.id + (marker.radar ? ('/' + marker.latId + '-' + marker.lonId) : '');
+            var bancoDatosMarker = MapState.getBancoDatos(markerId).filter(param => param.tableActive || param.graphicActive);
+            if (bancoDatosMarker.length > 0) {
+                cachedBancoDatos[markerId] = bancoDatosMarker;
+                localStorage.setItem('banco_datos', JSON.stringify(cachedBancoDatos));
+                if(!localStorage.getItem('marker-' + markerId)) {
+                    var markerProperties = ['id', 'latId', 'lonId', 'lat', 'lon', 'latitud', 'longitud', 'radar', 'nombre', 'mapResource', 'mapOption', 'markerClass', 'variableType'];
+                    localStorage.setItem('marker-' + markerId, JSON.stringify(marker, markerProperties));
+                }
             }
-        }
-        else {
-            delete cachedBancoDatos[marker.id];
-            localStorage.setItem('banco_datos', JSON.stringify(cachedBancoDatos));
-            localStorage.removeItem('marker-' + marker.id);
+            else {
+                delete cachedBancoDatos[markerId];
+                localStorage.setItem('banco_datos', JSON.stringify(cachedBancoDatos));
+                localStorage.removeItem('marker-' + markerId);
+            }
         }
     }
 

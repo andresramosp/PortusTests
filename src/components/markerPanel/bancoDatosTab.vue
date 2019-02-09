@@ -129,8 +129,9 @@ export default {
                     if (p.variable == param.variable)
                         Vue.set(p, 'tableActive', param.tableActive);
                 })
-                // Ojo: manejamos el global, no el local
-                var bancoDatosState = this.mapState.getBancoDatos(this.markers[0].id)
+                // Ojo: manejamos el global, no el local, pues podríamos tener parametros marcados anteriormente
+                var markerId = this.getUniqueMarkerId(this.markers[0]);
+                var bancoDatosState = this.mapState.getBancoDatos(markerId);
                 DataPanelsUtils.addRTDataTable(this.markers[0], bancoDatosState.filter(param => param.tableActive));
              }
              // En los puntos-malla (Predicción), si elegimos un parámetro se marcan todos y la tabla depende de la variable
@@ -142,7 +143,7 @@ export default {
                  })
                  DataPanelsUtils.setPredDataTable(this.markers[0], this.markers[0].mapOption.variableType, param.tableActive);
              }
-             DataPanelsUtils.saveDataUserPrefs(this.markers[0]);
+            DataPanelsUtils.saveDataUserPrefs(this.markers[0]);
          }, 750);
          
      },
@@ -195,10 +196,17 @@ export default {
      // así como mantener el estado de los checks en caso de una actualización (al añadir variables)
 
      setBancoDatos(params) {
-         this.mapState.addBancoDatos(this.markers[0].id, params.data);
-         this.bancoDatos = this.mapState.getBancoDatos(this.markers[0].id).filter(p => this.markers.map(m => m.mapOption.variableType).indexOf(p.variable) != -1);
+         var markerId = this.getUniqueMarkerId(this.markers[0]);
+         this.mapState.addBancoDatos(markerId, params.data);
+         this.bancoDatos = this.mapState.getBancoDatos(markerId).filter(p => this.markers.map(m => m.mapOption.variableType).indexOf(p.variable) != -1);
          if (this.bancoDatos.filter(param => !param.graphicActive || param.graphicActive == false).length == 0)
             this.allGraphsActive = true;
+     },
+
+    // Devuelve un id para referenciar al marker en el banco de datos
+    // Por lo general será su id normal pero si es punto de radar llevará adosado su lat/lon
+    getUniqueMarkerId(marker) {
+         return marker.id + (marker.radar ? ('/' + marker.latId + '-' + marker.lonId) : '');
      }
   }
 };

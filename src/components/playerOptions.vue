@@ -104,6 +104,7 @@ export default {
       },
       hasVectors() {
         return this.mapState.currentTimeLineLayer && this.mapState.currentTimeLineLayer.mapResource.vectors;
+        //return this.mapState.currentTimeLineLayer && this.mapState.currentTimeLineLayer.hasVectors;
       },
       hasRadars() {
         return this.mapState.currentRadar && !this.mapState.isLoading('puntosRadar');
@@ -183,22 +184,8 @@ export default {
                 vec: this.mapState.currentTimeLineLayer._baseLayer._url.indexOf('vec') != -1
               }
             });
-            // if (this.timeOutShareInfoClose)
-            //     clearInterval(this.timeOutShareInfoClose)
-            // this.timeOutShareInfoOpen = setTimeout(() => {
-            //     this.displayShareInfo = true; 
-            // }, 500)
         }
-      
       },
-
-      // closeShareInfo() {
-      //   if (this.timeOutShareInfoOpen)
-      //       clearInterval(this.timeOutShareInfoOpen)
-      //   this.timeOutShareInfoClose = setTimeout(() => {
-      //       this.displayShareInfo = false; 
-      //   }, 500)
-      // },
   }
 };
 </script>
