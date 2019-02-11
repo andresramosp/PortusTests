@@ -1,6 +1,7 @@
 export default {}
 
 import { MarkerClass, VariableType, RedType } from "@/common/enums";
+import MapState from "@/state/map.state";
 
 // Recursos de Tiles y Markers
 export const MapResources = [
@@ -96,9 +97,19 @@ export const MapResources = [
     vectors: true,
     paintBounds: false,
     nonToggleable: true,
-    //groupLayersBy: { field: 'idDominio' },
-    //comboSelect: { id: '123',  defaultOption: 'IBI'  }
-    //groupLayersBy: { field: 'idOperativa', label: 'Operativa' },
+    onAdded: function () {
+      var zoom = MapState.getMap().getZoom();
+      if (zoom < 6) {
+        var message = { 
+          id: 'msgCurrents', 
+          message: "Si desea ver la dirección de las corrientes, haga zoom varias veces en la región de interés por favor."
+        }
+        MapState.addNotifyMessage(message);
+      }
+    },
+    onRemoved: function() {
+      MapState.removeNotifyMessage('msgCurrents');
+    }
   },
   {
     id: 'pred-tiles-corriente-radar',

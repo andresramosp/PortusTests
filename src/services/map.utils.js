@@ -262,12 +262,12 @@ const MapUtils = {
     return Math.abs(lon).toFixed(2) + '° ' + (lon >= 0 ? E : O); 
   },
 
-  async asyncForEach(array, callback) {
-    for (let index = 0; index < array.length; index++) {
-      await callback(array[index], index, array)
-    }
-  },
+  getGMTDateString(date) {
+    var options = {  month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'UTC' };
+    return date.toLocaleDateString(Vue.$getLocale() == 'es' ? 'es-ES' : 'en-US', options).replaceAll(',','').replaceAll('.','');
+  }
 
+ 
 }
 
 export default MapUtils

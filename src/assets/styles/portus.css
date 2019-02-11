@@ -47,6 +47,10 @@
   box-shadow: none !important;
 }
 
+/* #no-bootstrap .markerPanel .custom-select {
+  background-color: white !important;
+} */
+
 .dx-datebox-calendar .dx-dropdowneditor-icon {
   color: #b1afaf;
   /* color: white; */
@@ -88,6 +92,13 @@
   cursor: pointer;
 }
 
+.closeIconSm {
+  float: right;
+  width: 15px;
+  cursor: pointer;
+  padding-top: 3px;
+}
+
 #no-bootstrap a:hover {
   text-decoration: none !important;
 }
@@ -111,6 +122,15 @@
   padding-top: 6px;
   padding-bottom: 5px;
   padding-left: 18px;
+  padding-right: 5px;
+}
+
+.notifyPopup .card-header {
+  border-radius: 0px !important;
+  font-size: 14px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-left: 10px;
   padding-right: 5px;
 }
 
@@ -166,6 +186,11 @@ input:-webkit-autofill:active  {
 
 .printable {
   -webkit-print-color-adjust: exact;
+}
+
+#shareInfoPanel .dx-tooltip-wrapper .dx-overlay-content .dx-popup-content {
+  padding: 0px !important;
+  height: auto !important;
 }
 
 /* @media screen and (max-height: 550px) {
@@ -240,6 +265,12 @@ input:-webkit-autofill:active  {
 .fadeInMenu {
   -webkit-animation: animat_show 0.5s;
   animation: animat_show 0.5s;
+  visibility: visible !important;
+}
+
+.fadeInSlow {
+  -webkit-animation: animat_show 1.5s;
+  animation: animat_show 1.5s;
   visibility: visible !important;
 }
 

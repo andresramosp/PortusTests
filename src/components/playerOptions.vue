@@ -136,12 +136,12 @@ export default {
       // Nos aseguramos de que el evento procede del control, pues
       // podría haber sido disparado por el initialize del Player
       if (ev.event)
-        this.mapState.setPlayerDateRangeValue(ev.value, null);
+        this.mapState.changePlayerDateRangeValue(ev.value, null);
     },
 
     changeDateToValue: function(ev) {
       if (ev.event)
-        this.mapState.setPlayerDateRangeValue(null, ev.value);
+        this.mapState.changePlayerDateRangeValue(null, ev.value);
     },
 
     openPredictionInfo() {

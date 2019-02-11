@@ -37,6 +37,7 @@ const MapState = {
     bancosDatos: PC.user_preferences.banco_datos  != undefined ? PC.user_preferences.banco_datos : {},
     bancosDatosHist: {},
     puertosInfoSourceId: null,
+    notifyMessages: [],
 
     init(map) {
         this.map = map;
@@ -118,7 +119,7 @@ const MapState = {
         var vectorial = mapResource.defaultVectors ? true : false;
         var result = await ApiService.get(mapResource.resourceApi, null, source);
         result.data.forEach(res => {
-            if (true) { //(this.preloadedTimeLineLayers.find(p => p.url == res.url) == null) {
+            if (this.preloadedTimeLineLayers.find(p => p.url == res.url) == null) {
                 var tileLayer = L.tileLayer(BASE_URL_PORTUS + res.url + '{d}{h}/' + (vectorial ? res.urlVec : res.urlIso) + '//{z}/{x}/{y}.png', {
                     tms: true,
                     minZoom: res.zoomMin,
@@ -155,6 +156,9 @@ const MapState = {
             }
 
         })
+        if (mapResource.onAdded) {
+            mapResource.onAdded();
+        }
         this.setVisibleTimeLineLayers();
         this.showingVectors = vectorial;
         this.removeLoading(mapResource.id);
@@ -239,16 +243,15 @@ const MapState = {
                     ms.removeMapLogo(url);
                 })
     
-                console.log('Removed: ' + preLayer._baseLayer._url);
             }
             if (MapUtils.tileLayerVisible(ms.map, preLayer._baseLayer) && preLayer.visible) {
+                ms.currentTimeLineLayer = preLayer;
                 ms.map.options.timeDimensionOptions.period = "PT" + preLayer._baseLayer.options.hoursStep + "H";
                 var date = new Date();
                 date.setUTCHours(0, 0, 0, 0);
                 var predHours = (preLayer._baseLayer.options.numDays) * 24; 
                 ms.maxPredictionDate = MapUtils.convertYMDHToDateStr(preLayer._baseLayer.options.strLastate);
                 ms.map.options.timeDimensionOptions.timeInterval = 'PT' + predHours + 'H/' + ms.maxPredictionDate;
-                //ms.map.options.timeDimensionOptions.timeInterval = 'PT' + predHours + 'H/' + ms.maxPredictionDate.toLocalTime().toISOString();
                 ms.map.timeDimension.initialize(ms.map.options.timeDimensionOptions);
                 ms.map.timeDimension.setCurrentTimeIndex(0);
                 if (!ms.map.timeDimensionControl) {
@@ -265,7 +268,6 @@ const MapState = {
                     ms.map.addControl(ms.map.timeDimensionControl);
                 }
                 preLayer.addTo(ms.map);
-                ms.currentTimeLineLayer = preLayer;
 
                 if (preLayer._baseLayer.options.predictionScaleImg) 
                     ms.predictionScaleImg = preLayer._baseLayer.options.predictionScaleImg;
@@ -279,8 +281,6 @@ const MapState = {
 
                 if (preLayer.boundRectangle)
                     preLayer.boundRectangle.remove();
-
-                console.log('Added: ' + preLayer._baseLayer._url)
             }
             else {
                 if (preLayer.mapResource.isRadar && (ms.currentRadar && ms.currentRadar.dominio == preLayer.idDominio)) {
@@ -293,7 +293,28 @@ const MapState = {
         })
     },
 
-    setPlayerDateRangeValue(from, to) {
+    // Este setter es para ser usado por el player de Leaflet, de forma
+    // que mantenga siempre coherente su valor con el state
+    setInitialPlayerDateRangeValue(from, to) {
+        this.playerDateRangeFromValue = from;
+        this.playerDateRangeToValue = to;
+        if ((!this.playerDateRangeFromValueOld || from.toJSON() != this.playerDateRangeFromValueOld.toJSON()) 
+         || (!this.playerDateRangeToValueOld.toJSON() || to.toJSON() != this.playerDateRangeToValueOld.toJSON())) {
+            var notifyMsg = { 
+                id: 'fechasPlayer', 
+                message: "Mostrando predicción: " + MapUtils.getGMTDateString(this.playerDateRangeFromValue) + " - " + MapUtils.getGMTDateString(this.playerDateRangeToValue) + ' (GMT)',
+                title: this.currentTimeLineLayer.mapOption ? Vue.$t(this.currentTimeLineLayer.mapOption.name) : '',
+                duration: 10000
+            };
+            this.addNotifyMessage(notifyMsg);
+        }
+       
+        this.playerDateRangeFromValueOld = from;
+        this.playerDateRangeToValueOld = to;
+    },
+
+    // Este setter es para ser usado exclusivamente por el control manual de fechas
+    changePlayerDateRangeValue(from, to) {
         this.map.timeDimensionControl._player.stop();
         this.map.removeControl(this.map.timeDimensionControl);
         if (this.currentTimeLineLayer) {
@@ -309,6 +330,7 @@ const MapState = {
         this.map.timeDimension.setCurrentTimeIndex(0);
         this.map.addControl(this.map.timeDimensionControl);
         this.currentTimeLineLayer.addTo(this.map);
+
     },
 
     setPlayerMinimized(value) {
@@ -337,6 +359,7 @@ const MapState = {
 
     removeMapResource(mapResourceId) {
         var ms = this;
+        var mapResource = this.getMapResource(mapResourceId);
         this.map.eachLayer(function (layer) {
             if (layer.mapResource && layer.mapResource.id == mapResourceId) {
                 layer.remove();
@@ -359,6 +382,9 @@ const MapState = {
         
         if (this.currentTimeLineLayer && this.currentTimeLineLayer.mapResource.id == mapResourceId && this.map.timeDimensionControl) 
             this.removePlayerControl();
+
+         if (mapResource.onRemoved)
+            mapResource.onRemoved();
     },
 
     removePlayerControl() {
@@ -366,6 +392,9 @@ const MapState = {
         this.map.removeControl(this.map.timeDimensionControl);
         this.predictionScaleImg = '';
         this.currentTimeLineLayer = null;
+        this.removeNotifyMessage('fechasPlayer');
+        this.playerDateRangeFromValueOld = null;
+        this.playerDateRangeToValueOld = null;
     },
     
     getActiveLayers() {
@@ -520,6 +549,19 @@ const MapState = {
 
     setPortusInfoPanel(sourceId) {
         this.puertosInfoSourceId = sourceId;
+    },
+
+    addNotifyMessage(message) {
+        this.removeNotifyMessage(message.id);
+        this.notifyMessages.push(message);
+    },
+
+    removeNotifyMessage(messageId) {
+        var message = this.notifyMessages.find(msg => msg.id == messageId);
+        if (message) {
+            clearTimeout(message.timeout);
+            this.notifyMessages = this.notifyMessages.filter(msg => msg.id != message.id);
+        }
     },
     
 

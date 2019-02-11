@@ -60,6 +60,7 @@ export default {
       }
   },
   mounted() {
+    this.$emit("content-loaded");
   },
   created() {
 

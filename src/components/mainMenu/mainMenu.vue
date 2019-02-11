@@ -1,7 +1,7 @@
 <template>
 <div >
   
-  <div class='layersPanel unselectable' :class="[align == 'left' ? 'leftAlign' : 'rightAlign', theme]">
+  <div class='layersPanel unselectable' :class="[align == 'left' ? 'leftAlign' : 'rightAlign']">
     <img @click="toggleMinimized()" 
          :class="[align == 'left' ? 'leftImgMinimizer' : 'rightImgMinimizer']"
          width="25" 

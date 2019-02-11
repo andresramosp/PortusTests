@@ -4,6 +4,7 @@
       <div id="map"></div>
       <img class="loaderGif" :src="require('@/assets/gifs/loadingBars.gif')" v-show="loading" width="100"  /> 
       <PlayerOptions  :isWidget="isWidget"  />
+      <NotifyPopup v-if="!isWidget" :messages="mapState.notifyMessages" />
   </div>
 
 </template>
@@ -12,11 +13,13 @@
 
 import MapState from "@/state/map.state";
 import PlayerOptions from "@/components/playerOptions.vue"
+import NotifyPopup from "@/components/notifyPopup.vue"
 
 export default {
   name: "Map",
   components: {
-    PlayerOptions
+    PlayerOptions,
+    NotifyPopup
   },
   props: {
     baseMap: Object,

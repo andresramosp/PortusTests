@@ -40,7 +40,7 @@
             <BancoDatosTab v-else :markers="mapState.markersSelected" @content-loaded="centerPosition" /> 
         </b-tab>
         <b-tab :title="$t('{informacionTab}')">
-            <InformacionTab :markers="mapState.markersSelected" />
+            <InformacionTab :markers="mapState.markersSelected" @content-loaded="centerPosition" />
         </b-tab>
         <b-tab v-if="esBoya() && !esHistorico()" :title="'Ultimas posiciones'" >
             <LastPositionsTab :boya="markerRef" />
@@ -98,7 +98,7 @@ export default {
       markerRef: null,
       imgPropietario: null,
       hrefPropietario: null,
-      position: { at: 'center', offset: '0 -60' }
+      position: { my: 'center', at: 'center', of: window }
     };
   },
   computed: {
@@ -133,10 +133,9 @@ export default {
           this.imgPropietario = BASE_URL_PORTUS + "/img/logosOrganismos/" + this.markerRef.propietario + ".png";
           this.hrefPropietario = this.markerRef.urlPropietario;
        }
+       //this.centerPosition();
       }
     }
-  },
-  mounted() {
   },
   created() {
   },

@@ -117,14 +117,11 @@ export default {
       routeData: null,
       minimized: false,
       showingShareInfo: false
-      // popupWidth: 1020,
-      // popupHeight: 553,
-      // popupPosition: 'center'
     };
   },
   props: {
     ubicacion: { type: Object, default: null },
-    popupPosition: { type: String, default: 'center '}
+    popupPosition: { type: String, default: 'center'}
   },
   computed: {
     popupWidth() {
