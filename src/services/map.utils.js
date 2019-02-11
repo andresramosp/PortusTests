@@ -10,6 +10,8 @@ import Vue from 'vue';
 const MapUtils = {
 
   tileLayerVisible(map, layer) {
+    if (layer._url.indexOf("/pathtiles/circulation/IBI/CURR/") != -1)
+      var a = 2;
     return map.getBounds().intersects(layer.options.bounds)
       && (layer.options.minZoom <= map.getZoom() && (map.getZoom() <= layer.options.maxZoom));
   },

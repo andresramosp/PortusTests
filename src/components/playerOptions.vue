@@ -17,7 +17,7 @@
             @valueChanged="changeDateFromValue"
             @mouseover="dateRangeMouseOver"
             @mouseout="dateRangeMouseOut"
-            :max="mapState.playerDateRangeToValue.addDays(-1)"
+            :max="mapState.playerDateRangeToValue ? mapState.playerDateRangeToValue.addDays(-1) : null"
             type="date"
             display-format="dd/MMM"
             width="20px"

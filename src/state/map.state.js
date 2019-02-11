@@ -3,6 +3,7 @@ import ApiService from "@/services/api.service";
 import MapUtils from "@/services/map.utils";
 import DataPanelsUtils from "@/services/dataPanels.utils";
 import { BASE_URL_PORTUS } from '@/common/config';
+import UserPrefs from '@/services/userPrefs.service'
 import Vue from 'vue';
 
 import RTDataPopup from "@/components/markerPopups/RTDataPopup.vue";
@@ -575,8 +576,10 @@ const MapState = {
     },
 
     addNotifyMessage(message) {
-        this.removeNotifyMessage(message.id);
-        this.notifyMessages.push(message);
+        if (PC.user_preferences.messages_ignore_list.find(msgId => msgId == message.id) == null) {
+            this.removeNotifyMessage(message.id);
+            this.notifyMessages.push(message);
+        }
     },
 
     removeNotifyMessage(messageId) {
@@ -584,9 +587,13 @@ const MapState = {
         if (message) {
             clearTimeout(message.timeout);
             this.notifyMessages = this.notifyMessages.filter(msg => msg.id != message.id);
+            if (message.dontShowMore) {
+                UserPrefs.addMessageToIgnore(message);
+                // Lo queremos desde ya en PC, no al reiniciar
+                UserPrefs.refresh(); 
+            }
         }
     },
-    
 
     // TODO: llevarse funcionalidad a radar.service.js
 

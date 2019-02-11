@@ -102,7 +102,8 @@ export const MapResources = [
       if (zoom < 6) {
         var message = { 
           id: 'msgCurrents', 
-          message: "Si desea ver la dirección de las corrientes, haga zoom varias veces en la región de interés por favor."
+          message: "Si desea ver la dirección de las corrientes, haga zoom varias veces en la región de interés por favor.",
+          ignorable: true
         }
         MapState.addNotifyMessage(message);
       }
