@@ -207,6 +207,11 @@ const MapUtils = {
         + ("0" + date.getHours()).slice(-2);
   },
 
+  getGMTDateString(date) {
+    var options = {  month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'UTC' };
+    return date.toLocaleDateString(Vue.$getLocale() == 'es' ? 'es-ES' : 'en-US', options).replaceAll(',','').replaceAll('.','');
+  },
+
   getDirNameFromDeg(degrees) {
     degrees = (degrees + 180) % 360;
         	
@@ -260,11 +265,6 @@ const MapUtils = {
     var E = Vue.$getLocale() == 'es' ? 'E' : 'E';
     var O = Vue.$getLocale() == 'es' ? 'O' : 'W';
     return Math.abs(lon).toFixed(2) + '° ' + (lon >= 0 ? E : O); 
-  },
-
-  getGMTDateString(date) {
-    var options = {  month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'UTC' };
-    return date.toLocaleDateString(Vue.$getLocale() == 'es' ? 'es-ES' : 'en-US', options).replaceAll(',','').replaceAll('.','');
   }
 
  

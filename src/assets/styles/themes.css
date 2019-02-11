@@ -115,6 +115,7 @@
 
 .darkTheme .notifyPopup .card-body {
   background: rgba(74, 73, 79, 0.8);
+  color: white;
 }
 
 .darkTheme .notifyPopup .card-header {

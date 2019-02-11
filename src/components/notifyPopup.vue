@@ -10,7 +10,7 @@
           <img :src='require("@/assets/icons/x.png")' class="closeIconSm"  @click="cerrar(message)">
         </div>
         <b-container style="max-width: 380px">
-          <div class="alertText" style="padding: 10px; font-size: 13px">
+          <div class="" style="padding: 10px; font-size: 13px">
               {{ message.message }}
           </div>
         </b-container>

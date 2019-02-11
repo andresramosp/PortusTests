@@ -23,6 +23,7 @@ const MapState = {
     playerDateRangeToValue: null,
     playerDateRangeVisibility: true,
     playerMinimized: false,
+    playerDateManualMode: false,
     maxPredictionDate: null,
     showingVectors: false,
     showingRadars: false,
@@ -238,30 +239,43 @@ const MapState = {
                 preLayer._defaultTime = 0;
                 preLayer._availableTimes = [];
                 if (preLayer._baseLayer.options.predictionScaleImg)
-                    ms.predictionScaleImg = '';
+                    //ms.predictionScaleImg = '';
                     preLayer._baseLayer.options.logosImgs.forEach(url => {
                     ms.removeMapLogo(url);
                 })
-    
             }
             if (MapUtils.tileLayerVisible(ms.map, preLayer._baseLayer) && preLayer.visible) {
                 ms.currentTimeLineLayer = preLayer;
                 ms.map.options.timeDimensionOptions.period = "PT" + preLayer._baseLayer.options.hoursStep + "H";
-                var date = new Date();
-                date.setUTCHours(0, 0, 0, 0);
-                var predHours = (preLayer._baseLayer.options.numDays) * 24; 
-                ms.maxPredictionDate = MapUtils.convertYMDHToDateStr(preLayer._baseLayer.options.strLastate);
-                ms.map.options.timeDimensionOptions.timeInterval = 'PT' + predHours + 'H/' + ms.maxPredictionDate;
+                if (ms.playerDateManualMode) {
+                    ms.maxPredictionDate = MapUtils.convertYMDHToDate(preLayer._baseLayer.options.strLastate);
+                    if (ms.playerDateRangeToValue > ms.maxPredictionDate) {
+                        ms.playerDateRangeToValue = ms.maxPredictionDate;
+                        var notifyMsg = { 
+                            id: 'errorFechasPlayer', 
+                            message: "No hay mapas en el intervalo de fechas seleccionado. Mostrando predicción: " + MapUtils.getGMTDateString(ms.playerDateRangeFromValue) + " - " + MapUtils.getGMTDateString(ms.playerDateRangeToValue) + ' (GMT)',
+                            title: "Aviso",
+                            duration: 10000
+                        };
+                        ms.addNotifyMessage(notifyMsg);
+                        ms.playerDateManualMode = false;
+                    }
+                    var hourPeriod = MapUtils.convertYMDHToDate(preLayer._baseLayer.options.strLastate).getHours();
+                    ms.playerDateRangeFromValue.setUTCHours(hourPeriod);
+                    ms.playerDateRangeToValue.setUTCHours(hourPeriod);
+                    ms.map.options.timeDimensionOptions.timeInterval = ms.playerDateRangeFromValue.toISOString() + '/' + ms.playerDateRangeToValue.toISOString();
+                }
+                else {
+                    var predHours = (preLayer._baseLayer.options.numDays) * 24; 
+                    ms.maxPredictionDate = MapUtils.convertYMDHToDateStr(preLayer._baseLayer.options.strLastate);
+                    ms.map.options.timeDimensionOptions.timeInterval = 'PT' + predHours + 'H/' + ms.maxPredictionDate;
+                }
                 ms.map.timeDimension.initialize(ms.map.options.timeDimensionOptions);
                 ms.map.timeDimension.setCurrentTimeIndex(0);
                 if (!ms.map.timeDimensionControl) {
                     ms.map.timeDimensionControl = L.control.timeDimension({
                         position: "bottomleft",
-                        playerOptions: {
-                            transitionTime: 500,
-                            loopButton: true,
-                            loop: true
-                        },
+                        playerOptions: { transitionTime: 500, loopButton: true,  loop: true },
                         autoPlay: true,
                         minimized: ms.playerMinimized
                     })
@@ -269,8 +283,10 @@ const MapState = {
                 }
                 preLayer.addTo(ms.map);
 
-                if (preLayer._baseLayer.options.predictionScaleImg) 
+                if (preLayer._baseLayer.options.predictionScaleImg) {
                     ms.predictionScaleImg = preLayer._baseLayer.options.predictionScaleImg;
+                }
+                    
 
                 preLayer._baseLayer.options.logosImgs.forEach(url => {
                     ms.addMapLogo(url);
@@ -285,7 +301,6 @@ const MapState = {
             else {
                 if (preLayer.mapResource.isRadar && (ms.currentRadar && ms.currentRadar.dominio == preLayer.idDominio)) {
                     ms.removeRadarPoints()
-                    console.log('Removed Radar: ' + preLayer.idDominio)
                 }
                 if (preLayer.boundRectangle)
                     preLayer.boundRectangle.addTo(ms.map);
@@ -294,26 +309,31 @@ const MapState = {
     },
 
     // Este setter es para ser usado por el player de Leaflet, de forma
-    // que mantenga siempre coherente su valor con el state
-    setInitialPlayerDateRangeValue(from, to) {
+    // que mantenga siempre coherente su valor con el state.
+    setPlayerDateRangeValue(from, to) {
         this.playerDateRangeFromValue = from;
         this.playerDateRangeToValue = to;
         if ((!this.playerDateRangeFromValueOld || from.toJSON() != this.playerDateRangeFromValueOld.toJSON()) 
-         || (!this.playerDateRangeToValueOld.toJSON() || to.toJSON() != this.playerDateRangeToValueOld.toJSON())) {
-            var notifyMsg = { 
-                id: 'fechasPlayer', 
-                message: "Mostrando predicción: " + MapUtils.getGMTDateString(this.playerDateRangeFromValue) + " - " + MapUtils.getGMTDateString(this.playerDateRangeToValue) + ' (GMT)',
-                title: this.currentTimeLineLayer.mapOption ? Vue.$t(this.currentTimeLineLayer.mapOption.name) : '',
-                duration: 10000
-            };
-            this.addNotifyMessage(notifyMsg);
+         || (!this.playerDateRangeToValueOld || to.toJSON() != this.playerDateRangeToValueOld.toJSON())) {
+            var showingError = this.notifyMessages.find(msg => msg.id == 'errorFechasPlayer') != null;
+            if (!showingError) {
+                var notifyMsg = { 
+                    id: 'fechasPlayer', 
+                    message: "Mostrando predicción: " + MapUtils.getGMTDateString(this.playerDateRangeFromValue) + " - " + MapUtils.getGMTDateString(this.playerDateRangeToValue) + ' (GMT)',
+                    title: this.currentTimeLineLayer.mapOption ? Vue.$t(this.currentTimeLineLayer.mapOption.name) : '',
+                    duration: 7000
+                };
+                this.addNotifyMessage(notifyMsg);
+            }
         }
-       
         this.playerDateRangeFromValueOld = from;
         this.playerDateRangeToValueOld = to;
     },
 
     // Este setter es para ser usado exclusivamente por el control manual de fechas
+    // Una vez cambiadas las fechas por esta vía se establece a true el playerDateManualMode
+    // de forma que, si las fechas de un tile no coinciden con las estableidas, podamos 
+    // avisar del cambio
     changePlayerDateRangeValue(from, to) {
         this.map.timeDimensionControl._player.stop();
         this.map.removeControl(this.map.timeDimensionControl);
@@ -330,6 +350,7 @@ const MapState = {
         this.map.timeDimension.setCurrentTimeIndex(0);
         this.map.addControl(this.map.timeDimensionControl);
         this.currentTimeLineLayer.addTo(this.map);
+        this.playerDateManualMode = true;
 
     },
 
@@ -393,8 +414,10 @@ const MapState = {
         this.predictionScaleImg = '';
         this.currentTimeLineLayer = null;
         this.removeNotifyMessage('fechasPlayer');
+        this.removeNotifyMessage('errorFechasPlayer');
         this.playerDateRangeFromValueOld = null;
         this.playerDateRangeToValueOld = null;
+        this.playerDateManualMode = false;
     },
     
     getActiveLayers() {
