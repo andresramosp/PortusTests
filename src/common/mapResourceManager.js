@@ -157,7 +157,7 @@ export const MapResources = [
   {
     id: 'pred-markers-cirana',
     type: 'MarkerLayer',
-    name: 'Puntos Modelo',
+    name: 'Tablas/Gráficos',
     resourceApi: 'puntosMalla/pred/Cirana',
     markerClass: MarkerClass.PuntoMalla,
     minZoom: 0,
@@ -167,7 +167,7 @@ export const MapResources = [
   {
     id: 'pred-markers-wana-atl',
     type: 'MarkerLayer',
-    name: 'Puntos Modelo',
+    name: 'Tablas/Gráficos',
     resourceApi: 'puntosMalla/pred/Wana/atl',
     markerClass: MarkerClass.PuntoMalla,
     minZoom: 0,
@@ -186,7 +186,7 @@ export const MapResources = [
   {
     id: 'pred-markers-wana-med',
     type: 'MarkerLayer',
-    name: 'Puntos Modelo',
+    name: 'Tablas/Gráficos',
     resourceApi: 'puntosMalla/pred/Wana/med',
     markerClass: MarkerClass.PuntoMalla,
     //groupLayersBy: { field: 'malla', label: 'Malla' },
@@ -206,7 +206,7 @@ export const MapResources = [
   {
     id: 'pred-markers-atmosfera',
     type: 'MarkerLayer',
-    name: 'Puntos Modelo',
+    name: 'Tablas/Gráficos',
     resourceApi: 'puntosMalla/pred/Atmosfera',
     markerClass: MarkerClass.PuntoMalla,
     minZoom: 0,

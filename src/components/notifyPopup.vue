@@ -37,7 +37,9 @@
     </b-card>
   </div>
 </template>
+
 <script>
+
 import MapState from "@/state/map.state";
 
 export default {

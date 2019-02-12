@@ -4,13 +4,14 @@
          @click="toggleMinimized()" 
          width="20" :class="[!mapState.playerMinimized ? 'minimizerButton' : 'minimizerButtonMin']" 
          :src="!mapState.playerMinimized ? require('@/assets/icons/replegar.png') : require('@/assets/icons/desplegar.png')" />
-    <div v-show="!mapState.playerMinimized" >
-       <div class="shadedSquare fadeIn">
+    <div >
+       <div v-show="!mapState.playerMinimized || isWidget" :class="[isWidget ? 'shadedSquareWidget' : 'shadedSquare']" class="fadeIn">
            <span class="unidadEscala" >{{unidadEscala}}</span>
-           <img :src="mapState.predictionScaleImg" class="predictionScale playerOptions" />
+           <img :src="mapState.predictionScaleImg" :class="[isWidget ? 'predictionScaleWidget' : 'predictionScale']" class="playerOptions" />
        </div>
      
          <dx-date-box
+            v-show="!mapState.playerMinimized"
             :ref="'datePickerFrom'"
             class="datePicker datePicker-left fadeIn"
             :value="mapState.playerDateRangeFromValue"
@@ -24,6 +25,7 @@
           />
 
            <dx-date-box
+           v-show="!mapState.playerMinimized"
             class="datePicker datePicker-right fadeIn"
             :value="mapState.playerDateRangeToValue"
             @valueChanged="changeDateToValue"
@@ -36,14 +38,7 @@
             width="20px"
           />
      
-      <div class="fadeIn" style="position: absolute; bottom: 20px; left: 427px; z-index: 5; width: 90px">
-        <!-- <img v-if='!isWidget' 
-                  :title="$t('{shareIconPred}')" 
-                  class="playerIcon"  
-                  @click="openShareInfo"
-                  @mouseover="openShareInfo"
-                  @mouseout="closeShareInfo"
-                  :src="require('@/assets/icons/shareIcon.png')" /> -->
+      <div v-show="!mapState.playerMinimized" class="fadeIn" style="position: absolute; bottom: 20px; left: 427px; z-index: 5; width: 90px">
         <ShareInfoPanel 
             v-if="!isWidget"
             class="sharePanelIcon"
@@ -57,8 +52,8 @@
         <img v-if='hasVectors' class="playerIcon" :title="$t('{vectorsIconPred}')" @click="toggleVectors()" :src="mapState.showingVectors ?  require('@/assets/icons/vectorsActivated.png') : require('@/assets/icons/vectors.png')" />
         <img v-if='hasRadars' class="playerIcon" :title="$t('{radarsIconPred}')" @click="toggleRadars()" :src="mapState.showingRadars ?  require('@/assets/icons/puntosRadarActivated.png') : require('@/assets/icons/puntosRadar.png')" />   
       </div>
-       <img class="infoPredIcon fadeIn" @click="openPredictionInfo()" :src="require('@/assets/icons/info.png')" />   
-       <img class="fpsIcon fadeIn" :src="require('@/assets/icons/fps.png')" />   
+       <img v-show="!mapState.playerMinimized" class="infoPredIcon fadeIn" @click="openPredictionInfo()" :src="require('@/assets/icons/info.png')" />   
+       <img v-show="!mapState.playerMinimized" class="fpsIcon fadeIn" :src="require('@/assets/icons/fps.png')" />   
 
        
 
@@ -92,10 +87,12 @@ export default {
   },
   computed: {
       unidadEscala() {
-        if (!this.isWidget && this.mapState.currentTimeLineLayer)
-          return this.$t('{' + 'unit' + this.mapState.currentTimeLineLayer.mapOption.variableType + '}');
-        else 
-          return null;
+        if (this.mapState.currentTimeLineLayer) {
+          if (!this.isWidget)
+            return this.$t('{' + 'unit' + this.mapState.currentTimeLineLayer.mapOption.variableType + '}');
+          else
+            return this.$t('{' + 'unit' + this.mapState.currentTimeLineLayer.mapResource.variableType + '}');
+        }
       },
       playingTimeLineLayer() {
         return this.mapState.currentTimeLineLayer != null;
@@ -179,6 +176,7 @@ export default {
               query: 
               { 
                 resourceId : this.mapState.currentTimeLineLayer.mapResource.id.replace('pred-tiles-', ''), 
+                var: this.mapState.currentTimeLineLayer.mapOption.variableType,
                 zoom: this.mapState.getMap().getZoom(), 
                 lat: this.mapState.getMap().getCenter().lat, 
                 lon: this.mapState.getMap().getCenter().lng,
@@ -220,9 +218,25 @@ export default {
     text-align: center;
 }
 
+.shadedSquareWidget {
+    position: absolute;
+    z-index: 2;
+    padding: 7px;
+    border-radius: 6px;
+    left: 42.0%;
+    bottom: 83px;
+    background: rgba(255, 255, 255, 0.35);
+    text-align: center;
+}
+
 .predictionScale {
     width: 320px;
     height: 25px;
+}
+
+.predictionScaleWidget {
+    width: 240px;
+    height: 20px;
 }
 
 .unidadEscala {
@@ -252,7 +266,7 @@ export default {
 
 .datePicker-right {
   /* left: 380px; */
-  left: 364px;
+  left: 366px;
 }
 
 .dx-texteditor-input {

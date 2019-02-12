@@ -10,8 +10,6 @@ import Vue from 'vue';
 const MapUtils = {
 
   tileLayerVisible(map, layer) {
-    if (layer._url.indexOf("/pathtiles/circulation/IBI/CURR/") != -1)
-      var a = 2;
     return map.getBounds().intersects(layer.options.bounds)
       && (layer.options.minZoom <= map.getZoom() && (map.getZoom() <= layer.options.maxZoom));
   },
@@ -204,8 +202,8 @@ const MapUtils = {
 
   convertDateToYMDH(date) {
     return date.getFullYear().toString() 
-        + (date.getMonth() + 1).toString() 
-        + date.getDate().toString() 
+        + ("0" + (date.getMonth() + 1)).slice(-2) 
+        + ("0" + date.getDate()).slice(-2) 
         + ("0" + date.getHours()).slice(-2);
   },
 

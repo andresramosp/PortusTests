@@ -89,7 +89,7 @@
     color: white;
   }
 
-  .darkTheme .leaflet-bar-timecontrol{
+  .darkTheme .leaflet-bar-timecontrol {
     color: white;
     background-color: rgba(0, 0, 0, 0.8);
   }
@@ -102,7 +102,9 @@
   background: white !important;
 } */
 
+
 .darkTheme .markerPanel div:not(.dx-popup-title):not(.dx-button-content):not(.dx-button-text),
+.darkTheme .staticMapPanel div:not(.dx-popup-title):not(.dx-button-content):not(.dx-button-text),
 .darkTheme .leaflet-popup-content .card-body,
 .darkTheme .whiteBG,
 .darkTheme .table-dark,
@@ -135,9 +137,10 @@
   color: white;
 }
 
-.darkTheme .markerPanel .dx-button-content {
+.darkTheme .markerPanel .dx-button-content,
+.darkTheme .staticMapPanel .dx-button-content {
     background: rgb(74, 73, 79);
-    border: 1.5px solid;
+    border: 1.5px solid !important;
     min-width: fit-content;
 }
 
@@ -150,12 +153,19 @@
   color: white;
 }
 
+.darkTheme #specialContentDeep
+{
+  background: black !important;
+  color: white;
+}
+
 .darkTheme #accordionContent .card-body {
   border: 1px solid gray;
 }
 
 
-.darkTheme .markerPanel .dx-state-hover .dx-button-content {
+.darkTheme .markerPanel .dx-state-hover .dx-button-content,
+.darkTheme .staticMapPanel .dx-state-hover .dx-button-content {
   background: rgb(21, 91, 140) !important;
 }
 

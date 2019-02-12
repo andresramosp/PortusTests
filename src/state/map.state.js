@@ -121,7 +121,7 @@ const MapState = {
         var vectorial = mapResource.defaultVectors ? true : false;
         var result = await ApiService.get(mapResource.resourceApi, null, source);
         result.data.forEach(res => {
-            if (this.preloadedTimeLineLayers.find(p => p.url == res.url) == null) {
+            if (true) { //} (this.preloadedTimeLineLayers.find(p => p.url == res.url) == null) {
                 var tileLayer = L.tileLayer(BASE_URL_PORTUS + res.url + '{d}{h}/' + (vectorial ? res.urlVec : res.urlIso) + '//{z}/{x}/{y}.png', {
                     tms: true,
                     minZoom: res.zoomMin,

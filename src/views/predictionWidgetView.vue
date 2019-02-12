@@ -41,6 +41,7 @@ export default {
 
     var resourceId = this.$route.query.resourceId;
     var predictionResource = MapState.getMapResource('pred-tiles-' + resourceId);
+    predictionResource.variableType = this.$route.query.var;
     predictionResource.defaultVectors =  this.$route.query.vec == 'true';
     predictionResource.comboSelect = null;
     MapState.addTimeLineLayer(predictionResource);

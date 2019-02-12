@@ -13,9 +13,9 @@
     font-family: "Portus Font" !important;
 }
 
-/* .markerPanel .card {
-    background-color:gray !important;
-} */
+.dx-button-content {
+  border-radius: 0px !important;
+}
   
 #no-bootstrap .dx-texteditor.dx-editor-outlined {
   border-radius: 0px !important;
@@ -43,8 +43,10 @@
   box-shadow: none !important;
 }
 
-.select-layers, .custom-select {
+#no-bootstrap .select-layers,
+#no-bootstrap .custom-select {
   box-shadow: none !important;
+  border-radius: 0px;
 }
 
 /* #no-bootstrap .markerPanel .custom-select {
@@ -193,6 +195,8 @@ input:-webkit-autofill:active  {
   height: auto !important;
 }
 
+
+
 /* @media screen and (max-height: 550px) {
  
    .layersPanel {
@@ -269,8 +273,8 @@ input:-webkit-autofill:active  {
 }
 
 .fadeInSlow {
-  -webkit-animation: animat_show 1.5s;
-  animation: animat_show 1.5s;
+  -webkit-animation: animat_show 2s;
+  animation: animat_show 2s;
   visibility: visible !important;
 }
 

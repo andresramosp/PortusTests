@@ -90,7 +90,7 @@
 <script>
 import MapState from "@/state/map.state";
 import ApiService from "@/services/api.service";
-import { DxPopup, DxToolbarItem } from "devextreme-vue/popup";
+import { DxPopup } from "devextreme-vue/popup";
 import LocationsRTWidget from "@/components/locationsWidget/locationsRTWidget.vue";
 import LocationsPredWidget from "@/components/locationsWidget/locationsPredWidget.vue";
 import LocationsGraphsWidget from "@/components/locationsWidget/locationsGraphsWidget.vue";
@@ -100,7 +100,6 @@ export default {
   name: "LocationsWidget",
   components: {
     DxPopup,
-    DxToolbarItem,
     LocationsRTWidget,
     LocationsPredWidget,
     LocationsGraphsWidget,
