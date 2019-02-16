@@ -13,7 +13,9 @@
             'tiempo_real': mapOptionGroup.id == 'tiempo_real',
             'historico': mapOptionGroup.id == 'historico',
             'singlePanel': selectCombos.length == 0,
-            'selectPanel': selectCombos.length > 0
+            'selectPanel': selectCombos.length > 0,
+            'floatingPanelWidth': !isIE,
+            'floatingPanelWidthIE': isIE
           }">
           <!-- Ojo: ahora mismo solo aceptaría un combo por subMenu. Poner v-for si se quiere soportar más -->
           <b-form-select v-if="selectCombos.length > 0" text-field="name" value-field="name" :options="subMenuOptions.filter(opt => opt.comboSelectId)" @change="setComboLayersVisibility" v-model="selectedOption" class="select-layers">
@@ -49,7 +51,7 @@ export default {
   data() {
     return {
       align: PC.options_panel_align,
-      theme: "", // PC.color_theme,
+      isIE: PC.isIE,
       mapState: MapState,
       selectedOption: null,
       subMenuOptions: []
@@ -242,8 +244,15 @@ export default {
   border-radius: 0px;
   color: white;
   font-size: 13px;
-  width: max-content;
   min-width: 100px;
+}
+
+.floatingPanelWidth {
+   width: max-content;
+}
+
+.floatingPanelWidthIE {
+   width: 130px;
 }
 
 .singlePanel {

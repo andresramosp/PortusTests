@@ -22,7 +22,7 @@
             {{ message.message }}
            </div>
           <div v-show="message.ignorable" style="float: right">
-            <label style="font-size: 11px; padding-right: 10px;">
+            <label style="font-size: 11px; padding-right: 10px; margin-bottom: 0px !important;">
               <input
                 class="form-check-input aligned"
                 type="checkbox"
@@ -75,6 +75,11 @@ export default {
 </script>
 
 <style scoped>
+
+.card-body {
+  padding-bottom: 15px !important;
+}
+
 .aligned {
   padding-bottom: 5px;
   margin-bottom: 5px;
@@ -113,7 +118,7 @@ export default {
 }
 
 .container {
-  padding-bottom: 15px;
+  /* padding-bottom: 15px; */
   padding-left: 0px;
   padding-right: 0px;
   padding-top: 5px;

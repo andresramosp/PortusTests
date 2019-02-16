@@ -5,6 +5,7 @@ import MapState from "@/state/map.state";
 import RTDataPopup from "@/components/markerPopups/RTDataPopup.vue";
 import HeapedMarkersPopup from "@/components/markerPopups/heapedMarkersPopup.vue";
 import SimpleMarkerPopup from "@/components/markerPopups/simpleMarkerPopup.vue";
+import GenericPopup from "@/components/markerPopups/genericPopup.vue";
 import Vue from 'vue';
 
 const MapUtils = {
@@ -118,6 +119,7 @@ const MapUtils = {
   },
 
   async openMarkerPopup(map, marker) {
+    MapState.preventMoveend = true;
     if (marker.mapResource.markerClass == MarkerClass.EstacionRT) {
         marker.timeOut = setTimeout(async () => {
           var markersAtPoint = this.getMarkersById(map, marker.id);
@@ -136,6 +138,7 @@ const MapUtils = {
         propsData: {  marker: marker } 
       }).$mount()
     }
+    
 
   },
 
@@ -148,7 +151,38 @@ const MapUtils = {
     if (marker.lastDataComponent) {
       marker.lastDataComponent.$destroy();
     }
+    setTimeout(() => {
+      MapState.preventMoveend = false;
+    }, 500);
   },
+
+  async createBounds(map, portusTimeLayer) {
+    var tooltipText, tooltipTip = "";
+    if (portusTimeLayer.mapResource.isRadar) {
+      var requestRadar = await ApiService.get('radares/' + portusTimeLayer.idDominio, { locale: Vue.$getLocale() });
+      this.currentRadar = requestRadar.data;
+      tooltipText = "En esta zona hay mapas de corrientes medidas por el sistema de radares de " + requestRadar.data.nombre;
+      tooltipTip = "Haga click en el área para acercarse"
+    }
+    else {
+      // Mensajes para otros tipos de mapTiles
+    }
+    var rect = L.rectangle([[portusTimeLayer.limN, portusTimeLayer.limW], [portusTimeLayer.limS, portusTimeLayer.limE]], { color: 'red', fillOpacity: 0.1, weight: 1 });
+    rect.on('click', function (e) {
+        map.flyToBounds(e.target.getBounds().pad(0.25));
+    });
+    rect.on('mouseover', function (e) {
+        new Vue({ ...GenericPopup, 
+            propsData: { position: { x: portusTimeLayer.limW, y: portusTimeLayer.limN} , tooltipText: tooltipText, tooltipTip: tooltipTip } 
+          }).$mount()
+    });
+    rect.on('mouseout', function (e) {
+      map.closePopup();
+    });
+    rect.mapResource = portusTimeLayer.mapResource;
+    rect.addTo(map);
+    portusTimeLayer.boundRectangle = rect;
+},
 
   getMarkersById(map, id) {
     var result = [];

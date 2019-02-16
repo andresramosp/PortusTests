@@ -8,7 +8,7 @@
                 <b-collapse visible id="collapseAnuales" class="mt-2" v-model="informesCollapseModel">
                     <b-card id="accordionContent" >
                         <b-row style="margin-top: 10px">
-                            <b-col cols="3">
+                            <b-col cols="4">
                                 <b-form-select v-model="informeAnualSelected" :options="informesAnualesOptions" class="mb-3">
                                     <template slot="first">
                                     </template>
@@ -37,7 +37,7 @@
                             <span style="font-size: 14px;">{{$t('{informesClimaticosLabel}')}}</span> 
                             <b-row style="margin-top: 10px; margin-bottom: 10px">
                                 <b-col v-for="informeVar in informesVariable" :key="informeVar.id" v-if="informeVar.variable == variable.varGrp" cols="3">
-                                    <dx-button :text="informeVar.nombre" width="80" height="35" type="default" @click="openLink(informeVar.url)" />
+                                    <dx-button :text="informeVar.nombre" height="35" type="default" @click="openLink(informeVar.url)" />
                                 </b-col>
                             </b-row>
                         </div>
@@ -68,7 +68,7 @@
 import MapState from "@/state/map.state";
 import ApiService from "@/services/api.service";
 import DataPanelsUtils from "@/services/dataPanels.utils";
-import { INFORMES_URL, BASE_URL_PORTUS, PUERTOS_URL } from '@/common/config';
+import { BANCO_DATOS_URL, BASE_URL_PORTUS, PUERTOS_URL } from '@/common/config';
 import { RedType, MarkerClass } from "@/common/enums";
 import DxButton from "devextreme-vue/button";
 
@@ -108,26 +108,24 @@ export default {
   mounted() {
   },
   created() {
-
-    this.variables = this.markers.map(m => { return { varGrp: m.mapOption.variableType, collapseModel: false } });
-    this.variables[0].collapseModel = true;
-      
-    if (!this.isMeteorologica() && !this.isModelo()) {
-        this.getInformesAnuales();
-    }
-    this.getInformes();
-    this.getProductos();
-
-    // if (this.markers[0].propietario != null) {
-    //    this.imgPropietario = BASE_URL_PORTUS + "/img/logosOrganismos/" + this.markers[0].propietario + ".png";
-    //    this.hrefPropietario = this.markers[0].urlPropietario;
-    // }
-    // else {
-    //    this.imgPropietario = BASE_URL_PORTUS + "/img/logosOrganismos/0.png";
-    //    this.hrefPropietario = PUERTOS_URL;
-    //  }
+      this.init();
+  },
+  watch: {
+      markers: function() {
+          this.init();
+      }
   },
   methods: {
+      init() {
+        this.variables = this.markers.map(m => { return { varGrp: m.mapOption.variableType, collapseModel: false } });
+        this.variables[0].collapseModel = true;
+        
+        if (!this.isMeteorologica() && !this.isModelo()) {
+            this.getInformesAnuales();
+        }
+        this.getInformes();
+        this.getProductos();
+      },
       isModelo() {
           return this.markers[0].mapResource.markerClass == MarkerClass.PuntoMallaHist;
       },
@@ -141,17 +139,17 @@ export default {
           window.open(url,'targetWindow',
                                      'toolbar=no,'
                                    + 'location=no,'
-                                   + 'status=no'
-                                   + 'menubar=no'
-                                   + 'scrollbars=yes'
-                                   + 'resizable=yes'
-                                   + 'width=650'
-                                   + 'height=800');
+                                   + 'status=no,'
+                                   + 'menubar=no,'
+                                   + 'scrollbars=yes,'
+                                   + 'resizable=yes,'
+                                   + 'width=650,'
+                                   + 'height=' + screen.availHeight);
           
       },
       openInformeAnual() {
           var estacion = this.markers[0];
-          var url = INFORMES_URL 
+          var url = BANCO_DATOS_URL 
                     + '/BD/informes/anuales/' 
                     + estacion.redId + '/' 
                     + estacion.id 

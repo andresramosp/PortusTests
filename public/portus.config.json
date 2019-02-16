@@ -13,6 +13,14 @@
     "default_map_logo": "https://portus.puertos.es/Portus_RT/portusgwt/img/logoPuertos.jpeg",
 
     "options_panel_align": "right",
-    "color_theme": "darkTheme"
+    "default_theme": "darkTheme",
+
+    "notify_messages": [
+        { 
+            "id": null,
+            "message": "El próximo miércoles se va a realizar una parada por mantenimiento",
+            "title": "Aviso Parada"
+        }
+    ] 
 
 }

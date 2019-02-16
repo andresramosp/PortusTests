@@ -1,6 +1,6 @@
  <template>
  <div class="ubicacionesPanel" :class="{ 'leftAlign': align == 'right', 'rightAlign': align == 'left', 'blueTheme': theme == 'blueTheme', 'darkTheme': theme == 'darkTheme' }">
-     <img :src="require('@/assets/icons/ubicaciones.png')" width="27" style="float: left;" />
+     <img :src="require('@/assets/icons/ubicaciones.png')" width="28" style="float: left;" />
      <dx-autocomplete style="float: right" 
             :data-source="ubicacionesList"
             :maxItemCount="200"
@@ -13,6 +13,7 @@
             @itemClick="abrirUbicacion"
             @valueChanged="checkEmptyValue"
             :show-clear-button="true"
+            height="28px"
             width="270px" >
 
            <div slot="itemTemplate" slot-scope="item">
@@ -108,13 +109,13 @@ export default {
         }, 50);
       });
       this.marker.on('mouseout', function (e) {
-        var marker = this;
-        if (marker.timeOut) {
-          clearTimeout(marker.timeOut);
-        }
-        marker.closePopup();
-        marker.unbindPopup();
-        marker.locationsRTComponent.$destroy(true);
+        // var marker = this;
+        // if (marker.timeOut) {
+        //   clearTimeout(marker.timeOut);
+        // }
+        // marker.closePopup();
+        // marker.unbindPopup();
+        // marker.locationsRTComponent.$destroy(true);
       });
       this.marker.addTo(map);
 
@@ -186,11 +187,11 @@ export default {
 
 .leftAlign {
   /* left: 50px; */
-  left: 200px;
+  left: 250px;
 }
 
 .rightAlign {
-  right: 200px;
+  right: 250px;
 }
 
 .blueTheme {

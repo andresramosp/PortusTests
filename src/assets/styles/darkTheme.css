@@ -1,20 +1,26 @@
 
 /* DARKTHEME */
 
-  .darkTheme .layersPanel .card-body {
+  .darkTheme .layersPanel .card-body,
+  .darkTheme .leaflet-bar-timecontrol
+   {
     background-color: rgba(0, 0, 0, 0.7);
+    color: white;
   }
   
   .darkTheme .card-header .predicciones, .darkThemeSub .predicciones {
     background-color: rgba(11, 90, 149, 0.7);
+    color: white;
   }
   
   .darkTheme .card-header .tiempo_real, .darkThemeSub .tiempo_real {
     background-color: rgba(6, 136, 192, 0.7);
+    color: white;
   }
   
   .darkTheme .card-header .historico, .darkThemeSub .historico {
     background-color: rgba(115, 170, 199, 0.7);
+    color: white;
   }
   
   .darkTheme .predicciones .mapOptionChecked  img {
@@ -89,11 +95,6 @@
     color: white;
   }
 
-  .darkTheme .leaflet-bar-timecontrol {
-    color: white;
-    background-color: rgba(0, 0, 0, 0.8);
-  }
-
   /* #no-bootstrap .darkTheme .leaflet-bar-timecontrol .leaflet-control-timecontrol a:hover{
     color: red !important;
   } */
@@ -105,6 +106,7 @@
 
 .darkTheme .markerPanel div:not(.dx-popup-title):not(.dx-button-content):not(.dx-button-text),
 .darkTheme .staticMapPanel div:not(.dx-popup-title):not(.dx-button-content):not(.dx-button-text),
+.darkTheme .dx-overlay-content,
 .darkTheme .leaflet-popup-content .card-body,
 .darkTheme .whiteBG,
 .darkTheme .table-dark,
@@ -113,6 +115,20 @@
     background: rgb(74, 73, 79);
     color:white !important;
     border-radius: 0px !important;
+}
+
+.darkTheme .markerPanel .dx-button-content,
+.darkTheme .staticMapPanel .dx-button-content
+ {
+    background-color: rgb(74, 73, 79);
+    border: 1.5px solid !important;
+    /* min-width: fit-content; */
+    color: white;
+}
+
+.darkTheme .staticMapPanel select {
+  background-color: rgb(74, 73, 79);
+  color: white;
 }
 
 .darkTheme .notifyPopup .card-body {
@@ -133,29 +149,23 @@
 }
 
 .darkTheme .simoPanel .card-header {
-  background: rgb(21, 91, 140);
+  background-color: rgb(21, 91, 140);
   color: white;
 }
 
-.darkTheme .markerPanel .dx-button-content,
-.darkTheme .staticMapPanel .dx-button-content {
-    background: rgb(74, 73, 79);
-    border: 1.5px solid !important;
-    min-width: fit-content;
-}
 
 .darkTheme #accordionContent *:not(.dx-button-content):not(.dx-button-text),
 .darkTheme #specialContent,
 .darkTheme .table-dark.table-striped tbody tr:nth-of-type(odd),
 .darkTheme .grayBG
 {
-  background: rgb(64, 63, 69) !important;
+  background-color: rgb(64, 63, 69) !important;
   color: white;
 }
 
 .darkTheme #specialContentDeep
 {
-  background: black !important;
+  background-color: black !important;
   color: white;
 }
 
@@ -220,4 +230,65 @@
 .darkTheme .table-dark th, .table-dark td, .table-dark thead th {
   border-color: transparent;
 }
+
+.darkTheme .markerPanel select,
+.darkTheme .staticMapPanel select {
+  -webkit-appearance: none;
+  background-image:  url("../../assets/icons/arrowDownWhite.png") !important;
+  background-size: 13px !important;
   
+}
+
+.darkTheme .dx-datebox-wrapper-calendar .dx-overlay-content,
+.darkTheme .dx-calendar-navigator .dx-calendar-caption-button.dx-button .dx-button-content
+ {
+  background-color: rgb(74, 73, 79) !important;
+  /* color: #00c8f9 !important; */
+  color: white !important;
+}
+
+.darkTheme .dx-calendar,
+.darkTheme .dx-calendar-cell
+ {
+  background-color: rgb(64, 63, 69);
+  color: white;
+}
+
+.darkTheme .dx-calendar-body thead tr th {
+  /* background-color: rgb(74, 73, 79); */
+  background-color: transparent;
+  /* color: #00c8f9; */
+  color: white !important;
+}
+
+.darkTheme .dx-calendar-cell.dx-calendar-empty-cell {
+  background-color: transparent;
+  color: gray;
+}
+
+.darkTheme .dx-calendar-cell.dx-calendar-empty-cell.dx-state-hover {
+  background-color: transparent;
+  color: gray;
+}
+
+.darkTheme .dx-calendar-cell.dx-state-hover,
+.darkTheme .dx-calendar-navigator-previous-month.dx-button.dx-state-hover,
+.darkTheme .dx-calendar-navigator-next-month.dx-button.dx-state-hover {
+  background-color: rgba(11, 90, 149, 1);
+  color:white;
+  box-shadow: none;
+  /* border-radius: 0px; */
+}
+
+.darkTheme .dx-calendar-navigator-previous-view.dx-button .dx-icon, 
+.darkTheme .dx-calendar-navigator-previous-month.dx-button .dx-icon,
+.darkTheme .dx-calendar-navigator-next-view.dx-button .dx-icon, 
+.darkTheme .dx-calendar-navigator-next-month.dx-button .dx-icon {
+  color: white;
+  /* background-color: rgb(74, 73, 79); */
+  opacity: 1;
+}
+
+.darkTheme .leaflet-popup-content .variableDate {
+  color: white !important;
+}

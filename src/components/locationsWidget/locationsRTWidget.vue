@@ -303,8 +303,9 @@ export default {
     font-size: 12px;
     /* color: #111; */
     position: absolute;
-    font-weight: bold;
+    /* font-weight: bold; */
     margin-top: -3px;
+    color: black;
 }
 
 .variableValue {
@@ -344,6 +345,7 @@ export default {
     position: absolute;
     margin-top: 72px;
     margin-left: 2px;
+    color: black !important;
 }
 
 .variableDateSm {
@@ -353,6 +355,7 @@ export default {
     font-family: Arial;
     position: absolute;
     margin-top: 14px;
+    color: black;
 }
 
 .winDirRotation {

@@ -106,7 +106,7 @@
     </b-card>
  
    <div v-if="!displayShareInfo && !loading" class="fadeIn">  
-      <div class="pleaBajaSection" style="margin-left: 35px;">
+    <div class="pleaBajaSection" style="margin-left: 35px;">
       <b-row>
         <b-col cols="2" style="padding-top: 7px">
           <div style="font-weight: bold">plea
@@ -432,6 +432,7 @@ export default {
   position: absolute;
   margin-top: -92px;
   font-size: 10.5px;
+  color: black;
 }
 
 .variableSection {

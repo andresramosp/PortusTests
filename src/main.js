@@ -32,7 +32,8 @@ async function StartApp() {
   config = await config.json();
   config.user_preferences = UserPrefs.getUserPrefs();
   config.mobile_device = isMobile();
-  document.body.classList.add(config.color_theme);
+  config.isIE = isIE();
+  //document.body.classList.add(config.color_theme);
 
   window.PC = config;
 

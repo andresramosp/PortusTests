@@ -54,7 +54,7 @@
 } */
 
 .dx-datebox-calendar .dx-dropdowneditor-icon {
-  color: #b1afaf;
+  color: lightgray;
   /* color: white; */
 }
 
@@ -194,7 +194,6 @@ input:-webkit-autofill:active  {
   padding: 0px !important;
   height: auto !important;
 }
-
 
 
 /* @media screen and (max-height: 550px) {

@@ -62,7 +62,7 @@ export default {
     .setLatLng(this.marker.getLatLng())
     .setContent(this.$el);
 
-    MapState.setHeapedPopup(popup);
+    popup.openOn(MapState.getMap());
     
   }
 };

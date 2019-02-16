@@ -22,7 +22,7 @@
               <b-row >
                   <b-col v-for="mapOption in mapOptions.filter(opt => opt.group == optGrp.id)" :key="mapOption.id" cols="6" class="form-check text-left" style="padding-top: 3px; margin-bottom: 3px;" >
                     <label class="form-check-label lightable" :class="[mapOption.active ? 'mapOptionChecked' : '']" :title="minimized ? $t(mapOption.name) : ''" style="float: left; cursor: pointer">
-                      <img style="float: left; margin-right: 2px; margin-top: -4px" width="28" 
+                      <img style="float: left; margin-right: 2px; margin-top: -2.5px" width="28" 
                             :class="[mapOption.active ? 'mapOptionChecked' : '']"
                             class="fadeIn"
                             :src='require("@/assets/icons/mainMenu/" + mapOption.id + ".png")' >
@@ -134,9 +134,8 @@ export default {
 .layersPanel {
   position: absolute;
   z-index: 2;
-  top: 9px;
+  top: 2px;
   border-radius: 0px;
-  color: white;
   font-size: 13px;
 }
 input[type="checkbox"] {

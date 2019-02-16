@@ -13,7 +13,8 @@
 <style>
   #app { height: 100%;}
   @import './assets/styles/portus.css';
-  @import './assets/styles/themes.css';
+  @import './assets/styles/darkTheme.css';
+  @import './assets/styles/whiteTheme.css';
 </style>
 
 

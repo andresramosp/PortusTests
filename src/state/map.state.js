@@ -45,6 +45,7 @@ const MapState = {
         this.map = map;
         this.cacheLayers();
         DataPanelsUtils.createDataListFromUserPrefs();
+        this.showStaffNotifyMessages();
     },
 
     cacheLayers() {
@@ -110,13 +111,11 @@ const MapState = {
     },
 
     async addTimeLineLayer(mapResource, mapOption) {
-
         var source = null;
         if (mapOption) {
             var source = ApiService.getCancelationToken();
             mapOption.sources.push(source);
         }
-    
         this.addLoading(mapResource.id);
         var vectorial = mapResource.defaultVectors ? true : false;
         var result = await ApiService.get(mapResource.resourceApi, null, source);
@@ -146,17 +145,9 @@ const MapState = {
                 portusTimeLayer.id = res.url;
                 this.preloadedTimeLineLayers.push(portusTimeLayer);
                 if (mapResource.paintBounds) {
-                    var ms = this;
-                    var rect = L.rectangle([[res.limN, res.limW], [res.limS, res.limE]], { color: 'red', fillOpacity: 0.1, weight: 1 })
-                    .on('click', function (e) {
-                        ms.map.flyToBounds(e.target.getBounds().pad(0.25));
-                    })
-                    rect.mapResource = mapResource;
-                    rect.addTo(this.map);
-                    portusTimeLayer.boundRectangle = rect;
+                    MapUtils.createBounds(this.map, portusTimeLayer)
                 }
             }
-
         })
         if (mapResource.onAdded) {
             mapResource.onAdded();
@@ -274,12 +265,7 @@ const MapState = {
                 ms.map.timeDimension.initialize(ms.map.options.timeDimensionOptions);
                 ms.map.timeDimension.setCurrentTimeIndex(0);
                 if (!ms.map.timeDimensionControl) {
-                    ms.map.timeDimensionControl = L.control.timeDimension({
-                        position: "bottomleft",
-                        playerOptions: { transitionTime: 500, loopButton: true,  loop: true },
-                        autoPlay: true,
-                        minimized: ms.playerMinimized
-                    })
+                    ms.map.timeDimensionControl = L.control.timeDimension({ position: "bottomleft", playerOptions: { transitionTime: 500, loopButton: true,  loop: true }, autoPlay: true, minimized: ms.playerMinimized })
                     ms.map.addControl(ms.map.timeDimensionControl);
                 }
                 preLayer.addTo(ms.map);
@@ -287,12 +273,9 @@ const MapState = {
                 if (preLayer._baseLayer.options.predictionScaleImg) {
                     ms.predictionScaleImg = preLayer._baseLayer.options.predictionScaleImg;
                 }
-                    
-
                 preLayer._baseLayer.options.logosImgs.forEach(url => {
                     ms.addMapLogo(url);
                 })
-
                 if (preLayer.mapResource.isRadar)
                     ms.getRadarPoints(preLayer);
 
@@ -460,6 +443,10 @@ const MapState = {
             mapOption.mapResources.forEach(resId => {
               this.removeMapResource(resId);
             });
+
+            // Esto es solo preventivo, cada recurso debe apagar su loading
+            if (this.getActiveMapOptions().length == 0)
+                this.loadingThings = [];
         }
 
         // Si activamos el mapOption de manera programática, 
@@ -595,6 +582,19 @@ const MapState = {
         }
     },
 
+    showStaffNotifyMessages() {
+        if (PC.notify_messages) {
+            PC.notify_messages.filter(msg => msg.id).forEach(msg => {
+                msg.type = "alert";
+                msg.title = "Aviso!"
+                msg.duration = 0;
+                msg.ignorable = true;
+                this.addNotifyMessage(msg);
+            });
+        }
+
+    },
+
     // TODO: llevarse funcionalidad a radar.service.js
 
     async getRadarPoints(layer) {
@@ -635,6 +635,7 @@ const MapState = {
         this.map.off("mousemove");
         this.currentRadar = null;
         this.showingRadars = false;
+        this.preventMoveend = false;
     },
 
     async getRadarLastData(radar, lat, lon, date, marker) {
@@ -690,11 +691,15 @@ const MapState = {
             });
             circleMarker.on('mouseover', function (e) {
                 circleMarker.timeOut = setTimeout(() => {
+                    ms.preventMoveend = true;
                     ms.getRadarLastData(ms.currentRadar, rp.latitud, rp.longitud, new Date(ms.currentPlayerTime), circleMarker);
                 }, 250)
             });
             circleMarker.on('mouseout', function (e) {
                 clearTimeout(circleMarker.timeOut);
+                setTimeout(() => {
+                    ms.preventMoveend = false;
+                }, 500);
             });
     
             if (this.radarPointMarker) 

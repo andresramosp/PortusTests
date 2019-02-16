@@ -105,7 +105,7 @@ import { DxPopup, DxToolbarItem } from "devextreme-vue/popup";
 import { DxDataGrid, DxColumn, DxPager, DxPaging, DxGrouping, DxGroupPanel } from "devextreme-vue/data-grid";
 import ShareInfoPanel from "@/components/shareInfoPanel.vue";
 import NivmarPleaBajaPredPanel from "@/components/dataTables/nivmarPleaBajaPredPanel.vue";
-import { INFORMES_URL, BASE_URL_PORTUS_REPORTS } from '@/common/config';
+import { BANCO_DATOS_URL, BASE_URL_PORTUS_REPORTS } from '@/common/config';
 
 export default {
   name: "DataTablesPredPanel",
@@ -197,7 +197,7 @@ export default {
           });
 
           if (this.marker.mareaAstronomica) {
-            this.mareaAstronomicaUrl = INFORMES_URL + "Mareas/Principal1.php?Estacion=" + this.marker.mareaAstronomica.id + "&Lenguaje=es"
+            this.mareaAstronomicaUrl = BANCO_DATOS_URL + "Mareas/Principal1.php?Estacion=" + this.marker.mareaAstronomica.id + "&Lenguaje=es"
           }
           else {
             this.mareaAstronomicaUrl = null;

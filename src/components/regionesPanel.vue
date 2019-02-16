@@ -1,6 +1,6 @@
  <template>
  <div class="ubicacionesPanel" :class="{ 'leftAlign': align == 'right', 'rightAlign': align == 'left', 'blueTheme': theme == 'blueTheme', 'darkTheme': theme == 'darkTheme' }">
-     <img :src="require('@/assets/icons/regiones.png')" width="27" style="float: left;" />
+     <img :src="require('@/assets/icons/regiones.png')" width="28" style="float: left;" />
      <dx-select-box  style="float: right" 
             :items="regionesList"
             display-expr="nombre"
@@ -8,8 +8,9 @@
             @itemClick="abrirRegion"
              @valueChanged="checkEmptyValue"
             :show-clear-button="true"
-            placeholder="Regions"
+            :placeholder="$t('{regionsPlaceholder}')"
             width="150px"
+            height="28px"
             item-template="itemTemplate"
             >
 
@@ -95,11 +96,11 @@ export default {
 
 .leftAlign {
   /* left: 415px; */
-  left: 530px;
+  left: 560px;
 }
 
 .rightAlign {
-  right: 530px;
+  right: 560px;
 }
 
 .blueTheme {

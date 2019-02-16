@@ -5,7 +5,7 @@
        </b-card-header>
     <b-container>
       <div class="row rowData">
-        <div class="col-md-5" style="font-weight: 700; font-size: 13px"></div>
+        <div class="col-md-5"></div>
         <div
           class="col-md-7 alertText"
           style="text-align: right;"

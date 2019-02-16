@@ -2,7 +2,7 @@ import MapState from "@/state/map.state";
 import MapUtils from "@/services/map.utils";
 import { MarkerClass } from "@/common/enums";
 import Vue from 'vue';
-import { BASE_URL_PORTUS_DATA, INFORMES_URL } from '@/common/config';
+import { BASE_URL_PORTUS_DATA, BANCO_DATOS_URL } from '@/common/config';
 
 
 const GraphicHeight =  262;
@@ -180,7 +180,8 @@ const DataPanelsUtils = {
                     name: producto.nombre + ": " +  MapUtils.getMarkerName(marker),
                     producto: producto,
                     type: 'GraphicHist', 
-                    url: INFORMES_URL + producto.url,
+                    // Arreglo para Series Temporales mientras sigan en Portus antiguo
+                    url: producto.id == 56 ? producto.url : BANCO_DATOS_URL + producto.url,
                     height: GraphicHistHeight,
                     id: this.generateDataPanelId(),
                     open: true

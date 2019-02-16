@@ -335,6 +335,11 @@ const LocalePlugin = {
             es: "Marcar todos",
             en: "Print all"
         },
+        // Regiones toolbar
+        regionsPlaceholder: {
+            es: "Regiones",
+            en: "Regions"
+        },
         // Ubicaciones Toolbar
         ubicacionesPlaceHolder: {
             es: "Búsqueda de localidades, puertos y playas...",

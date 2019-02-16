@@ -2,6 +2,8 @@
 
   <div style="height: 100%">
       <div id="map"></div>
+      <img v-if="!isWidget" @click="openFullscreen" class="fullscreenIcon" :class="[align == 'left' ? 'fullScreenIconLeftAlign' : 'fullScreenIconRightAlign']" :src="require('@/assets/icons/fullscreenBlanco.png')" />
+      <span v-if="!isWidget" class="clockPanel" :class="[align == 'left' ? 'clockLeftAlign' : 'clockRightAlign']" >{{currentTime}} GMT</span>
       <img class="loaderGif" :src="require('@/assets/gifs/loadingBars.gif')" v-show="loading" width="100"  /> 
       <PlayerOptions  :isWidget="isWidget"  />
       <NotifyPopup v-if="!isWidget" :messages="mapState.notifyMessages" />
@@ -29,7 +31,9 @@ export default {
   },
   data() {
     return {
-      mapState: MapState
+      mapState: MapState,
+      currentTime: null,
+      align: PC.options_panel_align
     };
   },
   watch: {
@@ -45,6 +49,7 @@ export default {
   mounted() {
     this.initMap();
     this.setBaseLayer();
+    this.startClock();
   },
   methods: {
    
@@ -79,10 +84,13 @@ export default {
      
       var vm = this;
       map.on("moveend", function() {
-        vm.moveEndTimeOut = setTimeout(() => {
-          MapState.setVisibleTimeLineLayers();
-          MapState.setVisibleMarkerLayers();
-        }, 750);
+        if (!MapState.preventMoveend) {
+           vm.moveEndTimeOut = setTimeout(() => {
+            MapState.setVisibleTimeLineLayers();
+            MapState.setVisibleMarkerLayers();
+          }, 750);
+        }
+       
       });
       map.on("movestart", function() {
         if (vm.moveEndTimeOut)
@@ -104,12 +112,86 @@ export default {
         MapState.setBaseLayer(this.baseMap);
       }
     },
+
+    startClock() {
+      var today = new Date();
+      var h = today.getUTCHours();
+      var m = today.getMinutes();
+      var s = today.getSeconds();
+      m = this.checkTime(m);
+      s = this.checkTime(s);
+      this.currentTime = h + ":" + m + ":" + s;
+      var t = setTimeout(this.startClock, 500);
+    },
+
+    checkTime(i) {
+      if (i < 10) {i = "0" + i}; 
+      return i;
+    },
+
+    openFullscreen() {
+      var route = this.$router.resolve({ path: "/"});
+      var w = window.open(route.href,'customWindow',
+                                     'toolbar=no,'
+                                   + 'location=no,'
+                                   + 'status=no,'
+                                   + 'menubar=no,'
+                                   + 'scrollbars=yes,'
+                                   + 'resizable=yes,'
+                                   + 'width=' + screen.availWidth
+                                   + ',height=' + screen.availHeight);
+     
+    }
   }
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+
+.clockPanel {
+  position: absolute;
+  top: 10px;
+  z-index: 7;
+  background: rgba(0, 0, 0, 0.3);
+  padding-top: 6px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 6px;
+  color: white;
+  font-size: 13px;
+}
+
+.clockRightAlign {
+  left: 50px;
+}
+
+.clockLeftAlign {
+  right: 50px;
+}
+
+
+.fullscreenIcon {
+  position: absolute;
+  top: 10px;
+  width: 31px;
+  z-index: 7;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 4.5px;
+  cursor: pointer;
+}
+
+.fullScreenIconRightAlign {
+  left: 10px;
+}
+
+.fullScreenIconLeftAlign {
+  right: 10px;
+}
+
+</style>
+
 <style >
+
 #map {
   z-index: 1;
   height: 100%;
@@ -121,8 +203,6 @@ export default {
   right: 20px;
   z-index: 5;
 }
-
-
 
 .loaderGif {
     position: absolute;
@@ -160,18 +240,6 @@ input[type="checkbox"] {
   animation: fadeout 1s;
 }
 
-.blueTheme {
-  background-color: rgba(0, 123, 255, 0.6);
-}
-
-.grayTheme {
-  background-color: #39434fbf;
-}
-
-.greenTheme {
-  background-color: rgba(0, 255, 0, 0.6);
-}
-
 @keyframes fadein {
   from {
     opacity: 0;
@@ -180,7 +248,6 @@ input[type="checkbox"] {
     opacity: 1;
   }
 }
-
 @keyframes fadeout {
   from {
     opacity: 1;
@@ -189,7 +256,6 @@ input[type="checkbox"] {
     opacity: 0;
   }
 }
-
 /* Firefox < 16 */
 @-moz-keyframes fadein {
   from {
@@ -199,7 +265,6 @@ input[type="checkbox"] {
     opacity: 1;
   }
 }
-
 /* Safari, Chrome and Opera > 12.1 */
 @-webkit-keyframes fadein {
   from {
@@ -209,7 +274,6 @@ input[type="checkbox"] {
     opacity: 1;
   }
 }
-
 /* Internet Explorer */
 @-ms-keyframes fadein {
   from {
@@ -219,7 +283,6 @@ input[type="checkbox"] {
     opacity: 1;
   }
 }
-
 /* Opera < 12.1 */
 @-o-keyframes fadein {
   from {
@@ -229,7 +292,6 @@ input[type="checkbox"] {
     opacity: 1;
   }
 }
-
 
 
 </style>

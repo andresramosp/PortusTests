@@ -28,7 +28,7 @@ import { MarkerClass } from "@/common/enums";
 import MapState from "@/state/map.state";
 import MapUtils from "@/services/map.utils";
 import ApiService from "@/services/api.service";
-import { INFORMES_URL, BASE_URL_PORTUS } from '@/common/config';
+import { BANCO_DATOS_URL, BASE_URL_PORTUS } from '@/common/config';
 import DxButton from "devextreme-vue/button";
 
 export default {
@@ -63,8 +63,16 @@ export default {
     this.$emit("content-loaded");
   },
   created() {
-
-      if (this.markers[0].mapResource.markerClass == MarkerClass.Ubicacion) {
+    this.init();
+  },
+  watch: {
+    markers: function() {
+      this.init()
+    }
+  },
+  methods: {
+     init() {
+        if (this.markers[0].mapResource.markerClass == MarkerClass.Ubicacion) {
               this.informacion = [
                 { key: this.$t("{longitudInfo}"), value: MapUtils.lonToString(this.markers[0].longitud) },
                 { key: this.$t("{latitudInfo}"), value: MapUtils.latToString(this.markers[0].latitud) },
@@ -80,7 +88,7 @@ export default {
               { key: this.$t("{codigoModeloInfo}"), value: this.markers[0].id },
               { key: this.$t("{cadencyInfo}"), value: (this.markers[0].tdelta * 60) + ' min'  },
               { key: this.$t("{mallaInfo}"), value: this.markers[0].malla },
-              { key: this.$t("{conjuntoDatosInfo}"), value: this.markers[0].red ? this.markers[0].red.descripcion : null, bold: true, href: this.markers[0].red ? (INFORMES_URL + 'BD/informes/INT_'	+ this.markers[0].red.id + '.pdf') : null }
+              { key: this.$t("{conjuntoDatosInfo}"), value: this.markers[0].red ? this.markers[0].red.descripcion : null, bold: true, href: this.markers[0].red ? (BANCO_DATOS_URL + 'BD/informes/INT_'	+ this.markers[0].red.id + '.pdf') : null }
             ];
         }
         else if (this.markers[0].mapResource.markerClass == MarkerClass.PuntoMallaVerif) {
@@ -105,7 +113,7 @@ export default {
                 { key: this.$t("{tipoSensorInfo}"), value: this.markers[0].tipoSensor },
                 { key: this.$t("{modeloEstacionInfo}"), value: this.markers[0].modelo },
                 { key: this.$t("{comentariosEstacionInfo}"), value: this.markers[0].comentarios },
-                { key: this.$t("{conjuntoDatosInfo}"), value: this.markers[0].red.descripcion, bold: true, href: INFORMES_URL + 'BD/informes/INT_'	+ this.markers[0].red.id + '.pdf' }
+                { key: this.$t("{conjuntoDatosInfo}"), value: this.markers[0].red.descripcion, bold: true, href: BANCO_DATOS_URL + 'BD/informes/INT_'	+ this.markers[0].red.id + '.pdf' }
               ];
         }
         else if (this.markers[0].mapResource.markerClass == MarkerClass.AntenaRadar) {
@@ -119,19 +127,17 @@ export default {
                 { key: this.$t("{tipoSensorInfo}"), value: this.markers[0].tipoSensor },
                 { key: this.$t("{modeloEstacionInfo}"), value: this.markers[0].modelo },
                 { key: this.$t("{comentariosEstacionInfo}"), value: this.markers[0].comentarios },
-                { key: this.$t("{conjuntoDatosInfo}"), value: this.markers[0].radar.red.nombre, bold: true, href: INFORMES_URL + 'BD/informes/INT_'	+ this.markers[0].radar.red.id + '.pdf' }
+                { key: this.$t("{conjuntoDatosInfo}"), value: this.markers[0].radar.red.nombre, bold: true, href: BANCO_DATOS_URL + 'BD/informes/INT_'	+ this.markers[0].radar.red.id + '.pdf' }
               ];
               
           // TODO
           var mi = this;
           ApiService.get('radares/' + this.markers[0].radarId + '?locale=' + this.$getLocale())
           .then((radar) => {
-              this.informacion.push({ key: this.$t("{conjuntoDatosInfo}"), value: radar.data.descripcion, bold: true, href: INFORMES_URL + 'BD/informes/INT_'	+ radar.data.id + '.pdf' })
+              this.informacion.push({ key: this.$t("{conjuntoDatosInfo}"), value: radar.data.descripcion, bold: true, href: BANCO_DATOS_URL + 'BD/informes/INT_'	+ radar.data.id + '.pdf' })
           })
         }
-
-  },
-  methods: {
+     },
      openLink(url) {
         window.open(url,'targetWindow',
                                      'toolbar=no,'
@@ -141,7 +147,7 @@ export default {
                                    + 'scrollbars=yes'
                                    + 'resizable=yes'
                                    + 'width=650'
-                                   + 'height=800');
+                                   + 'height=' + (screen.availHeight - 50));
     },
     hasPeriodosFondeo() {
       return (this.markers[0].mapResource.markerClass == MarkerClass.EstacionHist

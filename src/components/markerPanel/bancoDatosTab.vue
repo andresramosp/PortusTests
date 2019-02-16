@@ -58,7 +58,7 @@
 import MapState from "@/state/map.state";
 import DataPanelsUtils from "@/services/dataPanels.utils";
 import ApiService from "@/services/api.service";
-import { BASE_URL_PORTUS, INFORMES_URL } from '@/common/config';
+import { BASE_URL_PORTUS, BANCO_DATOS_URL } from '@/common/config';
 import { MarkerClass } from "@/common/enums";
 import DxButton from "devextreme-vue/button";
 import Vue from "vue";
@@ -95,22 +95,29 @@ export default {
   mounted() {
   },
   created() {
-       var mi = this;
+    this.init();
+  },
+  watch: {
+      markers: function() {
+          this.init();
+      }
+  },
+  methods: {
+      init() {
+        var mi = this;
         if (this.markers[0].mapResource.markerClass == MarkerClass.EstacionRT) {
             ApiService.post('parametros/' + this.markers[0].id + '?locale=' + this.$getLocale(), this.markers.map(m => m.mapOption.variableType))
-                .then((params) => {
-                    this.setBancoDatos(params);
-                });
+            .then((params) => {
+                this.setBancoDatos(params);
+            });
         }
         else {
             ApiService.post('parametros/?locale=' + this.$getLocale(), [this.markers[0].mapOption.variableType])
-                .then((params) => {
-                    this.setBancoDatos(params);
-                });
-           }
-
-  },
-  methods: {
+            .then((params) => {
+                 this.setBancoDatos(params);
+            });
+        }
+      },
       changeAllGraphsParam(value) {
           this.bancoDatos.forEach(param => {
               if (param.graphicActive != value) {
@@ -177,17 +184,17 @@ export default {
          return this.markers[0].mareaAstronomica;
      },
      openMareaAstronomica() {
-        window.open(INFORMES_URL + "Mareas/Principal1.php?Estacion=" 
+        window.open(BANCO_DATOS_URL + "Mareas/Principal1.php?Estacion=" 
                                 + this.markers[0].mareaAstronomica.id 
                                 + "&Lenguaje=es",'targetWindow',
                                           'toolbar=no,'
                                         + 'location=no,'
-                                        + 'status=no'
-                                        + 'menubar=no'
-                                        + 'scrollbars=yes'
-                                        + 'resizable=yes'
-                                        + 'width=650'
-                                        + 'height=800');
+                                        + 'status=no,'
+                                        + 'menubar=no,'
+                                        + 'scrollbars=yes,'
+                                        + 'resizable=yes,'
+                                        + 'width=650,'
+                                        + 'height=' + screen.availHeight);
      },
 
      // La lista de parámetros-checkboxes de cada marker la guardamos en un objeto

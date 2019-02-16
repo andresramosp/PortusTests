@@ -26,6 +26,7 @@ export default {
   },
   created() {
     this.$setLocale(this.$route.query.locale ? this.$route.query.locale : 'es');
+    document.body.classList.add(this.$route.query.theme ? this.$route.query.theme : PC.default_theme);
   },
   mounted () {
     this.baseMap = L.tileLayer(

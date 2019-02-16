@@ -38,7 +38,7 @@
               </label>
               <div v-for="day in dayGroups" :key="day">
                 <label
-                  style="margin-left: -10px; margin-top: 5px; margin-bottom: 0px !important; font-weight: bold"
+                  style="margin-left: -10px; margin-top: 5px; margin-bottom: 0px !important; "
                 >{{day}}</label>
                 <div
                   v-if="date.dayName == day"
@@ -55,6 +55,11 @@
                     >
                     {{ date.name }}
                   </label>
+                    <!-- <label  style="float: left; cursor: pointer" class="form-check-label">
+                       {{ date.name }}
+                      <img style="float: left; margin-right: 2px; " width="18" :src="date.active ? require('@/assets/icons/check_activo.png') : require('@/assets/icons/check_inactivo.png')" >
+                      <input class="form-check-input" style="display: none" type="checkbox" v-model="date.active" @change="paintMaps()" />
+                  </label> -->
                 </div>
               </div>
             </b-col>
@@ -65,11 +70,10 @@
             <b-form-select text-field="nombre" 
                            value-field="url" 
                            :options="domainsList" 
-                           @change="setComboLayersVisibility" 
                            v-model="domainSelected" 
                            :placeholder="$t('{listaDominiosTexto}')"
                            style="margin-left: 0px; overflow-y: scroll; width: 330px; margin-bottom: 10px"
-                           class="mb-3 form-control custom-select">
+                           class="mb-3 form-control">
             </b-form-select>
           </b-row>
           <b-row>
@@ -160,6 +164,7 @@ export default {
         locale: this.$getLocale()
       }).then(result => {
         sm.domainsList = result.data;
+        sm.domainSelected = sm.domainsList[0].url;
       });
       this.datesAvailables = [];
       var hoursGap = 3;
@@ -245,10 +250,7 @@ export default {
 
 <style scoped>
 
-.custom-select {
-  background: inherit;
-  color: inherit;
-}
+
 
 .footerButton {
   float: right;

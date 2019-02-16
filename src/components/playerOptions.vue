@@ -25,13 +25,14 @@
           />
 
            <dx-date-box
-           v-show="!mapState.playerMinimized"
+            v-show="!mapState.playerMinimized"
             class="datePicker datePicker-right fadeIn"
             :value="mapState.playerDateRangeToValue"
             @valueChanged="changeDateToValue"
             @mouseover="dateRangeMouseOver"
             @mouseout="dateRangeMouseOut"
             :max="mapState.maxPredictionDate"
+            :min="mapState.playerDateRangeFromValue ? mapState.playerDateRangeFromValue.addDays(1) : null"
             type="date"
             display-format="dd/MMM"
             :use-mask-behavior="true"
@@ -213,7 +214,7 @@ export default {
     padding: 7px;
     border-radius: 6px;
     left: 100px;
-    bottom: 83px;
+    bottom: 80px;
     background: rgba(255, 255, 255, 0.35);
     text-align: center;
 }
@@ -224,7 +225,7 @@ export default {
     padding: 7px;
     border-radius: 6px;
     left: 42.0%;
-    bottom: 83px;
+    bottom: 80px;
     background: rgba(255, 255, 255, 0.35);
     text-align: center;
 }

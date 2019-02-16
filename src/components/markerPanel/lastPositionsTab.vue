@@ -33,19 +33,29 @@ export default {
     }
   },
   created() {
-      var mi = this;
-      ApiService.get('lastData/positions/' + this.boya.id)
-      .then((params) => {
-        mi.data = params.data.map(d => 
-        { 
-          return { 
-            // fecha: new Date(d.fecha).toISOString().slice(0, 19).replace("T", " "), 
-            fecha: d.fecha.slice(0, 19), 
-            latitud: d.latitud.toFixed(4),
-            longitud: d.longitud.toFixed(4),
-          } 
-        });
-      })
+    this.init();
+  },
+  watch: {
+    boya: function(){
+      this.init();
+    }
+  },
+  methods: {
+    init(){
+        var mi = this;
+        ApiService.get('lastData/positions/' + this.boya.id)
+        .then((params) => {
+          mi.data = params.data.map(d => 
+          { 
+            return { 
+              // fecha: new Date(d.fecha).toISOString().slice(0, 19).replace("T", " "), 
+              fecha: d.fecha.slice(0, 19), 
+              latitud: d.latitud.toFixed(4),
+              longitud: d.longitud.toFixed(4),
+            } 
+          });
+        })
+    }
   }
 }
 </script>

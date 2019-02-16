@@ -21,6 +21,7 @@ export default {
   },
   async created() {
     this.$setLocale(this.$route.query.locale ? this.$route.query.locale : 'es');
+    document.body.classList.add(this.$route.query.theme ? this.$route.query.theme : PC.default_theme);
     var code = parseInt(this.$route.query.code);
     var result = await ApiService.get('ubicaciones/' + code + '?locale=' + this.$getLocale());
     this.ubicacion = result.data;
