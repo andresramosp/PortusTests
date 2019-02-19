@@ -56,9 +56,9 @@
 <script>
 
 import MapState from "@/state/map.state";
-import DataPanelsUtils from "@/services/dataPanels.utils";
+import DataPanelsService from "@/services/dataPanels.service";
 import ApiService from "@/services/api.service";
-import { BASE_URL_PORTUS, BANCO_DATOS_URL } from '@/common/config';
+import { BASE_URL_PORTUS, BANCO_DATOS_URL, BANCO_DATOS_URL_OLD } from '@/common/config';
 import { MarkerClass } from "@/common/enums";
 import DxButton from "devextreme-vue/button";
 import Vue from "vue";
@@ -139,7 +139,7 @@ export default {
                 // Ojo: manejamos el global, no el local, pues podríamos tener parametros marcados anteriormente
                 var markerId = this.getUniqueMarkerId(this.markers[0]);
                 var bancoDatosState = this.mapState.getBancoDatos(markerId);
-                DataPanelsUtils.addRTDataTable(this.markers[0], bancoDatosState.filter(param => param.tableActive));
+                DataPanelsService.addRTDataTable(this.markers[0], bancoDatosState.filter(param => param.tableActive));
              }
              // En los puntos-malla (Predicción), si elegimos un parámetro se marcan todos y la tabla depende de la variable
              if (this.markers[0].mapResource.markerClass == MarkerClass.PuntoMalla 
@@ -148,29 +148,29 @@ export default {
                  this.bancoDatos.forEach(p => {
                      Vue.set(p, 'tableActive', param.tableActive);
                  })
-                 DataPanelsUtils.setPredDataTable(this.markers[0], this.markers[0].mapOption.variableType, param.tableActive);
+                 DataPanelsService.setPredDataTable(this.markers[0], this.markers[0].mapOption.variableType, param.tableActive);
              }
-            DataPanelsUtils.saveDataUserPrefs(this.markers[0]);
+            DataPanelsService.saveDataUserPrefs(this.markers[0]);
          }, 750);
          
      },
      changeGraphParam(param) {
         // En las gráficas, podemos marcar parámetros individualmente
         if (this.markers[0].mapResource.markerClass == MarkerClass.EstacionRT) {
-            DataPanelsUtils.setRTGraphParam(this.markers[0], param);
+            DataPanelsService.setRTGraphParam(this.markers[0], param);
         }
         if (this.markers[0].mapResource.markerClass == MarkerClass.PuntoMalla
          || this.markers[0].mapResource.markerClass == MarkerClass.PuntoMallaVerif) {
             this.checkDir180Param(param);
-            DataPanelsUtils.setPredGraphParam(this.markers[0], [param]);
+            DataPanelsService.setPredGraphParam(this.markers[0], [param]);
         }
         if (this.markers[0].mapResource.markerClass == MarkerClass.Ubicacion) {
             this.checkDir180Param(param);
             var extraParam = { paramEseoo: 'SeaSea', graphicActive: param.graphicActive, unidad: 'm' };
             var parameters = [param, extraParam];
-            DataPanelsUtils.setPredGraphParam(this.markers[0], parameters, null, true);
+            DataPanelsService.setPredGraphParam(this.markers[0], parameters, null, true);
         }
-        DataPanelsUtils.saveDataUserPrefs(this.markers[0]);
+        DataPanelsService.saveDataUserPrefs(this.markers[0]);
 
         if (this.bancoDatos.filter(param => param.graphicActive == true).length == 0)
             this.allGraphsActive = false;
@@ -184,7 +184,7 @@ export default {
          return this.markers[0].mareaAstronomica;
      },
      openMareaAstronomica() {
-        window.open(BANCO_DATOS_URL + "Mareas/Principal1.php?Estacion=" 
+        window.open(BANCO_DATOS_URL_OLD + "Mareas/Principal1.php?Estacion=" 
                                 + this.markers[0].mareaAstronomica.id 
                                 + "&Lenguaje=es",'targetWindow',
                                           'toolbar=no,'

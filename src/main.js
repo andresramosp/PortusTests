@@ -4,7 +4,7 @@ import App from './app.vue'
 
 import ApiService from '@/services/api.service'
 import UserPrefs from '@/services/userPrefs.service'
-import LocalePlugin from '@/services/locale.plugin'
+import LocalePlugin from '@/plugins/locale.plugin'
 import BootstrapVue from 'bootstrap-vue'
 import 'devextreme/dist/css/dx.common.css';
 import 'devextreme/dist/css/dx.light.compact.css';
@@ -78,6 +78,12 @@ async function StartApp() {
       path: '/dataTablesPredWidget', 
       props: true,
       component: () => import('@/views/dataTablesPredWidgetView.vue')
+    },
+    { 
+      name: 'dataTablesRTWidget', 
+      path: '/dataTablesRTWidget', 
+      props: true,
+      component: () => import('@/views/dataTablesRTWidgetView.vue')
     }
   ]
 

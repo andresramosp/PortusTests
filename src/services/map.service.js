@@ -8,7 +8,7 @@ import SimpleMarkerPopup from "@/components/markerPopups/simpleMarkerPopup.vue";
 import GenericPopup from "@/components/markerPopups/genericPopup.vue";
 import Vue from 'vue';
 
-const MapUtils = {
+const MapService = {
 
   tileLayerVisible(map, layer) {
     return map.getBounds().intersects(layer.options.bounds)
@@ -304,7 +304,7 @@ const MapUtils = {
  
 }
 
-export default MapUtils
+export default MapService
 
 
 

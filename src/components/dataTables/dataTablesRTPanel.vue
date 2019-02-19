@@ -10,7 +10,23 @@
       >
     </div>
 
-    <b-row v-show="!displayShareInfo">
+    <b-row v-if="!isWidget && !loading">
+      <b-col style="float: right">
+          <ShareInfoPanel
+              v-if="routeData"
+              :routeData="routeData"
+              :iFrameWidth="1040"
+              :iFrameHeight="570"
+              class="sharePanel"
+              position="bottomLeft"
+              :imgWidth="23"
+              @opening="showingShareInfo = true"
+              @closing="showingShareInfo = false"
+            />
+      </b-col>
+    </b-row>
+    
+    <b-row v-show="true">
       <span v-if="errorMsg" >{{errorMsg}}</span>
       <b-col v-if="!loading && !errorMsg" class="fadeIn">
 
@@ -34,8 +50,8 @@
 
                     <dx-paging :page-size="8"/>
                     <dx-pager
-                      :show-page-size-selector="false"
-                      :allowed-page-sizes="[15]"
+                      :show-page-size-selector="isWidget"
+                      :allowed-page-sizes="[7, 15, 30, 100, 500]"
                       :show-info="true"
                       :show-navigation-buttons="true"
                     />
@@ -56,8 +72,8 @@
 import MapState from "@/state/map.state";
 import ApiService from "@/services/api.service";
 import { DxPopup, DxToolbarItem } from "devextreme-vue/popup";
-import {DxDataGrid, DxColumn, DxPager, DxPaging } from "devextreme-vue/data-grid";
-
+import { DxDataGrid, DxColumn, DxPager, DxPaging } from "devextreme-vue/data-grid";
+import ShareInfoPanel from "@/components/shareInfoPanel.vue";
 
 export default {
   name: "DataTablesRTPanel",
@@ -67,16 +83,16 @@ export default {
     DxDataGrid,
     DxColumn,
     DxPager,
-    DxPaging
+    DxPaging,
+    ShareInfoPanel
   },
   data() {
     return {
       defaultLogo: PC.default_map_logo,
       align: PC.options_panel_align,
-      theme: "", // PC.color_theme,
       mapState: MapState,
       titulo: '',
-      displayShareInfo: false,
+      showingShareInfo: false,
       minimized: true,
       columnsNames: {},
       dataSources: [],
@@ -88,7 +104,8 @@ export default {
   },
   props: {
     marker: { type: Object, default: null },
-    parameters: { type: Array, default: [] }
+    parameters: { type: Array, default: [] },
+    isWidget: { type: Boolean, default: false }
   },
   computed: {
 
@@ -131,6 +148,19 @@ export default {
             this.titulo += ". " + "Posición del punto: " +  " Lat " + parseFloat(this.marker.lat).toFixed(2) + " N" + ": Lon " + parseFloat(this.marker.lon).toFixed(2) + " O";
           }
       }
+
+      this.routeData = this.$router.resolve({
+        path: "/dataTablesRTWidget",
+        query: {
+          locale: this.$getLocale(),
+          stationCode: this.marker.id,
+          variables: this.paramsGroups.join(),
+          isRadar: this.marker.radar,
+          latId: this.marker.latId ? this.marker.latId : '',
+          lonId: this.marker.lonId ? this.marker.lonId : ''
+        }
+      });
+
     },
     async getTableData(parametrosDataSource, dataSourceId) {
       var dt = this;

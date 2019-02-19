@@ -53,7 +53,7 @@
 
 <script>
 
-import MapUtils from "@/services/map.utils";
+import MapService from "@/services/map.service";
 import { RedType } from "@/common/enums";
 
 export default {
@@ -90,7 +90,7 @@ export default {
         if (lastPositions.length > 0) {
           var latValue = parseFloat(lastPositions.find(lp => { return lp.nombreParametro == "Latitud"; }).valor).toFixed(2);
           var lonValue = parseFloat(lastPositions.find(lp => { return lp.nombreParametro == "Longitud"; }).valor).toFixed(2);
-          var lastPositionValue = MapUtils.latLonToString(latValue, lonValue).replace(',', '');
+          var lastPositionValue = MapService.latLonToString(latValue, lonValue).replace(',', '');
         }
         tiempoReal = tiempoReal.datos.filter(tr => { return (tr.nombreParametro != "Latitud" && tr.nombreParametro != "Longitud" );});
       }

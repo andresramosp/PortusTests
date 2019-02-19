@@ -1,22 +1,23 @@
 <template>
 <div style="text-align: center" >
-   <DataTablesPredPanel :marker="location" :variable="variable" :minimized="false" @loaded="loaded" :isWidget="true" />
+   <DataTablesRTPanel v-if="parameters" :marker="station" :parameters="parameters" :isWidget="true" />
 </div>
 </template>
 
 <script>
 
-import DataTablesPredPanel from "@/components/dataTables/dataTablesPredPanel.vue";
+import ApiService from "@/services/api.service";
+import DataTablesRTPanel from "@/components/dataTables/dataTablesRTPanel.vue";
 
 export default {
-  name: "DataTablesPredWidget",
+  name: "DataTablesRTWidget",
   components: {
-    DataTablesPredPanel
+    DataTablesRTPanel
   },
   data () {
     return {
-      location: null,
-      variable: null
+      station: null,
+      parameters: null
     }    
   },
   created() {
@@ -25,13 +26,19 @@ export default {
   },
   mounted () {
    
-    this.location = { 
-        id: parseInt(this.$route.query.locationCode),
-        latitud: parseFloat(this.$route.query.latitud),
-        longitud: parseFloat(this.$route.query.longitud),
-        mapResource: { palette: this.$route.query.palette }
+    this.station = { 
+        id: parseInt(this.$route.query.stationCode),
+        radar: this.$route.query.isRadar == 'true',
+        latId: this.$route.query.latId,
+        lonId: this.$route.query.lonId
       };
-    this.variable =this.$route.query.variable;
+    this.variables = this.$route.query.variables.split(',');
+
+    ApiService.post('parametros/' + this.station.id + '?locale=' + this.$getLocale(), this.variables)
+              .then(result => {
+                this.parameters = result.data;
+              })
+
     if (this.$route.query.forPrint) {
         setTimeout(() => {
           window.focus();

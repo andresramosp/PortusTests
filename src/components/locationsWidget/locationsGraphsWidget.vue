@@ -27,7 +27,7 @@
 
 <script>
 import Vue from "vue";
-import MapUtils from "@/services/map.utils";
+import MapService from "@/services/map.service";
 import { BASE_URL_PORTUS_DATA } from "@/common/config";
 import ApiService from "@/services/api.service";
 import ShareInfoPanel from "@/components/shareInfoPanel.vue";
@@ -39,7 +39,7 @@ export default {
   },
   data() {
     return {
-      mapUtils: MapUtils,
+      mapUtils: MapService,
       displayShareInfo: false,
       loading: true,
       graphUrlList: [],

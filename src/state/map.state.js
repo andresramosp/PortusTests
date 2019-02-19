@@ -1,12 +1,11 @@
 import { MapResources } from '@/common/mapResourceManager';
 import ApiService from "@/services/api.service";
-import MapUtils from "@/services/map.utils";
-import DataPanelsUtils from "@/services/dataPanels.utils";
+import MapService from "@/services/map.service";
+import RadarsService from "@/services/radars.service";
+import DataPanelsService from "@/services/dataPanels.service";
 import { BASE_URL_PORTUS } from '@/common/config';
 import UserPrefs from '@/services/userPrefs.service'
 import Vue from 'vue';
-
-import RTDataPopup from "@/components/markerPopups/RTDataPopup.vue";
 
 const MapState = {
 
@@ -44,7 +43,7 @@ const MapState = {
     init(map) {
         this.map = map;
         this.cacheLayers();
-        DataPanelsUtils.createDataListFromUserPrefs();
+        DataPanelsService.createDataListFromUserPrefs();
         this.showStaffNotifyMessages();
     },
 
@@ -87,17 +86,17 @@ const MapState = {
             var ms = this;
             marker.on('click', function (e) {
                 if (!this.heaped) {
-                    MapUtils.markerMouseClick(ms.map, this);
+                    MapService.markerMouseClick(ms.map, this);
                 }
                 else {
                     ms.popupFixed = true;
                 }
             });
             marker.on('mouseover', function (e) {
-                MapUtils.markerMouseOver(ms.map, this);
+                MapService.markerMouseOver(ms.map, this);
             });
             marker.on('mouseout', function (e) {
-                MapUtils.markerMouseOut(ms.map, this);
+                MapService.markerMouseOut(ms.map, this);
             });
             marker.mapResource = mapResource;
             marker.mapOption = mapOption;
@@ -120,33 +119,31 @@ const MapState = {
         var vectorial = mapResource.defaultVectors ? true : false;
         var result = await ApiService.get(mapResource.resourceApi, null, source);
         result.data.forEach(res => {
-            if (true) { //} (this.preloadedTimeLineLayers.find(p => p.url == res.url) == null) {
-                var tileLayer = L.tileLayer(BASE_URL_PORTUS + res.url + '{d}{h}/' + (vectorial ? res.urlVec : res.urlIso) + '//{z}/{x}/{y}.png', {
-                    tms: true,
-                    minZoom: res.zoomMin,
-                    maxZoom: res.zoomMax,
-                    bounds: L.latLngBounds(L.latLng(res.limN, res.limW), L.latLng(res.limS, res.limE)),
-                    numDays: res.numGap,
-                    strLastate: res.strLastate,
-                    hoursStep: res.numStep,
-                    predictionScaleImg: res.urlPaleta,
-                    logosImgs: res.urlLogos ? res.urlLogos.split(';') : []
-                });
-                var portusTimeLayer = L.timeDimension.layer.tileLayer.timeLine(
-                    tileLayer,
-                    {}
-                );
-                Object.assign(portusTimeLayer, res);
-                tileLayer.mapResource = mapResource;
-                portusTimeLayer.mapResource = mapResource;
-                portusTimeLayer.mapOption = mapOption;
-                portusTimeLayer.visible = this.initialVisibilityValue(portusTimeLayer);
-                //portusTimeLayer.hasVectors = res.urlVec == 'vec';
-                portusTimeLayer.id = res.url;
-                this.preloadedTimeLineLayers.push(portusTimeLayer);
-                if (mapResource.paintBounds) {
-                    MapUtils.createBounds(this.map, portusTimeLayer)
-                }
+            var tileLayer = L.tileLayer(BASE_URL_PORTUS + res.url + '{d}{h}/' + (vectorial ? res.urlVec : res.urlIso) + '//{z}/{x}/{y}.png', {
+                tms: true,
+                minZoom: res.zoomMin,
+                maxZoom: res.zoomMax,
+                bounds: L.latLngBounds(L.latLng(res.limN, res.limW), L.latLng(res.limS, res.limE)),
+                numDays: res.numGap,
+                strLastate: res.strLastate,
+                hoursStep: res.numStep,
+                predictionScaleImg: res.urlPaleta,
+                logosImgs: res.urlLogos ? res.urlLogos.split(';') : []
+            });
+            var portusTimeLayer = L.timeDimension.layer.tileLayer.timeLine(
+                tileLayer,
+                {}
+            );
+            Object.assign(portusTimeLayer, res);
+            tileLayer.mapResource = mapResource;
+            portusTimeLayer.mapResource = mapResource;
+            portusTimeLayer.mapOption = mapOption;
+            portusTimeLayer.visible = this.initialVisibilityValue(portusTimeLayer);
+            //portusTimeLayer.hasVectors = res.urlVec == 'vec';
+            portusTimeLayer.id = res.url;
+            this.preloadedTimeLineLayers.push(portusTimeLayer);
+            if (mapResource.paintBounds) {
+                MapService.createBounds(this.map, portusTimeLayer)
             }
         })
         if (mapResource.onAdded) {
@@ -205,7 +202,7 @@ const MapState = {
         this.preloadedMarkers.forEach(function (marker) {
             if (marker.visible 
             && (!marker.mapResource.filter || marker.mapResource.filter(marker))
-            && (marker.mapResource.showAll || (MapUtils.markerVisible(ms.map, marker)))) {
+            && (marker.mapResource.showAll || (MapService.markerVisible(ms.map, marker)))) {
                 marker.addTo(ms.map);
             }
             else {
@@ -236,30 +233,30 @@ const MapState = {
                     ms.removeMapLogo(url);
                 })
             }
-            if (MapUtils.tileLayerVisible(ms.map, preLayer._baseLayer) && preLayer.visible) {
+            if (MapService.tileLayerVisible(ms.map, preLayer._baseLayer) && preLayer.visible) {
                 ms.currentTimeLineLayer = preLayer;
                 ms.map.options.timeDimensionOptions.period = "PT" + preLayer._baseLayer.options.hoursStep + "H";
                 if (ms.playerDateManualMode) {
-                    ms.maxPredictionDate = MapUtils.convertYMDHToDate(preLayer._baseLayer.options.strLastate);
+                    ms.maxPredictionDate = MapService.convertYMDHToDate(preLayer._baseLayer.options.strLastate);
                     if (ms.playerDateRangeToValue > ms.maxPredictionDate) {
                         ms.playerDateRangeToValue = ms.maxPredictionDate;
                         var notifyMsg = { 
                             id: 'errorFechasPlayer', 
-                            message: "No hay mapas en el intervalo de fechas seleccionado. Mostrando predicción: " + MapUtils.getGMTDateString(ms.playerDateRangeFromValue) + " - " + MapUtils.getGMTDateString(ms.playerDateRangeToValue) + ' (GMT)',
+                            message: "No hay mapas en el intervalo de fechas seleccionado. Mostrando predicción: " + MapService.getGMTDateString(ms.playerDateRangeFromValue) + " - " + MapService.getGMTDateString(ms.playerDateRangeToValue) + ' (GMT)',
                             title: "Aviso",
                             duration: 10000
                         };
                         ms.addNotifyMessage(notifyMsg);
                         ms.playerDateManualMode = false;
                     }
-                    var hourPeriod = MapUtils.convertYMDHToDate(preLayer._baseLayer.options.strLastate).getHours();
+                    var hourPeriod = MapService.convertYMDHToDate(preLayer._baseLayer.options.strLastate).getHours();
                     ms.playerDateRangeFromValue.setUTCHours(hourPeriod);
                     ms.playerDateRangeToValue.setUTCHours(hourPeriod);
                     ms.map.options.timeDimensionOptions.timeInterval = ms.playerDateRangeFromValue.toISOString() + '/' + ms.playerDateRangeToValue.toISOString();
                 }
                 else {
                     var predHours = (preLayer._baseLayer.options.numDays) * 24; 
-                    ms.maxPredictionDate = MapUtils.convertYMDHToDateStr(preLayer._baseLayer.options.strLastate);
+                    ms.maxPredictionDate = MapService.convertYMDHToDateStr(preLayer._baseLayer.options.strLastate);
                     ms.map.options.timeDimensionOptions.timeInterval = 'PT' + predHours + 'H/' + ms.maxPredictionDate;
                 }
                 ms.map.timeDimension.initialize(ms.map.options.timeDimensionOptions);
@@ -277,14 +274,14 @@ const MapState = {
                     ms.addMapLogo(url);
                 })
                 if (preLayer.mapResource.isRadar)
-                    ms.getRadarPoints(preLayer);
+                    RadarsService.getRadarPoints(preLayer);
 
                 if (preLayer.boundRectangle)
                     preLayer.boundRectangle.remove();
             }
             else {
                 if (preLayer.mapResource.isRadar && (ms.currentRadar && ms.currentRadar.dominio == preLayer.idDominio)) {
-                    ms.removeRadarPoints()
+                    RadarsService.removeRadarPoints()
                 }
                 if (preLayer.boundRectangle)
                     preLayer.boundRectangle.addTo(ms.map);
@@ -303,7 +300,7 @@ const MapState = {
             if (!showingError) {
                 var notifyMsg = { 
                     id: 'fechasPlayer', 
-                    message: "Mostrando predicción: " + MapUtils.getGMTDateString(this.playerDateRangeFromValue) + " - " + MapUtils.getGMTDateString(this.playerDateRangeToValue) + ' (GMT)',
+                    message: "Mostrando predicción: " + MapService.getGMTDateString(this.playerDateRangeFromValue) + " - " + MapService.getGMTDateString(this.playerDateRangeToValue) + ' (GMT)',
                     title: this.currentTimeLineLayer.mapOption ? Vue.$t(this.currentTimeLineLayer.mapOption.name) : '',
                     duration: 7000
                 };
@@ -374,7 +371,7 @@ const MapState = {
                     })
                 }
                 if (layer.mapResource.isRadar && (ms.currentRadar && ms.currentRadar.dominio == layer.idDominio)) {
-                    ms.removeRadarPoints();
+                    RadarsService.removeRadarPoints();
                 }
             }
         });
@@ -593,154 +590,6 @@ const MapState = {
             });
         }
 
-    },
-
-    // TODO: llevarse funcionalidad a radar.service.js
-
-    async getRadarPoints(layer) {
-
-        if (!this.currentRadar || this.currentRadar.dominio != layer.idDominio) {
-
-            var requestRadar = await ApiService.get('radares/' + layer.idDominio, { locale: Vue.$getLocale() });
-            this.currentRadar = requestRadar.data;
-
-            // En principio no haría falta traerse todos los puntos-radar desde BD, pues
-            // podríamos crear un marker usando las lat/lon calculadas. Lo mantengo porque igualmente
-            // hemos de traer esos puntos por si queremos mostrar la malla auxiliar, y porque así se
-            // garantiza que el cálculo coincide con un punto-radar existente en BD.
-            this.addLoading('puntosRadar');
-            var requestPoints = await ApiService.get('puntosRadar/' + layer.idDominio);
-            this.radarPoints = requestPoints.data;
-
-            var ms = this;
-    
-            this.map.on("mousemove", function(ev) {
-                var mouseLatLng = L.latLng(ev.latlng.lat, ev.latlng.lng);
-                var closestRP = ms.calculateClosestRadarPoint(mouseLatLng, ms.currentRadar)
-                if (closestRP) {
-                    ms.addRadarPointMarker(closestRP, layer);
-                }
-            });
-            
-            this.addRadarPointsLayer(this.radarPoints, layer);
-            this.removeLoading('puntosRadar');
-        }
-    },
-
-    removeRadarPoints() {
-        if (this.radarPointsLayer)
-            this.map.removeLayer(this.radarPointsLayer);
-        if (this.radarPointMarker) 
-            this.radarPointMarker.remove();
-        this.map.off("mousemove");
-        this.currentRadar = null;
-        this.showingRadars = false;
-        this.preventMoveend = false;
-    },
-
-    async getRadarLastData(radar, lat, lon, date, marker) {
-        this.addLoading('radarData');
-        var lastData = await ApiService
-                            .get('lastData/radar/' 
-                            + radar.id
-                            + '/' + lat 
-                            + '/' + lon + '/' 
-                            + date + '?locale=' + Vue.$getLocale());
-        lastData.data.datos.push({ nombreParametro: "Longitud", valor: marker.getLatLng().lng, factor: 1, unidad: 'º'  });
-        lastData.data.datos.push({ nombreParametro: "Latitud", valor: marker.getLatLng().lat, factor: 1, unidad: 'º'  });
-        marker.lastDataComponent  = new Vue({ ...RTDataPopup, propsData: { marker: marker, data: lastData.data, radarPoint: true } }).$mount()
-        marker.bindPopup(marker.lastDataComponent.$el, { maxWidth: 560 });
-        marker.openPopup();
-        this.removeLoading('radarData');
-    },
-
-    calculateClosestRadarPoint(mouseLatLng, radar) {
-        var latId = (mouseLatLng.lat - radar.latitudMalla) / radar.stepLat;
-        var lonId = (mouseLatLng.lng - radar.longitudMalla) / radar.stepLon;
-        return this.radarPoints.find(rp => rp.latitud == Math.round(latId) && rp.longitud == Math.round(lonId));
-    },
-
-    addRadarPointMarker(rp, layer) {
-        if (!this.radarPointMarker || (this.radarPointMarker.latId != rp.latitud || this.radarPointMarker.lonId != rp.longitud)) {
-            var lat = this.currentRadar.latitudMalla + (rp.latitud * this.currentRadar.stepLat);
-            var lon = this.currentRadar.longitudMalla + (rp.longitud * this.currentRadar.stepLon);
-            var circleMarker = L.circleMarker([lat, lon], {
-                radius: 7,
-                stroke: false,
-                fillOpacity: 1,
-                opacity: 0,
-                color: '#bfd0ef' //'#3388ff'
-            });
-            circleMarker.latId = rp.latitud;
-            circleMarker.lonId = rp.longitud;
-            circleMarker.nombre = this.currentRadar.nombre;
-            circleMarker.mapResource = layer.mapResource;
-    
-            // El panel de información lo abrimos como si hiciéramos click en la estación 
-            // radar (que está invisible en el mapa), pero a dicho marker le asociamos
-            // el latlon del puntoRadar, de forma que, para el banco de datos, se añada
-            // dicha información en la llamada a la Api
-            var ms = this;
-            circleMarker.on('click', async function (e) {
-                var markerRadar = ms.preloadedMarkers.find(m => m.id == ms.currentRadar.id);
-                markerRadar.latId = rp.latitud;
-                markerRadar.lonId = rp.longitud;
-                markerRadar.lat = lat;
-                markerRadar.lon = lon;
-                ms.markersSelected = [markerRadar];
-            });
-            circleMarker.on('mouseover', function (e) {
-                circleMarker.timeOut = setTimeout(() => {
-                    ms.preventMoveend = true;
-                    ms.getRadarLastData(ms.currentRadar, rp.latitud, rp.longitud, new Date(ms.currentPlayerTime), circleMarker);
-                }, 250)
-            });
-            circleMarker.on('mouseout', function (e) {
-                clearTimeout(circleMarker.timeOut);
-                setTimeout(() => {
-                    ms.preventMoveend = false;
-                }, 500);
-            });
-    
-            if (this.radarPointMarker) 
-                this.radarPointMarker.remove();
-
-            circleMarker.addTo(this.map);
-            this.radarPointMarker = circleMarker;
-        }
-        
-    },
-
-    // De entrada se añaden invisibles
-    addRadarPointsLayer(radarPoints, layer) {
-        if (this.radarPointsLayer)
-            this.map.removeLayer(this.radarPointsLayer);
-
-        this.radarPointsLayer = L.layerGroup();
-        this.radarPointsLayer.mapResource = layer.mapResource;
-
-        radarPoints.forEach(rp => {
-            var lat = this.currentRadar.latitudMalla + (rp.latitud * this.currentRadar.stepLat);
-            var lon = this.currentRadar.longitudMalla + (rp.longitud * this.currentRadar.stepLon);
-            var circleMarker = L.circleMarker([lat, lon], {
-                radius: 5,
-                stroke: false,
-                fillOpacity: 0,
-                opacity: 0,
-                color: '#3388ff'
-            });
-           
-            this.radarPointsLayer.addLayer(circleMarker);
-        })
-
-        this.radarPointsLayer.addTo(this.map);
-    },
-
-    setRadarPointsLayerVisibility(visible) {
-        this.radarPointsLayer.eachLayer(l => {
-            l.setStyle({ fillOpacity: visible ? 0.25 : 0 });
-        })
-        this.showingRadars = visible;
     },
     
 };

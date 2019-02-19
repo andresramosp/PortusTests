@@ -141,7 +141,7 @@
 <script>
 
 import Vue from 'vue'
-import MapUtils from "@/services/map.utils";
+import MapService from "@/services/map.service";
 import ShareInfoPanel from "@/components/shareInfoPanel.vue";
 import InfoRTPanel from "@/components/locationsWidget/infoRTPanel.vue";
 import { SIMO_URL } from '@/common/config';
@@ -172,7 +172,7 @@ export default {
       vientoDirImg: null,
       loading: true,
       vientoRotation: '',
-      mapUtils: MapUtils,
+      mapUtils: MapService,
       interval: null,
       routeData: null,
       displayShareInfo: false,
@@ -324,7 +324,7 @@ export default {
     border-radius: 5px;
     font-size: 15px;
     background: #6683b3;
-    padding: 4px 6px;
+    padding: 4px 5px;
     margin-left: 118px;
 }
 

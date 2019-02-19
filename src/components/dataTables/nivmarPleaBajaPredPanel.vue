@@ -1,17 +1,17 @@
 <template>
   <div class="row allCenter" >
     <div v-for="day in days" :key="day.id" class="col-md-3" style="max-width: 18% !important;" >
-        <div style="margin-bottom: 5px; font-weight: bold; font-size: 13.5px">{{ day.id }}</div>
+        <div style="margin-bottom: 5px; font-size: 13.5px">{{ day.id }}</div>
         <b-table v-if="DBSource" striped hover :items="day.data" :fields="DBFields" :small="true" :fixed="true" :outlined="true" thead-class="hiddenHeader" >
           <template slot="indicador" slot-scope="data">
-              <a :style="'font-weight: bold; color: ' + (data.value == 'Bajamar' ? 'green' : 'red' ) +''">
+              <a :style="'color: ' + (data.value == 'Bajamar' ? 'green' : 'red' ) +''">
                 {{data.value}}
               </a>
           </template>
         </b-table>
          <b-table v-else striped hover :items="day.data" :fields="calculatedFields" :small="true" :fixed="true" :outlined="true" thead-class="hiddenHeader" >
              <template slot="indicador" slot-scope="data">
-              <a :style="'font-weight: bold; color: ' + (data.value == 'Min' ? 'green' : 'red' ) +''">
+              <a :style="'color: ' + (data.value == 'Min' ? 'green' : 'red' ) +''">
                 {{data.value}}
               </a>
           </template>
@@ -126,7 +126,7 @@ export default {
       var result = null
       var nivelReg = dayData.data.find(r => r.nombreParametro.toLowerCase().indexOf('nivel') != -1);
       for (var h in nivelReg) {
-        if (!isNaN(parseFloat(nivelReg[h]))) {
+        if (h.indexOf('_') == -1 && !isNaN(parseFloat(nivelReg[h]))) {
           if (!result || ((extreme == 'min' && parseFloat(nivelReg[h]) < result.nivel) || (extreme == 'max' && parseFloat(nivelReg[h]) > result.nivel))) {
             result = { hora: h, nivel: parseFloat(nivelReg[h]) };
           }

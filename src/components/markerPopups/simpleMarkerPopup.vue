@@ -16,7 +16,7 @@
 <script>
 
 import { MarkerClass } from "@/common/enums";
-import MapUtils from "@/services/map.utils";
+import MapService from "@/services/map.service";
 import MapState from "@/state/map.state";
 
 export default {
@@ -37,7 +37,7 @@ export default {
           value = this.$t("{tipoUbicacion" + this.marker.tipoUbicacion+"}") + ": " + this.marker.nombre;
           break;
         case MarkerClass.PuntoMalla:
-          value =  "Pred. " + this.$t(this.marker.mapOption.name) + ": " + MapUtils.getMarkerName(this.marker);
+          value =  "Pred. " + this.$t(this.marker.mapOption.name) + ": " + MapService.getMarkerName(this.marker);
           break;
         case MarkerClass.PuntoMallaVerif:
           value = this.$t("{verificacionInfo}") + ": " + this.marker.nombre;

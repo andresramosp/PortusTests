@@ -108,7 +108,7 @@
 
 import MapState from "@/state/map.state";
 import ApiService from "@/services/api.service";
-import MapUtils from "@/services/map.utils";
+import MapService from "@/services/map.service";
 import { BASE_URL_PORTUS } from "@/common/config";
 import { DxPopup } from "devextreme-vue/popup";
 import DxButton from "devextreme-vue/button";
@@ -178,7 +178,7 @@ export default {
         var opt = {
           dayName: date.toLocaleDateString(),
           name: ("0" + date.getHours()).slice(-2) + ":00",
-          value: MapUtils.convertDateToYMDH(date),
+          value: MapService.convertDateToYMDH(date),
           active: false
         };
         this.datesAvailables.push(opt);

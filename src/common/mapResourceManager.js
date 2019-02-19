@@ -162,7 +162,8 @@ export const MapResources = [
     markerClass: MarkerClass.PuntoMalla,
     minZoom: 0,
     //groupLayersBy: { field: 'malla', label: 'Malla' },
-    icon: 'punto-malla-cirana.png'
+    icon: 'punto-malla-cirana.png',
+    palette: "cirana"
   },
   {
     id: 'pred-markers-wana-atl',
@@ -171,7 +172,8 @@ export const MapResources = [
     resourceApi: 'puntosMalla/pred/Wana/atl',
     markerClass: MarkerClass.PuntoMalla,
     minZoom: 0,
-    icon: 'punto-malla-wana.png'
+    icon: 'punto-malla-wana.png',
+    palette:  "wave_atl"
   },
   {
     id: 'pred-markers-wana-atl-verif',
@@ -181,7 +183,8 @@ export const MapResources = [
     markerClass: MarkerClass.PuntoMallaVerif,
     unchecked: true,
     minZoom: 0,
-    icon: 'punto-malla-verif.png' 
+    icon: 'punto-malla-verif.png',
+    palette: "wave_atl"
   },
   {
     id: 'pred-markers-wana-med',
@@ -191,7 +194,8 @@ export const MapResources = [
     markerClass: MarkerClass.PuntoMalla,
     //groupLayersBy: { field: 'malla', label: 'Malla' },
     minZoom: 0,
-    icon: 'punto-malla-wana.png'
+    icon: 'punto-malla-wana.png',
+    palette: "wave_med"
   },
   {
     id: 'pred-markers-wana-med-verif',
@@ -201,7 +205,8 @@ export const MapResources = [
     markerClass: MarkerClass.PuntoMallaVerif,
     unchecked: true,
     minZoom: 0,
-    icon: 'punto-malla-verif.png'
+    icon: 'punto-malla-verif.png',
+    palette: "wave_med"
   },
   {
     id: 'pred-markers-atmosfera',
@@ -210,7 +215,8 @@ export const MapResources = [
     resourceApi: 'puntosMalla/pred/Atmosfera',
     markerClass: MarkerClass.PuntoMalla,
     minZoom: 0,
-    icon: 'punto-malla-atmosfera.png'
+    icon: 'punto-malla-atmosfera.png',
+    palette: "atmosfera"
   },
   {
     id: 'pred-markers-atmosfera-verif',
@@ -220,7 +226,8 @@ export const MapResources = [
     markerClass: MarkerClass.PuntoMallaVerif,
     unchecked: true,
     minZoom: 0,
-    icon: 'punto-malla-verif.png'
+    icon: 'punto-malla-verif.png',
+    palette: "atmosfera"
   },
   {
     id: 'tile-layer-prueba',

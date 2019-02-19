@@ -64,9 +64,9 @@
   color: transparent;
 }
 
-.dx-texteditor-buttons-container {
+/* .dx-texteditor-buttons-container {
   right: -5px !important;
-}
+} */
 
 .dx-dropdowneditor.dx-state-active .dx-dropdowneditor-icon {
   background-color: transparent !important;

@@ -67,7 +67,7 @@
 
 import MapState from "@/state/map.state";
 import ApiService from "@/services/api.service";
-import DataPanelsUtils from "@/services/dataPanels.utils";
+import DataPanelsService from "@/services/dataPanels.service";
 import { BANCO_DATOS_URL, BASE_URL_PORTUS, PUERTOS_URL } from '@/common/config';
 import { RedType, MarkerClass } from "@/common/enums";
 import DxButton from "devextreme-vue/button";
@@ -159,7 +159,7 @@ export default {
           this.openLink(url);
       },
       productoOptionChanged(productoOption) {
-         DataPanelsUtils.setExternalGraph(this.markers[0], productoOption, productoOption.active);
+         DataPanelsService.setExternalGraph(this.markers[0], productoOption, productoOption.active);
       },
       getInformes() {
           var variables = this.markers.map(m => m.mapOption.variableType)

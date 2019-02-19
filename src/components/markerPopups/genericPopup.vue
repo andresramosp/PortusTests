@@ -18,7 +18,7 @@
 <script>
 
 import { MarkerClass } from "@/common/enums";
-import MapUtils from "@/services/map.utils";
+import MapService from "@/services/map.service";
 import MapState from "@/state/map.state";
 
 export default {

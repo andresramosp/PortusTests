@@ -1,5 +1,5 @@
 import MapState from "@/state/map.state";
-import MapUtils from "@/services/map.utils";
+import MapService from "@/services/map.service";
 import { MarkerClass } from "@/common/enums";
 import Vue from 'vue';
 import { BASE_URL_PORTUS_DATA, BANCO_DATOS_URL } from '@/common/config';
@@ -8,7 +8,7 @@ import { BASE_URL_PORTUS_DATA, BANCO_DATOS_URL } from '@/common/config';
 const GraphicHeight =  262;
 const GraphicHistHeight = 380;
 
-const DataPanelsUtils = {
+const DataPanelsService = {
 
     addRTDataTable(marker, parameters) {
         var markerTable;
@@ -25,7 +25,7 @@ const DataPanelsUtils = {
         else {
             MapState.dataObjectsList.unshift(
                 { 
-                    name: 'Tiempo Real: ' + MapUtils.getMarkerName(marker) + " " + (marker.radar ? ("(" + MapUtils.latLonToString(marker.latId, marker.lonId) + ")") : ""),
+                    name: 'Tiempo Real: ' + MapService.getMarkerName(marker) + " " + (marker.radar ? ("(" + MapService.latLonToString(marker.latId, marker.lonId) + ")") : ""),
                     type: 'RTDataTable', 
                     marker: marker, 
                     latId: marker.radar ? marker.latId : null,
@@ -43,7 +43,7 @@ const DataPanelsUtils = {
         if (!predTable) {
             MapState.dataObjectsList.unshift(
                 { 
-                    name: 'Predicción ' + Vue.$t('{' + variable + '}') + ": " +  MapUtils.getMarkerName(location),
+                    name: 'Predicción ' + Vue.$t('{' + variable + '}') + ": " +  MapService.getMarkerName(location),
                     type: 'PredDataTable', 
                     marker: location, 
                     variable: variable,
@@ -158,7 +158,7 @@ const DataPanelsUtils = {
                 + "&locale=" + Vue.$getLocale();
             MapState.dataObjectsList.unshift(
                 { 
-                    name: 'Gráfica Predicción: ' + MapUtils.getMarkerName(modelPoint), //(modelPoint.nombre ? modelPoint.nombre : " Lat " + modelPoint.latitud.toFixed(2) + " N" + ": Lon " + modelPoint.longitud.toFixed(2) + " O"),
+                    name: 'Gráfica Predicción: ' + MapService.getMarkerName(modelPoint), //(modelPoint.nombre ? modelPoint.nombre : " Lat " + modelPoint.latitud.toFixed(2) + " N" + ": Lon " + modelPoint.longitud.toFixed(2) + " O"),
                     type: 'Graphic', 
                     parameters: parameters,
                     marker: modelPoint,
@@ -177,7 +177,7 @@ const DataPanelsUtils = {
             MapState.dataObjectsList.unshift(
                 { 
                     marker: marker,
-                    name: producto.nombre + ": " +  MapUtils.getMarkerName(marker),
+                    name: producto.nombre + ": " +  MapService.getMarkerName(marker),
                     producto: producto,
                     type: 'GraphicHist', 
                     // Arreglo para Series Temporales mientras sigan en Portus antiguo
@@ -194,7 +194,6 @@ const DataPanelsUtils = {
 
     generateDataPanelId() {
         var id = MapState.dataObjectsList.length > 0 ? (Math.max.apply(null, MapState.dataObjectsList.map(d => d.id)) + 1) : 0;
-        console.log(id);
         return  id;
     },
 
@@ -286,7 +285,7 @@ const DataPanelsUtils = {
                 cachedBancoDatos[markerId] = bancoDatosMarker;
                 localStorage.setItem('banco_datos', JSON.stringify(cachedBancoDatos));
                 if(!localStorage.getItem('marker-' + markerId)) {
-                    var markerProperties = ['id', 'latId', 'lonId', 'lat', 'lon', 'latitud', 'longitud', 'radar', 'nombre', 'mapResource', 'mapOption', 'markerClass', 'variableType'];
+                    var markerProperties = ['id', 'latId', 'lonId', 'lat', 'lon', 'latitud', 'longitud', 'radar', 'nombre', 'mapResource', 'palette', 'mapOption', 'markerClass', 'variableType'];
                     localStorage.setItem('marker-' + markerId, JSON.stringify(marker, markerProperties));
                 }
             }
@@ -300,4 +299,4 @@ const DataPanelsUtils = {
 
 }
 
-export default DataPanelsUtils;
+export default DataPanelsService;

@@ -22,7 +22,7 @@
          <b-col cols="2">
       
             <ShareInfoPanel
-              v-if="routeData"
+              v-if="routeData && !isWidget"
               :routeData="routeData"
               :iFrameWidth="1040"
               :iFrameHeight="570"
@@ -57,7 +57,6 @@
 
           <b-tabs v-if="marker && days.length > 0" v-model="tabIndex" @input="onShowTab">
             <b-tab
-              
               v-for="(dataSource, index) in days"
               :key="dataSource.id"
               :title="$t('{'+ dataSource.id +'}')"
@@ -70,6 +69,8 @@
                  :ref="'dataGrid' + index"
                 :data-source="dataSource.data"
                 :allow-column-reordering="false"
+                :allow-sorting="false"
+                :allow-column-resizing="false"
                 :row-alternation-enabled="true"
                 :show-borders="false"
                 :showColumnLines="false"
@@ -98,8 +99,9 @@
 
 <script>
 import MapState from "@/state/map.state";
-import MapUtils from "@/services/map.utils";
+import MapService from "@/services/map.service";
 import ApiService from "@/services/api.service";
+import PaletteService from "@/services/palette.service"
 import { VariableType, UbicacionType, MarkerClass } from "@/common/enums";
 import { DxPopup, DxToolbarItem } from "devextreme-vue/popup";
 import { DxDataGrid, DxColumn, DxPager, DxPaging, DxGrouping, DxGroupPanel } from "devextreme-vue/data-grid";
@@ -127,7 +129,7 @@ export default {
       align: PC.options_panel_align,
       theme: "", // PC.color_theme,
       mapState: MapState,
-      mapUtils: MapUtils,
+      mapUtils: MapService,
       //titulo: '',
       nivelMarRef: null,
       displayShareInfo: false,
@@ -145,7 +147,8 @@ export default {
   },
   props: {
     marker: { type: Object, default: null },
-    variable: { type: String, default: null }
+    variable: { type: String, default: null },
+    isWidget: { type: Boolean, default: false }
   },
   computed: {
     loading() {
@@ -154,11 +157,11 @@ export default {
     titulo() {
       if (this.variable == VariableType.SEA_LEVEL) {
           return this.$t('{tablePredTitle_' + this.variable + '}') 
-          + " " + MapUtils.getMarkerName(this.marker)
+          + " " + MapService.getMarkerName(this.marker)
           + ' (Ref: ' +  (this.nivelMarRef == 0 ? this.$t('{nivelMedio}') : this.$t('{ceroRedmar}')) + ')'
       }
       else {
-        return this.$t('{tablePredTitle_' + this.variable + '}') + " " + MapUtils.getMarkerName(this.marker);
+        return this.$t('{tablePredTitle_' + this.variable + '}') + " " + MapService.getMarkerName(this.marker);
       }
         
     }
@@ -192,7 +195,8 @@ export default {
               locationCode: this.marker.id,
               latitud: this.marker.latitud,
               longitud: this.marker.longitud,
-              variable: this.variable
+              variable: this.variable,
+              palette: this.marker.mapResource.palette
             }
           });
 
@@ -221,7 +225,7 @@ export default {
               var dayData = { 
                 _date: day,
                 id: new Date(day).toLocaleDateString(this.$getLocale() == 'es' ? 'es-ES' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
-                data: this.formatData(result.data.filter(d => new Date(d.fecha).toISOString().split('T')[0] == day))
+                data: this.formatData(result.data.filter(d => new Date(d.fecha).toISOString().split('T')[0] == day), day)
               }
               if (Object.keys(dayData.data[0]).length > this.minDataDay)
                 this.days.push(dayData);
@@ -238,7 +242,7 @@ export default {
       }
      
     },
-    formatData(data) {
+    formatData(data, day) {
       var result = [];
       data.forEach(fechaData => {
           fechaData.datos.forEach(paramData => {
@@ -247,14 +251,14 @@ export default {
               reg = { 
                 id: paramData.variableParametro + '-' + paramData.nombreParametro, 
                 variableParametro: paramData.variableParametro ? paramData.variableParametro.toUpperCase() : null, 
-                nombreParametro: paramData.nombreParametro 
+                nombreParametro: paramData.nombreParametro,
+                _day: day
               }
               result.push(reg);
             }
             var fecha = new Date(fechaData.fecha)
             var hora = fecha.toISOString().split('T')[1].substr(0,5)
-            var decimals = paramData.valor < 999 ? (this.variable == VariableType.SEA_LEVEL ? 2 : 1) : 0;
-            reg[hora] = paramData.valor ? parseFloat(paramData.valor).toFixed(decimals) : null; 
+            reg[hora] = paramData.valor ? parseFloat(paramData.valor) : null; 
           })
         }
       )
@@ -263,6 +267,7 @@ export default {
     customizeColumns(columns) {
       columns.forEach(col => {
         col.cssClass = "colHeader";
+        col.allowSorting = false;
         if (col.dataField == 'nombreParametro') {
           col.caption = " ";
           col.width = this.variable == VariableType.SEA_LEVEL ? 80 : 60;
@@ -270,14 +275,14 @@ export default {
         }
         else if (col.dataField == "variableParametro") {
           col.caption = " ";
-          col.width = this.variable == VariableType.SEA_LEVEL ? 0 : 100;
+          col.width = this.variable == VariableType.SEA_LEVEL ? 0 : 115;
           col.visibleIndex = 0;
         }
-       else if (col.dataField == "id") {
+       else if (col.dataField == "id" || col.dataField == "_day") {
           col.visible = false;
         }
         else {
-           col.width = this.variable == VariableType.SEA_LEVEL ? 45 : 34;
+           col.width = this.variable == VariableType.SEA_LEVEL ? 45 : 34;;
         }
       });
       return columns;
@@ -287,26 +292,33 @@ export default {
         ev.cellElement.style.background = "#7fb7e7f5";
         ev.cellElement.style.color = "white";
         ev.cellElement.style.fontWeight = 'bold';
-        if (this.repeatedVarGroup && ev.value == this.repeatedVarGroup.value) {
-          //ev.cellElement.remove();
+        if (this.repeatedVarGroup && ev.value == this.repeatedVarGroup.value && ev.data._day == this.repeatedVarGroup.data._day) {
           ev.cellElement.innerHTML = "";
-          //this.repeatedVarGroup.cellElement.rowSpan = "2";
         }
         this.repeatedVarGroup = ev;
       }
       else if (ev.column.dataField == "nombreParametro") {
         ev.cellElement.style.background = "#D5D5D5";
       }
-      else if (ev.rowType == "data") { // dato
+      else if (ev.rowType == "data") { 
         ev.cellElement.style.textAlign = "center";
         if (ev.data.nombreParametro == "Dir") {
-          ev.cellElement.innerHTML = ev.value ? this.getDirArrow(parseFloat(ev.value), 0.321) : '';
+          var dayData = this.days.find(d => d._date == ev.data._day);
+          var rowSpeed = dayData.data.find(d => d.variableParametro == ev.data.variableParametro 
+                                            && (d.nombreParametro == "Vc(m/s)" || d.nombreParametro == "Vv(m/s)" || d.nombreParametro == "Hs(m)"));
+          var speedValue = rowSpeed[ev.column.dataField];
+          ev.cellElement.innerHTML = ev.value ? this.getDirArrow(parseFloat(ev.value), parseFloat(speedValue)) : '';
+        }
+        else {
+          var decimals = ev.value < 999 ? (this.variable == VariableType.SEA_LEVEL ? 2 : 1) : 0;
+          ev.cellElement.innerHTML = ev.value ? ev.value.toFixed(decimals) : '';
         }
       }
     },
     getDirArrow(dir, speed) {
+      var color = PaletteService.getColor(this.marker.mapResource.palette, speed);
       return "<svg version='1.1' baseProfile='full' xmlns='http://www.w3.org/2000/svg' width='15' height='15' style='margin:0px; padding:0px'>"
-      + "<path transform='scale(0.15,0.15) rotate(" + dir + " 50 50)' stroke-width='3' stroke='#000000' fill='#3FC0FF' d='m75,50 l-25,-45 l-25,45  l13,0 l0,45 l25,0 l0,-45 l13,0z'></path></svg>"
+      + "<path transform='scale(0.15,0.15) rotate(" + dir + " 50 50)' stroke-width='3' stroke='#000000' fill='#" + color + "' d='m75,50 l-25,-45 l-25,45  l13,0 l0,45 l25,0 l0,-45 l13,0z'></path></svg>"
     },
     cerrar() {
       this.days = [];
@@ -332,10 +344,15 @@ export default {
       // w.document.write(printContents);
       // w.print();
 
-      var printWindow = window.open(this.routeData.href + '&forPrint=true', "_blank");
+      if (!this.isWidget) {
+        var printWindow = window.open(this.routeData.href + '&forPrint=true', "_blank");
       // printWindow.document.close(); 
       // printWindow.focus();
       // printWindow.print(); 
+      }
+      else {
+        window.print();
+      }
     },
 
     hasReport() {

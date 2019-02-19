@@ -66,6 +66,7 @@
 <script>
 
 import MapState from "@/state/map.state";
+import RadarsService from "@/services/radars.service";
 import { DxDateBox } from 'devextreme-vue';
 import ShareInfoPanel from "@/components/shareInfoPanel.vue";
 
@@ -128,7 +129,7 @@ export default {
     },
 
     toggleRadars: function() {
-      this.mapState.setRadarPointsLayerVisibility(!this.mapState.showingRadars);
+      RadarsService.setRadarPointsLayerVisibility(!this.mapState.showingRadars);
     },
 
     changeDateFromValue: function(ev) {

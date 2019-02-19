@@ -21,7 +21,7 @@
       slot-scope="title"
       class="popupHeader"
     >
-      Titulo
+      Información
 
        <img
         :src='require("@/assets/icons/x.png")'

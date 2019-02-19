@@ -24,7 +24,7 @@
 <script>
 
 import MapState from "@/state/map.state";
-import DataPanelsUtils from "@/services/dataPanels.utils";
+import DataPanelsService from "@/services/dataPanels.service";
 import DataTablesRTPanel from "@/components/dataTables/dataTablesRTPanel.vue";
 import DataTablesPredPanel from "@/components/dataTables/dataTablesPredPanel.vue";
 import draggable from "vuedraggable";
@@ -68,8 +68,8 @@ export default {
   },
   methods: {
     cerrar(dataPanel) {
-      DataPanelsUtils.removeDataPanel(dataPanel);
-      DataPanelsUtils.saveDataUserPrefs(dataPanel.marker);
+      DataPanelsService.removeDataPanel(dataPanel);
+      DataPanelsService.saveDataUserPrefs(dataPanel.marker);
     }
   }
 };

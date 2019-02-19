@@ -267,7 +267,7 @@
 
 <script>
 import Vue from "vue";
-import MapUtils from "@/services/map.utils";
+import MapService from "@/services/map.service";
 import ShareInfoPanel from "@/components/shareInfoPanel.vue";
 import { SIMO_URL } from '@/common/config';
 
@@ -278,7 +278,7 @@ export default {
   },
   data() {
     return {
-      mapUtils: MapUtils,
+      mapUtils: MapService,
       fechaD1: null,
       fechaD2: null,
       fechaD3: null,

@@ -68,7 +68,7 @@
 import { BASE_URL_PORTUS } from '@/common/config';
 import { MarkerClass } from "@/common/enums";
 import MapState from "@/state/map.state";
-import MapUtils from "@/services/map.utils";
+import MapService from "@/services/map.service";
 import InformacionTab from "@/components/markerPanel/informacionTab.vue"
 import BancoDatosTab from "@/components/markerPanel/bancoDatosTab.vue"
 import BancoDatosHistoricoTab from "@/components/markerPanel/bancoDatosHistoricoTab.vue"
@@ -107,7 +107,7 @@ export default {
             return this.$t("{tipoUbicacion"+this.markerRef.tipoUbicacion+"}") + ": " + this.markerRef.nombre;
         }
         else if (this.markerRef.mapResource.markerClass == MarkerClass.PuntoMalla) {
-            return "Pred. " +  this.$t(this.markerRef.mapOption.name) + ": " + MapUtils.getMarkerName(this.markerRef);
+            return "Pred. " +  this.$t(this.markerRef.mapOption.name) + ": " + MapService.getMarkerName(this.markerRef);
         }
         else if (this.markerRef.mapResource.markerClass == MarkerClass.PuntoMallaVerif) {
            return this.$t("{verificacionInfo}") + ": " + this.markerRef.nombre;

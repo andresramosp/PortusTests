@@ -26,7 +26,7 @@
 
 import { MarkerClass } from "@/common/enums";
 import MapState from "@/state/map.state";
-import MapUtils from "@/services/map.utils";
+import MapService from "@/services/map.service";
 import ApiService from "@/services/api.service";
 import { BANCO_DATOS_URL, BASE_URL_PORTUS } from '@/common/config';
 import DxButton from "devextreme-vue/button";
@@ -74,8 +74,8 @@ export default {
      init() {
         if (this.markers[0].mapResource.markerClass == MarkerClass.Ubicacion) {
               this.informacion = [
-                { key: this.$t("{longitudInfo}"), value: MapUtils.lonToString(this.markers[0].longitud) },
-                { key: this.$t("{latitudInfo}"), value: MapUtils.latToString(this.markers[0].latitud) },
+                { key: this.$t("{longitudInfo}"), value: MapService.lonToString(this.markers[0].longitud) },
+                { key: this.$t("{latitudInfo}"), value: MapService.latToString(this.markers[0].latitud) },
                 { key: this.$t("{codigoModeloInfo}"), value: this.markers[0].codigoModelo },
                 { key: this.$t("{verificacionInfo}"), value: this.markers[0].mareografo } // Mirar
               ];
@@ -83,8 +83,8 @@ export default {
         else if (this.markers[0].mapResource.markerClass == MarkerClass.PuntoMalla 
               || this.markers[0].mapResource.markerClass == MarkerClass.PuntoMallaHist) {
             this.informacion = [
-              { key: this.$t("{longitudInfo}"), value: MapUtils.lonToString(this.markers[0].longitud) },
-              { key: this.$t("{latitudInfo}"), value: MapUtils.latToString(this.markers[0].latitud) },
+              { key: this.$t("{longitudInfo}"), value: MapService.lonToString(this.markers[0].longitud) },
+              { key: this.$t("{latitudInfo}"), value: MapService.latToString(this.markers[0].latitud) },
               { key: this.$t("{codigoModeloInfo}"), value: this.markers[0].id },
               { key: this.$t("{cadencyInfo}"), value: (this.markers[0].tdelta * 60) + ' min'  },
               { key: this.$t("{mallaInfo}"), value: this.markers[0].malla },
@@ -93,8 +93,8 @@ export default {
         }
         else if (this.markers[0].mapResource.markerClass == MarkerClass.PuntoMallaVerif) {
            this.informacion = [
-              { key: this.$t("{longitudInfo}"), value: MapUtils.lonToString(this.markers[0].longitud) },
-                { key: this.$t("{latitudInfo}"), value: MapUtils.latToString(this.markers[0].latitud) },
+              { key: this.$t("{longitudInfo}"), value: MapService.lonToString(this.markers[0].longitud) },
+                { key: this.$t("{latitudInfo}"), value: MapService.latToString(this.markers[0].latitud) },
               { key:  this.$t("{codigoModeloInfo}"), value: this.markers[0].id },
               { key: this.$t("{cadencyInfo}"), value: (this.markers[0].tdelta * 60) + ' min'  }
             ];
@@ -103,8 +103,8 @@ export default {
               || this.markers[0].mapResource.markerClass == MarkerClass.EstacionHist) {
             this.informacion = [
                 { key: this.$t("{ubicacionEstacionInfo}"), value: this.markers[0].ubicacion },
-                { key: this.$t("{longitudInfo}"), value: MapUtils.lonToString(this.markers[0].longitud) },
-                { key: this.$t("{latitudInfo}"), value: MapUtils.latToString(this.markers[0].latitud) },
+                { key: this.$t("{longitudInfo}"), value: MapService.lonToString(this.markers[0].longitud) },
+                { key: this.$t("{latitudInfo}"), value: MapService.latToString(this.markers[0].latitud) },
                 { key: this.$t("{cadencyInfo}"), value: this.markers[0].cadencia ? this.markers[0].cadencia + ' Min' : null  },
                 { key: this.$t("{codigoEstacionInfo}"), value: this.markers[0].id },
                 { key: this.$t("{profundidadEstacionInfo}"), value: this.markers[0].altitudProfundidad ? this.markers[0].altitudProfundidad + ' m' : null },
@@ -119,8 +119,8 @@ export default {
         else if (this.markers[0].mapResource.markerClass == MarkerClass.AntenaRadar) {
             this.informacion = [
                 { key: this.$t("{ubicacionEstacionInfo}"), value: this.markers[0].ubicacion },
-                { key: this.$t("{longitudInfo}"), value: MapUtils.lonToString(this.markers[0].longitud) },
-                { key: this.$t("{latitudInfo}"), value: MapUtils.latToString(this.markers[0].latitud) },
+                { key: this.$t("{longitudInfo}"), value: MapService.lonToString(this.markers[0].longitud) },
+                { key: this.$t("{latitudInfo}"), value: MapService.latToString(this.markers[0].latitud) },
                 { key: this.$t("{codigoEstacionInfo}"), value: this.markers[0].id },
                 { key: this.$t("{fechaInicialFondeoInfo}"), value: this.markers[0].fechaAlta ? new Date(this.markers[0].fechaAlta).toISOString().split('T')[0] : null },
                 { key: this.$t("{fechaFinFondeoInfo}"), value: this.markers[0].fechaFin ? new Date(this.markers[0].fechaFin).toISOString().split('T')[0] : null },
