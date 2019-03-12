@@ -1,6 +1,6 @@
 <template>
 <div id="app" >
-   <Map :baseMap='baseMap' :mapFixed="true" :isWidget="true" />
+   <Map :mapFixed="true" :isWidget="true" />
    <LogosList :logos="mapState.mapLogos" :defaultLogo="defaultLogo" />
 </div>
 </template>
@@ -29,15 +29,7 @@ export default {
     document.body.classList.add(this.$route.query.theme ? this.$route.query.theme : PC.default_theme);
   },
   mounted () {
-    this.baseMap = L.tileLayer(
-      PC.base_layer,
-      {
-        minZoom: PC.base_layer_min_zoom,
-        maxZoom: PC.base_layer_max_zoom,
-        tms: false
-      }
-    );
-
+    
     MapState.playerMinimized = true;
 
     var resourceId = this.$route.query.resourceId;

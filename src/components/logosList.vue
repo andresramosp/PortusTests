@@ -1,9 +1,7 @@
 <template>
 <div  class="logosList rightAlign" >
   
-  <!-- <img v-for="logo in logosList" :key="logo" :src="'/images/logos/' + logo" style="margin-left: 5px" /> -->
   <img v-for="logo in logosList" :key="logo" :src="logo" class="fadeIn" style="margin-left: 5px" />
-  <!-- <img :src="'/images/logos/' + defaultLogo" style="margin-left: 5px" /> -->
   <img :src="defaultLogo" style="margin-left: 5px" />
 
 </div>
@@ -24,7 +22,7 @@ export default {
   },
   computed: {
     logosList() {
-      return this.logos.filter(l => l != this.defaultLogo).reverse();
+      return this.logos.filter(l => l.indexOf('logoPuertos') == -1).reverse();
     }
   },
   mounted() {},
@@ -45,7 +43,7 @@ export default {
 .logosList {
   position: absolute;
   z-index: 2;
-  bottom: 20px;
+  bottom: 5px;
 }
 
 

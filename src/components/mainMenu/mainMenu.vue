@@ -2,11 +2,10 @@
 <div >
   
   <div class='layersPanel unselectable' :class="[align == 'left' ? 'leftAlign' : 'rightAlign']">
-    <img @click="toggleMinimized()" 
-         :class="[align == 'left' ? 'leftImgMinimizer' : 'rightImgMinimizer']"
-         width="25" 
-         style="position: absolute; z-index: 5; cursor: pointer;" 
-         :src="minimizerImgSrc" />
+      <span style="position: absolute; z-index: 5; cursor: pointer; width: 25px; height: 25px" 
+            :class="minimizerClassList"
+            @click="toggleMinimized()">
+      </span>
     <div v-for="optGrp in mapOptionsGroups.groups" :key="optGrp.id">
        <b-row :class="optGrp.id" style="margin-left: 0px; margin-right: 0px">
           <b-card class="text-center panel-section" :class="[minimized ? 'minimized': '', fading ? 'fadeInMenu' : '']" @animationend="fading=false" header-tag="header" >
@@ -22,10 +21,11 @@
               <b-row >
                   <b-col v-for="mapOption in mapOptions.filter(opt => opt.group == optGrp.id)" :key="mapOption.id" cols="6" class="form-check text-left" style="padding-top: 3px; margin-bottom: 3px;" >
                     <label class="form-check-label lightable" :class="[mapOption.active ? 'mapOptionChecked' : '']" :title="minimized ? $t(mapOption.name) : ''" style="float: left; cursor: pointer">
-                      <img style="float: left; margin-right: 2px; margin-top: -2.5px" width="28" 
-                            :class="[mapOption.active ? 'mapOptionChecked' : '']"
+                      <span style="float: left; margin-right: 2px; margin-top: -2.5px; height: 28px"
                             class="fadeIn"
-                            :src='require("@/assets/icons/mainMenu/" + mapOption.id + ".png")' >
+                            :class="[mapOption.iconClass, mapOption.active ? 'mapOptionChecked' : '']">
+
+                      </span>
                       <input class="form-check-input" style="display: none" 
                             type="checkbox" 
                             v-model="mapOption.active" 
@@ -74,11 +74,27 @@ export default {
     mapOptionsGroups: { type: Object, default: null, required: false }
   },
   computed: {
-    minimizerImgSrc() {
-      if (this.align == 'left') 
-        return !this.minimized ? require('@/assets/icons/replegar.png') : require('@/assets/icons/desplegar.png');
-      else 
-        return !this.minimized ? require('@/assets/icons/desplegar.png') : require('@/assets/icons/replegar.png')
+    minimizerClassList() {
+      var list = [];
+      if (this.align == 'left') {
+        list.push('leftImgMinimizer')
+        if (!this.minimized) {
+          list.push('replegarIcon')
+        }
+        else {
+          list.push('desplegarIcon')
+        }
+      }
+      else {
+        list.push('rightImgMinimizer')
+        if (!this.minimized) {
+          list.push('desplegarIcon')
+        }
+        else {
+          list.push('replegarIcon')
+        }
+      }
+      return list;
     }
   },
   mounted() {},

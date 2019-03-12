@@ -1,6 +1,6 @@
  <template>
 
-    <div id="tableRT">
+    <div id="tableRT" class="printable">
 
      <div class="allCenter">
       <img 
@@ -10,10 +10,10 @@
       >
     </div>
 
-    <b-row v-if="!isWidget && !loading">
+    <b-row v-if="!loading">
       <b-col style="float: right">
           <ShareInfoPanel
-              v-if="routeData"
+              v-if="routeData && !isWidget"
               :routeData="routeData"
               :iFrameWidth="1040"
               :iFrameHeight="570"
@@ -23,6 +23,12 @@
               @opening="showingShareInfo = true"
               @closing="showingShareInfo = false"
             />
+           <img
+              :src='require("@/assets/icons/imprimir.png")'
+              class="shareIcon"
+              @click="printTable"
+              :title="$t('{printButton}')"
+            >
       </b-col>
     </b-row>
     
@@ -48,10 +54,10 @@
                   @cellPrepared="renderCell"
                 >
 
-                    <dx-paging :page-size="8"/>
+                    <dx-paging :page-size="pageSize"/>
                     <dx-pager
-                      :show-page-size-selector="isWidget"
-                      :allowed-page-sizes="[7, 15, 30, 100, 500]"
+                      :show-page-size-selector="true"
+                      :allowed-page-sizes="[8, 15, 30, 100, 500]"
                       :show-info="true"
                       :show-navigation-buttons="true"
                     />
@@ -105,7 +111,9 @@ export default {
   props: {
     marker: { type: Object, default: null },
     parameters: { type: Array, default: [] },
-    isWidget: { type: Boolean, default: false }
+    isWidget: { type: Boolean, default: false },
+    preselectedTabIndex: { type: Number, default: 0 },
+    pageSize: { type: Number, default: 8 }
   },
   computed: {
 
@@ -129,6 +137,9 @@ export default {
   watch: {
     parameters: function() {
       this.init();
+    },
+    preselectedTabIndex: function() {
+      this.tabIndex = this.preselectedTabIndex;
     }
   },
   created() {
@@ -149,17 +160,7 @@ export default {
           }
       }
 
-      this.routeData = this.$router.resolve({
-        path: "/dataTablesRTWidget",
-        query: {
-          locale: this.$getLocale(),
-          stationCode: this.marker.id,
-          variables: this.paramsGroups.join(),
-          isRadar: this.marker.radar,
-          latId: this.marker.latId ? this.marker.latId : '',
-          lonId: this.marker.lonId ? this.marker.lonId : ''
-        }
-      });
+      this.routeData = this.getRouteData();
 
     },
     async getTableData(parametrosDataSource, dataSourceId) {
@@ -183,10 +184,12 @@ export default {
             };
           dt.dataSources.push(dataSource);
           Object.assign(this.columnsNames, this.generateColumnsNames(result.data[0]));
+          this.$emit('loaded');
         }
         else {
           this.errorMsg = "Error. No hay datos que mostrar.";
         }
+
       }
       catch(error) {
         this.errorMsg = error.message;
@@ -244,6 +247,28 @@ export default {
         ev.cellElement.style.textAlign = "center";
       }
     },
+    printTable() {
+      if (!this.isWidget) {
+        var routePrintData = this.getRouteData();
+        var printWindow = window.open(routePrintData.href + '&forPrint=true&tab=' + this.tabIndex, "_blank");
+      }
+      else {
+        window.print();
+      }
+    },
+    getRouteData() {  
+      return this.$router.resolve({
+        path: "/dataTablesRTWidget",
+        query: {
+          locale: this.$getLocale(),
+          stationCode: this.marker.id,
+          variables: this.paramsGroups.join(),
+          isRadar: this.marker.radar,
+          latId: this.marker.latId ? this.marker.latId : '',
+          lonId: this.marker.lonId ? this.marker.lonId : ''
+        }
+      });
+    },
     cerrar() {
       this.dataSources = [];
       MapState.setRTDataTable(null, []);
@@ -255,10 +280,32 @@ export default {
 
 
 
-<style >
 
+<style>
 
+#tableRT .nav-link.active {
+  background-color: rgba(127, 183, 231, 0.96) !important;
+  color: white !important;
+  border: 1px solid white;
+}
 
+#tableRT .nav-link {
+  background-color: #e8e8e8 !important;
+  color: black !important;
+  border: 1px solid white;
+}
+
+#tableRT .nav-link:hover:not(.active) {
+   background-color: lightgray !important;
+}
+
+#tableRT .dx-datagrid-headers .dx-row .colHeader {
+  background-color: rgba(127, 183, 231, 0.96) !important;
+  font-size: 13px;
+  color: white;
+  padding-left: 2px;
+  text-align: center !important;
+}
 
 .largeTitle {
   font-size: 15px;

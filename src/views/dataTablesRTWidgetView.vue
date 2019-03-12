@@ -1,6 +1,12 @@
 <template>
 <div style="text-align: center" >
-   <DataTablesRTPanel v-if="parameters" :marker="station" :parameters="parameters" :isWidget="true" />
+   <DataTablesRTPanel v-if="parameters" 
+                      :marker="station" 
+                      :parameters="parameters" 
+                      :preselectedTabIndex="tab"
+                      @loaded="loaded" 
+                      :pageSize="pageSize"
+                      :isWidget="true" />
 </div>
 </template>
 
@@ -17,7 +23,8 @@ export default {
   data () {
     return {
       station: null,
-      parameters: null
+      parameters: null,
+      tab: 0
     }    
   },
   created() {
@@ -33,23 +40,17 @@ export default {
         lonId: this.$route.query.lonId
       };
     this.variables = this.$route.query.variables.split(',');
+    this.pageSize = this.$route.query.forPrint ? 500 : 8;
 
     ApiService.post('parametros/' + this.station.id + '?locale=' + this.$getLocale(), this.variables)
               .then(result => {
                 this.parameters = result.data;
               })
-
-    if (this.$route.query.forPrint) {
-        setTimeout(() => {
-          window.focus();
-          window.print();
-          window.close();
-        }, 1000);
-      }
   },
   methods: {
     loaded() {
-      if (this.$route.query.forPrint) {
+       if (this.$route.query.forPrint) {
+        this.tab = this.$route.query.tab;
         setTimeout(() => {
           window.focus();
           window.print();

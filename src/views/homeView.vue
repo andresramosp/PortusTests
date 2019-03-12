@@ -1,11 +1,11 @@
 <template>
 <div id="app">
-   <Map :baseMap='baseMap' :mapFixed="mapFixed" />
+   <Map :mapFixed="mapFixed" :scrollWheelZoom="scrollWheelZoom" />
    <MainMenu :mapOptionsGroups="mapState.mapOptionsGroups" :mapOptions="mapState.mapOptions" /> 
    <MarkerPanel :markers='mapState.markersSelected' />
    <StaticMapsPanel :mapResource='mapState.staticMapResourceSelected' />
-   <UbicacionesPanel />
-   <RegionesPanel />
+   <UbicacionesPanel v-if="showCitiesPanel" />
+   <RegionesPanel v-if="showRegionsPanel" />
    <LocationsWidget :ubicacion="mapState.ubicacionSelected" />
    <LogosList :logos="mapState.mapLogos" :defaultLogo="defaultLogo" />
    <DataStackPanel />
@@ -26,8 +26,6 @@ import LocationsWidget from "@/components/locationsWidget/locationsWidget.vue";
 import LogosList from "@/components/logosList.vue";
 import DataStackPanel from "@/components/dataStackPanel.vue";
 import PuertosInfoPanel from "@/components/puertosInfoPanel.vue";
-import { MapOptions } from '@/common/mapResourceManager';
-import { MapOptionsGroups } from '@/common/mapResourceManager';
 
 export default {
   name: "app",
@@ -46,26 +44,16 @@ export default {
   data () {
     return {
       mapState: MapState,
-      baseMap: null,
       mapFixed: PC.map_fixed,
-      defaultLogo: PC.default_map_logo
+      scrollWheelZoom: PC.scroll_wheel_zoom,
+      defaultLogo: PC.default_map_logo,
+      showCitiesPanel: PC.show_cities_panel,
+      showRegionsPanel: PC.show_regions_panel
     }    
   },
   created() {
     this.$setLocale(this.$route.query.locale ? this.$route.query.locale : 'es');
-    document.body.classList.add(this.$route.query.theme ? this.$route.query.theme : PC.default_theme);
-  },
-  mounted () {
-    this.baseMap = L.tileLayer(
-      PC.base_layer,
-      {
-        minZoom: PC.base_layer_min_zoom,
-        maxZoom: PC.base_layer_max_zoom,
-        tms: false
-      }
-    );
-    this.mapState.mapOptionsGroups = MapOptionsGroups;
-    this.mapState.mapOptions = MapOptions.filter(opt => { return PC.map_options.length == 0 || PC.map_options.indexOf(opt.id) != -1});  
+    document.body.classList.add(this.$route.query.theme ? this.$route.query.theme + "Theme" : PC.default_theme);
   }
 };
 </script>

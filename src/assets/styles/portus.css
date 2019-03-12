@@ -58,11 +58,7 @@
   /* color: white; */
 }
 
-.datePicker .dx-texteditor-input {
-  background: black;
-  /* color: #b1afaf; */
-  color: transparent;
-}
+
 
 /* .dx-texteditor-buttons-container {
   right: -5px !important;
@@ -84,9 +80,6 @@
   border-color: transparent !important;
 }
 
-.dx-datebox-calendar.dx-dropdowneditor-active .dx-texteditor-input {
-  background: black !important;
-}
 
 .closeIcon, .printIcon {
   float: right;
@@ -155,13 +148,7 @@
   border-top-right-radius: 0px;
 }
 
-#no-bootstrap .markerPanel .nav.nav-tabs {
-  border-bottom: 1px solid #dee2e624 !important;
-}
 
-#no-bootstrap .dx-popup-title {
-  border-bottom: 1px solid #dee2e624;
-}
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
@@ -170,21 +157,7 @@ input:-webkit-autofill:active  {
     -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
-#tablePred .dx-datagrid-headers .dx-row .colHeader {
-  background-color: #7fb7e7f5 !important;
-  font-size: 10px;
-  color: #f8f9fa;
-  padding-left: 2px;
-  text-align: center !important;
-}
 
-#tableRT .dx-datagrid-headers .dx-row .colHeader {
-  background-color: #7fb7e7f5 !important;
-  font-size: 12px;
-  color: #f8f9fa;
-  padding-left: 2px;
-  text-align: center !important;
-}
 
 .printable {
   -webkit-print-color-adjust: exact;
@@ -237,25 +210,45 @@ input:-webkit-autofill:active  {
 
 @media only screen and (max-device-width: 768px) and (orientation: portrait) {
 
-   .layersPanel {
+   .layersPanel.rightAlign {
       -webkit-transform: scale(2.0);
+    -webkit-transform-origin: 100% 0;
+    -webkit-transition:.3s;
+    transform: scale(2.0);
+    transform-origin: 100% 0;
+    transition:.3s;
+    top: 60px !important;
+   }
+
+   .layersPanel.leftAlign {
+    -webkit-transform: scale(2.0);
     -webkit-transform-origin: 0 0;
     -webkit-transition:.3s;
     transform: scale(2.0);
     transform-origin: 0 0;
     transition:.3s;
-   }
+    top: 60px !important;
+ }
 }
 @media only screen and (max-device-width: 768px) and (orientation: landscape){
 
-   .layersPanel {
-      -webkit-transform: scale(0.6);
-    -webkit-transform-origin: 0 0;
+   .layersPanel.rightAlign {
+      -webkit-transform: scale(0.8);
+    -webkit-transform-origin: 100% 0;
     -webkit-transition:.3s;
-    transform: scale(0.6);
-    transform-origin: 0 0;
+    transform: scale(0.8);
+    transform-origin: 100% 0;
     transition:.3s;
    }
+
+   .layersPanel.leftAlign {
+    -webkit-transform: scale(0.7);
+    -webkit-transform-origin: 0 0;
+    -webkit-transition:.3s;
+    transform: scale(0.7);
+    transform-origin: 0 0;
+    transition:.3s;
+  }
 }
 
 

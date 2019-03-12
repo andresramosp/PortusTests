@@ -1,0 +1,485 @@
+
+/* OCASO THEME */
+
+  .ocasoTheme .layersPanel .card-body
+   {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: rgb(127, 127, 127);
+  }
+  
+  .ocasoTheme .card-header .predicciones, 
+  .ocasoTheme .subMenu .predicciones {
+    background-color: rgba(238, 84, 16, 0.7);
+    color: white;
+  }
+  
+  .ocasoTheme .card-header .tiempo_real, 
+  .ocasoTheme .subMenu .tiempo_real {
+    background-color: rgba(238, 145, 24, 0.7);
+    color: white;
+  }
+
+  
+  .ocasoTheme .predicciones .mapOptionChecked  span {
+    background-color: rgba(238, 84, 16, 0.7);
+    -webkit-transition: background-color 190ms linear;
+    -moz-transition: background-color 190ms linear;
+    -o-transition: background-color 190ms linear;
+    -ms-transition: background-color 190ms linear;
+    transition: background-color 190ms linear;
+  }
+  
+  .ocasoTheme .predicciones .mapOptionChecked {
+      color: rgba(238, 84, 16, 1);
+      font-weight: bold;
+  }
+  
+  .ocasoTheme .tiempo_real .mapOptionChecked  span {
+    background-color: rgba(238, 145, 24, 0.7);
+    -webkit-transition: background-color 190ms linear;
+    -moz-transition: background-color 190ms linear;
+    -o-transition: background-color 190ms linear;
+    -ms-transition: background-color 190ms linear;
+    transition: background-color 190ms linear;
+  }
+  
+  .ocasoTheme .tiempo_real .mapOptionChecked {
+      color: rgba(238, 145, 24, 1);
+      font-weight: bold;
+  }
+  
+  
+  .ocasoTheme .predicciones .lightable:hover  {
+    color: rgba(238, 84, 16, 0.7);
+  }
+  
+  
+  .ocasoTheme .predicciones .minimized .lightable span:hover  {
+    background-color: rgba(238, 84, 16, 0.4);
+  }
+  
+  .ocasoTheme .tiempo_real .lightable:hover  {
+    color: rgba(238, 145, 24, 0.7);
+  }
+  
+  .ocasoTheme .tiempo_real .minimized .lightable span:hover  {
+    background-color: rgba(238, 145, 24, 0.4);
+  }
+  
+  .ocasoTheme .card-header.tiempo_real {
+    background-color: rgba(238, 145, 24, 0.7);
+    color: white;
+  }
+
+
+.ocasoTheme .markerPanel div:not(.dx-popup-title):not(.dx-button-content):not(.dx-button-text),
+.ocasoTheme .staticMapPanel div:not(.dx-popup-title):not(.dx-button-content):not(.dx-button-text),
+.ocasoTheme .leaflet-popup-content .card-body,
+.ocasoTheme .whiteBG,
+.ocasoTheme .table-dark,
+.ocasoTheme .shareInfoPanel,
+.ocasoTheme .leaflet-popup-tip {
+    background-color: white;
+    color:rgb(127, 127, 127) !important;
+    border-radius: 0px !important;
+}
+
+.ocasoTheme .markerPanel .dx-button-content,
+.ocasoTheme .staticMapPanel .dx-button-content
+ {
+    background-color: white;
+    border: 1.5px solid !important;
+    /* min-width: fit-content; */
+    color: rgb(127, 127, 127);
+}
+
+.ocasoTheme .staticMapPanel select {
+  background-color: white;
+  color: rgb(127, 127, 127);
+}
+
+.ocasoTheme .notifyPopup .card-body {
+  background: rgba(255, 255, 255, 0.9);
+  color: rgb(127, 127, 127);
+}
+
+.ocasoTheme .notifyPopup .card-header {
+  background: rgba(238, 145, 24, 0.7);
+  color: white
+}
+
+.ocasoTheme .popupHeader {
+  font-size: 15px !important;
+  background: rgb(238, 145, 24) !important;
+  color: white !important;
+  padding: 7px !important;
+}
+
+.ocasoTheme .simoPanel .card-header {
+  background-color: rgb(238, 145, 24);
+  color: white;
+}
+
+
+.ocasoTheme #accordionContent *:not(.dx-button-content):not(.dx-button-text),
+.ocasoTheme #specialContent,
+.ocasoTheme .table-dark.table-striped tbody tr:nth-of-type(odd),
+.ocasoTheme .grayBG
+{
+  background-color: rgb(229, 231, 230) !important;
+  color: rgb(127, 127, 127);
+}
+
+
+.ocasoTheme .markerPanel .dx-state-hover .dx-button-content,
+.ocasoTheme .staticMapPanel .dx-state-hover .dx-button-content {
+  background: rgba(238, 145, 24, 0.7) !important;
+}
+
+
+.ocasoTheme .markerPanel .nav-link {
+  color: rgb(127, 127, 127);
+  border-radius: 0px;
+  /* background-color: #2a377e;
+  border-color: #dee2e6 #dee2e6 #fff; */
+}
+
+.ocasoTheme .markerPanel .nav-link:hover {
+  color: white;
+  background-color: rgb(229, 231, 230);
+  border-color:transparent;
+}
+
+.ocasoTheme .markerPanel .nav-link.active {
+    color: #eff1f3;
+    background-color: rgb(238, 145, 24);
+    border-color: transparent;
+}
+
+.ocasoTheme .markerPanel .nav.nav-tabs {
+  border-bottom: 1px solid lightgray !important;
+}
+
+.ocasoTheme .dx-popup-title {
+  border-bottom: 1px solid lightgray !important;
+}
+
+.ocasoTheme .markerPanel .footer {
+  border-top: 1px solid lightgray !important;
+  margin-top: 20px;
+}
+
+.ocasoTheme .heapedMarker {
+  cursor: pointer; 
+  /* text-decoration: underline !important;  */
+  /* font-weight: 600;  */
+  color: rgb(127, 127, 127) !important;
+}
+
+
+.ocasoTheme .dataPanelHeader {
+  height: 30px;
+  padding-top: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+  cursor: move;
+  /* background-color: rgb(238, 145, 24); */
+  background-color: rgb(21, 91, 140);
+  color: white;
+}
+
+.ocasoTheme .alertText,
+.ocasoTheme .markerPanel a:hover,
+.ocasoTheme .leaflet-popup a:hover {
+  color: rgb(187, 60, 5) !important;
+}
+
+.ocasoTheme .leaflet-control-container a:hover {
+  color: black !important;
+}
+
+.ocasoTheme .leaflet-bar-timecontrol
+{
+  background-color: rgba(255, 255, 255, 1);
+  color: black;
+}
+
+.ocasoTheme .leaflet-bar-timecontrol .leaflet-control-timecontrol:before,
+.ocasoTheme .leaflet-bar a {
+   color: rgb(127, 127, 127);
+   background-color: white;
+}
+
+
+.ocasoTheme .timecontrol-slider .slider {
+  background: gray;
+  border: 0.4px solid rgb(127, 127, 127);
+}
+
+/* TODO: intentar coger el right y top del parent al que se agrega la cola */
+.ocasoTheme .slider-tale {
+  color: rgb(187, 60, 5);
+  background-color: rgb(187, 60, 5) !important;
+}
+.ocasoTheme .slider-speed-tale {
+  color: rgb(187, 60, 5);
+  background-color: rgb(187, 60, 5) !important;
+}
+
+.ocasoTheme .table-dark th, .table-dark td, .table-dark thead th {
+  border-color: transparent;
+}
+
+.ocasoTheme .markerPanel select,
+.ocasoTheme .staticMapPanel select {
+  -webkit-appearance: none;
+  background-image:  url("../../assets/icons/arrowDownWhite.png") !important;
+  background-size: 13px !important;
+  
+}
+
+
+
+.ocasoTheme .leaflet-popup-content .variableDate {
+  color: white !important;
+}
+
+.ocasoTheme .datePicker .dx-texteditor-input {
+  background: transparent;
+  color: transparent;
+  min-height: 20px;
+  height: 20px;
+}
+
+.ocasoTheme .dx-datebox-calendar .dx-dropdowneditor-icon {
+  color: rgb(127, 127, 127) !important;
+}
+
+.ocasoTheme .dx-datebox-calendar.dx-dropdowneditor-active .dx-texteditor-input {
+  background: white !important;
+}
+
+.ocasoTheme .shadedSquareWidget {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.ocasoTheme .shadedSquare {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.ocasoTheme .fullscreenIcon {
+  background: white;
+}
+
+.ocasoTheme .clockPanel {
+  background: white;
+  color: rgb(127, 127, 127);
+}
+
+
+.ocasoTheme .checkActive::before {
+  /* content: url('../icons/check_activo.png'); */
+  background-image: url('../icons/check_activo_gray.png');
+  background-size: 18px 18px;
+  display: inline-block;
+  width: 18px; 
+  height: 18px;
+  content:"";
+}
+
+.ocasoTheme .checkInactive::before {
+  /* content: url('../icons/check_inactivo.png'); */
+  background-image: url('../icons/check_inactivo_gray.png');
+  background-size: 18px 18px;
+  display: inline-block;
+  width: 18px; 
+  height: 18px;
+  content:"";
+}
+
+
+.ocasoTheme .wave::before {
+  background-image: url('../icons/bancoDatos/wave.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.ocasoTheme .wave_atl::before {
+  background-image: url('../icons/bancoDatos/wave_atl.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.ocasoTheme .wave_med::before {
+  background-image: url('../icons/bancoDatos/wave_med.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.ocasoTheme .salinity::before {
+  background-image: url('../icons/bancoDatos/salinity.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.ocasoTheme .sea_level::before {
+  background-image: url('../icons/bancoDatos/sea_level.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.ocasoTheme .air_presure::before {
+  background-image: url('../icons/bancoDatos/air_presure.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.ocasoTheme .air_temp::before {
+  background-image: url('../icons/bancoDatos/air_temp.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.ocasoTheme .agitation::before {
+  background-image: url('../icons/bancoDatos/agitation.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.ocasoTheme .wind::before {
+  background-image: url('../icons/bancoDatos/wind.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.ocasoTheme .currents::before {
+  background-image: url('../icons/bancoDatos/currents.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.ocasoTheme .seiche::before {
+  background-image: url('../icons/bancoDatos/seiche.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.ocasoTheme .water_temp::before {
+  background-image: url('../icons/bancoDatos/water_temp.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.ocasoTheme .ubicacionesIcon::before {
+  background-image: url('../icons/ubicaciones_color.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.ocasoTheme .regionesIcon::before {
+  background-image: url('../icons/regiones_color.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.ocasoTheme .replegarIcon::before {
+  /* content: url('../icons/check_activo.png'); */
+  background-image: url('../icons/replegarWhite.png');
+  background-size: 25px 25px;
+  display: inline-block;
+  width: 25px; 
+  height: 25px;
+  content:"";
+}
+
+.ocasoTheme .desplegarIcon::before {
+  /* content: url('../icons/check_activo.png'); */
+  background-image: url('../icons/desplegarWhite.png');
+  background-size: 25px 25px;
+  display: inline-block;
+  width: 25px; 
+  height: 25px;
+  content:"";
+}
+
+.ocasoTheme .replegarIconPlayer::before {
+  /* content: url('../icons/check_activo.png'); */
+  background-image: url('../icons/replegarWhite.png');
+  background-size: 20px 20px;
+  display: inline-block;
+  width: 20px; 
+  height: 20px;
+  content:"";
+}
+
+.ocasoTheme .desplegarIconPlayer::before {
+  /* content: url('../icons/check_activo.png'); */
+  background-image: url('../icons/desplegarWhite.png');
+  background-size: 20px 20px;
+  display: inline-block;
+  width: 20px; 
+  height: 20px;
+  content:"";
+}
+
+.ocasoTheme .fullscreenIcon::before {
+  /* content: url('../icons/check_activo.png'); */
+  background-image: url('../icons/fullscreenNegro.png');
+  background-size: 24px 24px;
+  display: inline-block;
+  width: 24px; 
+  height: 24px;
+  content:"";
+}
+
+.ocasoTheme .openLinkIcon::before {
+  /* content: url('../icons/check_activo.png'); */
+  background-image: url('../icons/openLinkBlack.png');
+  background-size: 11px 11px;
+  display: inline-block;
+  width: 11px; 
+  height: 11px;
+  content:"";
+}

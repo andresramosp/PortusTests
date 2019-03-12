@@ -5,8 +5,9 @@
             <b-col cols="8" >
                 <b-row v-for="data in informacion" :key="data.key" v-if="data.value != null && data.value != undefined">
                     <b-col style="font-weight:600;" cols="4">{{data.key}}</b-col>
-                    <b-col v-if="!data.href">{{data.value}}</b-col>
-                    <b-col v-else><a v-if="data.href" :href="data.href" target='_blank'>{{data.value}}</a></b-col>
+                    <b-col v-if="data.htmlContent" v-html="data.value"></b-col>
+                    <b-col v-else-if="data.href"><a v-if="data.href" :href="data.href" target='_blank'>{{data.value}}</a></b-col>
+                    <b-col v-else>{{data.value}}</b-col>
                 </b-row>
             </b-col>
             <b-col>
@@ -108,11 +109,11 @@ export default {
                 { key: this.$t("{cadencyInfo}"), value: this.markers[0].cadencia ? this.markers[0].cadencia + ' Min' : null  },
                 { key: this.$t("{codigoEstacionInfo}"), value: this.markers[0].id },
                 { key: this.$t("{profundidadEstacionInfo}"), value: this.markers[0].altitudProfundidad ? this.markers[0].altitudProfundidad + ' m' : null },
-                { key: this.$t("{fechaInicialFondeoInfo}"), value: this.markers[0].fechaAlta ? new Date(this.markers[0].fechaAlta.replace('+', '')).toISOString().split('T')[0] : null },
-                { key: this.$t("{fechaFinFondeoInfo}"), value: this.markers[0].fechaFin ? new Date(this.markers[0].fechaFin.replace('+', '')).toISOString().split('T')[0] : null },
+                { key: this.$t("{fechaInicialFondeoInfo}"), value: this.markers[0].fechaAlta ? new Date(this.markers[0].fechaAlta.replace('+', '')).toLocaleDateString().replaceAll('/', '-') : null },
+                { key: this.$t("{fechaFinFondeoInfo}"), value: this.markers[0].fechaFin ? new Date(this.markers[0].fechaFin.replace('+', '')).toLocaleDateString().replaceAll('/', '-') : null },
                 { key: this.$t("{tipoSensorInfo}"), value: this.markers[0].tipoSensor },
                 { key: this.$t("{modeloEstacionInfo}"), value: this.markers[0].modelo },
-                { key: this.$t("{comentariosEstacionInfo}"), value: this.markers[0].comentarios },
+                { key: this.$t("{comentariosEstacionInfo}"), value: this.markers[0].comentarios, htmlContent: true },
                 { key: this.$t("{conjuntoDatosInfo}"), value: this.markers[0].red.descripcion, bold: true, href: BANCO_DATOS_URL + 'BD/informes/INT_'	+ this.markers[0].red.id + '.pdf' }
               ];
         }
@@ -122,11 +123,11 @@ export default {
                 { key: this.$t("{longitudInfo}"), value: MapService.lonToString(this.markers[0].longitud) },
                 { key: this.$t("{latitudInfo}"), value: MapService.latToString(this.markers[0].latitud) },
                 { key: this.$t("{codigoEstacionInfo}"), value: this.markers[0].id },
-                { key: this.$t("{fechaInicialFondeoInfo}"), value: this.markers[0].fechaAlta ? new Date(this.markers[0].fechaAlta).toISOString().split('T')[0] : null },
-                { key: this.$t("{fechaFinFondeoInfo}"), value: this.markers[0].fechaFin ? new Date(this.markers[0].fechaFin).toISOString().split('T')[0] : null },
+                { key: this.$t("{fechaInicialFondeoInfo}"), value: this.markers[0].fechaAlta ? new Date(this.markers[0].fechaAlta).toLocaleDateString().replaceAll('/', '-') : null },
+                { key: this.$t("{fechaFinFondeoInfo}"), value: this.markers[0].fechaFin ? new Date(this.markers[0].fechaFin).toLocaleDateString().replaceAll('/', '-') : null },
                 { key: this.$t("{tipoSensorInfo}"), value: this.markers[0].tipoSensor },
                 { key: this.$t("{modeloEstacionInfo}"), value: this.markers[0].modelo },
-                { key: this.$t("{comentariosEstacionInfo}"), value: this.markers[0].comentarios },
+                { key: this.$t("{comentariosEstacionInfo}"), value: this.markers[0].comentarios, htmlContent: true },
                 { key: this.$t("{conjuntoDatosInfo}"), value: this.markers[0].radar.red.nombre, bold: true, href: BANCO_DATOS_URL + 'BD/informes/INT_'	+ this.markers[0].radar.red.id + '.pdf' }
               ];
               

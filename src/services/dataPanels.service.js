@@ -238,6 +238,8 @@ const DataPanelsService = {
             // medios externos pueda causar errores que impedirían arrancar la app.
             try {
                 var marker = JSON.parse(localStorage.getItem('marker-' + id));
+                marker.mapResource = MapState.getMapResource(marker.mapResource.id);
+                marker.mapOption = MapState.getMapOption(marker.mapOption.id);
                 if (marker) {
                     var activeTableParams = MapState.getBancoDatos(id).filter(param => param.tableActive);
                     var activeGraphicParams = MapState.getBancoDatos(id).filter(param => param.graphicActive);
@@ -285,7 +287,7 @@ const DataPanelsService = {
                 cachedBancoDatos[markerId] = bancoDatosMarker;
                 localStorage.setItem('banco_datos', JSON.stringify(cachedBancoDatos));
                 if(!localStorage.getItem('marker-' + markerId)) {
-                    var markerProperties = ['id', 'latId', 'lonId', 'lat', 'lon', 'latitud', 'longitud', 'radar', 'nombre', 'mapResource', 'palette', 'mapOption', 'markerClass', 'variableType'];
+                    var markerProperties = ['id', 'latId', 'lonId', 'lat', 'lon', 'latitud', 'longitud', 'radar', 'nombre', 'mapResource', 'id', 'mapOption', 'id'];
                     localStorage.setItem('marker-' + markerId, JSON.stringify(marker, markerProperties));
                 }
             }

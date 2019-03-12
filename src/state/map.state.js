@@ -1,4 +1,4 @@
-import { MapResources } from '@/common/mapResourceManager';
+import { MapResources, MapOptions, MapOptionsGroups } from '@/common/mapResourceManager';
 import ApiService from "@/services/api.service";
 import MapService from "@/services/map.service";
 import RadarsService from "@/services/radars.service";
@@ -42,6 +42,8 @@ const MapState = {
 
     init(map) {
         this.map = map;
+        this.mapOptionsGroups = MapOptionsGroups;
+        this.mapOptions = MapOptions.filter(opt => { return PC.map_options.length == 0 || PC.map_options.indexOf(opt.id) != -1});  
         this.cacheLayers();
         DataPanelsService.createDataListFromUserPrefs();
         this.showStaffNotifyMessages();
@@ -59,13 +61,15 @@ const MapState = {
         return this.map;
     },
 
-    setBaseLayer(baseLayer) {
-        baseLayer.addTo(this.map);
-    },
-
     getMapResource(mapResourceId) {
         return MapResources.find(mr => {
             return mr.id == mapResourceId;
+        });
+    },
+
+    getMapOption(mapOptionId) {
+        return this.mapOptions.find(opt => {
+            return opt.id == mapOptionId;
         });
     },
 
@@ -121,9 +125,11 @@ const MapState = {
         result.data.forEach(res => {
             var tileLayer = L.tileLayer(BASE_URL_PORTUS + res.url + '{d}{h}/' + (vectorial ? res.urlVec : res.urlIso) + '//{z}/{x}/{y}.png', {
                 tms: true,
+                bounds: PC.restrict_resources_to_initial_bounds ? new L.LatLngBounds(new L.LatLng(PC.map_initial_bounds[1], PC.map_initial_bounds[0]), new L.LatLng(PC.map_initial_bounds[3], PC.map_initial_bounds[2])) : null,
                 minZoom: res.zoomMin,
                 maxZoom: res.zoomMax,
-                bounds: L.latLngBounds(L.latLng(res.limN, res.limW), L.latLng(res.limS, res.limE)),
+                zIndex: res.numZIndex + 10,
+                limits: L.latLngBounds(L.latLng(res.limN, res.limW), L.latLng(res.limS, res.limE)),
                 numDays: res.numGap,
                 strLastate: res.strLastate,
                 hoursStep: res.numStep,
@@ -151,6 +157,7 @@ const MapState = {
         }
         this.setVisibleTimeLineLayers();
         this.showingVectors = vectorial;
+        console.log(this.showingVectors)
         this.removeLoading(mapResource.id);
     },
 
@@ -179,19 +186,29 @@ const MapState = {
         return true;
     },
 
-    setVectorial(mapResource, vectorial) {
-        var layers = this.preloadedTimeLineLayers.filter(layer => layer.mapResource.id == mapResource.id);
-        layers.forEach(l => {
-            if (vectorial)
-                l._baseLayer._url = l._baseLayer._url.replace('map', (vectorial ? l.urlVec : l.urlIso));
-            else
-                l._baseLayer._url = l._baseLayer._url.replace('vec', 'map');
+    setOptionVectorial(mapOption, vectorial) {
+        mapOption.mapResources.forEach(resId => {
+            var mapResource = MapState.getMapResource(resId);
+            if (mapResource.type == "TimeLineLayer")
+                MapState.setResourceUrlVectorial(mapResource, vectorial);
         });
+
         this.showingVectors = vectorial;
         this.setVisibleTimeLineLayers();
 
     },
 
+    setResourceUrlVectorial(mapResource, vectorial) {
+        var layers = this.preloadedTimeLineLayers.filter(layer => layer.mapResource.id == mapResource.id);
+        layers.forEach(l => {
+            if (vectorial) {
+                l._baseLayer._url = l._baseLayer._url.replace('map', vectorial ? l.urlVec : l.urlIso);
+            }
+            else {
+                l._baseLayer._url = l._baseLayer._url.replace('vec', 'map');
+            }
+        });
+    },
 
     // La visibilidad de un marker viene dada por:
     // 1. El campo visible, establecido por el usuario mediante el checkbox del submenu de recursos (salvo unchecked por defecto)
@@ -202,7 +219,7 @@ const MapState = {
         this.preloadedMarkers.forEach(function (marker) {
             if (marker.visible 
             && (!marker.mapResource.filter || marker.mapResource.filter(marker))
-            && (marker.mapResource.showAll || (MapService.markerVisible(ms.map, marker)))) {
+            && ((!PC.restrict_resources_to_initial_bounds && marker.mapResource.showAll) || (MapService.markerVisible(ms.map, marker)))) {
                 marker.addTo(ms.map);
             }
             else {
@@ -215,12 +232,11 @@ const MapState = {
         
         var ms = this;
         if (ms.map.timeDimensionControl) {
-            ms.map.timeDimensionControl._player.stop();
-            ms.map.removeControl(ms.map.timeDimensionControl);
-            ms.map.timeDimensionControl = null;
+           ms.removeTimeDimensionControl();
         }
 
         ms.currentTimeLineLayer = null;
+        //ms.playingTimeLineLayers = [];
         this.preloadedTimeLineLayers.forEach(function (preLayer) {
             if (ms.map.hasLayer(preLayer)) {
                 preLayer.remove();
@@ -228,13 +244,13 @@ const MapState = {
                 preLayer._defaultTime = 0;
                 preLayer._availableTimes = [];
                 if (preLayer._baseLayer.options.predictionScaleImg)
-                    //ms.predictionScaleImg = '';
                     preLayer._baseLayer.options.logosImgs.forEach(url => {
                     ms.removeMapLogo(url);
                 })
             }
             if (MapService.tileLayerVisible(ms.map, preLayer._baseLayer) && preLayer.visible) {
                 ms.currentTimeLineLayer = preLayer;
+                //ms.playingTimeLineLayers.push(preLayer);
                 ms.map.options.timeDimensionOptions.period = "PT" + preLayer._baseLayer.options.hoursStep + "H";
                 if (ms.playerDateManualMode) {
                     ms.maxPredictionDate = MapService.convertYMDHToDate(preLayer._baseLayer.options.strLastate);
@@ -242,8 +258,8 @@ const MapState = {
                         ms.playerDateRangeToValue = ms.maxPredictionDate;
                         var notifyMsg = { 
                             id: 'errorFechasPlayer', 
-                            message: "No hay mapas en el intervalo de fechas seleccionado. Mostrando predicción: " + MapService.getGMTDateString(ms.playerDateRangeFromValue) + " - " + MapService.getGMTDateString(ms.playerDateRangeToValue) + ' (GMT)',
-                            title: "Aviso",
+                            message: Vue.$t('{msgFixingPred}') + ": " + MapService.getWeekDateString(ms.playerDateRangeFromValue) + " - " + MapService.getWeekDateString(ms.playerDateRangeToValue) + ' (GMT)',
+                            title: Vue.$t('{titleMsgImportant}'),
                             duration: 10000
                         };
                         ms.addNotifyMessage(notifyMsg);
@@ -262,8 +278,7 @@ const MapState = {
                 ms.map.timeDimension.initialize(ms.map.options.timeDimensionOptions);
                 ms.map.timeDimension.setCurrentTimeIndex(0);
                 if (!ms.map.timeDimensionControl) {
-                    ms.map.timeDimensionControl = L.control.timeDimension({ position: "bottomleft", playerOptions: { transitionTime: 500, loopButton: true,  loop: true }, autoPlay: true, minimized: ms.playerMinimized })
-                    ms.map.addControl(ms.map.timeDimensionControl);
+                    ms.createTimeDimensionControl();
                 }
                 preLayer.addTo(ms.map);
 
@@ -300,7 +315,7 @@ const MapState = {
             if (!showingError) {
                 var notifyMsg = { 
                     id: 'fechasPlayer', 
-                    message: "Mostrando predicción: " + MapService.getGMTDateString(this.playerDateRangeFromValue) + " - " + MapService.getGMTDateString(this.playerDateRangeToValue) + ' (GMT)',
+                    message: Vue.$t('{msgShowingPred}') + ": " + MapService.getWeekDateString(this.playerDateRangeFromValue) + " - " + MapService.getWeekDateString(this.playerDateRangeToValue) + ' (GMT)',
                     title: this.currentTimeLineLayer.mapOption ? Vue.$t(this.currentTimeLineLayer.mapOption.name) : '',
                     duration: 7000
                 };
@@ -316,8 +331,7 @@ const MapState = {
     // de forma que, si las fechas de un tile no coinciden con las estableidas, podamos 
     // avisar del cambio
     changePlayerDateRangeValue(from, to) {
-        this.map.timeDimensionControl._player.stop();
-        this.map.removeControl(this.map.timeDimensionControl);
+        this.removeTimeDimensionControl();
         if (this.currentTimeLineLayer) {
             this.currentTimeLineLayer.remove();
             this.currentTimeLineLayer._layers = {};
@@ -329,10 +343,26 @@ const MapState = {
         this.map.options.timeDimensionOptions.timeInterval = this.playerDateRangeFromValue.toISOString() + '/' + this.playerDateRangeToValue.toISOString();
         this.map.timeDimension.initialize(this.map.options.timeDimensionOptions);
         this.map.timeDimension.setCurrentTimeIndex(0);
-        this.map.addControl(this.map.timeDimensionControl);
+        this.createTimeDimensionControl();
         this.currentTimeLineLayer.addTo(this.map);
         this.playerDateManualMode = true;
 
+    },
+
+    createTimeDimensionControl() {
+        this.map.timeDimensionControl = L.control.timeDimension(
+            { 
+                position: "bottomleft", 
+                playerOptions: { transitionTime: 500, loopButton: true,  loop: true }, 
+                autoPlay: true, minimized: this.playerMinimized 
+            })
+        this.map.addControl(this.map.timeDimensionControl);
+    },
+
+    removeTimeDimensionControl() {
+        this.map.timeDimensionControl._player.stop();
+        this.map.removeControl(this.map.timeDimensionControl);
+        this.map.timeDimensionControl = null;
     },
 
     setPlayerMinimized(value) {
@@ -582,8 +612,9 @@ const MapState = {
     showStaffNotifyMessages() {
         if (PC.notify_messages) {
             PC.notify_messages.filter(msg => msg.id).forEach(msg => {
+                msg.message = Vue.$getLocale() == 'es' ? msg.message.es : msg.message.en;
                 msg.type = "alert";
-                msg.title = "Aviso!"
+                msg.title = Vue.$t('{titleMsgImportant}')
                 msg.duration = 0;
                 msg.ignorable = true;
                 this.addNotifyMessage(msg);

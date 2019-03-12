@@ -2,10 +2,10 @@
 
   <div style="height: 100%">
       <div id="map"></div>
-      <img v-if="!isWidget" @click="openFullscreen" class="fullscreenIcon" :class="[align == 'left' ? 'fullScreenIconLeftAlign' : 'fullScreenIconRightAlign']" :src="require('@/assets/icons/fullscreenBlanco.png')" />
+      <span v-if="!isWidget" @click="openFullscreen" class="fullscreenIcon" :class="[align == 'left' ? 'fullScreenIconLeftAlign' : 'fullScreenIconRightAlign', 'fullScreenIcon']"></span>
       <span v-if="!isWidget" class="clockPanel" :class="[align == 'left' ? 'clockLeftAlign' : 'clockRightAlign']" >{{currentTime}} GMT</span>
       <img class="loaderGif" :src="require('@/assets/gifs/loadingBars.gif')" v-show="loading" width="100"  /> 
-      <PlayerOptions  :isWidget="isWidget"  />
+      <PlayerOptions :isWidget="isWidget"  />
       <NotifyPopup v-if="!isWidget" :messages="mapState.notifyMessages" />
   </div>
 
@@ -24,10 +24,10 @@ export default {
     NotifyPopup
   },
   props: {
-    baseMap: Object,
     zoomControl: { default: true, required: false },
     isWidget: { default: false, required: false },
     mapFixed: false,
+    scrollWheelZoom: true,
   },
   data() {
     return {
@@ -36,11 +36,6 @@ export default {
       align: PC.options_panel_align
     };
   },
-  watch: {
-    baseMap: function(oldValue, newValue) {
-      this.setBaseLayer();
-    }
-  },
   computed: {
     loading() {
       return this.mapState.loadingThings.length > 0;
@@ -48,12 +43,12 @@ export default {
   },
   mounted() {
     this.initMap();
-    this.setBaseLayer();
     this.startClock();
   },
   methods: {
    
     initMap: function() {
+
       var mapExtent = PC.map_initial_bounds;
       var bounds = new L.LatLngBounds(
         new L.LatLng(mapExtent[1], mapExtent[0]),
@@ -62,25 +57,47 @@ export default {
 
       var map = L.map("map", {
         preferCanvas: true,
-        zoomSnap: 0.1,
+        // Con restrict_view forzamos decimales en zoom para ajustar
+        // zoomSnap: PC.restrict_view_to_initial_bounds ? 0 : 1,
+        // zoomDelta: 0.1,
         zoomControl: false,
         closePopupOnClick: false,
         fullscreenControl: true,
         timeDimensionControl: false,
         timeDimension: true,
-        timeDimensionOptions: { mapState: this.mapState }
+        timeDimensionOptions: { mapState: this.mapState },
+        attributionControl: false
       }).fitBounds(bounds);
+
+      if (PC.restrict_view_to_initial_bounds) 
+        map.setMaxBounds(bounds.pad(0.75));
+
+      var baseLayer = L.tileLayer(
+        PC.base_layer,
+        {
+          minZoom: PC.restrict_view_to_initial_bounds ? Math.round(map.getZoom()) : PC.base_layer_min_zoom,
+          maxZoom: PC.base_layer_max_zoom,
+          tms: false
+        }
+      );
+      baseLayer.addTo(map);
+
+      // var rect = L.rectangle([[mapExtent[1], mapExtent[0]], [mapExtent[3], mapExtent[2]]], { color: 'red', fillOpacity: 0.1, weight: 1 });
+      // rect.addTo(map);
 
       if (!this.mapFixed) {
         L.control.zoom({
           position: PC.options_panel_align == 'right' ? 'topleft' : 'topright'
         }).addTo(map);
-        // L.control.zoomBox({
-        //   modal: true,
-        //   addToZoomControl: true,
-        //   position: PC.options_panel_align == 'right' ? 'topleft' : 'topright'
-        // }).addTo(map);
+        if (!this.scrollWheelZoom) {
+           map.scrollWheelZoom.disable();
+        }
+      } else {
+        map.scrollWheelZoom.disable();
+        map.dragging.disable();
       }
+
+      map.touchZoom.disable();
      
       var vm = this;
       map.on("moveend", function() {
@@ -88,6 +105,7 @@ export default {
            vm.moveEndTimeOut = setTimeout(() => {
             MapState.setVisibleTimeLineLayers();
             MapState.setVisibleMarkerLayers();
+            console.log(map.getZoom());
           }, 750);
         }
        
@@ -100,17 +118,7 @@ export default {
         MapState.popupFixed = false;
       });
 
-      if (this.mapFixed) {
-        map.scrollWheelZoom.disable();
-        map.dragging.disable();
-      }
       MapState.init(map);
-    },
-
-    setBaseLayer: function() {
-      if (this.baseMap) {
-        MapState.setBaseLayer(this.baseMap);
-      }
     },
 
     startClock() {
@@ -152,12 +160,10 @@ export default {
   position: absolute;
   top: 10px;
   z-index: 7;
-  background: rgba(0, 0, 0, 0.3);
   padding-top: 6px;
   padding-left: 10px;
   padding-right: 10px;
   padding-bottom: 6px;
-  color: white;
   font-size: 13px;
 }
 
@@ -174,9 +180,9 @@ export default {
   position: absolute;
   top: 10px;
   width: 31px;
+  height: 31px;
   z-index: 7;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 4.5px;
+  padding: 3.5px;
   cursor: pointer;
 }
 

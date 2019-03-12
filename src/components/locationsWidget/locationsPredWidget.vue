@@ -53,6 +53,45 @@
              <img :src="vientoImgD1">
           
           </div>
+          <div class="pleaBajaSection">
+            <b-row>
+               <span style="float: left; margin-right: 17px; margin-top: 5px; font-weight: bold">plea
+                   <img
+                    style="width: 9px; margin-left: -2px; margin-top: -1px"
+                    :src="require('@/assets/locationsWidget/plea.png')"
+                  >
+               </span>
+             
+               <div style="float: left">
+                <b-row> 
+                  <span v-if="plea1LevelD1 != null && !isNaN(plea1LevelD1)">{{plea1DateD1}} ({{plea1LevelD1}}m)</span>
+                  <span v-else>{{plea1DateD1}} (nd)</span>
+                </b-row>
+                <b-row>
+                  <span v-if="plea2LevelD1 != null && !isNaN(plea2LevelD1)">{{plea2DateD1}} ({{plea2LevelD1}}m)</span>
+                  <span v-else>{{plea2DateD1}} (nd)</span>
+                </b-row>
+               </div>
+            </b-row>
+            <b-row>
+                 <span style="float: left; margin-right: 17px; margin-top: 5px; font-weight: bold">baja
+                   <img
+                    style="width: 9px; margin-left: -2px; margin-top: -1px"
+                    :src="require('@/assets/locationsWidget/baja.png')"
+                  >
+               </span>
+               <div style="float: left">
+                <b-row>
+                   <span v-if="baja1LevelD1 != null && !isNaN(baja1LevelD1)">{{baja1DateD1}} ({{baja1LevelD1}}m)</span>
+                   <span v-else>{{baja1DateD1}} (nd)</span>
+                </b-row>
+                <b-row>
+                   <span v-if="baja2LevelD1 != null && !isNaN(baja2LevelD1)">{{baja2DateD1}} ({{baja2LevelD1}}m)</span>
+                   <span v-else>{{baja2DateD1}} (nd)</span>
+                </b-row>
+               </div>
+            </b-row>
+          </div>
         </div>
 
         <div class="variableBGSection" style="background-color: #dae0ea;">
@@ -77,6 +116,44 @@
              <img class="winDirRotation" :style="'transform: rotate(' + vientoRotationD2 + 'deg)'" :src='require("@/assets/locationsWidget/windDir.png")' />
             <img :src="vientoImgD2">
           </div>
+           <div class="pleaBajaSection">
+            <b-row>
+                <span style="float: left; margin-right: 17px; margin-top: 5px; font-weight: bold">plea
+                   <img
+                    style="width: 9px; margin-left: -2px; margin-top: -1px"
+                    :src="require('@/assets/locationsWidget/plea.png')"
+                  >
+               </span>
+               <div style="float: left">
+                <b-row> 
+                  <span v-if="plea1LevelD2 != null && !isNaN(plea1LevelD2)">{{plea1DateD2}} ({{plea1LevelD2}}m)</span>
+                  <span v-else>{{plea1DateD2}} (nd)</span>
+                </b-row>
+                <b-row>
+                  <span v-if="plea2LevelD2 != null && !isNaN(plea2LevelD2)">{{plea2DateD2}} ({{plea2LevelD2}}m)</span>
+                  <span v-else>{{plea2DateD2}} (nd)</span>
+                </b-row>
+               </div>
+            </b-row>
+            <b-row>
+                <span style="float: left; margin-right: 17px; margin-top: 5px; font-weight: bold">baja
+                   <img
+                    style="width: 9px; margin-left: -2px; margin-top: -1px"
+                    :src="require('@/assets/locationsWidget/baja.png')"
+                  >
+               </span>
+               <div style="float: left">
+                <b-row>
+                   <span v-if="baja1LevelD2 != null && !isNaN(baja1LevelD2)">{{baja1DateD2}} ({{baja1LevelD2}}m)</span>
+                   <span v-else>{{baja1DateD2}} (nd)</span>
+                </b-row>
+                <b-row>
+                   <span v-if="baja2LevelD2 != null && !isNaN(baja2LevelD2)">{{baja2DateD2}} ({{baja2LevelD2}}m)</span>
+                   <span v-else>{{baja2DateD2}} (nd)</span>
+                </b-row>
+               </div>
+            </b-row>
+          </div>
         </div>
         <div class="variableBGSection" style="background-color: #e8ebf1;">
           <div class="variableDate">{{fechaD3}}</div>
@@ -100,167 +177,51 @@
             <img class="winDirRotation" :style="'transform: rotate(' + vientoRotationD3 + 'deg)'" :src='require("@/assets/locationsWidget/windDir.png")' />
             <img :src="vientoImgD3">
           </div>
+           <div class="pleaBajaSection">
+            <b-row>
+                 <span style="float: left; margin-right: 17px; margin-top: 5px; font-weight: bold">plea
+                   <img
+                    style="width: 9px; margin-left: -2px; margin-top: -1px"
+                    :src="require('@/assets/locationsWidget/plea.png')"
+                  >
+               </span>
+               <div style="float: left">
+                <b-row> 
+                  <span v-if="plea1LevelD3 != null && !isNaN(plea1LevelD3)">{{plea1DateD3}} ({{plea1LevelD3}}m)</span>
+                  <span v-else>{{plea1DateD3}} (nd)</span>
+                </b-row>
+                <b-row>
+                  <span v-if="plea2LevelD3 != null && !isNaN(plea2LevelD3)">{{plea2DateD3}} ({{plea2LevelD3}}m)</span>
+                  <span v-else>{{plea2DateD3}} (nd)</span>
+                </b-row>
+               </div>
+            </b-row>
+            <b-row>
+                 <span style="float: left; margin-right: 17px; margin-top: 5px; font-weight: bold">baja
+                   <img
+                    style="width: 9px; margin-left: -2px; margin-top: -1px"
+                    :src="require('@/assets/locationsWidget/baja.png')"
+                  >
+               </span>
+               <div style="float: left">
+                <b-row>
+                   <span v-if="baja1LevelD3 != null && !isNaN(baja1LevelD3)">{{baja1DateD3}} ({{baja1LevelD3}}m)</span>
+                   <span v-else>{{baja1DateD3}} (nd)</span>
+                </b-row>
+                <b-row>
+                   <span v-if="baja2LevelD3 != null && !isNaN(baja2LevelD3)">{{baja2DateD3}} ({{baja2LevelD3}}m)</span>
+                   <span v-else>{{baja2DateD3}} (nd)</span>
+                </b-row>
+               </div>
+            </b-row>
+          </div>
         </div>
       </div>
       <span style="float: left; font-size: 9.5px">* En aguas abiertas</span>
     </b-card>
  
-   <div v-if="!displayShareInfo && !loading" class="fadeIn">  
-    <div class="pleaBajaSection" style="margin-left: 35px;">
-      <b-row>
-        <b-col cols="2" style="padding-top: 7px">
-          <div style="font-weight: bold">plea
-            <!-- <img
-              style="width: 9px; margin-left: -2px;"
-              :src="require('@/assets/locationsWidget/baja.png')"
-            >-->
-          </div>
-        </b-col>
-        <b-col>
-          <b-row>
-            <b-col>
-               <span v-if="plea1LevelD1 != null && !isNaN(plea1LevelD1)">{{plea1DateD1}} ({{plea1LevelD1}}m)</span>
-               <span v-else>{{plea1DateD1}} (nd)</span>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col>
-              <span v-if="plea2LevelD1 != null && !isNaN(plea2LevelD1)">{{plea2DateD1}} ({{plea2LevelD1}}m)</span>
-               <span v-else>{{plea2DateD1}} (nd)</span>
-            </b-col>
-          </b-row>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col cols="2" style="padding-top: 7px">
-          <div style="font-weight: bold">baja
-            <!-- <img
-              style="width: 9px; margin-left: -2px;"
-              :src="require('@/assets/locationsWidget/baja.png')"
-            >-->
-          </div>
-        </b-col>
-        <b-col>
-          <b-row>
-            <b-col>
-              <span v-if="baja1LevelD1 != null && !isNaN(baja1LevelD1)">{{baja1DateD1}} ({{baja1LevelD1}}m)</span>
-               <span v-else>{{baja1DateD1}} (nd)</span>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col>
-               <span v-if="baja2LevelD1 != null && !isNaN(baja2LevelD1)">{{baja2DateD1}} ({{baja2LevelD1}}m)</span>
-               <span v-else>{{baja2DateD1}} (nd)</span>
-            </b-col>
-          </b-row>
-        </b-col>
-      </b-row>
-    </div>
-    
 
-    <div class="pleaBajaSection" style="margin-left: 154px;">
-      <b-row>
-        <b-col cols="2" style="padding-top: 7px">
-          <div style="font-weight: bold">plea
-            <!-- <img
-              style="width: 9px; margin-left: -2px;"
-              :src="require('@/assets/locationsWidget/baja.png')"
-            >-->
-          </div>
-        </b-col>
-        <b-col>
-          <b-row>
-            <b-col>
-              <span v-if="plea1LevelD2 != null && !isNaN(plea1LevelD2)">{{plea1DateD2}} ({{plea1LevelD2}}m)</span>
-               <span v-else>{{plea1DateD2}} (nd)</span>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col>
-              <span v-if="plea2LevelD2 != null && !isNaN(plea2LevelD2)">{{plea2DateD2}} ({{plea2LevelD2}}m)</span>
-               <span v-else>{{plea2DateD2}} (nd)</span>
-            </b-col>
-          </b-row>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col cols="2" style="padding-top: 7px">
-          <div style="font-weight: bold">baja
-            <!-- <img
-              style="width: 9px; margin-left: -2px;"
-              :src="require('@/assets/locationsWidget/baja.png')"
-            >-->
-          </div>
-        </b-col>
-        <b-col>
-          <b-row>
-            <b-col>
-                <span v-if="baja1LevelD2 != null && !isNaN(baja1LevelD2)">{{baja1DateD2}} ({{baja1LevelD2}}m)</span>
-               <span v-else>{{baja1DateD2}} (nd)</span>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col>
-                <span v-if="baja2LevelD2 != null && !isNaN(baja2LevelD2)">{{baja2DateD2}} ({{baja2LevelD2}}m)</span>
-               <span v-else>{{baja2DateD2}} (nd)</span>
-            </b-col>
-          </b-row>
-        </b-col>
-      </b-row>
-    </div>
-
-    <div class="pleaBajaSection" style="margin-left: 274px;">
-      <b-row>
-        <b-col cols="2" style="padding-top: 7px">
-          <div style="font-weight: bold">plea
-            <!-- <img
-              style="width: 9px; margin-left: -2px;"
-              :src="require('@/assets/locationsWidget/baja.png')"
-            >-->
-          </div>
-        </b-col>
-          <b-col>
-          <b-row>
-            <b-col>
-               <span v-if="plea1LevelD3 != null && !isNaN(plea1LevelD3)">{{plea1DateD3}} ({{plea1LevelD3}}m)</span>
-               <span v-else>{{plea1DateD3}} (nd)</span>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col>
-              <span v-if="plea2LevelD3 != null && !isNaN(plea2LevelD3)">{{plea2DateD3}} ({{plea2LevelD3}}m)</span>
-              <span v-else>{{plea2DateD3}} (nd)</span>
-            </b-col>
-          </b-row>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col cols="2" style="padding-top: 7px">
-          <div style="font-weight: bold">baja
-            <!-- <img
-              style="width: 9px; margin-left: -2px;"
-              :src="require('@/assets/locationsWidget/baja.png')"
-            >-->
-          </div>
-        </b-col>
-          <b-col>
-          <b-row>
-            <b-col>
-               <span v-if="baja1LevelD3 != null && !isNaN(baja1LevelD3)">{{baja1DateD3}} ({{baja1LevelD3}}m)</span>
-               <span v-else>{{baja1DateD3}} (nd)</span>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col>
-              <span v-if="baja2LevelD3 != null && !isNaN(baja2LevelD3)">{{baja2DateD3}} ({{baja2LevelD3}}m)</span>
-               <span v-else>{{baja2DateD3}} (nd)</span>
-            </b-col>
-          </b-row>
-        </b-col>
-      </b-row>
-    </div>
-   </div>
-
+  
 
   </div>
 </template>
@@ -388,8 +349,8 @@ export default {
         this['baja1LevelD' + count] = parseFloat(data[fecha][0].low_tide1_level).toFixed(2);
         this['baja2DateD' + count] = this.printHour(data[fecha][0].low_tide2_date)
         this['baja2LevelD' + count] = parseFloat(data[fecha][0].low_tide2_level).toFixed(2);
-        this['oleajeImgD' + count] = require("@/assets/locationsWidget/surfP_" + data[fecha][0].alert_surf + ".png");
-        this['vientoImgD' + count] = require("@/assets/locationsWidget/windP_" +  data[fecha][0].alert_wind + ".png");
+        this['oleajeImgD' + count] = require("@/assets/locationsWidget/surfP_" + (data[fecha][0].alert_surf  >= 0 ? data[fecha][0].alert_surf : 0) + ".png");
+        this['vientoImgD' + count] = require("@/assets/locationsWidget/windP_" +  (data[fecha][0].alert_wind  >= 0 ? data[fecha][0].alert_wind : 0) + ".png");
         this['vientoDirImgD' + count] = require("@/assets/locationsWidget/" + this.mapUtils.getDirNameFromDeg(this['vientoRotationD' + count]).toLowerCase() + "_w.png");
         count++;
       }
@@ -430,9 +391,10 @@ export default {
 
 .pleaBajaSection {
   position: absolute;
-  margin-top: -92px;
+  margin-top: 72px;
   font-size: 10.5px;
   color: black;
+  padding-left: 23px;
 }
 
 .variableSection {
@@ -440,11 +402,12 @@ export default {
   width: 45px;
   border-radius: 21px;
   float: left;
-  margin-right: 7px;
+  /* margin-right: 7px; */
+  margin-left: 9.5px;
 }
 
 .variableBGSection {
-  padding: 8px;
+  padding: 8px 0px;
   height: 150px;
   float: left;
   width: 120px;
@@ -500,6 +463,7 @@ export default {
   font-family: Arial;
   position: absolute;
   margin-top: -26px;
+  margin-left: 6px;
 }
 
 .variableDateSm {

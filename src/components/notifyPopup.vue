@@ -9,7 +9,7 @@
       :class="[align == 'left' ? 'leftAlign' : 'rightAlign']"
     >
       <div slot="header" class="mb-0">
-        {{message.title ? message.title : 'Aviso'}}
+        {{message.title ? $t(message.title) : $t('{titleMsg}')}}
         <img
           :src="require('@/assets/icons/x.png')"
           class="closeIconSm"
@@ -19,7 +19,7 @@
       <b-container style="max-width: 380px;">
         <div style="padding: 10px; margin-bottom: 10px">
           <div style="font-size: 13px; float: left">
-            {{ message.message }}
+            {{ $t(message.message) }}
            </div>
           <div v-show="message.ignorable" style="float: right">
             <label style="font-size: 11px; padding-right: 10px; margin-bottom: 0px !important;">
@@ -29,7 +29,7 @@
                 v-model="message.dontShowMore"
                 :value="message.dontShowMore"
               >
-              No volver a ver
+              {{ $t('{dontShowMoreCheck}') }}
             </label>
           </div>
         </div>

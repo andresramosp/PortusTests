@@ -11,20 +11,21 @@
         </b-row>
         <b-row v-for="param in bancoDatos" :key="param.id" >
             <b-col style="padding-top: 2px">
-                <img style="float: left; margin-right: 7px; margin-top: -4px;" width="25" 
-                    :title="$t('{' + param.variable + '}')"
-                    :src='require("@/assets/icons/bancoDatos/" + param.variable.toLowerCase() + ".png")'>
-                <span>{{ param.nombre }}</span>
+                <span  :title="$t('{' + param.variable + '}')" 
+                      style="float: left; margin-right: 7px; margin-top: -4px; height: 25px" 
+                      :class="param.variable.toLowerCase()">
+                </span>
+                <span >{{ param.nombre }}</span>
             </b-col>
              <b-col>
                 <label style="margin-bottom: 0px !important;">
-                    <img style="" width="18" :src="param.graphicActive ? require('@/assets/icons/check_activo.png') : require('@/assets/icons/check_inactivo.png')" >
+                    <span :class="param.graphicActive ? 'checkActive' : 'checkInactive'" > </span>
                     <input class="form-check-input" style="display: none" type="checkbox" v-model="param.graphicActive" @change="changeGraphParam(param)" />
                 </label>
             </b-col>
             <b-col >
                 <label style="margin-bottom: 0px !important;">
-                    <img style="" width="18" :src="param.tableActive ? require('@/assets/icons/check_activo.png') : require('@/assets/icons/check_inactivo.png')" >
+                    <span :class="param.tableActive ? 'checkActive' : 'checkInactive'" > </span>
                     <input class="form-check-input" style="display: none" type="checkbox" v-model="param.tableActive" @change="changeParam(param)" />
                 </label>
             </b-col>
@@ -35,8 +36,8 @@
             </b-col>
             <b-col>
                 <label style="margin-bottom: 0px !important;">
-                    <img style="" width="18" :src="allGraphsActive ? require('@/assets/icons/check_activo.png') : require('@/assets/icons/check_inactivo.png')" >
-                    <input class="form-check-input" style="display: none" type="checkbox" v-model="allGraphsActive" @change="changeAllGraphsParam(allGraphsActive)" />
+                     <span :class="allGraphsActive ? 'checkActive' : 'checkInactive'" > </span>
+                     <input class="form-check-input" style="display: none" type="checkbox" v-model="allGraphsActive" @change="changeAllGraphsParam(allGraphsActive)" />
                 </label>
             </b-col>
         </b-row>
@@ -86,12 +87,6 @@ export default {
           return this.bancoDatos.length > 0;
       }
   },
-  watch: {
-      contentLoaded() {
-          if (this.contentLoaded)
-            this.$emit('content-loaded');
-      }
-  },
   mounted() {
   },
   created() {
@@ -100,6 +95,10 @@ export default {
   watch: {
       markers: function() {
           this.init();
+      },
+      contentLoaded: function() {
+          if (this.contentLoaded)
+            this.$emit('content-loaded');
       }
   },
   methods: {

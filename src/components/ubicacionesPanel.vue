@@ -1,6 +1,6 @@
  <template>
  <div class="ubicacionesPanel" :class="{ 'leftAlign': align == 'right', 'rightAlign': align == 'left', 'blueTheme': theme == 'blueTheme', 'darkTheme': theme == 'darkTheme' }">
-     <img :src="require('@/assets/icons/ubicaciones.png')" width="28" style="float: left;" />
+     <span class="ubicacionesIcon" style="float: left; width: 28px; height: 28px"></span>
      <dx-autocomplete style="float: right" 
             :data-source="ubicacionesList"
             :maxItemCount="200"
@@ -47,7 +47,7 @@ export default {
       ubicacionesList: null,
       defaultZoom: 6,
       marker: null,
-      mapOptionIdActivated: null,
+      mapOptionActivated: null,
       predResourceActivated: null,
       waveMapResourcePrefix: 'pred-tiles-oleaje-', // + region del puerto
       waveMapOptionPrefix: 'pred_oleaje_' // + region del puerto
@@ -109,13 +109,13 @@ export default {
         }, 50);
       });
       this.marker.on('mouseout', function (e) {
-        // var marker = this;
-        // if (marker.timeOut) {
-        //   clearTimeout(marker.timeOut);
-        // }
-        // marker.closePopup();
-        // marker.unbindPopup();
-        // marker.locationsRTComponent.$destroy(true);
+        var marker = this;
+        if (marker.timeOut) {
+          clearTimeout(marker.timeOut);
+        }
+        marker.closePopup();
+        marker.unbindPopup();
+        marker.locationsRTComponent.$destroy(true);
       });
       this.marker.addTo(map);
 
@@ -123,7 +123,10 @@ export default {
       map.flyTo(latLng, ubicacion.minZoom != -1 ? ubicacion.minZoom : this.defaultZoom);
 
       if (ubicacion.tipoUbicacion == UbicacionType.PUERTO) {
-        this.addPrediction(ubicacion);
+        setTimeout(() => {
+          this.addPrediction(ubicacion);
+        }, 2000);
+        
       }
 
       this.mapState.ubicacionSelected = ubicacion;
@@ -141,20 +144,35 @@ export default {
     },
 
     addPrediction(ubicacion) {
-        this.predResourceActivated = this.mapState.getMapResource(this.waveMapResourcePrefix + ubicacion.region.toLowerCase());
-        this.predResourceActivated.oldVectorsValue = this.predResourceActivated.defaultVectors;
-        this.predResourceActivated.defaultVectors = true;
+        // this.predResourceActivated = this.mapState.getMapResource(this.waveMapResourcePrefix + ubicacion.region.toLowerCase());
+        // this.predResourceActivated.oldVectorsValue = this.predResourceActivated.defaultVectors;
+        // this.predResourceActivated.defaultVectors = true;
 
-        this.mapOptionIdActivated = this.waveMapOptionPrefix + ubicacion.region.toLowerCase();
-        this.mapState.setMapOption(this.mapOptionIdActivated, true);
+        this.mapOptionActivated = this.mapState.getMapOption(this.waveMapOptionPrefix + ubicacion.region.toLowerCase());
+        this.mapOptionActivated.mapResources.forEach(resId => {
+            var mapResource = MapState.getMapResource(resId);
+            if (mapResource.type == "TimeLineLayer") {
+               mapResource.oldVectorsValue = mapResource.defaultVectors;
+               mapResource.defaultVectors = true;
+            }
+        });
+        this.mapState.setMapOption(this.mapOptionActivated.id, true);
        
     },
 
     removePrediction() {
-        if (this.mapOptionIdActivated) {
-          this.mapState.setMapOption(this.mapOptionIdActivated, false);
-          this.mapOptionIdActivated = null;
-          this.predResourceActivated.defaultVectors = this.predResourceActivated.oldVectorsValue;
+        if (this.mapOptionActivated) {
+          this.mapState.setMapOption(this.mapOptionActivated.id, false);
+          this.mapOptionActivated.mapResources.forEach(resId => {
+            var mapResource = MapState.getMapResource(resId);
+            if (mapResource.type == "TimeLineLayer") {
+                mapResource.defaultVectors = mapResource.oldVectorsValue;
+            }
+          });
+
+          this.mapOptionActivated = null;
+
+          //this.predResourceActivated.defaultVectors = this.predResourceActivated.oldVectorsValue;
 
           var mapExtent = PC.map_initial_bounds;
           var bounds = new L.LatLngBounds(

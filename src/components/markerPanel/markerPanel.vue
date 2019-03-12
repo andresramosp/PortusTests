@@ -183,10 +183,7 @@ export default {
 <style scoped>
 
 
-.footer {
-  border-top: 1px solid #dee2e624;
-  margin-top: 20px;
-}
+
 
 .footerButton {
   margin-top: 15px;

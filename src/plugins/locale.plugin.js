@@ -153,6 +153,23 @@ const LocalePlugin = {
             es: "Hist.",
             en: "Hist."
         },
+        // Subopciones Menu
+        markersPredSubOption: {
+            es: "Tablas/Gráficos",
+            en: "Table/Charts"
+        },
+        verifPredSubOption: {
+            es: "Verificación",
+            en: "Validation"
+        },
+        stationsSubOption: {
+            es: "Estaciones",
+            en: "Stations"
+        },
+        modelsSubOption: {
+            es: "Puntos Modelo",
+            en: "Model Points"
+        },
         // Info Panel
         cerrarButton: {
             es: "Cerrar",
@@ -185,6 +202,18 @@ const LocalePlugin = {
         tipoUbicacionLocalidad: {
             es: "Localidad",
             en: "Place"
+        },
+        tipoUbicacionPuertoPlr: {
+            es: "Puertos",
+            en: "Ports"
+        },
+        tipoUbicacionPlayaPlr: {
+            es: "Playas",
+            en: "Beaches"
+        },
+        tipoUbicacionLocalidadPlr: {
+            es: "Localidades",
+            en: "Places"
         },
         longitudInfo: {
             es: "Longitud",
@@ -323,10 +352,6 @@ const LocalePlugin = {
             es: "Dominios",
             en: "Domains"
         },
-        botonImprimirMapas: {
-            es: "Imprimir",
-            en: "Print"
-        },
         botonBorrarMapas: {
             es: "Borrar",
             en: "Delete"
@@ -443,6 +468,44 @@ const LocalePlugin = {
         radarsIconPred: {
             es: "Ver puntos de radar",
             en: "Show radar points"
+        },
+        // Tooltips botones varios
+        shareTitle: {
+            es: "Incluir widget en su web",
+            en: "Add widget to your web"
+        },
+        pdfReport: {
+            es: "Reporte PDF",
+            en: "PDF report"
+        },
+        printButton: {
+            es: "Imprimir",
+            en: "Print"
+        },
+        // Alertas flotantes
+        msgCurrentsDir: {
+            es: "Si desea ver la dirección de las corrientes, haga zoom varias veces en la región de interés por favor.",
+            en: "If you wish to see currents direction, please make a zoom several times in the selected area of interest."
+        },
+        msgShowingPred: {
+            es: "Mostrando predicción",
+            en: "Showing prediction"
+        },
+        msgFixingPred: {
+            es: "No hay mapas en el intervalo de fechas seleccionado. Mostrando predicción",
+            en: "There are not maps for selected dates. Showing prediction:"
+        },
+        titleMsg: {
+            es: "Aviso",
+            en: "Notice"
+        },
+        titleMsgImportant: {
+            es: "Importante",
+            en: "Important"
+        },
+        dontShowMoreCheck: {
+            es: "No volver a ver",
+            en: "Don't show again"
         }
     },
    

@@ -1463,11 +1463,12 @@ L.TimeDimension.Player = (L.Layer || L.Class).extend({
     initialize: function(options, timeDimension) {
         var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
         this._preloadBuffer = !isChrome;
+        this.mapState = timeDimension.options.mapState;
         L.setOptions(this, options);
         this._timeDimension = timeDimension;
         this._paused = false;
-        this._buffer = this.options.buffer || (isChrome ? 5 : 15);
-        this._minBufferReady =  this.options.minBufferReady || (isChrome ? 3 : 1); 
+        this._buffer = this.options.buffer || (isChrome ? 10 : 25);
+        this._minBufferReady =  this.options.minBufferReady || (isChrome ? 5 : 1); 
         this._waitingForBuffer = false;
         this._loop = this.options.loop || false;
         this._steps = 1;
@@ -1490,8 +1491,10 @@ L.TimeDimension.Player = (L.Layer || L.Class).extend({
 
 
     _tick: function() {
-        if (this._preloadBuffer)
+        if (this._preloadBuffer) {
+            this.mapState.addLoading('playerPreload');
             jQuery('#sliderTimeElement').removeClass('knob');
+        }
         var maxIndex = this._getMaxIndex();
         var maxForward = (this._timeDimension.getCurrentTimeIndex() >= maxIndex) && (this._steps > 0);
         var maxBackward = (this._timeDimension.getCurrentTimeIndex() == 0) && (this._steps < 0);
@@ -1500,6 +1503,7 @@ L.TimeDimension.Player = (L.Layer || L.Class).extend({
             if (maxForward && this._preloadBuffer) {
                 this._preloadBuffer = false;
                 this.setTransitionTime(this.options.transitionTime || 1000);
+                this.mapState.removeLoading('playerPreload');
                 jQuery('#sliderTimeElement').addClass('knob');
             }
             if (!this._loop) {

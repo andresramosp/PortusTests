@@ -1,11 +1,17 @@
 <template>
   <div v-show="playingTimeLineLayer">
-    <img v-show="!isWidget" 
+    <!-- <img v-show="!isWidget" 
          @click="toggleMinimized()" 
          width="20" :class="[!mapState.playerMinimized ? 'minimizerButton' : 'minimizerButtonMin']" 
-         :src="!mapState.playerMinimized ? require('@/assets/icons/replegar.png') : require('@/assets/icons/desplegar.png')" />
+         :src="!mapState.playerMinimized ? require('@/assets/icons/replegar.png') : require('@/assets/icons/desplegar.png')" /> -->
+    <span v-show="!isWidget" 
+          style="width: 20px; height: 20px"
+          @click="toggleMinimized()" 
+          :class="minimizerClassList"
+    >
+    </span>
     <div >
-       <div v-show="!mapState.playerMinimized || isWidget" :class="[isWidget ? 'shadedSquareWidget' : 'shadedSquare']" class="fadeIn">
+       <div v-show="!mapState.playerMinimized || (isWidget && showScale)" :class="[isWidget ? 'shadedSquareWidget' : 'shadedSquare']" class="fadeIn">
            <span class="unidadEscala" >{{unidadEscala}}</span>
            <img :src="mapState.predictionScaleImg" :class="[isWidget ? 'predictionScaleWidget' : 'predictionScale']" class="playerOptions" />
        </div>
@@ -21,7 +27,7 @@
             :max="mapState.playerDateRangeToValue ? mapState.playerDateRangeToValue.addDays(-1) : null"
             type="date"
             display-format="dd/MMM"
-            width="20px"
+            width="18px"
           />
 
            <dx-date-box
@@ -35,8 +41,7 @@
             :min="mapState.playerDateRangeFromValue ? mapState.playerDateRangeFromValue.addDays(1) : null"
             type="date"
             display-format="dd/MMM"
-            :use-mask-behavior="true"
-            width="20px"
+            width="18px"
           />
      
       <div v-show="!mapState.playerMinimized" class="fadeIn" style="position: absolute; bottom: 20px; left: 427px; z-index: 5; width: 90px">
@@ -53,7 +58,8 @@
         <img v-if='hasVectors' class="playerIcon" :title="$t('{vectorsIconPred}')" @click="toggleVectors()" :src="mapState.showingVectors ?  require('@/assets/icons/vectorsActivated.png') : require('@/assets/icons/vectors.png')" />
         <img v-if='hasRadars' class="playerIcon" :title="$t('{radarsIconPred}')" @click="toggleRadars()" :src="mapState.showingRadars ?  require('@/assets/icons/puntosRadarActivated.png') : require('@/assets/icons/puntosRadar.png')" />   
       </div>
-       <img v-show="!mapState.playerMinimized" class="infoPredIcon fadeIn" @click="openPredictionInfo()" :src="require('@/assets/icons/info.png')" />   
+       <img v-show="!mapState.playerMinimized" class="infoPredIcon fadeIn" @click="openPredictionInfo()" :src="require('@/assets/icons/info.png')" /> 
+       <img v-show="isWidget" class="showScaleIcon fadeIn" @click="showScale = !showScale" :title="'Mostrar Escala'" :src="require('@/assets/icons/info.png')" />     
        <img v-show="!mapState.playerMinimized" class="fpsIcon fadeIn" :src="require('@/assets/icons/fps.png')" />   
 
        
@@ -81,13 +87,22 @@ export default {
       align: PC.options_panel_align,
       mapState: MapState,
       displayShareInfo: false,
-      predictionRouteData: null
+      predictionRouteData: null,
+      showScale: false
     };
   },
   props: {
     isWidget: { default: false, required: false }
   },
   computed: {
+      minimizerClassList() {
+        if (!this.mapState.playerMinimized) {
+          return ['minimizerButton', 'replegarIconPlayer']
+        }
+        else {
+          return ['minimizerButtonMin', 'desplegarIconPlayer']
+        }
+      },
       unidadEscala() {
         if (this.mapState.currentTimeLineLayer) {
           if (!this.isWidget)
@@ -124,8 +139,12 @@ export default {
     },
 
     toggleVectors: function() {
-      var currentPredLayer = this.mapState.currentTimeLineLayer
-      MapState.setVectorial(currentPredLayer.mapResource, !this.mapState.showingVectors);
+      // var currentPredLayer = this.mapState.currentTimeLineLayer
+      // MapState.setVectorial(currentPredLayer.mapResource, !this.mapState.showingVectors);
+      var currentAnimationOption = this.mapState.getActiveMapOptions()
+                                                .filter(opt => MapState.isAnimationOption(opt))[0]; 
+      MapState.setOptionVectorial(currentAnimationOption, !this.mapState.showingVectors)
+      
     },
 
     toggleRadars: function() {
@@ -216,7 +235,6 @@ export default {
     border-radius: 6px;
     left: 100px;
     bottom: 80px;
-    background: rgba(255, 255, 255, 0.35);
     text-align: center;
 }
 
@@ -227,7 +245,6 @@ export default {
     border-radius: 6px;
     left: 42.0%;
     bottom: 80px;
-    background: rgba(255, 255, 255, 0.35);
     text-align: center;
 }
 
@@ -252,7 +269,7 @@ export default {
     position: absolute;
     z-index: 2;
     left: 125px;
-    bottom: 15px;
+    bottom: 17px;
     width: 70px;
     font-size: 10px;
     border: none !important;
@@ -263,12 +280,12 @@ export default {
 
 .datePicker-left {
   /* left: 128px; */
-  left: 246px;
+  left: 248px;
 }
 
 .datePicker-right {
   /* left: 380px; */
-  left: 366px;
+  left: 370px;
 }
 
 .dx-texteditor-input {
@@ -319,6 +336,15 @@ export default {
     cursor: pointer;
 }
 
+.showScaleIcon {
+    position: absolute;
+    z-index: 2;
+    width: 17px;
+    left: 893px;
+    bottom: 12px;
+    cursor: pointer;
+}
+
 .fpsIcon {
     position: absolute;
     z-index: 2;
@@ -327,7 +353,21 @@ export default {
     width: 15px;
 }
 
+.dx-datebox-calendar .dx-dropdowneditor-icon {
+    font-size: 16px;
+}
 
+</style>
 
+<style scoped>
+
+.dx-texteditor-buttons-container {
+    position: absolute;
+    top: 0;
+    left: 4.5px;
+    /* right: 0; */
+    width: 15px;
+    height: 100%;
+}
 
 </style>

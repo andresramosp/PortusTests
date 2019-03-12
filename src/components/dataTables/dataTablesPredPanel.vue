@@ -12,11 +12,12 @@
 
     <div >
       <span v-if="errorMsg" >{{errorMsg}}</span>
-      <b-row v-if="!loading && !errorMsg">
-        <b-col  class="fadeIn" cols="2">
-          <img :src="defaultLogo" style="margin-left: 5px; margin-bottom: 15px">
+      <b-row v-if="!loading && !errorMsg" class="fadeIn">
+       <b-col  cols="3" style="display: flex;">
+          <img v-if="isCirana()" src="http://portus.puertos.es/Portus/img/logo_copernicusMFC.png" style="float:left" width="36" height="36">
+          <img :src="defaultLogo" style="margin-left: 5px; margin-bottom: 15px; float:left">
         </b-col>
-        <b-col cols="8">
+        <b-col cols="7" style="text-align: left">
           {{titulo}}
          </b-col>
          <b-col cols="2">
@@ -37,11 +38,13 @@
               class="shareIcon"
               v-if="hasReport()"
               @click="openReport"
+              :title="$t('{pdfReport}')"
             >
             <img
               :src='require("@/assets/icons/imprimir.png")'
               class="shareIcon"
               @click="printTable"
+              :title="$t('{printButton}')"
             >
         </b-col>
       </b-row>
@@ -148,7 +151,8 @@ export default {
   props: {
     marker: { type: Object, default: null },
     variable: { type: String, default: null },
-    isWidget: { type: Boolean, default: false }
+    isWidget: { type: Boolean, default: false },
+    preselectedTabIndex: { type: Number, default: 0 }
   },
   computed: {
     loading() {
@@ -174,6 +178,9 @@ export default {
     marker: function () {
       if (this.marker && this.variable)
         this.init();
+    },
+    preselectedTabIndex: function() {
+      this.tabIndex = this.preselectedTabIndex;
     }
   },
   created() {
@@ -188,17 +195,7 @@ export default {
            this.days = [];
            this.getTableData();
 
-           this.routeData = this.$router.resolve({
-            path: "/dataTablesPredWidget",
-            query: {
-              locale: this.$getLocale(),
-              locationCode: this.marker.id,
-              latitud: this.marker.latitud,
-              longitud: this.marker.longitud,
-              variable: this.variable,
-              palette: this.marker.mapResource.palette
-            }
-          });
+           this.routeData = this.getRouteData();
 
           if (this.marker.mareaAstronomica) {
             this.mareaAstronomicaUrl = BANCO_DATOS_URL + "Mareas/Principal1.php?Estacion=" + this.marker.mareaAstronomica.id + "&Lenguaje=es"
@@ -218,14 +215,14 @@ export default {
                                       + "?locale=" + this.$getLocale())
       
         if (result.data.length > 0) {
-            var groupDays = result.data.map(d => new Date(d.fecha)
-                .toISOString().split('T')[0])
+            var groupDays = result.data.map(d => d.fecha
+                .split(' ')[0])
                 .filter(function (elem, index, self) { return index == self.indexOf(elem); });
             groupDays.forEach(day => {
               var dayData = { 
                 _date: day,
                 id: new Date(day).toLocaleDateString(this.$getLocale() == 'es' ? 'es-ES' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
-                data: this.formatData(result.data.filter(d => new Date(d.fecha).toISOString().split('T')[0] == day), day)
+                data: this.formatData(result.data.filter(d => d.fecha.split(' ')[0] == day), day)
               }
               if (Object.keys(dayData.data[0]).length > this.minDataDay)
                 this.days.push(dayData);
@@ -256,8 +253,7 @@ export default {
               }
               result.push(reg);
             }
-            var fecha = new Date(fechaData.fecha)
-            var hora = fecha.toISOString().split('T')[1].substr(0,5)
+            var hora = fechaData.fecha.split(' ')[1].substr(0,5)
             reg[hora] = paramData.valor ? parseFloat(paramData.valor) : null; 
           })
         }
@@ -289,16 +285,17 @@ export default {
     },
     renderCell(ev) {
       if (ev.column.dataField == "variableParametro") {
-        ev.cellElement.style.background = "#7fb7e7f5";
+        ev.cellElement.style.background = "rgba(127, 183, 231, 0.96)";
         ev.cellElement.style.color = "white";
-        ev.cellElement.style.fontWeight = 'bold';
+        //ev.cellElement.style.fontWeight = 'bold';
         if (this.repeatedVarGroup && ev.value == this.repeatedVarGroup.value && ev.data._day == this.repeatedVarGroup.data._day) {
           ev.cellElement.innerHTML = "";
         }
         this.repeatedVarGroup = ev;
       }
       else if (ev.column.dataField == "nombreParametro") {
-        ev.cellElement.style.background = "#D5D5D5";
+        ev.cellElement.style.background = "rgb(232, 232, 232)";
+        ev.cellElement.style.color = "black";
       }
       else if (ev.rowType == "data") { 
         ev.cellElement.style.textAlign = "center";
@@ -307,18 +304,32 @@ export default {
           var rowSpeed = dayData.data.find(d => d.variableParametro == ev.data.variableParametro 
                                             && (d.nombreParametro == "Vc(m/s)" || d.nombreParametro == "Vv(m/s)" || d.nombreParametro == "Hs(m)"));
           var speedValue = rowSpeed[ev.column.dataField];
-          ev.cellElement.innerHTML = ev.value ? this.getDirArrow(parseFloat(ev.value), parseFloat(speedValue)) : '';
+          ev.cellElement.innerHTML = ev.value != null ? this.getDirArrow(parseFloat(ev.value), parseFloat(speedValue), ev.data) : '';
         }
         else {
           var decimals = ev.value < 999 ? (this.variable == VariableType.SEA_LEVEL ? 2 : 1) : 0;
-          ev.cellElement.innerHTML = ev.value ? ev.value.toFixed(decimals) : '';
+          ev.cellElement.innerHTML = ev.value != null ? ev.value.toFixed(decimals) : '';
         }
       }
     },
-    getDirArrow(dir, speed) {
-      var color = PaletteService.getColor(this.marker.mapResource.palette, speed);
+    getDirArrow(dir, speed, row) {
+      var palette = typeof this.marker.mapResource.palette === "function" ? this.marker.mapResource.palette(row) : this.marker.mapResource.palette;
+      var color = PaletteService.getColor(palette , speed);
       return "<svg version='1.1' baseProfile='full' xmlns='http://www.w3.org/2000/svg' width='15' height='15' style='margin:0px; padding:0px'>"
       + "<path transform='scale(0.15,0.15) rotate(" + dir + " 50 50)' stroke-width='3' stroke='#000000' fill='#" + color + "' d='m75,50 l-25,-45 l-25,45  l13,0 l0,45 l25,0 l0,-45 l13,0z'></path></svg>"
+    },
+    getRouteData() {
+      return this.$router.resolve({
+            path: "/dataTablesPredWidget",
+            query: {
+              locale: this.$getLocale(),
+              locationCode: this.marker.id,
+              latitud: this.marker.latitud,
+              longitud: this.marker.longitud,
+              variable: this.variable,
+              mapResource: this.marker.mapResource.id
+            }
+          });
     },
     cerrar() {
       this.days = [];
@@ -333,22 +344,9 @@ export default {
     },
   
     printTable() {
-      // Ponerle ref al logo y traerse el innerHtml, si lo piden
-      // Se le puede quitar la primera columna para ajustarlo mejor
-      // var printContents = "<style type='text/css' media='print'>  @page { size: landscape; } .dx-datagrid-headers .dx-row .colHeader { background-color: #7fb7e7f5 !important; font-size: 10px; font-weight: bold; color: #f8f9fa; padding-left: 2px } </style>"
-      // printContents += "<div style='margin-left: 800px;margin-bottom: 20px;'>" + this.$refs['tableContainer' + this.tabIndex][0].title + "</div>"
-      // // if (this.$refs.pleaBajaContainer)
-      // //   printContents += this.$refs.pleaBajaContainer.$el.innerHTML;
-      // printContents += this.$refs['tableContainer' + this.tabIndex][0].$el.innerHTML; 
-      // var w = window.open();
-      // w.document.write(printContents);
-      // w.print();
-
       if (!this.isWidget) {
-        var printWindow = window.open(this.routeData.href + '&forPrint=true', "_blank");
-      // printWindow.document.close(); 
-      // printWindow.focus();
-      // printWindow.print(); 
+        var routePrintData = this.getRouteData();
+        var printWindow = window.open(routePrintData.href + '&forPrint=true&tab=' + this.tabIndex, "_blank");
       }
       else {
         window.print();
@@ -359,6 +357,12 @@ export default {
       return (this.marker && this.marker.mapOption) &&
           (this.marker.mapOption.variableType == VariableType.WAVE
           || this.marker.mapOption.variableType == VariableType.SEA_LEVEL)
+    },
+
+    isCirana() {
+      return this.variable == VariableType.CURRENTS 
+        || this.variable == VariableType.SALINITY 
+        || this.variable == VariableType.WATER_TEMP;
     },
 
     openReport() {
@@ -423,7 +427,7 @@ export default {
 
 
 
-<style >
+<style>
 
 
 .list-container .nav-link {
@@ -449,8 +453,38 @@ export default {
     border-bottom: 0px !important;
 }
 
-.bg-selectedTab {
-    background-color: #7fb7e7f5 !important;
+.bg-selectedTab, 
+#tablePred .dx-datagrid-headers .dx-row .colHeader {
+    background-color: rgba(127, 183, 231, 0.96) !important;
+}
+
+.nav-link.bg-light {
+  color: black !important;
+  background-color: #e8e8e8 !important;
+  border: 1px solid white;
+}
+
+a.bg-light:hover {
+  background-color: lightgray !important;
+  border: 1px solid white;
+  color: black !important;
+}
+
+a.text-light:hover {
+  color: white !important;
+  border: 1px solid white;
+}
+
+a.text-light:focus {
+  color: white !important;
+  border: 1px solid white;
+}
+
+#tablePred .dx-datagrid-headers .dx-row .colHeader {
+  font-size: 10px;
+  color: #f8f9fa;
+  padding-left: 2px;
+  text-align: center !important;
 }
 
 .dx-datagrid-rowsview {

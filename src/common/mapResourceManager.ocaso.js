@@ -78,8 +78,7 @@ export const MapResources = [
     mapsResourceApi: 'mapStaticResources/VHM0Med',
     tms: true,
     vectors: true,
-    nonToggleable: true,
-    //paintBounds: true
+    nonToggleable: true
   },
   {
     id: 'pred-tiles-oleaje',
@@ -262,12 +261,6 @@ export const MapResources = [
     palette: "atmosfera"
   },
   {
-    id: 'tile-layer-prueba',
-    type: 'TileLayer',
-    name: 'Prueba TileLayer',
-    resourceUrl: 'https://tile.waymarkedtrails.org/cycling/{z}/{x}/{y}.png'
-  },
-  {
     id: 'rt-markers-ojeale',
     type: 'MarkerLayer',
     name: 'RT - Oleaje',
@@ -446,175 +439,15 @@ export const MapResources = [
     //cached: true,
     preventHeaping: true
   },
-  {
-    id: 'hist-markers-estaciones-oleaje',
-    type: 'MarkerLayer',
-    name: 'Estaciones Oleaje',
-    resourceApi: 'estaciones/hist/WAVE',
-    markerClass: MarkerClass.EstacionHist,
-    minZoom: 0,
-    icon: 'estacion-hist-oleaje.png',
-    iconSize: [24, 24],
-    showAll: true,
-    locale: true,
-    //cached: true,
-    preventHeaping: true,
-    subOption: '{stationsSubOption}'
-  },
-  {
-    id: 'hist-markers-estaciones-salinidad',
-    type: 'MarkerLayer',
-    name: 'Estaciones Salinidad',
-    resourceApi: 'estaciones/hist/SALINITY',
-    markerClass: MarkerClass.EstacionHist,
-    minZoom: 0,
-    icon: 'estacion-hist-salinidad.png',
-    iconSize: [24, 24],
-    showAll: true,
-    locale: true,
-    //cached: true,
-    preventHeaping: true,
-    subOption: '{stationsSubOption}'
-  },
-  {
-    id: 'hist-markers-modelos-oleaje',
-    type: 'MarkerLayer',
-    name: 'Puntos Malla Oleaje',
-    resourceApi: 'puntosMalla/hist/WAVE',
-    markerClass: MarkerClass.PuntoMallaHist, 
-    minZoom: 0,
-    iconSize: [17, 17],
-    icon: 'punto-malla-hist-oleaje.png', 
-    subOption: '{modelsSubOption}'
-  },
-  {
-    id: 'hist-markers-estaciones-viento',
-    type: 'MarkerLayer',
-    name: 'Estaciones Viento',
-    resourceApi: 'estaciones/hist/WIND',
-    markerClass: MarkerClass.EstacionHist,
-    minZoom: 0,
-    icon: 'estacion-hist-viento.png',
-    iconSize: [24, 24],
-    showAll: true,
-    locale: true,
-    //cached: true,
-    preventHeaping: true,
-    subOption: '{stationsSubOption}'
-  },
-  {
-    id: 'hist-markers-modelos-viento',
-    type: 'MarkerLayer',
-    name: 'Puntos Malla Viento',
-    resourceApi: 'puntosMalla/hist/WIND',
-    markerClass: MarkerClass.PuntoMallaHist, 
-    minZoom: 0,
-    iconSize: [13, 13],
-    icon: 'punto-malla-hist-viento.png', 
-    subOption: '{modelsSubOption}'
-  },
-  {
-    id: 'hist-markers-estaciones-corrientes',
-    type: 'MarkerLayer',
-    name: 'Estaciones Corrientes',
-    resourceApi: 'estaciones/hist/CURRENTS',
-    markerClass: MarkerClass.EstacionHist,
-    minZoom: 0,
-    icon: 'estacion-hist-corrientes.png',
-    iconSize: [24, 24],
-    showAll: true,
-    locale: true,
-    //cached: true,
-    preventHeaping: true,
-    subOption: '{stationsSubOption}'
-  },
-  {
-    id: 'hist-markers-estaciones-nivmar',
-    type: 'MarkerLayer',
-    name: 'Estaciones Nivmar',
-    resourceApi: 'estaciones/hist/SEA_LEVEL',
-    markerClass: MarkerClass.EstacionHist,
-    minZoom: 0,
-    icon: 'estacion-hist-nivmar.png',
-    iconSize:  [24, 24],
-    showAll: true,
-    locale: true,
-    //cached: true,
-    preventHeaping: true,
-    subOption: '{stationsSubOption}'
-  },
-  {
-    id: 'hist-markers-estaciones-temp-agua',
-    type: 'MarkerLayer',
-    name: 'Estaciones Temp Agua',
-    resourceApi: 'estaciones/hist/WATER_TEMP',
-    markerClass: MarkerClass.EstacionHist,
-    minZoom: 0,
-    icon: 'estacion-hist-tempAgua.png',
-    iconSize:  [24, 24],
-    showAll: true,
-    locale: true,
-    //cached: true,
-    preventHeaping: true,
-    subOption: '{stationsSubOption}'
-  },
-  {
-    id: 'hist-markers-estaciones-agitacion',
-    type: 'MarkerLayer',
-    name: 'Estaciones Agitacion',
-    resourceApi: 'estaciones/hist/AGITATION',
-    markerClass: MarkerClass.EstacionHist,
-    minZoom: 0,
-    icon: 'estacion-hist-agitacion.png',
-    iconSize:  [24, 24],
-    showAll: true,
-    locale: true,
-    //cached: true,
-    preventHeaping: true,
-    subOption: '{stationsSubOption}'
-  },
-  {
-    id: 'hist-markers-estaciones-presion-aire',
-    type: 'MarkerLayer',
-    name: 'Estaciones Pres. Aire',
-    resourceApi: 'estaciones/hist/AIR_PRESURE',
-    markerClass: MarkerClass.EstacionHist,
-    minZoom: 0,
-    icon: 'estacion-hist-presionAtm.png',
-    iconSize: [24, 24],
-    showAll: true,
-    locale: true,
-    //cached: true,
-    preventHeaping: true,
-    subOption: '{stationsSubOption}'
-  },
-  {
-    id: 'hist-markers-estaciones-temp-aire',
-    type: 'MarkerLayer',
-    name: 'Estaciones Temp Aire',
-    resourceApi: 'estaciones/hist/AIR_TEMP',
-    markerClass: MarkerClass.EstacionHist,
-    minZoom: 0,
-    icon: 'estacion-hist-tempAire.png',
-    iconSize: [24, 24],
-    showAll: true,
-    locale: true,
-    //cached: true,
-    preventHeaping: true,
-    subOption: '{stationsSubOption}'
-  }
 ];
 
 export const MapOptionsGroups = {
   groups: [
     { id: 'predicciones', name: '{prediccionesGroup}', nameMin: '{prediccionesGroupMin}', multiple: false },
-    { id: 'tiempo_real', name: '{tiempoRealGroup}', nameMin: '{tiempoRealGroupMin}', multiple: true },
-    { id: 'historico', name: '{historicoGroup}', nameMin: '{historicoGroupMin}', multiple: true }
+    { id: 'tiempo_real', name: '{tiempoRealGroup}', nameMin: '{tiempoRealGroupMin}', multiple: true }
   ],
   agregations: [
-    ['predicciones', 'tiempo_real'],
-    // ['predicciones', 'historico'],
-    // ['tiempo_real', 'historico']
+    ['predicciones', 'tiempo_real']
   ]
 }
 
@@ -756,82 +589,6 @@ export const MapOptions = [
     variableType: VariableType.SALINITY,
     iconClass: 'salinity',
     mapResources: ['rt-markers-salinidad']
-  },
-  // Histórico
-  {
-    id: 'hist_oleaje',
-    group: 'historico',
-    name: '{oleajeOption}',
-    variableType: VariableType.WAVE,
-    iconClass: 'wave',
-    mapResources: ['hist-markers-estaciones-oleaje', 'hist-markers-modelos-oleaje'],
-    //nonToggleable: true
-  },
-  {
-    id: 'hist_nivmar',
-    group: 'historico',
-    name: '{nivelDelMarOption}',
-    variableType: VariableType.SEA_LEVEL,
-    iconClass: 'sea_level',
-    mapResources: ['hist-markers-estaciones-nivmar']
-  },
-  {
-    id: 'hist_viento',
-    group: 'historico',
-    name: '{vientoOption}',
-    variableType: VariableType.WIND,
-    iconClass: 'wind',
-    mapResources: ['hist-markers-estaciones-viento', 'hist-markers-modelos-viento']
-  },
-  {
-    id: 'hist_agitacion',
-    group: 'historico',
-    name: '{agitacionOption}',
-    variableType: VariableType.AGITATION,
-    iconClass: 'agitation',
-    mapResources: ['hist-markers-estaciones-agitacion']
-  },
-  {
-    id: 'hist_temp_agua',
-    group: 'historico',
-    name: '{temperaturaOption}',
-    variableType: VariableType.WATER_TEMP,
-    iconClass: 'water_temp',
-    mapResources: ['hist-markers-estaciones-temp-agua']
-  },
-  {
-    id: 'hist_presion_aire',
-    group: 'historico',
-    name: '{presionAtmOption}',
-    variableType: VariableType.AIR_PRESURE,
-    iconClass: 'air_presure',
-    mapResources: ['hist-markers-estaciones-presion-aire']
-  },
-  {
-    id: 'hist_corrientes',
-    group: 'historico',
-    name: '{corrientesOption}',
-    variableType: VariableType.CURRENTS,
-    iconClass: 'currents',
-    mapResources: ['hist-markers-estaciones-corrientes']
-  },
-  {
-    id: 'hist_temp_aire',
-    group: 'historico',
-    name: '{temperaturaAireOption}',
-    variableType: VariableType.AIR_TEMP,
-    iconClass: 'air_temp',
-    mapResources: ['hist-markers-estaciones-temp-aire']
-  },
-  {
-    id: 'hist_salinidad',
-    group: 'historico',
-    name: '{salinidadOption}',
-    variableType: VariableType.SALINITY,
-    iconClass: 'salinity',
-    mapResources: ['hist-markers-estaciones-salinidad']
-  },
+  }
   
-
-
 ]

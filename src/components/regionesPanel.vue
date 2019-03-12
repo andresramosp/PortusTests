@@ -1,6 +1,6 @@
  <template>
  <div class="ubicacionesPanel" :class="{ 'leftAlign': align == 'right', 'rightAlign': align == 'left', 'blueTheme': theme == 'blueTheme', 'darkTheme': theme == 'darkTheme' }">
-     <img :src="require('@/assets/icons/regiones.png')" width="28" style="float: left;" />
+     <span class="regionesIcon" style="float: left; width: 28px; height: 28px"></span>
      <dx-select-box  style="float: right" 
             :items="regionesList"
             display-expr="nombre"

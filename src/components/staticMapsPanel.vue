@@ -71,9 +71,11 @@
                            value-field="url" 
                            :options="domainsList" 
                            v-model="domainSelected" 
-                           :placeholder="$t('{listaDominiosTexto}')"
                            style="margin-left: 0px; overflow-y: scroll; width: 330px; margin-bottom: 10px"
                            class="mb-3 form-control">
+              <template slot="first">
+                <option :value="null" disabled>-- {{$t('{listaDominiosTexto}')}} --</option>
+              </template>
             </b-form-select>
           </b-row>
           <b-row>
@@ -98,7 +100,7 @@
 
     <div class="footer" >
          <dx-button :text="$t('{botonBorrarMapas}')" class="footerButton" @click="clearMaps()" />
-         <dx-button :text="$t('{botonImprimirMapas}')" class="footerButton" @click="printMaps()" />
+         <dx-button :text="$t('{printButton}')" class="footerButton" @click="printMaps()" />
      </div>
 
   </dx-popup>
@@ -164,7 +166,7 @@ export default {
         locale: this.$getLocale()
       }).then(result => {
         sm.domainsList = result.data;
-        sm.domainSelected = sm.domainsList[0].url;
+        //sm.domainSelected = sm.domainsList[0].url;
       });
       this.datesAvailables = [];
       var hoursGap = 3;

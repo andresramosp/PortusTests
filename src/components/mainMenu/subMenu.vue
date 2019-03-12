@@ -6,7 +6,7 @@
         'subMenuLeftMin': minimized  && align == 'left',
         'subMenuRight': !minimized && align == 'right',
         'subMenuRightMin': minimized  && align == 'right'}" >
-   <div class="darkThemeSub">
+   <div >
       <transition appear :appear-class="appearClass" appear-to-class="slide-menu-enter-active">
         <div class="floatingPanel fadeIn"  :class="{ 
             'predicciones': mapOptionGroup.id == 'predicciones',

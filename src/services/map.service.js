@@ -11,7 +11,7 @@ import Vue from 'vue';
 const MapService = {
 
   tileLayerVisible(map, layer) {
-    return map.getBounds().intersects(layer.options.bounds)
+    return this.boundsVisible(map, layer.options.limits)
       && (layer.options.minZoom <= map.getZoom() && (map.getZoom() <= layer.options.maxZoom));
   },
 
@@ -24,12 +24,40 @@ const MapService = {
       else {
         minZoom = marker.minZoom ? marker.minZoom : (marker.mapResource.minZoom ? marker.mapResource.minZoom : 0);
       }
-      return map.getBounds().contains(marker.getLatLng()) // + buffer
+      return this.latLngVisible(map, marker.getLatLng()) 
           && (map.getZoom() >= minZoom);
     }
     else {
       return (!marker.minZoom || map.getZoom() >= marker.minZoom) 
-          && (!marker.maxZoom || map.getZoom() < marker.maxZoom);
+          && (!marker.maxZoom || map.getZoom() <= marker.maxZoom);
+    }
+  },
+
+  latLngVisible(map, latLng) {
+    if (!PC.restrict_resources_to_initial_bounds) {
+      return map.getBounds().contains(latLng);
+    }
+    else {
+      var restrictedArea = PC.map_initial_bounds;
+      var restrictedBounds = new L.LatLngBounds(
+        new L.LatLng(restrictedArea[1], restrictedArea[0]),
+        new L.LatLng(restrictedArea[3], restrictedArea[2])
+      );
+      return restrictedBounds.contains(latLng) && map.getBounds().contains(latLng);
+    }
+  },
+
+  boundsVisible(map, bounds) {
+    if (!PC.restrict_resources_to_initial_bounds) {
+      return map.getBounds().intersects(bounds);
+    }
+    else {
+      var restrictedArea = PC.map_initial_bounds;
+      var restrictedBounds = new L.LatLngBounds(
+        new L.LatLng(restrictedArea[1], restrictedArea[0]),
+        new L.LatLng(restrictedArea[3], restrictedArea[2])
+      );
+      return map.getBounds().intersects(restrictedBounds) && map.getBounds().intersects(bounds);
     }
   },
 
@@ -169,7 +197,7 @@ const MapService = {
     }
     var rect = L.rectangle([[portusTimeLayer.limN, portusTimeLayer.limW], [portusTimeLayer.limS, portusTimeLayer.limE]], { color: 'red', fillOpacity: 0.1, weight: 1 });
     rect.on('click', function (e) {
-        map.flyToBounds(e.target.getBounds().pad(0.25));
+        map.flyToBounds(e.target.getBounds().pad(0.1));
     });
     rect.on('mouseover', function (e) {
         new Vue({ ...GenericPopup, 
@@ -241,9 +269,14 @@ const MapService = {
         + ("0" + date.getHours()).slice(-2);
   },
 
-  getGMTDateString(date) {
+  getWeekDateString(date) {
     var options = {  month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'UTC' };
     return date.toLocaleDateString(Vue.$getLocale() == 'es' ? 'es-ES' : 'en-US', options).replaceAll(',','').replaceAll('.','');
+  },
+
+  getDateString(date) {
+    var options = {  month: '2-digit', day: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+    return date.toLocaleDateString(Vue.$getLocale() == 'es' ? 'es-ES' : 'en-US', options).replaceAll('/','-');
   },
 
   getDirNameFromDeg(degrees) {

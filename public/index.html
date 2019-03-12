@@ -21,7 +21,7 @@
   <meta http-equiv="imagetoolbar" content="no">
   <meta name="viewport" content="width=1024">
   <meta name="apple-mobile-web-app-capable" content="no">
-  <meta http-equiv="X-UA-Compatible" content="IE=10">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
   <!-- Bootstrap & JQuery -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
@@ -49,13 +49,8 @@
   <link rel="stylesheet" href="./css/L.Control.ZoomBox.css" />
   <script src="./scripts/L.Control.ZoomBox.js"></script>
 
-
-  <!-- Portus Config as Global Object -->
-  <!-- <script type="text/javascript" src="./portus.config.js" ></script> -->
-
   <script>
     Date.prototype.toLocalTime = function () {
-      // return new Date(this.getTime() - (this.getTimezoneOffset() * 60000));
       var newDate = new Date(this.getTime() + this.getTimezoneOffset()*60*1000);
 
       var offset = this.getTimezoneOffset() / 60;

@@ -99,12 +99,6 @@ export default {
           return this.productosVariable.length > 0;
       }
   },
-  watch: {
-      contentLoaded() {
-          if (this.contentLoaded)
-            this.$emit('content-loaded');
-      }
-  },
   mounted() {
   },
   created() {
@@ -113,6 +107,10 @@ export default {
   watch: {
       markers: function() {
           this.init();
+      },
+      contentLoaded: function() {
+          if (this.contentLoaded)
+            this.$emit('content-loaded');
       }
   },
   methods: {
@@ -190,7 +188,7 @@ export default {
             this.informeAnualSelected = 'N';
         }
         else if (this.markers[0].red.tipoRed == RedType.REDCOS) {
-                minYear = 2009;
+                minYear = 1985 //; 2009;
                 maxYear = !this.isInactiva() ? 2014 : new Date(this.markers[0].fechaFin).getFullYear();
                 this.informesAnualesOptions = [
                     { value: 'O', text: 'Oleaje'}

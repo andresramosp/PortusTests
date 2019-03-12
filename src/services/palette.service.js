@@ -7,7 +7,7 @@ const PaletteService = {
         {
             paletteId: "cirana",
             rangeValues: { min: 0, max: 1.5 },
-            step: 0.1,
+            step: 0.01,
             spectrum: ['#ff00ff', '#00ffff', '#ffff00', '#ff6400', '#ff3c00', '#ff2800', '#ff1400', '#c80000', '#9b0000', '#460000', '#000000']
         },
         {

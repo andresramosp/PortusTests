@@ -32,9 +32,14 @@
           class="row rowData rowDataTable"
           :class="{ 'whiteBG': index % 2 != 0, 'grayBG': index % 2 == 0 }"
         >
-          <div class="col-md-6">{{data.nombreParametro}}</div>
+          <div class="col-md-8">
+             <img style="float: left; margin-left: -3px; margin-right: 3px; margin-top: -4px; position: absolute" width="25" 
+                    :title="$t('{' + data.variable + '}')"
+                    :src='require("@/assets/icons/bancoDatos/" + data.variable.toLowerCase() + ".png")'>
+            <span style="margin-left: 25px"> {{data.nombreParametro}} </span>
+            </div>
           <div
-            class="col-md-6"
+            class="col-md-4"
             style="text-align: right"
             :class="{ 'paramQC': data.paramQC }"
           >{{formatParamValue(data)}}</div>
@@ -82,10 +87,10 @@ export default {
       var lastPositionValue;
       var tiempoReal = this.data;
       if (tiempoReal.datos.length > 0) {
-        dateValue = tiempoReal.fecha ? tiempoReal.fecha.slice(0, 19) + " GMT" : "";
-        // dateValue = tiempoReal.fecha;
-        // dateValue = new Date(dateValue);
-        // dateValue = dateValue.toISOString().slice(0, 19).replace("T", " ") + " GMT";
+        if (PC.isIE)
+          dateValue = tiempoReal.fecha ? tiempoReal.fecha.slice(0, 19) + " GMT" : "";
+        else 
+          dateValue = tiempoReal.fecha ? MapService.getDateString(new Date(tiempoReal.fecha)) + " GMT" : ""; //new Date(tiempoReal.fecha).toLocaleString().replaceAll('/', '-') + " GMT" : "";
         var lastPositions = tiempoReal.datos.filter(tr => { return tr.nombreParametro == "Latitud" || tr.nombreParametro == "Longitud";});
         if (lastPositions.length > 0) {
           var latValue = parseFloat(lastPositions.find(lp => { return lp.nombreParametro == "Latitud"; }).valor).toFixed(2);
@@ -129,8 +134,8 @@ export default {
 }
 
 .rowDataTable {
-  padding-top: 1.5px;
-  padding-bottom: 1.5px;
+    padding-top: 3.5px;
+    padding-bottom: 2.5px;
 }
 
 .leaflet-popup-content-wrapper {

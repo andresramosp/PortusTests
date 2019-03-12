@@ -1,12 +1,18 @@
 <template>
 <div style="text-align: center" >
-   <DataTablesPredPanel :marker="location" :variable="variable" :minimized="false" @loaded="loaded" :isWidget="true" />
+   <DataTablesPredPanel :marker="location" 
+                        :variable="variable" 
+                        :minimized="false" 
+                        @loaded="loaded" 
+                        :preselectedTabIndex="tab"
+                        :isWidget="true" />
 </div>
 </template>
 
 <script>
 
 import DataTablesPredPanel from "@/components/dataTables/dataTablesPredPanel.vue";
+import { MapResources } from '@/common/mapResourceManager';
 
 export default {
   name: "DataTablesPredWidget",
@@ -16,7 +22,8 @@ export default {
   data () {
     return {
       location: null,
-      variable: null
+      variable: null,
+      tab: 0
     }    
   },
   created() {
@@ -29,20 +36,14 @@ export default {
         id: parseInt(this.$route.query.locationCode),
         latitud: parseFloat(this.$route.query.latitud),
         longitud: parseFloat(this.$route.query.longitud),
-        mapResource: { palette: this.$route.query.palette }
+        mapResource: MapResources.find(m => m.id == this.$route.query.mapResource)
       };
     this.variable =this.$route.query.variable;
-    if (this.$route.query.forPrint) {
-        setTimeout(() => {
-          window.focus();
-          window.print();
-          window.close();
-        }, 1000);
-      }
   },
   methods: {
     loaded() {
-      if (this.$route.query.forPrint) {
+       if (this.$route.query.forPrint) {
+        this.tab = this.$route.query.tab;
         setTimeout(() => {
           window.focus();
           window.print();

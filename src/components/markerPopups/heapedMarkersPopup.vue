@@ -60,12 +60,7 @@ export default {
   font-size: 12px;
 }
 
-.heapedMarker {
-  cursor: pointer; 
-  /* text-decoration: underline !important;  */
-  /* font-weight: 600;  */
-  color: white !important;
-}
+
 
 .card {
   background-color: transparent;

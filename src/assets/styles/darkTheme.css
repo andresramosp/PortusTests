@@ -1,29 +1,37 @@
 
 /* DARKTHEME */
 
-  .darkTheme .layersPanel .card-body,
-  .darkTheme .leaflet-bar-timecontrol
+  .darkTheme .layersPanel .card-body
    {
     background-color: rgba(0, 0, 0, 0.7);
     color: white;
   }
+
+  .darkTheme .leaflet-bar-timecontrol
+   {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+  }
   
-  .darkTheme .card-header .predicciones, .darkThemeSub .predicciones {
+  .darkTheme .card-header .predicciones, 
+  .darkTheme .subMenu .predicciones {
     background-color: rgba(11, 90, 149, 0.7);
     color: white;
   }
   
-  .darkTheme .card-header .tiempo_real, .darkThemeSub .tiempo_real {
+  .darkTheme .card-header .tiempo_real, 
+  .darkTheme .subMenu .tiempo_real {
     background-color: rgba(6, 136, 192, 0.7);
     color: white;
   }
   
-  .darkTheme .card-header .historico, .darkThemeSub .historico {
+  .darkTheme .card-header .historico, 
+  .darkTheme .subMenu .historico {
     background-color: rgba(115, 170, 199, 0.7);
     color: white;
   }
   
-  .darkTheme .predicciones .mapOptionChecked  img {
+  .darkTheme .predicciones .mapOptionChecked span {
     background-color: rgba(11, 90, 149, 0.7);
     -webkit-transition: background-color 190ms linear;
     -moz-transition: background-color 190ms linear;
@@ -32,12 +40,12 @@
     transition: background-color 190ms linear;
   }
   
-  .darkTheme .predicciones .mapOptionChecked {
+  .darkTheme .predicciones .mapOptionChecked  {
       color: rgba(11, 90, 149, 1);
       font-weight: bold;
   }
   
-  .darkTheme .tiempo_real .mapOptionChecked  img {
+  .darkTheme .tiempo_real .mapOptionChecked  span {
     background-color: rgba(6, 136, 192, 0.7);
     -webkit-transition: background-color 190ms linear;
     -moz-transition: background-color 190ms linear;
@@ -51,7 +59,7 @@
       font-weight: bold;
   }
   
-  .darkTheme .historico .mapOptionChecked  img {
+  .darkTheme .historico .mapOptionChecked  span {
     background-color: rgba(115, 170, 199, 0.7);
     -webkit-transition: background-color 190ms linear;
     -moz-transition: background-color 190ms linear;
@@ -70,7 +78,7 @@
   }
   
   
-  .darkTheme .predicciones .minimized .lightable img:hover  {
+  .darkTheme .predicciones .minimized .lightable span:hover  {
     background-color: rgba(11, 90, 149, 0.4);
   }
   
@@ -78,7 +86,7 @@
     color: rgba(6, 136, 192, 0.7);
   }
   
-  .darkTheme .tiempo_real .minimized .lightable img:hover  {
+  .darkTheme .tiempo_real .minimized .lightable span:hover  {
     background-color: rgba(6, 136, 192, 0.4);
   }
   
@@ -86,7 +94,7 @@
     color: rgba(115, 170, 199, 0.7);
   }
   
-  .darkTheme .historico .minimized .lightable img:hover  {
+  .darkTheme .historico .minimized .lightable span:hover  {
     background-color: rgba(115, 170, 199, 0.4);
   }
 
@@ -104,15 +112,16 @@
 } */
 
 
+
+
 .darkTheme .markerPanel div:not(.dx-popup-title):not(.dx-button-content):not(.dx-button-text),
 .darkTheme .staticMapPanel div:not(.dx-popup-title):not(.dx-button-content):not(.dx-button-text),
-.darkTheme .dx-overlay-content,
 .darkTheme .leaflet-popup-content .card-body,
 .darkTheme .whiteBG,
 .darkTheme .table-dark,
 .darkTheme .shareInfoPanel,
 .darkTheme .leaflet-popup-tip {
-    background: rgb(74, 73, 79);
+    background-color: rgb(74, 73, 79);
     color:white !important;
     border-radius: 0px !important;
 }
@@ -163,11 +172,6 @@
   color: white;
 }
 
-.darkTheme #specialContentDeep
-{
-  background-color: black !important;
-  color: white;
-}
 
 .darkTheme #accordionContent .card-body {
   border: 1px solid gray;
@@ -199,6 +203,26 @@
     border-color: transparent;
 }
 
+.darkTheme .markerPanel .nav.nav-tabs {
+  border-bottom: 1px solid #dee2e624 !important;
+}
+
+.darkTheme .dx-popup-title {
+  border-bottom: 1px solid #dee2e624 !important;
+}
+
+.darkTheme .markerPanel .footer {
+  border-top: 1px solid #dee2e624 !important;
+  margin-top: 20px;
+}
+
+.darkTheme .heapedMarker {
+  cursor: pointer; 
+  /* text-decoration: underline !important;  */
+  /* font-weight: 600;  */
+  color: white !important;
+}
+
 .darkTheme .dataPanelHeader {
   height: 30px;
   padding-top: 2px;
@@ -219,9 +243,9 @@
   color: white !important;
 }
 
-.darkTheme .list-container a:hover {
-  color: black !important;
-}
+/* .darkTheme .list-container a:hover {
+  color: #00c8f9 !important;
+} */
 /* 
 .darkTheme .leaflet-popup a:hover {
   color: rgb(21, 91, 140) !important;
@@ -250,7 +274,7 @@
 .darkTheme .dx-calendar,
 .darkTheme .dx-calendar-cell
  {
-  background-color: rgb(64, 63, 69);
+  background-color: rgb(64, 63, 69) ;
   color: white;
 }
 
@@ -291,4 +315,243 @@
 
 .darkTheme .leaflet-popup-content .variableDate {
   color: white !important;
+}
+
+.darkTheme .datePicker .dx-texteditor-input {
+  background: #2e2b2b;
+  /* color: #b1afaf; */
+  color: transparent;
+  min-height: 20px;
+  height: 20px;
+}
+
+.darkTheme .dx-datebox-calendar .dx-dropdowneditor-icon {
+  color: lightgray !important;
+}
+
+.darkTheme .dx-datebox-calendar.dx-dropdowneditor-active .dx-texteditor-input {
+  background: black !important;
+}
+
+.darkTheme .shadedSquareWidget {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.darkTheme .shadedSquare {
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.darkTheme .fullscreenIcon {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.darkTheme .clockPanel {
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+.darkTheme .checkActive::before {
+  /* content: url('../icons/check_activo.png'); */
+  background-image: url('../icons/check_activo.png');
+  background-size: 18px 18px;
+  display: inline-block;
+  width: 18px; 
+  height: 18px;
+  content:"";
+}
+
+.darkTheme .checkInactive::before {
+  /* content: url('../icons/check_inactivo.png'); */
+  background-image: url('../icons/check_inactivo.png');
+  background-size: 18px 18px;
+  display: inline-block;
+  width: 18px; 
+  height: 18px;
+  content:"";
+}
+
+.darkTheme .wave::before {
+  background-image: url('../icons/bancoDatos/wave.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.darkTheme .wave_atl::before {
+  background-image: url('../icons/bancoDatos/wave_atl.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.darkTheme .wave_med::before {
+  background-image: url('../icons/bancoDatos/wave_med.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.darkTheme .salinity::before {
+  background-image: url('../icons/bancoDatos/salinity.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.darkTheme .sea_level::before {
+  background-image: url('../icons/bancoDatos/sea_level.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.darkTheme .air_presure::before {
+  background-image: url('../icons/bancoDatos/air_presure.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.darkTheme .air_temp::before {
+  background-image: url('../icons/bancoDatos/air_temp.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.darkTheme .agitation::before {
+  background-image: url('../icons/bancoDatos/agitation.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.darkTheme .wind::before {
+  background-image: url('../icons/bancoDatos/wind.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.darkTheme .currents::before {
+  background-image: url('../icons/bancoDatos/currents.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.darkTheme .seiche::before {
+  background-image: url('../icons/bancoDatos/seiche.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.darkTheme .water_temp::before {
+  background-image: url('../icons/bancoDatos/water_temp.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.darkTheme .ubicacionesIcon::before {
+  background-image: url('../icons/ubicaciones.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.darkTheme .regionesIcon::before {
+  background-image: url('../icons/regiones.png');
+  background-size: 28px 28px;
+  display: inline-block;
+  width: 28px; 
+  height: 28px;
+  content:"";
+}
+
+.darkTheme .replegarIcon::before {
+  /* content: url('../icons/check_activo.png'); */
+  background-image: url('../icons/replegar.png');
+  background-size: 25px 25px;
+  display: inline-block;
+  width: 25px; 
+  height: 25px;
+  content:"";
+}
+
+.darkTheme .desplegarIcon::before {
+  /* content: url('../icons/check_activo.png'); */
+  background-image: url('../icons/desplegar.png');
+  background-size: 25px 25px;
+  display: inline-block;
+  width: 25px; 
+  height: 25px;
+  content:"";
+}
+
+.darkTheme .replegarIconPlayer::before {
+  /* content: url('../icons/check_activo.png'); */
+  background-image: url('../icons/replegar.png');
+  background-size: 20px 20px;
+  display: inline-block;
+  width: 20px; 
+  height: 20px;
+  content:"";
+}
+
+.darkTheme .desplegarIconPlayer::before {
+  /* content: url('../icons/check_activo.png'); */
+  background-image: url('../icons/desplegar.png');
+  background-size: 20px 20px;
+  display: inline-block;
+  width: 20px; 
+  height: 20px;
+  content:"";
+}
+
+.darkTheme .fullscreenIcon::before {
+  /* content: url('../icons/check_activo.png'); */
+  background-image: url('../icons/fullscreenBlanco.png');
+  background-size: 24px 24px;
+  display: inline-block;
+  width: 24px; 
+  height: 24px;
+  content:"";
+}
+
+.darkTheme .openLinkIcon::before {
+  /* content: url('../icons/check_activo.png'); */
+  background-image: url('../icons/openLink.png');
+  background-size: 11px 11px;
+  display: inline-block;
+  width: 11px; 
+  height: 11px;
+  content:"";
 }

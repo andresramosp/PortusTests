@@ -12,7 +12,8 @@
 
     <div v-show="displayShareInfo" :style="customStyle" :class="[customPosition ? '' : position]" @mouseover="openShareInfo" @mouseout="closeShareInfo" class="shareInfoPanel fadeInMenu">
        <label class="alertText" style="float: left: display: inline; margin-right:3px" for="urlLink">URL</label>
-      <img :src='require("@/assets/icons/openLink.png")' width="11" class="shareImg" @click="openLink">
+      <!-- <img :src='require("@/assets/icons/openLink.png")' width="11" class="shareImg" @click="openLink"> -->
+      <span class="shareImg openLinkIcon" @click="openLink" ></span>
       <b-form-input id="specialContent" 
                   class="shareInput"
                   size="sm" 
@@ -110,6 +111,8 @@ export default {
   margin-left: 4px;
   margin-right: 5px;
   margin-top: -6px;
+  width: 11px;
+  height: 11px;
  
 }
 
@@ -129,7 +132,6 @@ export default {
     padding: 10px;
     font-size: 11px;
     border-radius: 0px;
-    height: 151px;
 }
 
 .bottomRight {
